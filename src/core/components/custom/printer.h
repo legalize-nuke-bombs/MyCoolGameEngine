@@ -5,9 +5,10 @@
 
 struct printer {
     struct component base;
-    const char* string;
-    const double interval;
+    const char* intervalString;
+    double interval;
     double timer;
+    const char* lastString;
 };
 
 void printer_update(struct component *self, double dt);
@@ -18,6 +19,6 @@ static struct component_vtable printer_vtable = {
     .on_destroy = printer_destroy
 };
 
-void printer_init(struct component *self, struct entity *parent);
+void printer_init(struct component *self, struct entity *parent, const char *string, double interval);
 
 #endif
