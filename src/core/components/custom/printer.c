@@ -2,6 +2,11 @@
 
 #include <stdio.h>
 
+static struct component_vtable printer_vtable = {
+    .on_update = printer_update,
+    .on_destroy = printer_destroy
+};
+
 void printer_init(struct printer *this, const char *intervalString, const char *lastString, double interval) {
     struct component *base = printer_as_component(this);
 

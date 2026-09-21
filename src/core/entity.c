@@ -10,7 +10,7 @@
 void entity_init(struct entity *this) {
     this->_name = "Default entity";
 
-    this->_components = malloc(sizeof(struct component) * DEFAULT_COMPONENTS_CAPACITY);
+    this->_components = malloc(sizeof(struct component*) * DEFAULT_COMPONENTS_CAPACITY);
     this->_components_capacity = DEFAULT_COMPONENTS_CAPACITY;
     this->_components_count = 0;
 }

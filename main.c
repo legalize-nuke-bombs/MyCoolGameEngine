@@ -28,19 +28,20 @@ int main(void) {
     scene_set_name(&scene, "my scene name");
     scene_set_entity_collection(&scene, &entity_collection);
 
-    struct timespec start, end;
+    struct timespec previous, now;
     struct update_context update_context = {
-        update_context.dt = 0
+        .dt = 0
     };
 
+    clock_gettime(CLOCK_MONOTONIC, &previous);
+
     for (long long i = 0; i < 100000000ll; i++) {
-        clock_gettime(CLOCK_MONOTONIC, &start);
+        clock_gettime(CLOCK_MONOTONIC, &now);
+
+        update_context.dt = (double)(now.tv_sec - previous.tv_sec) + (double)(now.tv_nsec - previous.tv_nsec) / 1e9;
+        previous = now;
 
         scene_update(&scene, &update_context);
-
-        clock_gettime(CLOCK_MONOTONIC, &end);
-
-        update_context.dt = (double)(end.tv_sec - start.tv_sec) + (double)(end.tv_nsec - start.tv_nsec) / 1e9;
     }
 
     scene_destroy(&scene);
