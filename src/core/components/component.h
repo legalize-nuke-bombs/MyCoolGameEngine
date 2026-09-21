@@ -11,7 +11,9 @@ struct component_vtable {
 
 struct component {
     struct component_vtable *vtable;
-    struct entity *entity;
+    struct entity *parent;
 };
+
+void component_init(struct component *component, struct entity *parent);
 
 #endif
