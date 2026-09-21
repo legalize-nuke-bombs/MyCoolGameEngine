@@ -1,7 +1,7 @@
-#include "src/core/Entity.h"
+#include "src/core/entity.h"
 
 int main(void) {
-    struct Entity firstEntity;
+    struct entity firstEntity;
     init_entity(&firstEntity);
     print_entity(&firstEntity);
     return 0;

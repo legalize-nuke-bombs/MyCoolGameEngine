@@ -4,10 +4,10 @@ project(MyCoolGameEngine C)
 set(CMAKE_C_STANDARD 11)
 
 add_executable(MyCoolGameEngine main.c
-        src/core/Entity.h
-        src/core/Entity.c
-        src/utils/Vector2.h
-        src/utils/Vector2.c
-        src/utils/Vector2Math.h
-        src/utils/Vector2Math.c
+        src/core/entity.h
+        src/core/entity.c
+        src/utils/vector2.h
+        src/utils/vector2.c
+        src/utils/vector2_math.h
+        src/utils/vector2_math.c
 )
