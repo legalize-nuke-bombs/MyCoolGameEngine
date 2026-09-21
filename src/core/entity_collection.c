@@ -4,6 +4,7 @@
 
 #include "entity_collection.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "entity.h"
@@ -23,4 +24,12 @@ void entity_collection_destroy(struct entity_collection *this) {
         entity_destroy(entity);
     }
     free(this->_entities);
+}
+
+int entity_collection_get_entities_count(const struct entity_collection *this) {
+    return this->_entities_count;
+}
+
+void entity_collection_print(const struct entity_collection *this) {
+    printf("Entity collection (%d entities count, %d entities capacity)\n", this->_entities_count, this->_entities_capacity);
 }
