@@ -11,13 +11,11 @@ void logger_init(int level) {
     }
 }
 
-
 void logger_log(int level, const char* string) {
     if (level >= logger_level) {
         printf("%s", string);
     }
 }
-
 
 void logger_debug(const char* string) {
     logger_log(LOGGER_LEVEL_DEBUG, string);
