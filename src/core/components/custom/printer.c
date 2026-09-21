@@ -14,14 +14,14 @@ void printer_init(struct printer *this, const char *intervalString, const char *
     this->timer = 0.0;
 }
 
-void printer_update(struct component *base, const double dt) {
+void printer_update(struct component *base, const struct update_context *context) {
     struct printer *this = (struct printer *)base;
 
     if (this->intervalString == NULL) {
         return;
     }
 
-    this->timer += dt;
+    this->timer += context->dt;
     if (this->timer >= this->interval) {
         printf("%s\n", this->intervalString);
         this->timer -= this->interval;

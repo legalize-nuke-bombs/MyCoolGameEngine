@@ -12,7 +12,14 @@ int main(void) {
     entity_init(&firstEntity);
     entity_set_name(&firstEntity, "my favourite entity");
     entity_add_component(&firstEntity, printer_as_component(&printer));
+
     entity_print(&firstEntity);
+
+    struct update_context context = {
+        .dt = 10
+    };
+    entity_update(&firstEntity, &context);
+
     entity_destroy(&firstEntity);
 
     return 0;

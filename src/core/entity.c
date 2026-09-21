@@ -51,6 +51,13 @@ void entity_add_component(struct entity *this, struct component *component) {
     component_set_parent(component, this);
 }
 
+void entity_update(const struct entity *this, const struct update_context *context) {
+    for (int i = 0; i < this->_components_count; i++) {
+        struct component *component = this->_components[i];
+        component_update(component, context);
+    }
+}
+
 void entity_print(const struct entity *this) {
     printf("Entity %s (%d components count, %d components capacity)\n", this->_name, this->_components_count, this->_components_capacity);
 }

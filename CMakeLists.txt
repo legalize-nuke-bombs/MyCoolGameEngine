@@ -15,4 +15,5 @@ add_executable(MyCoolGameEngine main.c
         src/logging/logger.c
         src/core/components/custom/printer.h
         src/core/components/custom/printer.c
+        src/core/update_context.h
 )
