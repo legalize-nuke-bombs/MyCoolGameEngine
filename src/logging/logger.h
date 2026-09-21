@@ -12,11 +12,11 @@
 
 void logger_init(int level);
 
-void logger_log(int level, const char* string);
+void logger_log(int level, const char* format, ...) __attribute__((format(printf, 2, 3)));
 
-void logger_debug(const char* string);
-void logger_info(const char* string);
-void logger_warn(const char* string);
-void logger_error(const char* string);
+#define logger_debug(...) logger_log(LOGGER_LEVEL_DEBUG, __VA_ARGS__)
+#define logger_info(...) logger_log(LOGGER_LEVEL_INFO, __VA_ARGS__)
+#define logger_warn(...) logger_log(LOGGER_LEVEL_WARN, __VA_ARGS__)
+#define logger_error(...) logger_log(LOGGER_LEVEL_ERROR, __VA_ARGS__)
 
 #endif
