@@ -33,7 +33,7 @@ int entity_get_components_count(const struct entity *this) {
 }
 static void entity_realloc_components(struct entity *this) {
     int new_capacity = 2 * this->_components_capacity;
-    struct component **new_components = malloc(sizeof(struct component) * new_capacity);
+    struct component **new_components = malloc(sizeof(struct component*) * new_capacity);
     for (int i = 0; i < this->_components_count; i++) {
         new_components[i] = this->_components[i];
     }
