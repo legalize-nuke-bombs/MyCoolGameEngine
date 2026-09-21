@@ -13,7 +13,7 @@ struct entity {
 
 
 void entity_init(struct entity *this);
-void entity_destroy(struct entity *this);
+void entity_destroy(const struct entity *this);
 
 const char *entity_get_name(const struct entity *this);
 void entity_set_name(struct entity *this, const char *name);

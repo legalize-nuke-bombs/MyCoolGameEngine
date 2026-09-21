@@ -1,7 +1,14 @@
 #include "component.h"
 
+#include <stddef.h>
+
 void component_init(struct component *component) {
 
+}
+void component_destroy(struct component *component) {
+    if (component->_vtable->on_destroy != NULL) {
+        component->_vtable->on_destroy(component);
+    }
 }
 
 struct entity* component_get_parent(struct component *this) {

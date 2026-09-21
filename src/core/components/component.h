@@ -14,6 +14,7 @@ struct component {
 };
 
 void component_init(struct component *component);
+void component_destroy(struct component *component);
 
 struct entity* component_get_parent(struct component *this);
 void component_set_parent(struct component *this, struct entity *parent);

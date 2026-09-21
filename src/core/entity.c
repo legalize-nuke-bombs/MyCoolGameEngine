@@ -14,9 +14,11 @@ void entity_init(struct entity *this) {
     this->_components_capacity = DEFAULT_COMPONENTS_CAPACITY;
     this->_components_count = 0;
 }
-void entity_destroy(struct entity *this) {
+void entity_destroy(const struct entity *this) {
+    for (int i = 0; i < this->_components_count; i++) {
+        component_destroy(this->_components[i]);
+    }
     free(this->_components);
-    this->_components = NULL;
 }
 
 const char* entity_get_name(const struct entity *this) {
