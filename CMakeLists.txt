@@ -12,4 +12,6 @@ add_executable(MyCoolGameEngine main.c
         src/utils/vector2_math.c
         src/core/components/component.h
         src/core/components/component.c
+        src/logging/logger.h
+        src/logging/logger.c
 )
