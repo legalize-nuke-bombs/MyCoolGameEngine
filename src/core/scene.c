@@ -9,12 +9,12 @@
 #include <stdio.h>
 
 void scene_init(struct scene *this) {
-    logger_info("Initializing the scene\n");
     this->_name = "Default scene";
+    logger_info("Initializing the scene %s\n", this->_name);
     this->_entity_collection = NULL;
 }
 void scene_destroy(const struct scene *this) {
-    logger_info("Destroying the scene\n");
+    logger_info("Destroying the scene %s\n", this->_name);
     if (this->_entity_collection != NULL) {
         entity_collection_destroy(this->_entity_collection);
     }
@@ -38,8 +38,4 @@ void scene_update(struct scene *this, const struct update_context *context) {
     if (this->_entity_collection != NULL) {
         entity_collection_update(this->_entity_collection, context);
     }
-}
-
-void scene_print(const struct scene *this) {
-    printf("Scene %s\n", this->_name);
 }

@@ -52,7 +52,3 @@ void entity_collection_update(const struct entity_collection *this, const struct
         entity_update(entity, context);
     }
 }
-
-void entity_collection_print(const struct entity_collection *this) {
-    printf("Entity collection (%d entities count, %d entities capacity)\n", this->_entities_count, this->_entities_capacity);
-}

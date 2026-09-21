@@ -23,6 +23,4 @@ void scene_set_entity_collection(struct scene *this, struct entity_collection *e
 
 void scene_update(struct scene *this, const struct update_context *context);
 
-void scene_print(const struct scene *this);
-
 #endif //MYCOOLGAMEENGINE_SCENE_H

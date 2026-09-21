@@ -24,7 +24,5 @@ void entity_add_component(struct entity *this, struct component *component);
 
 void entity_update(const struct entity *this, const struct update_context *context);
 
-void entity_print(const struct entity *this);
-
 
 #endif

@@ -56,7 +56,3 @@ void entity_update(const struct entity *this, const struct update_context *conte
         component_update(component, context);
     }
 }
-
-void entity_print(const struct entity *this) {
-    printf("Entity %s (%d components count, %d components capacity)\n", this->_name, this->_components_count, this->_components_capacity);
-}

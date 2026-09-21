@@ -6,8 +6,6 @@
 #include "src/core/entity_collection.h"
 #include "src/core/scene.h"
 
-#include <unistd.h>
-
 int main(void) {
     logger_init(LOGGER_LEVEL_DEBUG);
 

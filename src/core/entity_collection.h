@@ -21,6 +21,4 @@ void entity_collection_add_entity(struct entity_collection *this, struct entity 
 
 void entity_collection_update(const struct entity_collection *this, const struct update_context *context);
 
-void entity_collection_print(const struct entity_collection *this);
-
 #endif //MYCOOLGAMEENGINE_ENTITY_COLLECTION_H
