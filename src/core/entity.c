@@ -14,8 +14,8 @@ const char* entity_get_name(const struct entity *entity) {
     return entity->_name;
 }
 void entity_set_name(struct entity *entity, const char *name) {
-    if (entity->_name == NULL) {
-        logger_warn("attempt to set null name to an entity");
+    if (name == NULL) {
+        logger_warn("attempt to set null name to an entity\n");
         return;
     }
     entity->_name = name;
