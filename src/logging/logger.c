@@ -2,6 +2,7 @@
 
 #include <stdarg.h>
 #include <stdio.h>
+#include <time.h>
 
 static int logger_level;
 
@@ -18,6 +19,16 @@ void logger_log(const int level, const char* format, ...) {
     if (level < logger_level) {
         return;
     }
+
+    time_t time_t;
+    time(&time_t);
+
+    const struct tm *tm = localtime(&time_t);
+
+    char time_buffer[24];
+    strftime(time_buffer, sizeof(time_buffer), "%Y-%m-%d %H:%M:%S", tm);
+
+    printf("[%s] ", time_buffer);
 
     va_list args;
     va_start(args, format);
