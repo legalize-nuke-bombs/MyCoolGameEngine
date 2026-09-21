@@ -6,7 +6,7 @@ struct vector2 {
     double y;
 };
 
-struct vector2 vector2_zero();
-struct vector2 vector2_one();
+struct vector2 vector2_zero = { .x = 0.0, .y = 0.0 };
+struct vector2 vector2_one = { .x = 1.0, .y = 1.0 };
 
 #endif
