@@ -6,21 +6,22 @@
 struct entity {
     const char *_name;
 
-    struct component *_components;
+    struct component **_components;
     int _components_capacity;
     int _components_count;
 };
 
 
-void entity_init(struct entity *entity);
-void entity_destroy(struct entity *entity);
+void entity_init(struct entity *this);
+void entity_destroy(struct entity *this);
 
-const char *entity_get_name(const struct entity *entity);
-void entity_set_name(struct entity *entity, const char *name);
+const char *entity_get_name(const struct entity *this);
+void entity_set_name(struct entity *this, const char *name);
 
-int entity_get_components_count(const struct entity *entity);
+int entity_get_components_count(const struct entity *this);
+void entity_add_component(struct entity *this, struct component *component);
 
-void entity_print(const struct entity *entity);
+void entity_print(const struct entity *this);
 
 
 #endif

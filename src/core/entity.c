@@ -7,29 +7,48 @@
 #define DEFAULT_COMPONENTS_CAPACITY 1
 
 
-void entity_init(struct entity *entity) {
-    entity->_name = "Default entity";
+void entity_init(struct entity *this) {
+    this->_name = "Default entity";
 
-    entity->_components = malloc(sizeof(struct component) * DEFAULT_COMPONENTS_CAPACITY);
-    entity->_components_capacity = DEFAULT_COMPONENTS_CAPACITY;
-    entity->_components_count = 0;
+    this->_components = malloc(sizeof(struct component) * DEFAULT_COMPONENTS_CAPACITY);
+    this->_components_capacity = DEFAULT_COMPONENTS_CAPACITY;
+    this->_components_count = 0;
 }
-void entity_destroy(struct entity *entity) {
-    free(entity->_components);
-    entity->_components = NULL;
-}
-
-const char* entity_get_name(const struct entity *entity) {
-    return entity->_name;
-}
-void entity_set_name(struct entity *entity, const char *name) {
-    entity->_name = name;
+void entity_destroy(struct entity *this) {
+    free(this->_components);
+    this->_components = NULL;
 }
 
-int entity_get_components_count(const struct entity *entity) {
-    return entity->_components_count;
+const char* entity_get_name(const struct entity *this) {
+    return this->_name;
+}
+void entity_set_name(struct entity *this, const char *name) {
+    this->_name = name;
 }
 
-void entity_print(const struct entity *entity) {
-    printf("Entity %s (%d components count, %d components capacity)\n", entity->_name, entity->_components_count, entity->_components_capacity);
+int entity_get_components_count(const struct entity *this) {
+    return this->_components_count;
+}
+static void entity_realloc_components(struct entity *this) {
+    int new_capacity = 2 * this->_components_capacity;
+    struct component **new_components = malloc(sizeof(struct component) * new_capacity);
+    for (int i = 0; i < this->_components_count; i++) {
+        new_components[i] = this->_components[i];
+    }
+    free(this->_components);
+    this->_components = new_components;
+    this->_components_capacity = new_capacity;
+}
+void entity_add_component(struct entity *this, struct component *component) {
+    if (this->_components_count >= this->_components_capacity) {
+        entity_realloc_components(this);
+    }
+    this->_components[this->_components_count] = component;
+    this->_components_count++;
+
+    component_set_parent(component, this);
+}
+
+void entity_print(const struct entity *this) {
+    printf("Entity %s (%d components count, %d components capacity)\n", this->_name, this->_components_count, this->_components_capacity);
 }

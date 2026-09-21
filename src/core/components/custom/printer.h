@@ -11,14 +11,16 @@ struct printer {
     const char* lastString;
 };
 
-void printer_update(struct component *self, double dt);
-void printer_destroy(struct component *self);
+void printer_update(struct component *base, double dt);
+void printer_destroy(struct component *base);
 
 static struct component_vtable printer_vtable = {
     .on_update = printer_update,
     .on_destroy = printer_destroy
 };
 
-void printer_init(struct component *self, struct entity *parent, const char *string, double interval);
+void printer_init(struct printer *this, const char *intervalString, const char *lastString, double interval);
+
+struct component* printer_as_component(struct printer *this);
 
 #endif

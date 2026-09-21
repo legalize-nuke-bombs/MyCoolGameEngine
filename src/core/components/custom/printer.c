@@ -2,19 +2,20 @@
 
 #include <stdio.h>
 
-void printer_init(struct component *self, struct entity *parent, const char *string, double interval) {
-    component_init(self, parent);
-    self->vtable = &printer_vtable;
+void printer_init(struct printer *this, const char *intervalString, const char *lastString, double interval) {
+    struct component *base = printer_as_component(this);
 
-    struct printer *this = (struct printer *)self;
+    component_init(base);
+    base->_vtable = &printer_vtable;
 
-    this->intervalString = string;
+    this->intervalString = intervalString;
+    this->lastString = lastString;
     this->interval = interval;
     this->timer = 0.0;
 }
 
-void printer_update(struct component *self, const double dt) {
-    struct printer *this = (struct printer *)self;
+void printer_update(struct component *base, const double dt) {
+    struct printer *this = (struct printer *)base;
 
     if (this->intervalString == NULL) {
         return;
@@ -27,11 +28,15 @@ void printer_update(struct component *self, const double dt) {
     }
 }
 
-void printer_destroy(struct component *self) {
-    const struct printer *this = (struct printer *)self;
+void printer_destroy(struct component *base) {
+    const struct printer *this = (struct printer *)base;
 
     if (this->lastString == NULL) {
         return;
     }
     printf("%s\n", this->lastString);
+}
+
+struct component *printer_as_component(struct printer *this) {
+    return (struct component *) this;
 }

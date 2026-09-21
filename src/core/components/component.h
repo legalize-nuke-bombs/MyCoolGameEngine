@@ -9,10 +9,13 @@ struct component_vtable {
 };
 
 struct component {
-    struct component_vtable *vtable;
-    struct entity *parent;
+    struct component_vtable *_vtable;
+    struct entity *_parent;
 };
 
-void component_init(struct component *component, struct entity *parent);
+void component_init(struct component *component);
+
+struct entity* component_get_parent(struct component *this);
+void component_set_parent(struct component *this, struct entity *parent);
 
 #endif
