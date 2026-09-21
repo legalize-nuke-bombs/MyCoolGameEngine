@@ -19,3 +19,9 @@ double get_vector_x(const struct Vector2 *vector) {
 double get_vector_y(const struct Vector2 *vector) {
     return vector->y;
 }
+void set_vector_x(struct Vector2 *vector, double x) {
+    vector->x = x;
+}
+void set_vector_y(struct Vector2 *vector, double y) {
+    vector->y = y;
+}

@@ -11,5 +11,7 @@ struct Vector2 vector2_1();
 
 double get_vector_x(const struct Vector2 *vector);
 double get_vector_y(const struct Vector2 *vector);
+void set_vector_x(struct Vector2 *vector, double x);
+void set_vector_y(struct Vector2 *vector, double y);
 
 #endif
