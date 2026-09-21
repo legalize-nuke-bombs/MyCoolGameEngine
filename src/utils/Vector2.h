@@ -9,4 +9,7 @@ struct Vector2 {
 struct Vector2 vector2_0();
 struct Vector2 vector2_1();
 
+double get_vector_x(const struct Vector2 *vector);
+double get_vector_y(const struct Vector2 *vector);
+
 #endif

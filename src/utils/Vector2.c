@@ -12,3 +12,10 @@ struct Vector2 vector2_1() {
     vector.y = 1;
     return vector;
 }
+
+double get_vector_x(const struct Vector2 *vector) {
+    return vector->x;
+}
+double get_vector_y(const struct Vector2 *vector) {
+    return vector->y;
+}
