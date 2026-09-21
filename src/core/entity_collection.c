@@ -46,6 +46,13 @@ void entity_collection_add_entity(struct entity_collection *this, struct entity 
     this->_entities[this->_entities_count++] = entity;
 }
 
+void entity_collection_update(const struct entity_collection *this, const struct update_context *context) {
+    for (int i = 0; i < this->_entities_count; i++) {
+        const struct entity *entity = this->_entities[i];
+        entity_update(entity, context);
+    }
+}
+
 void entity_collection_print(const struct entity_collection *this) {
     printf("Entity collection (%d entities count, %d entities capacity)\n", this->_entities_count, this->_entities_capacity);
 }

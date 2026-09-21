@@ -5,6 +5,8 @@
 #ifndef MYCOOLGAMEENGINE_ENTITY_COLLECTION_H
 #define MYCOOLGAMEENGINE_ENTITY_COLLECTION_H
 
+#include "update_context.h"
+
 struct entity_collection {
     struct entity** _entities;
     int _entities_capacity;
@@ -16,6 +18,8 @@ void entity_collection_destroy(struct entity_collection *this);
 
 int entity_collection_get_entities_count(const struct entity_collection *this);
 void entity_collection_add_entity(struct entity_collection *this, struct entity *entity);
+
+void entity_collection_update(const struct entity_collection *this, const struct update_context *context);
 
 void entity_collection_print(const struct entity_collection *this);
 
