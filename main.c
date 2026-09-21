@@ -1,6 +1,7 @@
 #include "src/core/entity.h"
 #include "src/logging/logger.h"
 #include "src/core/components/custom/printer.h"
+#include "src/core/entity_collection.h"
 
 int main(void) {
     logger_init(LOGGER_LEVEL_DEBUG);
@@ -8,19 +9,14 @@ int main(void) {
     struct printer printer;
     printer_init(&printer, "hi", "bye", 1);
 
-    struct entity firstEntity;
-    entity_init(&firstEntity);
-    entity_set_name(&firstEntity, "my favourite entity");
-    entity_add_component(&firstEntity, printer_as_component(&printer));
+    struct entity entity;
+    entity_init(&entity);
+    entity_set_name(&entity, "my favourite entity");
+    entity_add_component(&entity, printer_as_component(&printer));
 
-    entity_print(&firstEntity);
-
-    struct update_context context = {
-        .dt = 10
-    };
-    entity_update(&firstEntity, &context);
-
-    entity_destroy(&firstEntity);
+    struct entity_collection entity_collection;
+    entity_collection_init(&entity_collection);
+    entity_collection_destroy(&entity_collection);
 
     return 0;
 }
