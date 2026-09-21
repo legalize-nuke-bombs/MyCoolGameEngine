@@ -21,4 +21,5 @@ add_executable(MyCoolGameEngine main.c
         src/core/entity_collection.c
         src/core/scene.h
         src/core/scene.c
+        version.h
 )
