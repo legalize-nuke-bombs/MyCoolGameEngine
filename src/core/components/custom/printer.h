@@ -1,0 +1,8 @@
+//
+// Created by nikita on 22.09.2026.
+//
+
+#ifndef MYCOOLGAMEENGINE_PRINTER_H
+#define MYCOOLGAMEENGINE_PRINTER_H
+
+#endif //MYCOOLGAMEENGINE_PRINTER_H
