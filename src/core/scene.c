@@ -3,15 +3,18 @@
 //
 
 #include "scene.h"
+#include "../logging/logger.h"
 
 #include <stddef.h>
 #include <stdio.h>
 
 void scene_init(struct scene *this) {
+    logger_info("Initializing the scene\n");
     this->_name = "Default scene";
     this->_entity_collection = NULL;
 }
 void scene_destroy(const struct scene *this) {
+    logger_info("Destroying the scene\n");
     if (this->_entity_collection != NULL) {
         entity_collection_destroy(this->_entity_collection);
     }
