@@ -7,7 +7,7 @@ int main(void) {
     struct entity firstEntity;
     entity_init(&firstEntity);
     entity_print(&firstEntity);
-
+    entity_destroy(&firstEntity);
 
     return 0;
 }

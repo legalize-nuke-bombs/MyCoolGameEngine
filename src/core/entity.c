@@ -6,6 +6,9 @@
 void entity_init(struct entity *entity) {
     entity->_name = "Default entity";
 }
+void entity_destroy(struct entity *entity) {
+
+}
 
 const char* entity_get_name(const struct entity *entity) {
     return entity->_name;

@@ -7,6 +7,7 @@ struct entity {
 
 
 void entity_init(struct entity *entity);
+void entity_destroy(struct entity *entity);
 
 const char *entity_get_name(const struct entity *entity);
 void entity_set_name(struct entity *entity, const char *name);
