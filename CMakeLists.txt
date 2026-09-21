@@ -8,4 +8,6 @@ add_executable(MyCoolGameEngine main.c
         src/core/Entity.c
         src/utils/Vector2.h
         src/utils/Vector2.c
+        src/utils/Vector2Math.h
+        src/utils/Vector2Math.c
 )
