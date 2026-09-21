@@ -16,6 +16,7 @@ int main(void) {
 
     struct entity_collection entity_collection;
     entity_collection_init(&entity_collection);
+    entity_collection_add_entity(&entity_collection, &entity);
     entity_collection_print(&entity_collection);
     entity_collection_destroy(&entity_collection);
 

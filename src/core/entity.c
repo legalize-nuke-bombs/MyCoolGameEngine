@@ -45,8 +45,7 @@ void entity_add_component(struct entity *this, struct component *component) {
     if (this->_components_count >= this->_components_capacity) {
         entity_realloc_components(this);
     }
-    this->_components[this->_components_count] = component;
-    this->_components_count++;
+    this->_components[this->_components_count++] = component;
 
     component_set_parent(component, this);
 }

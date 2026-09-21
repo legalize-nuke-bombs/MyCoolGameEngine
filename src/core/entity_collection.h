@@ -15,6 +15,7 @@ void entity_collection_init(struct entity_collection *this);
 void entity_collection_destroy(struct entity_collection *this);
 
 int entity_collection_get_entities_count(const struct entity_collection *this);
+void entity_collection_add_entity(struct entity_collection *this, struct entity *entity);
 
 void entity_collection_print(const struct entity_collection *this);
 
