@@ -4,7 +4,7 @@
 struct component;
 
 struct component_vtable {
-    void (*on_update)(struct component *self);
+    void (*on_update)(struct component *self, double dt);
     void (*on_destroy)(struct component *self);
 };
 
