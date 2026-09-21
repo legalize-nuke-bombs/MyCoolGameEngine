@@ -2,7 +2,7 @@
 
 int main(void) {
     struct entity firstEntity;
-    init_entity(&firstEntity);
-    print_entity(&firstEntity);
+    entity_init(&firstEntity);
+    entity_print(&firstEntity);
     return 0;
 }
