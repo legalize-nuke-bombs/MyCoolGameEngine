@@ -2,8 +2,8 @@
 
 #include <stdio.h>
 
-void init_entity(struct Entity *entity, const char *name) {
-    entity->name = name;
+void init_entity(struct Entity *entity) {
+    entity->name = "Default entity";
 }
 
 const char* get_entity_name(const struct Entity *entity) {

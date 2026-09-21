@@ -6,7 +6,7 @@ struct Entity {
 };
 
 
-void init_entity(struct Entity *entity, const char *name);
+void init_entity(struct Entity *entity);
 
 const char *get_entity_name(const struct Entity *entity);
 void set_entity_name(struct Entity *entity, const char *name);
