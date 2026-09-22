@@ -12,7 +12,8 @@ struct entity {
     struct action on_component_captured;
 };
 
-void entity_init(struct entity *this);
+void entity_create(struct entity *this);
+void entity_awake(const struct entity *this);
 void entity_destroy(const struct entity *this);
 
 const char *entity_get_name(const struct entity *this);

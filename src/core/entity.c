@@ -6,11 +6,18 @@
 #include "scene.h"
 #include "../logging/logger.h"
 
-void entity_init(struct entity *this) {
+void entity_create(struct entity *this) {
     this->_name = "Default entity";
     logger_debug("Entity %s is initializing...", this->_name);
     list_init(&this->_components, 1);
     action_init(&this->on_component_captured);
+}
+void entity_awake(const struct entity *this) {
+    logger_debug("Entity %s is awaking...", this->_name);
+    for (int i = 0; i < list_count(&this->_components); i++) {
+        struct component *component = list_get(&this->_components, i);
+        component_awake(component);
+    }
 }
 void entity_destroy(const struct entity *this) {
     logger_debug("Entity %s is destroying...", this->_name);

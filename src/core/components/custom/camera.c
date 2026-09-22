@@ -6,6 +6,7 @@ static const char* camera_component_key(void);
 
 static struct component_vtable camera_vtable = {
     .component_key = camera_component_key,
+    .on_awake = NULL,
     .on_update = NULL,
     .on_destroy = NULL
 };
@@ -17,7 +18,7 @@ static const char* camera_component_key(void) {
 void camera_init(struct camera *this) {
     struct component *base = camera_as_component(this);
 
-    component_init(base);
+    component_create(base);
     base->_vtable = &camera_vtable;
 }
 

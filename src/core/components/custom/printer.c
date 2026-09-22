@@ -10,6 +10,7 @@ static void printer_destroy(struct component *base);
 
 static struct component_vtable printer_vtable = {
     .component_key = printer_component_key,
+    .on_awake = NULL,
     .on_update = printer_update,
     .on_destroy = printer_destroy
 };
@@ -21,7 +22,7 @@ static const char* printer_component_key(void) {
 void printer_init(struct printer *this, const char *intervalString, const char *lastString, double interval) {
     struct component *base = printer_as_component(this);
 
-    component_init(base);
+    component_create(base);
     base->_vtable = &printer_vtable;
 
     this->intervalString = intervalString;

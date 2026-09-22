@@ -21,7 +21,7 @@ int main(void) {
     camera_init(camera);
 
     struct entity* entity = malloc(sizeof(struct entity));
-    entity_init(entity);
+    entity_create(entity);
     entity_set_name(entity, "My favourite entity");
     entity_capture_component(entity, transform_as_component(transform));
     entity_capture_component(entity, camera_as_component(camera));
