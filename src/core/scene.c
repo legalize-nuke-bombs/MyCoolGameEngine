@@ -34,6 +34,7 @@ const char* scene_get_name(const struct scene *this) {
     return this->_name;
 }
 void scene_set_name(struct scene *this, const char *name) {
+    logger_info("Scene %s is renaming to %s", this->_name, name);
     this->_name = name;
 }
 
