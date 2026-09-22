@@ -30,7 +30,7 @@ void printer_update(struct component *base, const struct update_context *context
 
     this->timer += context->dt;
     if (this->timer >= this->interval) {
-        logger_info("Entity `%s` component printer: %s\n", base->_parent->_name, this->intervalString);
+        logger_info("Entity `%s` component printer: %s\n", entity_get_name(component_get_parent(base)), this->intervalString);
         this->timer -= this->interval;
     }
 }
@@ -41,7 +41,7 @@ void printer_destroy(struct component *base) {
     if (this->lastString == NULL) {
         return;
     }
-    logger_info("Entity `%s` component printer: %s\n", base->_parent->_name, this->lastString);
+    logger_info("Entity `%s` component printer: %s\n", entity_get_name(component_get_parent(base)), this->lastString);
 }
 
 struct component *printer_as_component(struct printer *this) {

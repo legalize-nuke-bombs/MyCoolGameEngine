@@ -1,9 +1,8 @@
 #include "transform.h"
-#include "../../../utils/vector2_math.h"
 
-#include <stdio.h>
+#include <stddef.h>
 
-static struct component_vtable printer_vtable = {
+static struct component_vtable transform_vtable = {
     .on_update = NULL,
     .on_destroy = NULL
 };
@@ -12,10 +11,10 @@ void transform_init(struct transform *this, const struct vector2* position, cons
     struct component *base = transform_as_component(this);
 
     component_init(base);
-    base->_vtable = &printer_vtable;
+    base->_vtable = &transform_vtable;
 
     this->position = *position;
-    this->scale = vector_relu(scale);
+    this->scale = *scale;
 }
 
 struct component *transform_as_component(struct transform *this) {

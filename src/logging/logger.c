@@ -20,10 +20,10 @@ void logger_log(const int level, const char* format, ...) {
         return;
     }
 
-    time_t time_t;
-    time(&time_t);
+    time_t now;
+    time(&now);
 
-    const struct tm *tm = localtime(&time_t);
+    const struct tm *tm = localtime(&now);
 
     char time_buffer[24];
     strftime(time_buffer, sizeof(time_buffer), "%Y-%m-%d %H:%M:%S", tm);
