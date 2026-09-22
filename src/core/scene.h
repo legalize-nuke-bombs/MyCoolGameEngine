@@ -21,8 +21,6 @@ void scene_destroy(const struct scene *this);
 const char* scene_get_name(const struct scene *this);
 void scene_set_name(struct scene *this, const char *name);
 
-void handle_new_component(void *base, void *component);
-
 void scene_capture_entity(struct scene *this, struct entity *entity);
 
 void scene_update(const struct scene *this, const struct update_context *context);

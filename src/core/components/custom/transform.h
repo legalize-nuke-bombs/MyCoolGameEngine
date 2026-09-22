@@ -14,8 +14,6 @@ struct transform {
     struct vector2 scale;
 };
 
-const char* transform_component_key();
-
 void transform_init(struct transform *this, const struct vector2* position, const struct vector2* scale);
 
 struct component* transform_as_component(struct transform *this);

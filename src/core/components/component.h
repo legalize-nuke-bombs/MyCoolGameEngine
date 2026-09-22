@@ -6,7 +6,7 @@
 struct component;
 
 struct component_vtable {
-    const char* (*component_key)();
+    const char* (*component_key)(void);
     void (*on_update)(struct component *self, const struct update_context *context);
     void (*on_destroy)(struct component *self);
 };

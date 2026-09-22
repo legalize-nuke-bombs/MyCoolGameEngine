@@ -2,13 +2,15 @@
 
 #include <stddef.h>
 
+static const char* transform_component_key(void);
+
 static struct component_vtable transform_vtable = {
     .component_key = transform_component_key,
     .on_update = NULL,
     .on_destroy = NULL
 };
 
-const char* transform_component_key() {
+static const char* transform_component_key(void) {
     return "transform";
 }
 

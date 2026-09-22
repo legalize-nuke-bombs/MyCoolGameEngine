@@ -3,9 +3,9 @@
 #include <math.h>
 
 double vector_get_length(const struct vector2 *vector) {
-    return sqrt(vector_get_magnitude(vector));
+    return sqrt(vector_get_sqr_length(vector));
 }
-double vector_get_magnitude(const struct vector2 *vector) {
+double vector_get_sqr_length(const struct vector2 *vector) {
     return vector->x * vector->x + vector->y * vector->y;
 }
 
@@ -23,9 +23,9 @@ struct vector2 vector_subtract(const struct vector2 *vector1, const struct vecto
 }
 
 double vector_distance(const struct vector2 *point1, const struct vector2 *point2) {
-    return sqrt(vector_distance_magnitude(point1, point2));
+    return sqrt(vector_sqr_distance(point1, point2));
 }
-double vector_distance_magnitude(const struct vector2 *point1, const struct vector2 *point2) {
+double vector_sqr_distance(const struct vector2 *point1, const struct vector2 *point2) {
     const struct vector2 subtracted = vector_subtract(point1, point2);
     return subtracted.x * subtracted.x + subtracted.y * subtracted.y;
 }

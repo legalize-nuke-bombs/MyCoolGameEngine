@@ -11,10 +11,6 @@ struct printer {
     const char* lastString;
 };
 
-const char* printer_component_key();
-void printer_update(struct component *base, const struct update_context *context);
-void printer_destroy(struct component *base);
-
 void printer_init(struct printer *this, const char *intervalString, const char *lastString, double interval);
 
 struct component* printer_as_component(struct printer *this);

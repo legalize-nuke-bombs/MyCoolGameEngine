@@ -6,10 +6,12 @@
 #include "../../logging/logger.h"
 
 void component_init(struct component *this) {
-
+    this->_vtable = NULL;
+    this->_parent = NULL;
 }
 void component_destroy(struct component *this) {
-    logger_debug("Entity %s is destroying component %s...", this->_parent->_name, this->_vtable->component_key());
+    const char *parent_name = this->_parent != NULL ? entity_get_name(this->_parent) : "<none>";
+    logger_debug("Entity %s is destroying component %s...", parent_name, component_get_key(this));
     if (this->_vtable->on_destroy != NULL) {
         this->_vtable->on_destroy(this);
     }

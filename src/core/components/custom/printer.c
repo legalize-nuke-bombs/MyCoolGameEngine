@@ -4,13 +4,17 @@
 
 #include <stdio.h>
 
+static const char* printer_component_key(void);
+static void printer_update(struct component *base, const struct update_context *context);
+static void printer_destroy(struct component *base);
+
 static struct component_vtable printer_vtable = {
     .component_key = printer_component_key,
     .on_update = printer_update,
     .on_destroy = printer_destroy
 };
 
-const char* printer_component_key() {
+static const char* printer_component_key(void) {
     return "printer";
 }
 
@@ -26,7 +30,7 @@ void printer_init(struct printer *this, const char *intervalString, const char *
     this->timer = 0.0;
 }
 
-void printer_update(struct component *base, const struct update_context *context) {
+static void printer_update(struct component *base, const struct update_context *context) {
     struct printer *this = (struct printer *)base;
 
     if (this->intervalString == NULL) {
@@ -40,7 +44,7 @@ void printer_update(struct component *base, const struct update_context *context
     }
 }
 
-void printer_destroy(struct component *base) {
+static void printer_destroy(struct component *base) {
     const struct printer *this = (struct printer *)base;
 
     if (this->lastString == NULL) {

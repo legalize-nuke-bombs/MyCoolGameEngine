@@ -35,6 +35,7 @@ void tmap_register_component(struct tmap *this, struct component *component) {
             logger_debug("TMap now knows component key %s", component_key);
         }
         else {
+            list_destroy(list);
             free(list);
             logger_error("Failed to populate tmap, tmap count %d, tmap capacity %d", dictionary_count(&this->_dictionary), dictionary_capacity(&this->_dictionary));
         }

@@ -37,7 +37,7 @@ void scene_set_name(struct scene *this, const char *name) {
     this->_name = name;
 }
 
-void handle_new_component(void *base, void *component) {
+static void handle_new_component(void *base, void *component) {
     struct scene *this = (struct scene *)base;
     tmap_register_component(&this->_tmap, component);
 }
