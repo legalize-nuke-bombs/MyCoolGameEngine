@@ -26,4 +26,8 @@ add_executable(MyCoolGameEngine main.c
         src/utils/list.c
         src/utils/dictionary.h
         src/utils/dictionary.c
+        src/utils/string_dictionary.h
+        src/utils/string_hasher.h
+        src/utils/string_hasher.c
+        src/utils/string_dictionary.cpp
 )

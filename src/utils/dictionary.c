@@ -1,7 +1,7 @@
 #include "dictionary.h"
 #include <stdlib.h>
 
-void dictionary_init(struct dictionary *dictionary, int dim, int (*hash)(void*), bool (*equals)(void*, void*)) {
+void dictionary_init(struct dictionary *dictionary, int dim, int (*hash)(const void*), bool (*equals)(const void*, const void*)) {
     if (dim < 0) {
         dim = 0;
     }
