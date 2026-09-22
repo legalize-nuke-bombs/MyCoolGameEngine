@@ -48,7 +48,7 @@ void scene_capture_entity(struct scene *this, struct entity *entity) {
     list_add(&this->_entities, entity);
 
     for (int i = 0; i < entity_get_components_count(entity); i++) {
-        struct component *component = entity_get_component(entity, i);
+        struct component *component = entity_get_component_by_index(entity, i);
         handle_new_component(this, component);
     }
 
