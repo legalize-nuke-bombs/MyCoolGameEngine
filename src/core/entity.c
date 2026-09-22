@@ -2,11 +2,14 @@
 
 #include <stdlib.h>
 
+#include "../logging/logger.h"
+
 void entity_init(struct entity *this) {
     this->_name = "Default entity";
     list_init(&this->_components, 1);
 }
 void entity_destroy(const struct entity *this) {
+    logger_debug("Entity %s is destroying...\n", this->_name);
     for (int i = 0; i < list_count(&this->_components); i++) {
         struct component *component = list_get(&this->_components, i);
         component_destroy(component);

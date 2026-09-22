@@ -2,10 +2,14 @@
 
 #include <stddef.h>
 
+#include "../entity.h"
+#include "../../logging/logger.h"
+
 void component_init(struct component *this) {
 
 }
 void component_destroy(struct component *this) {
+    logger_debug("Entity %s is destroying component...\n", this->_parent->_name);
     if (this->_vtable->on_destroy != NULL) {
         this->_vtable->on_destroy(this);
     }
