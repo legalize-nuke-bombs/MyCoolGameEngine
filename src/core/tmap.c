@@ -50,3 +50,7 @@ void tmap_register_component(struct tmap *this, struct component *component) {
         logger_error("Failed to populate tmap list for component key %s", component_key);
     }
 }
+
+const struct list* tmap_try_get_components(const struct tmap *this, const char *component_key) {
+    return dictionary_get(&this->_dictionary, (void*) component_key);
+}
