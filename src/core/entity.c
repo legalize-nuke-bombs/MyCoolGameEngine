@@ -63,7 +63,7 @@ struct component* entity_try_get_component(const struct entity *this, const char
 struct component* entity_get_component(const struct entity *this, const char *name) {
     struct component *component = entity_try_get_component(this, name);
     if (component == NULL) {
-        logger_warn("Entity %s does not contain required component %s", this->_name, name);
+        logger_error("Entity %s does not contain required component %s", this->_name, name);
     }
     return component;
 }

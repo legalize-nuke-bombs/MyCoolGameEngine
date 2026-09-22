@@ -9,6 +9,8 @@
 
 struct camera {
     struct component base;
+
+    struct transform *_transform;
 };
 
 void camera_init(struct camera *this);
