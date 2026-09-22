@@ -20,12 +20,14 @@ int main(void) {
     entity_init(entity);
     entity_set_name(entity, "My favourite entity");
     entity_capture_component(entity, transform_as_component(transform));
-    entity_capture_component(entity, printer_as_component(printer));
 
     struct scene scene;
     scene_init(&scene);
     scene_set_name(&scene, "My scene name");
     scene_capture_entity(&scene, entity);
+
+    // dynamic!
+    entity_capture_component(entity, printer_as_component(printer));
 
     struct timespec previous, now;
     struct update_context update_context = {
