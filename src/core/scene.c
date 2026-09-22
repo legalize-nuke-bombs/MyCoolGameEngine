@@ -17,6 +17,13 @@ void scene_init(struct scene *this) {
     list_init(&this->_entities, 16);
     tmap_init(&this->_tmap);
 }
+void scene_awake(const struct scene *this) {
+    logger_info("Scene %s is awaking...", this->_name);
+    for (int i = 0; i < list_count(&this->_entities); i++) {
+        const struct entity *entity = list_get(&this->_entities, i);
+        entity_awake(entity);
+    }
+}
 void scene_destroy(const struct scene *this) {
     logger_info("Scene %s is destroying...", this->_name);
 

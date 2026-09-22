@@ -31,6 +31,8 @@ int main(void) {
     scene_set_name(&scene, "My scene name");
     scene_capture_entity(&scene, entity);
 
+    scene_awake(&scene);
+
     // dynamic!
     entity_capture_component(entity, printer_as_component(printer));
 
