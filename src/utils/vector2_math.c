@@ -21,6 +21,12 @@ struct vector2 vector_subtract(const struct vector2 *vector1, const struct vecto
     result.y = vector1->y - vector2->y;
     return result;
 }
+struct vector2 vector_multiply(const struct vector2 *vector1, const struct vector2 *vector2) {
+    struct vector2 result;
+    result.x = vector1->x * vector2->x;
+    result.y = vector1->y * vector2->y;
+    return result;
+}
 
 double vector_distance(const struct vector2 *point1, const struct vector2 *point2) {
     return sqrt(vector_sqr_distance(point1, point2));

@@ -27,6 +27,8 @@ void component_destroy(struct component *this);
 struct entity* component_get_parent(const struct component *this);
 void component_set_parent(struct component *this, struct entity *parent);
 const char* component_get_parent_name(const struct component *this);
+struct vector2 component_get_position(const struct component *this);
+struct vector2 component_get_scale(const struct component *this);
 
 const char* component_get_key(const struct component *this);
 

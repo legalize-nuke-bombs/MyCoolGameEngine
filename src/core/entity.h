@@ -10,10 +10,11 @@ struct entity {
     const char *_name;
     struct list _components;
     struct action on_component_captured;
+    struct transform* transform;
 };
 
 void entity_create(struct entity *this);
-void entity_awake(const struct entity *this);
+void entity_awake(struct entity *this);
 void entity_destroy(const struct entity *this);
 
 const char *entity_get_name(const struct entity *this);

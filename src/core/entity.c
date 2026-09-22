@@ -11,9 +11,11 @@ void entity_create(struct entity *this) {
     logger_debug("Entity %s is initializing...", this->_name);
     list_init(&this->_components, 1);
     action_init(&this->on_component_captured);
+    this->transform = NULL;
 }
-void entity_awake(const struct entity *this) {
+void entity_awake(struct entity *this) {
     logger_debug("Entity %s is awaking...", this->_name);
+    this->transform = (struct transform*)entity_get_component(this, "transform");
     for (int i = 0; i < list_count(&this->_components); i++) {
         struct component *component = list_get(&this->_components, i);
         component_awake(component);

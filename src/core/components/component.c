@@ -4,6 +4,8 @@
 
 #include "../entity.h"
 #include "../../logging/logger.h"
+#include "../../utils/vector2_math.h"
+#include "custom/transform.h"
 
 void component_create(struct component *this) {
     this->_vtable = NULL;
@@ -33,6 +35,12 @@ void component_set_parent(struct component *this, struct entity *parent) {
 }
 const char* component_get_parent_name(const struct component *this) {
     return this->_parent != NULL ? entity_get_name(this->_parent) : "<none>";
+}
+struct vector2 component_get_position(const struct component *this) {
+    return this->_parent != NULL ? vector_sum(&this->_parent->transform->position, &this->local_position) : this->local_position;
+}
+struct vector2 component_get_scale(const struct component *this) {
+    return this->_parent != NULL ? vector_multiply(&this->_parent->transform->scale, &this->local_scale) : this->local_scale;
 }
 
 const char* component_get_key(const struct component *this) {
