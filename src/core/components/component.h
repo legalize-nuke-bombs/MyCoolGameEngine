@@ -2,6 +2,7 @@
 #define MYCOOLGAMEENGINE_COMPONENT_H
 
 #include "../update_context.h"
+#include "../../utils/vector2.h"
 
 struct component;
 
@@ -14,6 +15,8 @@ struct component_vtable {
 struct component {
     struct component_vtable *_vtable;
     struct entity *_parent;
+    struct vector2 local_position;
+    struct vector2 local_scale;
 };
 
 void component_init(struct component *this);

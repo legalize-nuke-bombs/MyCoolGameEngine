@@ -8,6 +8,8 @@
 void component_init(struct component *this) {
     this->_vtable = NULL;
     this->_parent = NULL;
+    this->local_position = vector2_zero;
+    this->local_scale = vector2_one;
 }
 void component_destroy(struct component *this) {
     const char *parent_name = this->_parent != NULL ? entity_get_name(this->_parent) : "<none>";
