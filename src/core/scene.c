@@ -29,6 +29,7 @@ void scene_destroy(const struct scene *this) {
     for (int i = 0; i < dictionary_capacity(&this->_tmap); i++) {
         const struct dictionary_node dictionary_node = dictionary_get_node(&this->_tmap, i);
         if (dictionary_node.value != NULL) {
+            list_destroy(dictionary_node.value);
             free(dictionary_node.value);
         }
     }
