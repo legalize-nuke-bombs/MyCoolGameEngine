@@ -26,6 +26,9 @@ int dictionary_count(const struct dictionary *dictionary) {
 static int dictionary_node_index(const struct dictionary *dictionary, void *key) {
     return dictionary->hash(key) & (dictionary_capacity(dictionary) - 1);
 }
+struct dictionary_node dictionary_get_node(const struct dictionary *dictionary, int index) {
+    return dictionary->_nodes[index];
+}
 
 bool dictionary_try_add(struct dictionary *dictionary, void *key, void *value) {
     const int capacity = dictionary_capacity(dictionary);
@@ -56,7 +59,6 @@ bool dictionary_try_add(struct dictionary *dictionary, void *key, void *value) {
     dictionary->_count++;
     return true;
 }
-
 void *dictionary_get(const struct dictionary *dictionary, void *key) {
     const int capacity = dictionary_capacity(dictionary);
 
@@ -78,4 +80,10 @@ void *dictionary_get(const struct dictionary *dictionary, void *key) {
     }
 
     return NULL;
+}
+bool dictionary_present(const struct dictionary *dictionary, void *key) {
+    return dictionary_get(dictionary, key) != NULL;
+}
+bool dictionary_absent(const struct dictionary *dictionary, void *key) {
+    return dictionary_get(dictionary, key) == NULL;
 }

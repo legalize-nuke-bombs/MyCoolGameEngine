@@ -11,6 +11,7 @@ struct printer {
     const char* lastString;
 };
 
+const char* printer_component_key();
 void printer_update(struct component *base, const struct update_context *context);
 void printer_destroy(struct component *base);
 

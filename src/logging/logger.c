@@ -15,9 +15,31 @@ void logger_init(int level) {
     }
 }
 
-void logger_log(const int level, const char* format, ...) {
+void logger_log(int level, const char* format, ...) {
+    if (level < LOGGER_LEVEL_MIN) {
+        level = LOGGER_LEVEL_MIN;
+    }
+    if (level > LOGGER_LEVEL_MAX) {
+        level = LOGGER_LEVEL_MAX;
+    }
+
     if (level < logger_level) {
         return;
+    }
+
+    switch (level) {
+        case LOGGER_LEVEL_DEBUG:
+            printf("[DEBUG] ");
+            break;
+        case LOGGER_LEVEL_INFO:
+            printf("[INFO]  ");
+            break;
+        case LOGGER_LEVEL_WARN:
+            printf("[WARN]  ");
+            break;
+        case LOGGER_LEVEL_ERROR:
+            printf("[ERROR] ");
+            break;
     }
 
     time_t now;
@@ -34,4 +56,6 @@ void logger_log(const int level, const char* format, ...) {
     va_start(args, format);
     vprintf(format, args);
     va_end(args);
+
+    printf("\n");
 }

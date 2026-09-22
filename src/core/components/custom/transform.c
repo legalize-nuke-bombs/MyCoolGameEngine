@@ -3,9 +3,14 @@
 #include <stddef.h>
 
 static struct component_vtable transform_vtable = {
+    .component_key = transform_component_key,
     .on_update = NULL,
     .on_destroy = NULL
 };
+
+const char* transform_component_key() {
+    return "transform";
+}
 
 void transform_init(struct transform *this, const struct vector2* position, const struct vector2* scale) {
     struct component *base = transform_as_component(this);

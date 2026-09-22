@@ -19,6 +19,7 @@ void entity_set_name(struct entity *this, const char *name);
 
 int entity_get_components_count(const struct entity *this);
 void entity_capture_component(struct entity *this, struct component *component);
+struct component* entity_get_component(const struct entity *this, int index);
 
 void entity_update(const struct entity *this, const struct update_context *context);
 

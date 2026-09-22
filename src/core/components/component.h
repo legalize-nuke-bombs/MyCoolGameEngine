@@ -6,6 +6,7 @@
 struct component;
 
 struct component_vtable {
+    const char* (*component_key)();
     void (*on_update)(struct component *self, const struct update_context *context);
     void (*on_destroy)(struct component *self);
 };
@@ -20,6 +21,8 @@ void component_destroy(struct component *this);
 
 struct entity* component_get_parent(const struct component *this);
 void component_set_parent(struct component *this, struct entity *parent);
+
+const char* component_get_key(const struct component *this);
 
 void component_update(struct component *this, const struct update_context *context);
 

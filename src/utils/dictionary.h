@@ -25,7 +25,11 @@ void dictionary_destroy(const struct dictionary *dictionary);
 int dictionary_capacity(const struct dictionary *dictionary);
 int dictionary_count(const struct dictionary *dictionary);
 
+struct dictionary_node dictionary_get_node(const struct dictionary *dictionary, int index);
+
 bool dictionary_try_add(struct dictionary *dictionary, void *key, void *value);
 void *dictionary_get(const struct dictionary *dictionary, void *key);
+bool dictionary_present(const struct dictionary *dictionary, void *key);
+bool dictionary_absent(const struct dictionary *dictionary, void *key);
 
 #endif //MYCOOLGAMEENGINE_DICTIONARY_H
