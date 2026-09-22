@@ -40,6 +40,13 @@ void entity_set_name(struct entity *this, const char *name) {
     this->_name = name;
 }
 
+struct scene* entity_get_parent(const struct entity *this) {
+    return this->_parent;
+}
+void entity_set_parent(struct entity *this, struct scene* parent) {
+    this->_parent = parent;
+}
+
 int entity_get_components_count(const struct entity *this) {
     return list_count(&this->_components);
 }
