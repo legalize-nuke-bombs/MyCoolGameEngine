@@ -19,8 +19,8 @@ int main(void) {
     struct entity entity;
     entity_init(&entity);
     entity_set_name(&entity, "my favourite entity");
-    entity_add_component(&entity, transform_as_component(&transform));
-    entity_add_component(&entity, printer_as_component(&printer));
+    entity_capture_component(&entity, transform_as_component(&transform));
+    entity_capture_component(&entity, printer_as_component(&printer));
 
     struct entity_collection entity_collection;
     entity_collection_init(&entity_collection);
