@@ -9,6 +9,7 @@ void entity_init(struct entity *this) {
     this->_name = "Default entity";
     logger_debug("Entity %s is initializing...", this->_name);
     list_init(&this->_components, 1);
+    action_init(&this->on_component_captured);
 }
 void entity_destroy(const struct entity *this) {
     logger_debug("Entity %s is destroying...", this->_name);
@@ -18,6 +19,7 @@ void entity_destroy(const struct entity *this) {
         free(component);
     }
     list_destroy(&this->_components);
+    action_destroy(&this->on_component_captured);
 }
 
 const char* entity_get_name(const struct entity *this) {
@@ -35,6 +37,7 @@ void entity_capture_component(struct entity *this, struct component *component) 
     logger_debug("Entity %s is capturing component %s", this->_name, component_get_key(component));
     component_set_parent(component, this);
     list_add(&this->_components, component);
+    action_invoke(&this->on_component_captured, component);
 }
 struct component* entity_get_component(const struct entity *this, const int index) {
     return list_get(&this->_components, index);

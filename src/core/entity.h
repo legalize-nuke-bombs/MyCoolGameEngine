@@ -4,10 +4,12 @@
 #include "update_context.h"
 #include "components/component.h"
 #include "../utils/list.h"
+#include "../utils/action.h"
 
 struct entity {
     const char *_name;
     struct list _components;
+    struct action on_component_captured;
 };
 
 void entity_init(struct entity *this);
