@@ -4,7 +4,6 @@
 
 #include "scene.h"
 #include "../logging/logger.h"
-#include "../utils/string_dictionary.h"
 
 #include <stdlib.h>
 
