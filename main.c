@@ -4,7 +4,6 @@
 #include "src/logging/logger.h"
 #include "src/core/components/custom/printer.h"
 #include "src/core/components/custom/transform.h"
-#include "src/core/entity_collection.h"
 #include "src/core/scene.h"
 
 int main(void) {
@@ -22,14 +21,10 @@ int main(void) {
     entity_capture_component(&entity, transform_as_component(&transform));
     entity_capture_component(&entity, printer_as_component(&printer));
 
-    struct entity_collection entity_collection;
-    entity_collection_init(&entity_collection);
-    entity_collection_add_entity(&entity_collection, &entity);
-
     struct scene scene;
     scene_init(&scene);
     scene_set_name(&scene, "my scene name");
-    scene_set_entity_collection(&scene, &entity_collection);
+    scene_add_entity(&scene, &entity);
 
     struct timespec previous, now;
     struct update_context update_context = {

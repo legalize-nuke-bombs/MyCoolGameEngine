@@ -17,8 +17,6 @@ add_executable(MyCoolGameEngine main.c
         src/core/components/custom/printer.h
         src/core/components/custom/printer.c
         src/core/update_context.h
-        src/core/entity_collection.h
-        src/core/entity_collection.c
         src/core/scene.h
         src/core/scene.c
         version.h
