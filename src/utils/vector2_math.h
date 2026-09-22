@@ -12,4 +12,6 @@ struct vector2 vector_subtract(const struct vector2 *vector1, const struct vecto
 double vector_distance(const struct vector2 *point1, const struct vector2 *point2);
 double vector_distance_magnitude(const struct vector2 *point1, const struct vector2 *point2);
 
+struct vector2 vector_relu(const struct vector2 *vector);
+
 #endif

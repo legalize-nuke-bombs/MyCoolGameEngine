@@ -29,3 +29,11 @@ double vector_distance_magnitude(const struct vector2 *point1, const struct vect
     const struct vector2 subtracted = vector_subtract(point1, point2);
     return subtracted.x * subtracted.x + subtracted.y * subtracted.y;
 }
+
+struct vector2 vector_relu(const struct vector2 *vector) {
+    const struct vector2 output = {
+        .x = vector->x < 0 ? 0 : vector->x,
+        .y = vector->y < 0 ? 0 : vector->y,
+    };
+    return output;
+}

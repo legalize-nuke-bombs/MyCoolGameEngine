@@ -3,6 +3,7 @@
 #include "src/core/entity.h"
 #include "src/logging/logger.h"
 #include "src/core/components/custom/printer.h"
+#include "src/core/components/custom/transform.h"
 #include "src/core/entity_collection.h"
 #include "src/core/scene.h"
 
@@ -12,9 +13,13 @@ int main(void) {
     struct printer printer;
     printer_init(&printer, "hi", "bye", 1);
 
+    struct transform transform;
+    transform_init(&transform, &vector2_zero, &vector2_one);
+
     struct entity entity;
     entity_init(&entity);
     entity_set_name(&entity, "my favourite entity");
+    entity_add_component(&entity, transform_as_component(&transform));
     entity_add_component(&entity, printer_as_component(&printer));
 
     struct entity_collection entity_collection;
