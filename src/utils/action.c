@@ -19,7 +19,10 @@ void action_destroy(const struct action *this) {
     list_destroy(&this->_list);
 }
 
-void action_capture(struct action *this, struct action_method* action_method) {
+void action_add(struct action *this, void *listener, void (*action)(void*, void*)) {
+    struct action_method *action_method = malloc(sizeof(struct action_method));
+    action_method->listener = listener;
+    action_method->action = action;
     list_add(&this->_list, action_method);
 }
 void action_invoke(const struct action *this, void* action_context) {

@@ -52,10 +52,7 @@ void scene_capture_entity(struct scene *this, struct entity *entity) {
         handle_new_component(this, component);
     }
 
-    struct action_method* action_method = malloc(sizeof(action_method));
-    action_method->listener = this;
-    action_method->action = handle_new_component;
-    action_capture(&entity->on_component_captured, action_method);
+    action_add(&entity->on_component_captured, this, handle_new_component);
 }
 
 void scene_update(const struct scene *this, const struct update_context *context) {

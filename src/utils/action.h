@@ -19,7 +19,7 @@ struct action {
 void action_init(struct action *this);
 void action_destroy(const struct action *this);
 
-void action_capture(struct action *this, struct action_method* action_method);
+void action_add(struct action *this, void *listener, void (*action)(void*, void*));
 void action_invoke(const struct action *this, void* action_context);
 
 #endif //MYCOOLGAMEENGINE_ACTION_H
