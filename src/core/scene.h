@@ -6,14 +6,13 @@
 #define MYCOOLGAMEENGINE_SCENE_H
 
 #include "../utils/list.h"
-#include "../utils/dictionary.h"
-#include "entity.h"
 #include "update_context.h"
+#include "tmap.h"
 
 struct scene {
     const char* _name;
     struct list _entities;
-    struct dictionary _tmap;
+    struct tmap _tmap;
 };
 
 void scene_init(struct scene *this);

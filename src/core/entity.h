@@ -7,7 +7,6 @@
 
 struct entity {
     const char *_name;
-
     struct list _components;
 };
 

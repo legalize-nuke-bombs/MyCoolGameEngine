@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 
+#include "scene.h"
 #include "../logging/logger.h"
 
 void entity_init(struct entity *this) {

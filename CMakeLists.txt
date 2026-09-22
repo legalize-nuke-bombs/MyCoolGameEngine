@@ -30,4 +30,6 @@ add_executable(MyCoolGameEngine main.c
         src/utils/string_hasher.h
         src/utils/string_hasher.c
         src/utils/string_dictionary.c
+        src/core/tmap.h
+        src/core/tmap.c
 )

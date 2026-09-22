@@ -8,13 +8,14 @@
 
 #include <stdlib.h>
 
+#include "entity.h"
 
 
 void scene_init(struct scene *this) {
     this->_name = "Default scene";
     logger_info("Scene %s is initializing...", this->_name);
     list_init(&this->_entities, 16);
-    this->_tmap = string_dictionary_build(10);
+    tmap_init(&this->_tmap);
 }
 void scene_destroy(const struct scene *this) {
     logger_info("Scene %s is destroying...", this->_name);
@@ -26,14 +27,7 @@ void scene_destroy(const struct scene *this) {
     }
     list_destroy(&this->_entities);
 
-    for (int i = 0; i < dictionary_capacity(&this->_tmap); i++) {
-        const struct dictionary_node dictionary_node = dictionary_get_node(&this->_tmap, i);
-        if (dictionary_node.value != NULL) {
-            list_destroy(dictionary_node.value);
-            free(dictionary_node.value);
-        }
-    }
-    dictionary_destroy(&this->_tmap);
+    tmap_destroy(&this->_tmap);
 }
 
 const char* scene_get_name(const struct scene *this) {
@@ -50,28 +44,7 @@ void scene_capture_entity(struct scene *this, struct entity *entity) {
 
     for (int i = 0; i < entity_get_components_count(entity); i++) {
         struct component *component = entity_get_component(entity, i);
-        const char* component_key = component_get_key(component);
-
-        if (dictionary_absent(&this->_tmap, (void*) component_key)) {
-            struct list* list = malloc(sizeof(struct list));
-            list_init(list, 1);
-            if (dictionary_try_add(&this->_tmap, (void*) component_key, list)) {
-                logger_debug("TMap now knows component key %s", component_key);
-            }
-            else {
-                free(list);
-                logger_error("Failed to populate tmap, tmap count %d, tmap capacity %d", dictionary_count(&this->_tmap), dictionary_capacity(&this->_tmap));
-            }
-        }
-
-        struct list* list = dictionary_get(&this->_tmap, (void*) component_key);
-        if (list != NULL) {
-            list_add(list, component);
-            logger_debug("TMap registered sample of %s", component_key);
-        }
-        else {
-            logger_error("Failed to populate tmap list for component key %s", component_key);
-        }
+        tmap_register_component(&this->_tmap, component);
     }
 }
 
