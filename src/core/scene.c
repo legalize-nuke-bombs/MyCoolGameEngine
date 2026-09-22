@@ -20,7 +20,7 @@ void scene_init(struct scene *this) {
 void scene_awake(const struct scene *this) {
     logger_info("Scene %s is awaking...", this->_name);
     for (int i = 0; i < list_count(&this->_entities); i++) {
-        const struct entity *entity = list_get(&this->_entities, i);
+        struct entity *entity = list_get(&this->_entities, i);
         entity_awake(entity);
     }
 }
