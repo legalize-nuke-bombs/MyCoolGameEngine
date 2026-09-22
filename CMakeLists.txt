@@ -32,4 +32,6 @@ add_executable(MyCoolGameEngine main.c
         src/utils/string_dictionary.c
         src/core/tmap.h
         src/core/tmap.c
+        src/utils/action.h
+        src/utils/action.c
 )
