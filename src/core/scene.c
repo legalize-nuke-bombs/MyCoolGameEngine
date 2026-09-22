@@ -50,6 +50,10 @@ static void handle_new_component(void *base, void *component) {
     tmap_register_component(&this->_tmap, component);
 }
 
+const struct tmap* scene_get_tmap(const struct scene *this) {
+    return &this->_tmap;
+}
+
 void scene_capture_entity(struct scene *this, struct entity *entity) {
     logger_debug("Scene %s is capturing entity %s", this->_name, entity_get_name(entity));
 
