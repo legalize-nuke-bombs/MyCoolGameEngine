@@ -8,6 +8,7 @@
 #include <stdlib.h>
 
 #include "entity.h"
+#include "../utils/action.h"
 
 
 void scene_init(struct scene *this) {
@@ -36,6 +37,11 @@ void scene_set_name(struct scene *this, const char *name) {
     this->_name = name;
 }
 
+void handle_new_component(void *base, void *component) {
+    struct scene *this = (struct scene *)base;
+    tmap_register_component(&this->_tmap, component);
+}
+
 void scene_capture_entity(struct scene *this, struct entity *entity) {
     logger_debug("Scene %s is capturing entity %s", this->_name, entity_get_name(entity));
 
@@ -43,8 +49,13 @@ void scene_capture_entity(struct scene *this, struct entity *entity) {
 
     for (int i = 0; i < entity_get_components_count(entity); i++) {
         struct component *component = entity_get_component(entity, i);
-        tmap_register_component(&this->_tmap, component);
+        handle_new_component(this, component);
     }
+
+    struct action_method* action_method = malloc(sizeof(action_method));
+    action_method->listener = this;
+    action_method->action = handle_new_component;
+    action_capture(&entity->on_component_captured, action_method);
 }
 
 void scene_update(const struct scene *this, const struct update_context *context) {
