@@ -51,7 +51,7 @@ struct component* entity_get_component_by_index(const struct entity *this, const
     return list_get(&this->_components, index);
 }
 
-struct component* entity_get_component(const struct entity *this, const char *name) {
+struct component* entity_try_get_component(const struct entity *this, const char *name) {
     for (int i = 0; i < list_count(&this->_components); i++) {
         struct component *component = list_get(&this->_components, i);
         if (strcmp(component_get_key(component), name) == 0) {
@@ -59,6 +59,13 @@ struct component* entity_get_component(const struct entity *this, const char *na
         }
     }
     return NULL;
+}
+struct component* entity_get_component(const struct entity *this, const char *name) {
+    struct component *component = entity_try_get_component(this, name);
+    if (component == NULL) {
+        logger_warn("Entity %s does not contain required component %s", this->_name, name);
+    }
+    return component;
 }
 
 void entity_update(const struct entity *this, const struct update_context *context) {
