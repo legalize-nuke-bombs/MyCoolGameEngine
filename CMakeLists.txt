@@ -24,4 +24,6 @@ add_executable(MyCoolGameEngine main.c
         version.h
         src/core/components/custom/transform.h
         src/core/components/custom/transform.c
+        src/utils/list.h
+        src/utils/list.c
 )
