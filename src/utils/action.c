@@ -8,6 +8,10 @@
 
 #include "../logging/logger.h"
 
+struct action_method {
+    void *listener;
+    void (*action)(void *listener, void *action_context);
+};
 
 void action_init(struct action *this) {
     list_init(&this->_list, 1);

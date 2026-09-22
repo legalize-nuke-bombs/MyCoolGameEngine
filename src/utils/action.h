@@ -7,11 +7,6 @@
 
 #include "list.h"
 
-struct action_method {
-    void *listener;
-    void (*action)(void *listener, void *action_context);
-};
-
 struct action {
     struct list _list;
 };
