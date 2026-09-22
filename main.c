@@ -6,6 +6,7 @@
 #include "src/core/components/custom/printer.h"
 #include "src/core/components/custom/transform.h"
 #include "src/core/scene.h"
+#include "src/core/components/custom/camera.h"
 
 int main(void) {
     logger_init(LOGGER_LEVEL_DEBUG);
@@ -16,10 +17,14 @@ int main(void) {
     struct transform* transform = malloc(sizeof(struct transform));
     transform_init(transform, &vector2_zero, &vector2_one);
 
+    struct camera* camera = malloc(sizeof(struct camera));
+    camera_init(camera);
+
     struct entity* entity = malloc(sizeof(struct entity));
     entity_init(entity);
     entity_set_name(entity, "My favourite entity");
     entity_capture_component(entity, transform_as_component(transform));
+    entity_capture_component(entity, camera_as_component(camera));
 
     struct scene scene;
     scene_init(&scene);
