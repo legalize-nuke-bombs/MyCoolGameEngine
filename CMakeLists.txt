@@ -19,25 +19,25 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(SDL3)
 
 add_executable(MyCoolGameEngine main.c
-        src/core/entity.h
-        src/core/entity.c
+        src/scene/entity.h
+        src/scene/entity.c
         src/utils/vector2.h
         src/utils/vector2.c
         src/utils/vector2_math.h
         src/utils/vector2_math.c
-        src/core/components/component.h
-        src/core/components/component.c
-        src/core/components/component_internal.h
+        src/scene/components/component.h
+        src/scene/components/component.c
+        src/scene/components/component_internal.h
         src/logging/logger.h
         src/logging/logger.c
-        src/core/components/custom/printer.h
-        src/core/components/custom/printer.c
-        src/core/update_context.h
-        src/core/scene.h
-        src/core/scene.c
+        src/scene/components/custom/printer.h
+        src/scene/components/custom/printer.c
+        src/scene/update_context.h
+        src/scene/scene.h
+        src/scene/scene.c
         version.h
-        src/core/components/transform/transform.h
-        src/core/components/transform/transform.c
+        src/scene/components/transform/transform.h
+        src/scene/components/transform/transform.c
         src/utils/list.h
         src/utils/list.c
         src/utils/dictionary.h
@@ -46,14 +46,14 @@ add_executable(MyCoolGameEngine main.c
         src/utils/string_hasher.h
         src/utils/string_hasher.c
         src/utils/string_dictionary.c
-        src/core/tmap.h
-        src/core/tmap.c
+        src/scene/tmap.h
+        src/scene/tmap.c
         src/utils/action.h
         src/utils/action.c
-        src/core/components/rendering/camera.h
-        src/core/components/rendering/camera.c
-        src/core/entity_collection.h
-        src/core/entity_collection.c
+        src/scene/components/rendering/camera.h
+        src/scene/components/rendering/camera.c
+        src/scene/entity_collection.h
+        src/scene/entity_collection.c
         example.c
         src/rendering/renderer_pipeline.h
         src/rendering/renderer_pipeline.c

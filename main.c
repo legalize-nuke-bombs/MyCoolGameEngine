@@ -1,11 +1,11 @@
 #include <SDL3/SDL.h>
 
-#include "src/core/entity.h"
+#include "src/scene/entity.h"
 #include "src/logging/logger.h"
-#include "src/core/components/custom/printer.h"
-#include "src/core/components/transform/transform.h"
-#include "src/core/scene.h"
-#include "src/core/components/rendering/camera.h"
+#include "src/scene/components/custom/printer.h"
+#include "src/scene/components/transform/transform.h"
+#include "src/scene/scene.h"
+#include "src/scene/components/rendering/camera.h"
 
 int main(void) {
     logger_init(LOGGER_LEVEL_DEBUG);
