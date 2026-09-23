@@ -51,6 +51,9 @@ void entity_destroy(struct entity *this) {
     free(this);
 }
 void entity_mark_destroyed(struct entity *this) {
+    if (!this->alive) {
+        return;
+    }
     logger_debug("Entity %s is marking destroyed..", this->name);
     this->alive = false;
     for (int i = 0; i < list_count(this->components); i++) {
