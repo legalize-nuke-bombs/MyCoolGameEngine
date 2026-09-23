@@ -6,7 +6,7 @@
 #define MYCOOLGAMEENGINE_ENGINE_CONTEXT_H
 
 struct engine_context {
-    struct renderer_pipeline *pipeline;
+    struct renderer_pipeline *renderer_pipeline;
 };
 
 #endif //MYCOOLGAMEENGINE_ENGINE_CONTEXT_H

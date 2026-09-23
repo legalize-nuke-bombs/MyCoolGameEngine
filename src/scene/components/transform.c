@@ -1,8 +1,8 @@
-#include "../transform/transform.h"
+#include "transform.h"
 
 #include <stdlib.h>
 
-#include "../component_internal.h"
+#include "component_internal.h"
 
 struct transform {
     struct component base;

@@ -5,7 +5,7 @@
 #include "../entity.h"
 #include "../../logging/logger.h"
 #include "../../utils/vector2_math.h"
-#include "transform/transform.h"
+#include "transform.h"
 
 void component_init(struct component *this, const struct component_vtable *vtable) {
     this->vtable = vtable;
