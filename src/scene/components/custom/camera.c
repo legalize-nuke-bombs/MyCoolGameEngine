@@ -48,7 +48,7 @@ struct camera* camera_create(struct entity *parent) {
 static void camera_awake(struct component *base) {
     struct camera *this = (struct camera *) base;
 
-    this->renderer = scene_get_engine_context(entity_get_parent(component_get_parent(base)))->renderer_pipeline;
+    this->renderer = engine_context_get_renderer_pipeline(scene_get_engine_context(entity_get_parent(component_get_parent(base))));
     logger_debug("Entity %s awoken its camera on %f %f", component_get_parent_name(base), component_get_position(base).x, component_get_position(base).y);
 }
 

@@ -33,15 +33,13 @@ int main(void) {
 
     struct renderer_pipeline *renderer_pipeline = renderer_pipeline_create(renderer);
 
-    const struct engine_context engine_context = {
-        .renderer_pipeline = renderer_pipeline
-    };
+    struct engine_context* engine_context = engine_context_create(renderer_pipeline);
 
-    struct interpreter* interpreter = interpreter_create(&engine_context);
+    struct interpreter* interpreter = interpreter_create(engine_context);
     logger_info("Interpreter finished with exit code %d", interpreter_eval(interpreter, "script.txt"));
     interpreter_destroy(interpreter);
 
-    struct scene* scene = scene_create("My scene", &engine_context);
+    struct scene* scene = scene_create("My scene", engine_context);
 
     struct entity* entity = entity_create(scene);
     entity_set_name(entity, "My favourite entity");
@@ -92,6 +90,7 @@ int main(void) {
 
     scene_destroy(scene);
     renderer_pipeline_destroy(renderer_pipeline);
+    engine_context_destroy(engine_context);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
