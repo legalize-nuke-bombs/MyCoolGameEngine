@@ -80,5 +80,5 @@ void tmap_remove_dead(const struct tmap *this) {
             }
         }
     }
-    logger_debug("TMap removed %d dead components", ctr);
+    logger_debug("tmap removed %d dead components", ctr);
 }

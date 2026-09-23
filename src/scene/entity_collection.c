@@ -7,6 +7,7 @@
 #include <stdlib.h>
 
 #include "entity.h"
+#include "../logging/logger.h"
 #include "../utils/list.h"
 
 struct entity_collection {
@@ -43,4 +44,20 @@ void entity_collection_update(const struct entity_collection *this, const struct
         const struct entity *entity = list_get(this->list, i);
         entity_update(entity, context);
     }
+}
+
+void entity_collection_destroy_dead(const struct entity_collection *this) {
+    int ctr = 0;
+    for (int i = 0; i < list_count(this->list); i++) {
+        struct entity *entity = list_get(this->list, i);
+        if (entity == NULL) {
+            continue;
+        }
+        if (!entity_is_alive(entity)) {
+            entity_destroy(entity);
+            list_set(this->list, i, NULL);
+            ctr++;
+        }
+    }
+    logger_debug("entity_collection destroyed %d dead entities", ctr);
 }
