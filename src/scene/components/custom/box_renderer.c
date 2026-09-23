@@ -41,6 +41,7 @@ struct box_renderer* box_renderer_create(struct color color) {
     component_init(box_renderer_as_component(this), &box_renderer_vtable);
 
     this->color = color;
+    this->renderer = NULL;
 
     return this;
 }
