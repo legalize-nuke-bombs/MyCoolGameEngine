@@ -8,7 +8,7 @@
 #include "renderer_primitive.h"
 
 struct rendering_primitive_vtable {
-    void (*draw)(void* self, struct rect rect, struct rect viewport, struct SDL_Renderer* renderer);
+    void (*draw)(const void* self, const struct rect rect, const struct rect viewport, struct SDL_Renderer* renderer);
 };
 
 struct renderer_primitive {
