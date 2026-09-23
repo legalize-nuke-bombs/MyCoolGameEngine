@@ -31,10 +31,10 @@ static void interpreter_command_register_register_all(const struct interpreter_c
 }
 
 
-struct interpreter_command_register* interpreter_command_register_create(const char *name) {
+struct interpreter_command_register* interpreter_command_register_create(const char *name, const int capacity) {
     struct interpreter_command_register* this = malloc(sizeof(struct interpreter_command_register));
     this->name = name;
-    this->dictionary = string_dictionary_build(1024);
+    this->dictionary = string_dictionary_build(capacity);
     interpreter_command_register_register_all(this);
     return this;
 }
