@@ -77,6 +77,7 @@ int main(void) {
 
         scene_update(scene, &update_context);
 
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
         renderer_pipeline_flush(renderer_pipeline);
         SDL_RenderPresent(renderer);

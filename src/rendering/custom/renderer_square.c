@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <SDL3/SDL.h>
 
+#include "../../logging/logger.h"
+
 struct renderer_square {
     struct renderer_primitive base;
     struct color color;
@@ -28,6 +30,8 @@ static void renderer_square_draw(const void* self, const struct rect rect, const
         .w = camera_position_sdl.size.x,
         .h = camera_position_sdl.size.y
     };
+
+    logger_debug("Rendering square at %f %f - %f %f", sdl_rect.x, sdl_rect.y, sdl_rect.w, sdl_rect.h);
 
     SDL_SetRenderDrawColor(renderer, this->color.r, this->color.g, this->color.b, this->color.a);
     SDL_RenderFillRect(renderer, &sdl_rect);

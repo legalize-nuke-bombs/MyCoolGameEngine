@@ -69,6 +69,5 @@ void renderer_pipeline_flush(struct renderer_pipeline *this) {
         const struct renderer_pipeline_draw_call draw_call = this->draw_calls[i];
         renderer_primitive_draw(draw_call.primitive, draw_call.rect, this->viewport, this->native_renderer);
     }
-    logger_debug("Flushed %d draw calls", this->draw_calls_count);
     this->draw_calls_count = 0;
 }
