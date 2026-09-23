@@ -7,7 +7,7 @@
 
 struct interpreter_command_register;
 
-struct interpreter_command_register* interpreter_command_register_create();
+struct interpreter_command_register* interpreter_command_register_create(const char *name);
 void interpreter_command_register_destroy(struct interpreter_command_register* this);
 
 struct interpreter_command* interpreter_command_register_try_get_command(const struct interpreter_command_register* this, const char* command_key);

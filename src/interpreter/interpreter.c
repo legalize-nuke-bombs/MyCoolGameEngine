@@ -22,7 +22,7 @@ struct interpreter {
 
 struct interpreter* interpreter_create(const struct engine *engine) {
     struct interpreter* interpreter = malloc(sizeof(struct interpreter));
-    interpreter->command_register = interpreter_command_register_create();
+    interpreter->command_register = interpreter_command_register_create("Main");
     interpreter->engine = engine;
     return interpreter;
 }

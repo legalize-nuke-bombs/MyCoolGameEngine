@@ -13,14 +13,15 @@
 #include "custom/interpreter_print.h"
 
 struct interpreter_command_register {
+    const char *name;
     struct dictionary *dictionary;
 };
 
 
 static void interpreter_command_register_capture_command(const struct interpreter_command_register* this, struct interpreter_command* command) {
-    logger_debug("Interpreter is registering command %s...", command->key);
+    logger_debug("Interpreter command register %s is registering command %s...", this->name, command->key);
     if (!dictionary_try_add(this->dictionary, (void*)command->key, command)) {
-        logger_error("Interpreter failed to register command %s", command->key);
+        logger_error("Interpreter command register %s failed to register command %s", this->name, command->key);
     }
 }
 
@@ -29,8 +30,9 @@ static void interpreter_command_register_register_all(const struct interpreter_c
 }
 
 
-struct interpreter_command_register* interpreter_command_register_create() {
+struct interpreter_command_register* interpreter_command_register_create(const char *name) {
     struct interpreter_command_register* this = malloc(sizeof(struct interpreter_command_register));
+    this->name = name;
     this->dictionary = string_dictionary_build(1024);
     interpreter_command_register_register_all(this);
     return this;
