@@ -5,7 +5,9 @@
 #include "interpreter_print.h"
 
 #include <stddef.h>
+#include <stdlib.h>
 
+#include "../interpreter_command.h"
 #include "../../logging/logger.h"
 #include "../../utils/parser.h"
 
@@ -21,10 +23,9 @@ static void interpreter_print_execute(struct parser *parser, const struct engine
     logger_info("Interpreter print: %s", context);
 }
 
-struct interpreter_command interpreter_print_create() {
-    const struct interpreter_command func = {
-        .key = "print",
-        .func = interpreter_print_execute
-    };
+struct interpreter_command* interpreter_print_create() {
+    struct interpreter_command *func = malloc(sizeof(struct interpreter_command));
+    func->key = "print";
+    func->func = interpreter_print_execute;
     return func;
 }
