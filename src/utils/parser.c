@@ -20,6 +20,8 @@ struct parser* parser_create(const char* filename) {
     parser->file = fopen(filename, "r");
     if (parser->file == NULL) {
         logger_warn("Parser failed to open %s", filename);
+        parser_destroy(parser);
+        return NULL;
     }
     return parser;
 }

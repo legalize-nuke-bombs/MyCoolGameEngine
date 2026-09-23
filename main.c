@@ -10,6 +10,7 @@
 #include "src/rendering/renderer_pipeline.h"
 #include "src/scene/components/custom/box_renderer.h"
 #include "src/utils/colors.h"
+#include "src/interpreter/interpreter.h"
 
 int main(void) {
     logger_init(LOGGER_LEVEL_DEBUG);
@@ -35,6 +36,8 @@ int main(void) {
     const struct engine_context engine_context = {
         .renderer_pipeline = renderer_pipeline
     };
+
+    logger_info("Interpreter finished with exit code %d", interpreter_eval("script.txt"));
 
     struct scene* scene = scene_create(&engine_context);
     scene_set_name(scene, "My scene name");

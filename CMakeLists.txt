@@ -76,6 +76,8 @@ add_executable(MyCoolGameEngine main.c
         src/rendering/renderer_layers.c
         src/utils/parser.h
         src/utils/parser.c
+        src/interpreter/interpreter.h
+        src/interpreter/interpreter.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3)
