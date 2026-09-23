@@ -54,6 +54,7 @@ add_executable(MyCoolGameEngine main.c
         src/core/components/custom/camera.c
         src/core/entity_collection.h
         src/core/entity_collection.c
+        example.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3)
