@@ -55,6 +55,11 @@ add_executable(MyCoolGameEngine main.c
         src/core/entity_collection.h
         src/core/entity_collection.c
         example.c
+        src/rendering/renderer_pipeline.h
+        src/rendering/renderer_pipeline.c
+        src/utils/rect.h
+        src/rendering/rendering_primitive.h
+        src/rendering/rendering_layer.h
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3)
