@@ -78,7 +78,7 @@ add_executable(MyCoolGameEngine main.c
         src/utils/parser.c
         src/interpreter/interpreter.h
         src/interpreter/interpreter.c
-        src/interpreter/interpreter_func.h
+        src/interpreter/interpreter_command.h
         src/interpreter/custom/interpreter_print.h
         src/interpreter/custom/interpreter_print.c
 )

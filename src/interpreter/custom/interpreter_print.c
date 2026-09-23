@@ -21,8 +21,8 @@ static void interpreter_print_execute(struct parser *parser, const struct engine
     logger_info("Interpreter print: %s", context);
 }
 
-struct interpreter_func interpreter_print_create() {
-    const struct interpreter_func func = {
+struct interpreter_command interpreter_print_create() {
+    const struct interpreter_command func = {
         .key = "print",
         .func = interpreter_print_execute
     };
