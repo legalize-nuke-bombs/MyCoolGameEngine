@@ -5,9 +5,13 @@
 #ifndef MYCOOLGAMEENGINE_ENGINE_H
 #define MYCOOLGAMEENGINE_ENGINE_H
 
+struct renderer_pipeline;
+
 struct engine* engine_create();
 void engine_destroy(struct engine *this);
 
-int engine_run(struct engine *this);
+void engine_run(struct engine *this);
+
+struct renderer_pipeline *engine_get_renderer_pipeline(const struct engine *this);
 
 #endif //MYCOOLGAMEENGINE_ENGINE_H

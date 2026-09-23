@@ -6,11 +6,11 @@
 #define MYCOOLGAMEENGINE_INTERPRETER_COMMAND_H
 
 struct parser;
-struct engine_context;
+struct engine;
 
 struct interpreter_command {
     const char *key;
-    void (*func)(struct parser *parser, const struct engine_context *engine_context);
+    void (*func)(struct parser *parser, const struct engine *engine);
 };
 
 #endif //MYCOOLGAMEENGINE_INTERPRETER_COMMAND_H

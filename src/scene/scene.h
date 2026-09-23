@@ -10,16 +10,16 @@
 
 struct scene;
 struct entity;
-struct engine_context;
+struct engine;
 
-struct scene* scene_create(const char* name, const struct engine_context *engine_context);
+struct scene* scene_create(const char* name, const struct engine *engine);
 void scene_awake(struct scene *this);
 void scene_destroy(struct scene *this);
 
 const char* scene_get_name(const struct scene *this);
 
 const struct tmap* scene_get_tmap(const struct scene *this);
-const struct engine_context* scene_get_engine_context(const struct scene *this);
+const struct engine* scene_get_engine(const struct scene *this);
 
 void scene_capture_entity(struct scene *this, struct entity *entity);
 

@@ -16,14 +16,14 @@
 
 struct interpreter {
     struct interpreter_command_register *command_register;
-    const struct engine_context *engine_context;
+    const struct engine *engine;
 };
 
 
-struct interpreter* interpreter_create(const struct engine_context *engine_context) {
+struct interpreter* interpreter_create(const struct engine *engine) {
     struct interpreter* interpreter = malloc(sizeof(struct interpreter));
     interpreter->command_register = interpreter_command_register_create();
-    interpreter->engine_context = engine_context;
+    interpreter->engine = engine;
     return interpreter;
 }
 void interpreter_destroy(struct interpreter* this) {
@@ -44,7 +44,7 @@ static int interpreter_run(const struct interpreter *this, struct parser *parser
             continue;
         }
 
-        command->func(parser, this->engine_context);
+        command->func(parser, this->engine);
     }
 }
 

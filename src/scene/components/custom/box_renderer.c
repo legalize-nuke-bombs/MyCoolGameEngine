@@ -12,7 +12,7 @@
 #include "../../../rendering/renderer_layers.h"
 #include "../../entity.h"
 #include "../../scene.h"
-#include "../../../engine/engine_context.h"
+#include "../../../engine/engine.h"
 
 struct box_renderer {
     struct component base;
@@ -50,7 +50,7 @@ struct box_renderer* box_renderer_create(struct entity *parent, struct color col
 static void box_renderer_awake(struct component *base) {
     struct box_renderer *this = (struct box_renderer *) base;
 
-    this->renderer = engine_context_get_renderer_pipeline(scene_get_engine_context(entity_get_parent(component_get_parent(base))));
+    this->renderer = engine_get_renderer_pipeline(scene_get_engine(entity_get_parent(component_get_parent(base))));
 }
 
 static void box_renderer_update(struct component *base, const struct update_context *context) {

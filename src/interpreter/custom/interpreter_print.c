@@ -12,7 +12,7 @@
 #include "../../utils/parser.h"
 
 
-static void interpreter_print_execute(struct parser *parser, const struct engine_context *engine_context) {
+static void interpreter_print_execute(struct parser *parser, const struct engine *engine) {
     const char* context = parser_next(parser);
 
     if (context == NULL) {

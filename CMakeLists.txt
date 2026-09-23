@@ -66,7 +66,6 @@ add_executable(MyCoolGameEngine main.c
         src/rendering/custom/renderer_square.c
         src/utils/rect_math.h
         src/utils/rect_math.c
-        src/engine/engine_context.h
         src/scene/components/custom/box_renderer.h
         src/scene/components/custom/box_renderer.c
         src/utils/color.h
@@ -85,7 +84,6 @@ add_executable(MyCoolGameEngine main.c
         src/interpreter/interpreter_command_register.c
         src/engine/engine.h
         src/engine/engine.c
-        src/engine/engine_context.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3)
