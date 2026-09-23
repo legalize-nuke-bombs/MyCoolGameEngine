@@ -7,6 +7,7 @@
 #include "../utils/string_dictionary.h"
 #include "../logging/logger.h"
 #include <stdlib.h>
+#include <string.h>
 
 #include "interpreter_command.h"
 
@@ -51,5 +52,37 @@ void interpreter_command_register_destroy(struct interpreter_command_register* t
 }
 
 struct interpreter_command* interpreter_command_register_try_get_command(const struct interpreter_command_register* this, const char* command_key) {
-    return dictionary_get(this->dictionary, (void*)command_key);
+    struct interpreter_command* command = dictionary_get(this->dictionary, (void*)command_key);
+    if (command == NULL) {
+        char* command_list = interpreter_command_register_alloc_command_list(this);
+        logger_warn("Interpreter %s does not know command %s. Supported commands: %s", this->name, command_key, command_list);
+        free(command_list);
+    }
+    return command;
+}
+
+char* interpreter_command_register_alloc_command_list(const struct interpreter_command_register *this) {
+    size_t len = 0;
+    for (int i = 0; i < dictionary_capacity(this->dictionary); i++) {
+        const struct dictionary_node node = dictionary_get_node(this->dictionary, i);
+        const char* command_key = node.key;
+        if (command_key == NULL) {
+            continue;
+        }
+        len += strlen(command_key);
+        len++;
+    }
+
+    char* result = malloc(len * sizeof(char) + 1);
+    result[0] = '\0';
+    for (int i = 0; i < dictionary_capacity(this->dictionary); i++) {
+        const struct dictionary_node node = dictionary_get_node(this->dictionary, i);
+        const char* command_key = node.key;
+        if (command_key == NULL) {
+            continue;
+        }
+        strcat(result, command_key);
+        strcat(result, " ");
+    }
+    return result;
 }

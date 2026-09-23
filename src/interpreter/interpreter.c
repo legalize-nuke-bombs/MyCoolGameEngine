@@ -40,7 +40,6 @@ static int interpreter_run(const struct interpreter *this, struct parser *parser
 
         const struct interpreter_command *command = interpreter_command_register_try_get_command(this->command_register, word);
         if (command == NULL) {
-            logger_warn("Interpreter found unknown command %s", word);
             continue;
         }
 

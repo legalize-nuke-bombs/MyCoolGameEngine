@@ -12,4 +12,6 @@ void interpreter_command_register_destroy(struct interpreter_command_register* t
 
 struct interpreter_command* interpreter_command_register_try_get_command(const struct interpreter_command_register* this, const char* command_key);
 
+char* interpreter_command_register_alloc_command_list(const struct interpreter_command_register *this);
+
 #endif //MYCOOLGAMEENGINE_INTERPRETER_COMMAND_REGISTER_H
