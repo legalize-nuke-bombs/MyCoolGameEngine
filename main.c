@@ -1,4 +1,4 @@
-#include <pthread_time.h> // TODO this shit does not work on macos
+#include <SDL3/SDL.h>
 
 #include "src/core/entity.h"
 #include "src/logging/logger.h"
@@ -30,17 +30,16 @@ int main(void) {
     // dynamic!
     entity_capture_component(entity, printer_as_component(printer));
 
-    struct timespec previous, now;
     struct update_context update_context = {
         .dt = 0
     };
 
-    clock_gettime(CLOCK_MONOTONIC, &previous);
+    Uint64 previous = SDL_GetTicksNS();
 
     for (long long i = 0; i < 100000000ll; i++) {
-        clock_gettime(CLOCK_MONOTONIC, &now);
+        const Uint64 now = SDL_GetTicksNS();
 
-        update_context.dt = (double)(now.tv_sec - previous.tv_sec) + (double)(now.tv_nsec - previous.tv_nsec) / 1e9;
+        update_context.dt = (double)(now - previous) / 1e9;
         previous = now;
 
         scene_update(scene, &update_context);
