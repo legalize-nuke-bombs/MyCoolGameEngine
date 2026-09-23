@@ -15,10 +15,10 @@ struct scene {
     const char* name;
     struct entity_collection* entities;
     struct tmap *tmap;
-    struct engine_context *engine_context;
+    const struct engine_context *engine_context;
 };
 
-struct scene* scene_create(struct engine_context *engine_context) {
+struct scene* scene_create(const struct engine_context* engine_context) {
     struct scene *this = malloc(sizeof(struct scene));
     this->name = "Default scene";
     logger_info("Scene %s is initializing...", this->name);
@@ -54,6 +54,9 @@ static void handle_new_component(void *base, void *component) {
 
 const struct tmap* scene_get_tmap(const struct scene *this) {
     return this->tmap;
+}
+const struct engine_context *scene_get_engine_context(const struct scene *this) {
+    return this->engine_context;
 }
 
 void scene_capture_entity(struct scene *this, struct entity *entity) {
