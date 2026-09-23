@@ -32,7 +32,7 @@ static const char* box_renderer_component_key(void) {
 
 struct box_renderer* box_renderer_create(struct color color) {
     struct box_renderer *this = malloc(sizeof(struct box_renderer));
-    component_init(NULL, &box_renderer_vtable);
+    component_init(box_renderer_as_component(this), &box_renderer_vtable);
 
     this->color = color;
 
@@ -44,8 +44,6 @@ static void box_renderer_awake(struct component *base) {
 }
 
 static void box_renderer_update(struct component *base, const struct update_context *context) {
-    struct printer *this = (struct printer *)base;
-
     logger_debug("BOX RENDERER RUN");
 }
 
