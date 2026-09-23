@@ -79,4 +79,11 @@ void scene_capture_entity(struct scene *this, struct entity *entity) {
 
 void scene_update(const struct scene *this, const struct update_context *context) {
     entity_collection_update(this->entities, context);
+    scene_run_gc(this);
+}
+
+void scene_run_gc(const struct scene *this) {
+    logger_info("Scene %s launched gc", this->name);
+    tmap_remove_dead(this->tmap);
+    entity_collection_destroy_dead(this->entities);
 }

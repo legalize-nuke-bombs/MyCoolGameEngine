@@ -26,4 +26,6 @@ void scene_capture_entity(struct scene *this, struct entity *entity);
 
 void scene_update(const struct scene *this, const struct update_context *context);
 
+void scene_run_gc(const struct scene *this);
+
 #endif //MYCOOLGAMEENGINE_SCENE_H
