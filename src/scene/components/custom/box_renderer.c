@@ -52,8 +52,8 @@ static void box_renderer_awake(struct component *base) {
     this->renderer = scene_get_engine_context(entity_get_parent(component_get_parent(base)))->renderer_pipeline;
     this->draw_call.primitive = renderer_square_as_renderer_primitive(renderer_square_create(this->color));
     this->draw_call.layer = renderer_layer_bg1;
-    this->draw_call.rect.position = component_get_local_position(base);
-    this->draw_call.rect.size = component_get_local_scale(base);
+    this->draw_call.rect.position = component_get_position(base);
+    this->draw_call.rect.size = component_get_scale(base);
 }
 
 static void box_renderer_update(struct component *base, const struct update_context *context) {

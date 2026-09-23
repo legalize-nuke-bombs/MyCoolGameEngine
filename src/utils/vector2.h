@@ -8,5 +8,7 @@ struct vector2 {
 
 extern const struct vector2 vector2_zero;
 extern const struct vector2 vector2_one;
+extern const struct vector2 vector2_10;
+extern const struct vector2 vector2_100;
 
 #endif

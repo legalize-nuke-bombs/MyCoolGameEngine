@@ -42,6 +42,7 @@ int main(void) {
 
     struct printer* printer = printer_create("hi", "bye", 1);
     struct transform* transform = transform_create(&vector2_zero, &vector2_one);
+    transform_set_scale(transform, &vector2_100);
     struct camera* camera = camera_create();
     struct box_renderer* box_renderer = box_renderer_create(color_blue);
 
@@ -57,9 +58,6 @@ int main(void) {
     scene_capture_entity(scene, entity);
 
     scene_awake(scene);
-
-    // dynamic!
-    entity_capture_component(entity, printer_as_component(printer));
 
     struct update_context update_context = {
         .dt = 0
