@@ -10,7 +10,7 @@ struct renderer_pipeline;
 struct engine* engine_create();
 void engine_destroy(struct engine *this);
 
-void engine_run(struct engine *this);
+void engine_run(struct engine *this, const char* script_path);
 
 struct renderer_pipeline *engine_get_renderer_pipeline(const struct engine *this);
 

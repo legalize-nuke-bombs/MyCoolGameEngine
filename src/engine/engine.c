@@ -74,15 +74,20 @@ void engine_destroy(struct engine *this) {
     free(this);
 }
 
-void engine_run(struct engine *this) {
-    logger_info("Engine is starting...");
+void engine_run(struct engine *this, const char *script_path) {
     if (this->running) {
         logger_warn("Engine failed to start: already running");
         return;
     }
+    if (script_path == NULL) {
+        logger_warn("Engine will not start: script is not set");
+        return;
+    }
+
+    logger_info("Engine is starting using script %s...", script_path);
     this->running = true;
 
-    logger_info("Interpreter finished with exit code %d", interpreter_eval(this->interpreter, "script.txt"));
+    logger_info("Interpreter finished with exit code %d", interpreter_eval(this->interpreter, script_path));
 
     this->scene = scene_create("My scene", this);
 
