@@ -11,10 +11,14 @@
 #include "entity_collection.h"
 
 
+#define GC_INTERVAL 1
+
+
 struct scene {
     const char* name;
     struct entity_collection* entities;
     struct tmap *tmap;
+    double gcTimer;
     const struct engine_context *engine_context;
 };
 
@@ -27,9 +31,10 @@ struct scene* scene_create(const struct engine_context* engine_context) {
     this->engine_context = engine_context;
     return this;
 }
-void scene_awake(const struct scene *this) {
+void scene_awake(struct scene *this) {
     logger_info("Scene %s is awaking...", this->name);
     entity_collection_awake_everyone(this->entities);
+    this->gcTimer = 0;
 }
 void scene_destroy(struct scene *this) {
     logger_info("Scene %s is destroying...", this->name);
@@ -77,13 +82,18 @@ void scene_capture_entity(struct scene *this, struct entity *entity) {
     entity_subscribe_on_component_captured(entity, this, handle_new_component);
 }
 
-void scene_update(const struct scene *this, const struct update_context *context) {
-    entity_collection_update(this->entities, context);
-    scene_run_gc(this);
-}
-
-void scene_run_gc(const struct scene *this) {
+static void scene_run_gc(struct scene *this, double dt) {
+    this->gcTimer += dt;
+    if (this->gcTimer < GC_INTERVAL) {
+        return;
+    }
+    this->gcTimer -= GC_INTERVAL;
     logger_info("Scene %s launched gc", this->name);
     tmap_remove_dead(this->tmap);
     entity_collection_destroy_dead(this->entities);
+}
+
+void scene_update(struct scene *this, const struct update_context *context) {
+    entity_collection_update(this->entities, context);
+    scene_run_gc(this, context->dt);
 }
