@@ -27,7 +27,8 @@ static const struct component_vtable camera_vtable = {
     .component_key = camera_component_key,
     .on_awake = camera_awake,
     .on_update = camera_update,
-    .on_destroy = camera_destroy
+    .on_destroy = camera_destroy,
+    .on_free = NULL
 };
 
 static const char* camera_component_key(void) {
@@ -54,8 +55,8 @@ static void camera_update(struct component *base, const struct update_context *c
     const struct camera *this = (struct camera *) base;
 
     const struct rect viewport = {
-        .position = component_get_local_position(base),
-        .size = component_get_local_scale(base)
+        .position = component_get_position(base),
+        .size = component_get_scale(base)
     };
     renderer_pipeline_set_viewport(this->renderer, viewport);
 }

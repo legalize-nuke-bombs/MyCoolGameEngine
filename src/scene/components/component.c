@@ -26,6 +26,9 @@ void component_awake(struct component *this) {
 void component_destroy(struct component *this) {
     logger_debug("Entity %s is destroying component %s...", component_get_parent_name(this), component_get_key(this));
     component_mark_destroyed(this);
+    if (this->vtable->on_free != NULL) {
+        this->vtable->on_free(this);
+    }
     free(this);
 }
 void component_mark_destroyed(struct component *this) {

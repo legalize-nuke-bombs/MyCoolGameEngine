@@ -10,6 +10,7 @@ struct component_vtable {
     void (*on_awake)(struct component *this);
     void (*on_update)(struct component *this, const struct update_context *context);
     void (*on_destroy)(struct component *this);
+    void (*on_free)(struct component *this);
 };
 
 struct component {

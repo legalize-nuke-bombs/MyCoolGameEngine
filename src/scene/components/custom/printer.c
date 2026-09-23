@@ -22,7 +22,8 @@ static const struct component_vtable printer_vtable = {
     .component_key = printer_component_key,
     .on_awake = NULL,
     .on_update = printer_update,
-    .on_destroy = printer_destroy
+    .on_destroy = printer_destroy,
+    .on_free = NULL
 };
 
 static const char* printer_component_key(void) {
