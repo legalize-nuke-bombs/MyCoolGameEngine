@@ -1,8 +1,8 @@
-#include "camera.h"
+#include "../rendering/camera.h"
 
 #include <stdlib.h>
 
-#include "transform.h"
+#include "../transform/transform.h"
 #include "../component_internal.h"
 #include "../../entity.h"
 #include "../../../logging/logger.h"

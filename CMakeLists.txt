@@ -36,8 +36,8 @@ add_executable(MyCoolGameEngine main.c
         src/core/scene.h
         src/core/scene.c
         version.h
-        src/core/components/custom/transform.h
-        src/core/components/custom/transform.c
+        src/core/components/transform/transform.h
+        src/core/components/transform/transform.c
         src/utils/list.h
         src/utils/list.c
         src/utils/dictionary.h
@@ -50,8 +50,8 @@ add_executable(MyCoolGameEngine main.c
         src/core/tmap.c
         src/utils/action.h
         src/utils/action.c
-        src/core/components/custom/camera.h
-        src/core/components/custom/camera.c
+        src/core/components/rendering/camera.h
+        src/core/components/rendering/camera.c
         src/core/entity_collection.h
         src/core/entity_collection.c
         example.c
