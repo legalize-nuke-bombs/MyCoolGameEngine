@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "interpreter_command.h"
 #include "interpreter_command_register.h"
 #include "../logging/logger.h"
 #include "../utils/parser.h"
@@ -29,19 +30,21 @@ void interpreter_destroy(struct interpreter* this) {
     interpreter_command_register_destroy(this->command_register);
     free(this);
 }
-static int interpreter_run(struct parser *parser) {
+
+static int interpreter_run(const struct interpreter *this, struct parser *parser) {
     while (1) {
         const char *word = parser_next(parser);
         if (word == NULL) {
             return INTERPRETER_OK;
         }
 
-        if (strcmp(word, "print") == 0) {
-            const char *print_arg = parser_next(parser);
-            if (print_arg != NULL) {
-                logger_info("Interpreter printed %s", print_arg);
-            }
+        const struct interpreter_command *command = interpreter_command_register_try_get_command(this->command_register, word);
+        if (command == NULL) {
+            logger_warn("Interpreter found unknown command %s", word);
+            continue;
         }
+
+        command->func(parser, this->engine_context);
     }
 }
 
@@ -51,7 +54,7 @@ int interpreter_eval(const struct interpreter *this, const char* script_path) {
         return INTERPRETER_FAILED_OPEN_SCRIPT;
     }
 
-    const int result = interpreter_run(parser);
+    const int result = interpreter_run(this, parser);
     parser_destroy(parser);
     return result;
 }
