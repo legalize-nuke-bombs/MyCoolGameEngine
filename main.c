@@ -70,10 +70,14 @@ int main(void) {
 
     Uint64 previous = SDL_GetTicksNS();
 
-    for (long long i = 0; i < 120; i++) {
+    for (long long i = 0; i < 200; i++) {
         const Uint64 now = SDL_GetTicksNS();
         update_context.dt = (double)(now - previous) / 1e9;
         previous = now;
+
+        if (i > 100) {
+            entity_mark_destroyed(entity);
+        }
 
         SDL_Event event;
         while (SDL_PollEvent(&event)) {}
