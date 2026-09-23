@@ -87,7 +87,6 @@ static void renderer_pipeline_present_viewport(struct renderer_pipeline *this) {
 
 void renderer_pipeline_flush(struct renderer_pipeline *this) {
     if (!this->viewport_enabled) {
-        logger_warn("Rendering pipeline viewport is not set.");
         this->draw_calls_count = 0;
         return;
     }
