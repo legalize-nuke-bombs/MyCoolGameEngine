@@ -22,9 +22,9 @@ struct scene {
     const struct engine_context *engine_context;
 };
 
-struct scene* scene_create(const struct engine_context* engine_context) {
+struct scene* scene_create(const char *name, const struct engine_context* engine_context) {
     struct scene *this = malloc(sizeof(struct scene));
-    this->name = "Default scene";
+    this->name = name;
     logger_info("Scene %s is initializing...", this->name);
     this->entities = entity_collection_create();
     this->tmap = tmap_create();
@@ -46,10 +46,6 @@ void scene_destroy(struct scene *this) {
 
 const char* scene_get_name(const struct scene *this) {
     return this->name;
-}
-void scene_set_name(struct scene *this, const char *name) {
-    logger_info("Scene %s is renaming to %s", this->name, name);
-    this->name = name;
 }
 
 static void handle_new_component(void *base, void *component) {

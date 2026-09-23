@@ -41,8 +41,7 @@ int main(void) {
     logger_info("Interpreter finished with exit code %d", interpreter_eval(interpreter, "script.txt"));
     interpreter_destroy(interpreter);
 
-    struct scene* scene = scene_create(&engine_context);
-    scene_set_name(scene, "My scene name");
+    struct scene* scene = scene_create("My scene", &engine_context);
 
     struct entity* entity = entity_create(scene);
     entity_set_name(entity, "My favourite entity");

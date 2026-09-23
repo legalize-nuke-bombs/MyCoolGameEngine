@@ -12,12 +12,11 @@ struct scene;
 struct entity;
 struct engine_context;
 
-struct scene* scene_create(const struct engine_context *engine_context);
+struct scene* scene_create(const char* name, const struct engine_context *engine_context);
 void scene_awake(struct scene *this);
 void scene_destroy(struct scene *this);
 
 const char* scene_get_name(const struct scene *this);
-void scene_set_name(struct scene *this, const char *name);
 
 const struct tmap* scene_get_tmap(const struct scene *this);
 const struct engine_context* scene_get_engine_context(const struct scene *this);
