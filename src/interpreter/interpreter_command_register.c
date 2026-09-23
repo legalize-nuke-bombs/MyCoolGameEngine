@@ -11,32 +11,16 @@
 
 #include "interpreter_command.h"
 
-#include "custom/interpreter_print.h"
-
 struct interpreter_command_register {
     const char *name;
     struct dictionary *dictionary;
 };
 
 
-static void interpreter_command_register_capture_command(const struct interpreter_command_register* this, struct interpreter_command* command) {
-    const char* command_key = interpreter_command_get_key(command);
-    logger_debug("Interpreter command register %s is registering command %s...", this->name, command_key);
-    if (!dictionary_try_add(this->dictionary, (void*)command_key, command)) {
-        logger_error("Interpreter command register %s failed to register command %s", this->name, command_key);
-    }
-}
-
-static void interpreter_command_register_register_all(const struct interpreter_command_register* this) {
-    interpreter_command_register_capture_command(this, interpreter_print_create());
-}
-
-
 struct interpreter_command_register* interpreter_command_register_create(const char *name, const int capacity) {
     struct interpreter_command_register* this = malloc(sizeof(struct interpreter_command_register));
     this->name = name;
     this->dictionary = string_dictionary_build(capacity);
-    interpreter_command_register_register_all(this);
     return this;
 }
 void interpreter_command_register_destroy(struct interpreter_command_register* this) {
@@ -49,6 +33,14 @@ void interpreter_command_register_destroy(struct interpreter_command_register* t
     }
     dictionary_destroy(this->dictionary);
     free(this);
+}
+
+void interpreter_command_register_capture_command(const struct interpreter_command_register* this, struct interpreter_command* command) {
+    const char* command_key = interpreter_command_get_key(command);
+    logger_debug("Interpreter command register %s is registering command %s...", this->name, command_key);
+    if (!dictionary_try_add(this->dictionary, (void*)command_key, command)) {
+        logger_error("Interpreter command register %s failed to register command %s", this->name, command_key);
+    }
 }
 
 struct interpreter_command* interpreter_command_register_try_get_command(const struct interpreter_command_register* this, const char* command_key) {

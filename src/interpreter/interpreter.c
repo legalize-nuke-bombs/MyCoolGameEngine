@@ -6,12 +6,11 @@
 
 #include <stddef.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include "interpreter_command.h"
 #include "interpreter_command_register.h"
-#include "../logging/logger.h"
 #include "../utils/parser.h"
+#include "custom/interpreter_print.h"
 
 
 struct interpreter {
@@ -23,6 +22,7 @@ struct interpreter {
 struct interpreter* interpreter_create(const struct engine *engine) {
     struct interpreter* interpreter = malloc(sizeof(struct interpreter));
     interpreter->command_register = interpreter_command_register_create("Main", 128);
+    interpreter_command_register_capture_command(interpreter->command_register, interpreter_print_create());
     interpreter->engine = engine;
     return interpreter;
 }
