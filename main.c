@@ -30,10 +30,6 @@ int main(void) {
     SDL_SetRenderVSync(renderer, 1);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
-
-
-
-
     struct renderer_pipeline *renderer_pipeline = renderer_pipeline_create(renderer);
 
     const struct engine_context engine_context = {
@@ -42,9 +38,16 @@ int main(void) {
 
     struct printer* printer = printer_create("hi", "bye", 1);
     struct transform* transform = transform_create(&vector2_zero, &vector2_one);
-    transform_set_scale(transform, &vector2_100);
     struct camera* camera = camera_create();
+    component_set_local_scale(camera_as_component(camera), &(struct vector2){
+                                  .x = 1280,
+                                  .y = 720
+                              });
     struct box_renderer* box_renderer = box_renderer_create(color_blue);
+    component_set_local_scale(box_renderer_as_component(box_renderer), &(struct vector2){
+                                  .x = 100,
+                                  .y = 100
+                              });
 
     struct entity* entity = entity_create();
     entity_set_name(entity, "My favourite entity");

@@ -18,23 +18,16 @@ struct renderer_square {
 static void renderer_square_draw(const void* self, const struct rect rect, const struct rect viewport, SDL_Renderer* renderer) {
     const struct renderer_square* this = (struct renderer_square*)self;
 
-    const struct rect camera_position_engine = {
-        .position = vector_sub(&rect.position, &viewport.position),
-        .size = rect.size
+    const struct rect target_rect = rect_sdl(&rect, &viewport);
+    const SDL_FRect sdl_target_rect = {
+        .x = target_rect.position.x,
+        .y = target_rect.position.y,
+        .w = target_rect.size.x,
+        .h = target_rect.size.y
     };
-    const struct rect camera_position_sdl = rect_sdl(&camera_position_engine);
-
-    const SDL_FRect sdl_rect = {
-        .x = camera_position_sdl.position.x,
-        .y = camera_position_sdl.position.y,
-        .w = camera_position_sdl.size.x,
-        .h = camera_position_sdl.size.y
-    };
-
-    logger_debug("Rendering square at %f %f - %f %f", sdl_rect.x, sdl_rect.y, sdl_rect.w, sdl_rect.h);
 
     SDL_SetRenderDrawColor(renderer, this->color.r, this->color.g, this->color.b, this->color.a);
-    SDL_RenderFillRect(renderer, &sdl_rect);
+    SDL_RenderFillRect(renderer, &sdl_target_rect);
 }
 
 static const struct rendering_primitive_vtable renderer_square_vtable = {

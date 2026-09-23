@@ -8,7 +8,8 @@ double vector_get_sqr_length(const struct vector2 *vector);
 
 struct vector2 vector_sum(const struct vector2 *vector1, const struct vector2 *vector2);
 struct vector2 vector_sub(const struct vector2 *vector1, const struct vector2 *vector2);
-struct vector2 vector_multiply(const struct vector2 *vector1, const struct vector2 *vector2);
+struct vector2 vector_multiply_vector(const struct vector2 *vector1, const struct vector2 *vector2);
+struct vector2 vector_multiply_scalar(const struct vector2 *vector1, double scalar);
 
 double vector_distance(const struct vector2 *point1, const struct vector2 *point2);
 double vector_sqr_distance(const struct vector2 *point1, const struct vector2 *point2);

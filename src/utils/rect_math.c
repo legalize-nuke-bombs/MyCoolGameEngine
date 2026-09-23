@@ -21,16 +21,14 @@ struct rect rect_sub(const struct rect *rect1, const struct rect *rect2) {
     return result;
 }
 
-struct rect rect_sdl(const struct rect *this) {
-    const struct vector2 half_size = {
-        .x = this->size.x / 2.0f,
-        .y = this->size.y / 2.0f
-    };
-
+struct rect rect_sdl(const struct rect *obj, const struct rect *viewport) {
+    const struct vector2 half_viewport_size = vector_multiply_scalar(&viewport->size, 0.5);
     const struct rect result = {
-        .position = vector_sub(&this->position, &half_size),
-        .size = this->size
+        .position = {
+            .x = half_viewport_size.x + (obj->position.x - viewport->position.x) - (obj->size.x / 2.0f),
+            .y = half_viewport_size.y - (obj->position.y - viewport->position.y) - (obj->size.y / 2.0f)
+        },
+        .size = obj->size
     };
-
     return result;
 }

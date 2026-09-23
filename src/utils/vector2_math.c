@@ -21,10 +21,17 @@ struct vector2 vector_sub(const struct vector2 *vector1, const struct vector2 *v
     result.y = vector1->y - vector2->y;
     return result;
 }
-struct vector2 vector_multiply(const struct vector2 *vector1, const struct vector2 *vector2) {
+struct vector2 vector_multiply_vector(const struct vector2 *vector1, const struct vector2 *vector2) {
     struct vector2 result;
     result.x = vector1->x * vector2->x;
     result.y = vector1->y * vector2->y;
+    return result;
+}
+struct vector2 vector_multiply_scalar(const struct vector2 *vector1, double scalar) {
+    const struct vector2 result = {
+        .x = vector1->x * scalar,
+        .y = vector1->y * scalar
+    };
     return result;
 }
 
