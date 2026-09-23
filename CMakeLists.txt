@@ -67,6 +67,11 @@ add_executable(MyCoolGameEngine main.c
         src/utils/rect_math.h
         src/utils/rect_math.c
         src/engine/engine_context.h
+        src/scene/components/custom/box_renderer.h
+        src/scene/components/custom/box_renderer.c
+        src/utils/color.h
+        src/utils/colors.h
+        src/utils/colors.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3)

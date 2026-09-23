@@ -8,6 +8,8 @@
 #include "src/scene/components/custom/camera.h"
 #include "src/engine/engine_context.h"
 #include "src/rendering/renderer_pipeline.h"
+#include "src/scene/components/custom/box_renderer.h"
+#include "src/utils/colors.h"
 
 int main(void) {
     logger_init(LOGGER_LEVEL_DEBUG);
@@ -39,15 +41,16 @@ int main(void) {
     };
 
     struct printer* printer = printer_create("hi", "bye", 1);
-
     struct transform* transform = transform_create(&vector2_zero, &vector2_one);
-
     struct camera* camera = camera_create();
+    struct box_renderer* box_renderer = box_renderer_create(color_white);
 
     struct entity* entity = entity_create();
     entity_set_name(entity, "My favourite entity");
     entity_capture_component(entity, transform_as_component(transform));
     entity_capture_component(entity, camera_as_component(camera));
+    entity_capture_component(entity, printer_as_component(printer));
+    entity_capture_component(entity, box_renderer_as_component(box_renderer));
 
     struct scene* scene = scene_create(&engine_context);
     scene_set_name(scene, "My scene name");
