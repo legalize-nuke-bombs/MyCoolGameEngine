@@ -20,7 +20,7 @@ void renderer_pipeline_remove_viewport(struct renderer_pipeline *this);
 
 struct renderer_pipeline_draw_call {
     struct rect rect;
-    struct rendering_primitive primitive;
+    struct rendering_primitive* primitive;
     struct rendering_layer layer;
 };
 

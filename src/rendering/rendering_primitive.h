@@ -5,10 +5,11 @@
 #ifndef MYCOOLGAMEENGINE_RENDERING_PRIMITIVE_H
 #define MYCOOLGAMEENGINE_RENDERING_PRIMITIVE_H
 
-struct SDL_Renderer;
+#include "../utils/rect.h"
 
-struct rendering_primitive {
-    void (*draw)(struct rect rect, struct rect viewport, struct SDL_Renderer* native_renderer);
-};
+struct SDL_Renderer;
+struct rendering_primitive;
+
+void rendering_primitive_draw(struct rendering_primitive* self, struct rect rect, struct rect viewport, struct SDL_Renderer* renderer);
 
 #endif //MYCOOLGAMEENGINE_RENDERING_PRIMITIVE_H

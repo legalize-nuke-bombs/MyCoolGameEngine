@@ -58,8 +58,8 @@ void renderer_pipeline_draw_primitive(struct renderer_pipeline *this, struct ren
 static int renderer_pipeline_draw_call_compair(const void *draw_call1, const void *draw_call2) {
     const struct renderer_pipeline_draw_call* dc1 = (struct renderer_pipeline_draw_call*)draw_call1;
     const struct renderer_pipeline_draw_call* dc2 = (struct renderer_pipeline_draw_call*)draw_call2;
-    int p1 = dc1->layer.priority;
-    int p2 = dc2->layer.priority;
+    const int p1 = dc1->layer.priority;
+    const int p2 = dc2->layer.priority;
     return (p1 > p2) - (p1 < p2);
 }
 
@@ -67,7 +67,7 @@ void renderer_pipeline_flush(struct renderer_pipeline *this) {
     qsort(this->draw_calls, this->draw_calls_count, sizeof(struct renderer_pipeline_draw_call), renderer_pipeline_draw_call_compair);
     for (int i = 0; i < this->draw_calls_count; i++) {
         const struct renderer_pipeline_draw_call draw_call = this->draw_calls[i];
-        draw_call.primitive.draw(draw_call.rect, this->viewport, this->native_renderer);
+        rendering_primitive_draw(draw_call.primitive, draw_call.rect, this->viewport, this->native_renderer);
     }
     this->draw_calls_count = 0;
 }
