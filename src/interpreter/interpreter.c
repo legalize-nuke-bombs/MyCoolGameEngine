@@ -8,22 +8,26 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "interpreter_command_register.h"
 #include "../logging/logger.h"
 #include "../utils/parser.h"
 
 
 struct interpreter {
+    struct interpreter_command_register *command_register;
     const struct engine_context *engine_context;
 };
 
 
 struct interpreter* interpreter_create(const struct engine_context *engine_context) {
     struct interpreter* interpreter = malloc(sizeof(struct interpreter));
+    interpreter->command_register = interpreter_command_register_create();
     interpreter->engine_context = engine_context;
     return interpreter;
 }
-void interpreter_destroy(struct interpreter* interpreter) {
-    free(interpreter);
+void interpreter_destroy(struct interpreter* this) {
+    interpreter_command_register_destroy(this->command_register);
+    free(this);
 }
 static int interpreter_run(struct parser *parser) {
     while (1) {
