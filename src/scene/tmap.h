@@ -18,4 +18,6 @@ void tmap_register_component(const struct tmap *this, struct component *componen
 
 const struct list* tmap_try_get_components(const struct tmap *this, const char *component_key);
 
+void tmap_remove_dead(const struct tmap *this);
+
 #endif //MYCOOLGAMEENGINE_TMAP_H

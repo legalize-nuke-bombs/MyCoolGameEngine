@@ -22,17 +22,17 @@ struct list* list_create(int capacity) {
     list->count = 0;
     return list;
 }
-void list_destroy(struct list *list) {
-    free(list->data);
-    free(list);
+void list_destroy(struct list *this) {
+    free(this->data);
+    free(this);
 }
 
-int list_count(const struct list *list) {
-    return list->count;
+int list_count(const struct list *this) {
+    return this->count;
 }
 
-void* list_get(const struct list *list, const int index) {
-    return list->data[index];
+void* list_get(const struct list *this, const int index) {
+    return this->data[index];
 }
 
 static void list_realloc(struct list *list) {
@@ -45,9 +45,12 @@ static void list_realloc(struct list *list) {
     list->data = new_data;
     list->capacity = new_capacity;
 }
-void list_add(struct list *list, void *data) {
-    if (list->count >= list->capacity) {
-        list_realloc(list);
+void list_add(struct list *this, void *data) {
+    if (this->count >= this->capacity) {
+        list_realloc(this);
     }
-    list->data[list->count++] = data;
+    this->data[this->count++] = data;
+}
+void list_set(const struct list *this, int index, void *data) {
+    this->data[index] = data;
 }

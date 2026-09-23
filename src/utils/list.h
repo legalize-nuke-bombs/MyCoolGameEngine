@@ -8,12 +8,13 @@
 struct list;
 
 struct list* list_create(int capacity);
-void list_destroy(struct list *list);
+void list_destroy(struct list *this);
 
-int list_count(const struct list *list);
+int list_count(const struct list *this);
 
-void* list_get(const struct list *list, int index);
+void* list_get(const struct list *this, int index);
 
-void list_add(struct list *list, void *data);
+void list_add(struct list *this, void *data);
+void list_set(const struct list *this, int index, void *data);
 
 #endif //MYCOOLGAMEENGINE_LIST_H

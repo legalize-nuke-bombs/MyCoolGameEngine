@@ -59,3 +59,26 @@ void tmap_register_component(const struct tmap *this, struct component *componen
 const struct list* tmap_try_get_components(const struct tmap *this, const char *component_key) {
     return dictionary_get(this->dictionary, (void*) component_key);
 }
+
+void tmap_remove_dead(const struct tmap *this) {
+    int ctr = 0;
+    for (int i = 0; i < dictionary_capacity(this->dictionary); i++) {
+        const struct dictionary_node dictionary_node = dictionary_get_node(this->dictionary, i);
+        const struct list* list = dictionary_node.value;
+        if (list == NULL) {
+            continue;
+        }
+
+        for (int j = 0; j < list_count(list); j++) {
+            const struct component *component = list_get(list, j);
+            if (component == NULL) {
+                continue;
+            }
+            if (!component_is_alive(component)) {
+                list_set(list, j, NULL);
+                ctr++;
+            }
+        }
+    }
+    logger_debug("TMap removed %d dead components", ctr);
+}
