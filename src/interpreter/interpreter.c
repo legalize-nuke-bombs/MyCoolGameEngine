@@ -44,7 +44,7 @@ static int interpreter_run(const struct interpreter *this, struct parser *parser
             continue;
         }
 
-        command->func(parser, this->engine);
+        interpreter_command_execute(command, parser, this->engine);
     }
 }
 

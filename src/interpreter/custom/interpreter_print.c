@@ -8,11 +8,20 @@
 #include <stdlib.h>
 
 #include "../interpreter_command.h"
+#include "../interpreter_command_internal.h"
 #include "../../logging/logger.h"
 #include "../../utils/parser.h"
 
 
-static void interpreter_print_execute(struct parser *parser, const struct engine *engine) {
+struct interpreter_print {
+    struct interpreter_command base;
+};
+
+static const char* interpreter_print_get_key() {
+    return "print";
+}
+
+static void interpreter_print_execute(const struct interpreter_command *self, struct parser *parser, const struct engine *engine) {
     const char* context = parser_next(parser);
 
     if (context == NULL) {
@@ -23,9 +32,13 @@ static void interpreter_print_execute(struct parser *parser, const struct engine
     logger_info("Interpreter print: %s", context);
 }
 
+static const struct interpreter_command_vtable print_vtable = {
+    .key = interpreter_print_get_key,
+    .execute = interpreter_print_execute
+};
+
 struct interpreter_command* interpreter_print_create() {
-    struct interpreter_command *func = malloc(sizeof(struct interpreter_command));
-    func->key = "print";
-    func->func = interpreter_print_execute;
-    return func;
+    struct interpreter_print *self = malloc(sizeof(struct interpreter_print));
+    self->base.vtable = &print_vtable;
+    return (struct interpreter_command*)self;
 }

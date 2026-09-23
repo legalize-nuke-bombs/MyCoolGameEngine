@@ -84,6 +84,8 @@ add_executable(MyCoolGameEngine main.c
         src/interpreter/interpreter_command_register.c
         src/engine/engine.h
         src/engine/engine.c
+        src/interpreter/interpreter_command_internal.h
+        src/interpreter/interpreter_command.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3)

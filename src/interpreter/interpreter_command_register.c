@@ -19,9 +19,10 @@ struct interpreter_command_register {
 
 
 static void interpreter_command_register_capture_command(const struct interpreter_command_register* this, struct interpreter_command* command) {
-    logger_debug("Interpreter command register %s is registering command %s...", this->name, command->key);
-    if (!dictionary_try_add(this->dictionary, (void*)command->key, command)) {
-        logger_error("Interpreter command register %s failed to register command %s", this->name, command->key);
+    const char* command_key = interpreter_command_get_key(command);
+    logger_debug("Interpreter command register %s is registering command %s...", this->name, command_key);
+    if (!dictionary_try_add(this->dictionary, (void*)command_key, command)) {
+        logger_error("Interpreter command register %s failed to register command %s", this->name, command_key);
     }
 }
 
