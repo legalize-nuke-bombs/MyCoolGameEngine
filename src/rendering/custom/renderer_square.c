@@ -10,7 +10,7 @@
 
 struct renderer_square {
     struct renderer_primitive base;
-    SDL_Color color;
+    struct color color;
 };
 
 static void renderer_square_draw(const void* self, const struct rect rect, const struct rect viewport, SDL_Renderer* renderer) {
@@ -37,7 +37,7 @@ static const struct rendering_primitive_vtable renderer_square_vtable = {
     .draw = renderer_square_draw
 };
 
-struct renderer_square* renderer_square_create(const SDL_Color color) {
+struct renderer_square* renderer_square_create(const struct color color) {
     struct renderer_square* this = malloc(sizeof(struct renderer_square));
     this->base.vtable = &renderer_square_vtable;
     this->color = color;
