@@ -7,6 +7,6 @@
 
 #include "dictionary.h"
 
-struct dictionary string_dictionary_build(int dim);
+struct dictionary* string_dictionary_build(int dim);
 
 #endif //MYCOOLGAMEENGINE_STRING_DICTIONARY_H

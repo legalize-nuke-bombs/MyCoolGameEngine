@@ -1,5 +1,4 @@
 #include <pthread_time.h> // TODO this shit does not work on macos
-#include <stdlib.h>
 
 #include "src/core/entity.h"
 #include "src/logging/logger.h"
@@ -11,27 +10,22 @@
 int main(void) {
     logger_init(LOGGER_LEVEL_DEBUG);
 
-    struct printer* printer = malloc(sizeof(struct printer));
-    printer_init(printer, "hi", "bye", 1);
+    struct printer* printer = printer_create("hi", "bye", 1);
 
-    struct transform* transform = malloc(sizeof(struct transform));
-    transform_init(transform, &vector2_zero, &vector2_one);
+    struct transform* transform = transform_create(&vector2_zero, &vector2_one);
 
-    struct camera* camera = malloc(sizeof(struct camera));
-    camera_init(camera);
+    struct camera* camera = camera_create();
 
-    struct entity* entity = malloc(sizeof(struct entity));
-    entity_create(entity);
+    struct entity* entity = entity_create();
     entity_set_name(entity, "My favourite entity");
     entity_capture_component(entity, transform_as_component(transform));
     entity_capture_component(entity, camera_as_component(camera));
 
-    struct scene scene;
-    scene_init(&scene);
-    scene_set_name(&scene, "My scene name");
-    scene_capture_entity(&scene, entity);
+    struct scene* scene = scene_create();
+    scene_set_name(scene, "My scene name");
+    scene_capture_entity(scene, entity);
 
-    scene_awake(&scene);
+    scene_awake(scene);
 
     // dynamic!
     entity_capture_component(entity, printer_as_component(printer));
@@ -49,10 +43,10 @@ int main(void) {
         update_context.dt = (double)(now.tv_sec - previous.tv_sec) + (double)(now.tv_nsec - previous.tv_nsec) / 1e9;
         previous = now;
 
-        scene_update(&scene, &update_context);
+        scene_update(scene, &update_context);
     }
 
-    scene_destroy(&scene);
+    scene_destroy(scene);
 
     return 0;
 }

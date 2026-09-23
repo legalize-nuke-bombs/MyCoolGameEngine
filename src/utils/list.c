@@ -6,39 +6,48 @@
 
 #include <stdlib.h>
 
-void list_init(struct list *list, int capacity) {
+struct list {
+    void **data;
+    int capacity;
+    int count;
+};
+
+struct list* list_create(int capacity) {
     if (capacity <= 0) {
         capacity = 1;
     }
-    list->_data = malloc(sizeof(void *) * capacity);
-    list->_capacity = capacity;
-    list->_count = 0;
+    struct list *list = malloc(sizeof(struct list));
+    list->data = malloc(sizeof(void *) * capacity);
+    list->capacity = capacity;
+    list->count = 0;
+    return list;
 }
-void list_destroy(const struct list *list) {
-    free(list->_data);
+void list_destroy(struct list *list) {
+    free(list->data);
+    free(list);
 }
 
 int list_count(const struct list *list) {
-    return list->_count;
+    return list->count;
 }
 
 void* list_get(const struct list *list, const int index) {
-    return list->_data[index];
+    return list->data[index];
 }
 
 static void list_realloc(struct list *list) {
-    const int new_capacity = 2 * list->_capacity;
+    const int new_capacity = 2 * list->capacity;
     void **new_data = malloc(sizeof(void *) * new_capacity);
-    for (int i = 0; i < list->_count; i++) {
-        new_data[i] = list->_data[i];
+    for (int i = 0; i < list->count; i++) {
+        new_data[i] = list->data[i];
     }
-    free(list->_data);
-    list->_data = new_data;
-    list->_capacity = new_capacity;
+    free(list->data);
+    list->data = new_data;
+    list->capacity = new_capacity;
 }
 void list_add(struct list *list, void *data) {
-    if (list->_count >= list->_capacity) {
+    if (list->count >= list->capacity) {
         list_realloc(list);
     }
-    list->_data[list->_count++] = data;
+    list->data[list->count++] = data;
 }

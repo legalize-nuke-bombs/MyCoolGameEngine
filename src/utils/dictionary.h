@@ -11,16 +11,10 @@ struct dictionary_node {
     void *value;
 };
 
-struct dictionary {
-    struct dictionary_node *_nodes;
-    int _dim;
-    int _count;
-    int (*hash)(const void *key);
-    bool (*equals)(const void *key1, const void *key2);
-};
+struct dictionary;
 
-void dictionary_init(struct dictionary *dictionary, int dim, int (*hash)(const void*), bool (*equals)(const void*, const void*));
-void dictionary_destroy(const struct dictionary *dictionary);
+struct dictionary* dictionary_create(int dim, int (*hash)(const void*), bool (*equals)(const void*, const void*));
+void dictionary_destroy(struct dictionary *dictionary);
 
 int dictionary_capacity(const struct dictionary *dictionary);
 int dictionary_count(const struct dictionary *dictionary);

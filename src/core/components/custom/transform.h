@@ -8,13 +8,14 @@
 #include "../component.h"
 #include "../../../utils/vector2.h"
 
-struct transform {
-    struct component base;
-    struct vector2 position;
-    struct vector2 scale;
-};
+struct transform;
 
-void transform_init(struct transform *this, const struct vector2* position, const struct vector2* scale);
+struct transform* transform_create(const struct vector2* position, const struct vector2* scale);
+
+struct vector2 transform_get_position(const struct transform *this);
+void transform_set_position(struct transform *this, const struct vector2 *position);
+struct vector2 transform_get_scale(const struct transform *this);
+void transform_set_scale(struct transform *this, const struct vector2 *scale);
 
 struct component* transform_as_component(struct transform *this);
 

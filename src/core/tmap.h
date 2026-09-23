@@ -6,16 +6,13 @@
 #define MYCOOLGAMEENGINE_TMAP_H
 
 #include "components/component.h"
-#include "../utils/dictionary.h"
 #include "../utils/list.h"
 
 
-struct tmap {
-    struct dictionary _dictionary;
-};
+struct tmap;
 
-void tmap_init(struct tmap *this);
-void tmap_destroy(const struct tmap *this);
+struct tmap* tmap_create(void);
+void tmap_destroy(struct tmap *this);
 
 void tmap_register_component(struct tmap *this, struct component *component);
 

@@ -7,13 +7,9 @@
 
 #include "../component.h"
 
-struct camera {
-    struct component base;
+struct camera;
 
-    struct transform *_transform;
-};
-
-void camera_init(struct camera *this);
+struct camera* camera_create(void);
 
 struct component* camera_as_component(struct camera *this);
 

@@ -1,14 +1,24 @@
 #include "printer.h"
+#include "../component_internal.h"
 #include "../../../logging/logger.h"
 #include "../../entity.h"
 
 #include <stdio.h>
+#include <stdlib.h>
+
+struct printer {
+    struct component base;
+    const char* intervalString;
+    double interval;
+    double timer;
+    const char* lastString;
+};
 
 static const char* printer_component_key(void);
 static void printer_update(struct component *base, const struct update_context *context);
 static void printer_destroy(struct component *base);
 
-static struct component_vtable printer_vtable = {
+static const struct component_vtable printer_vtable = {
     .component_key = printer_component_key,
     .on_awake = NULL,
     .on_update = printer_update,
@@ -19,16 +29,16 @@ static const char* printer_component_key(void) {
     return "printer";
 }
 
-void printer_init(struct printer *this, const char *intervalString, const char *lastString, double interval) {
-    struct component *base = printer_as_component(this);
-
-    component_create(base);
-    base->_vtable = &printer_vtable;
+struct printer* printer_create(const char *intervalString, const char *lastString, double interval) {
+    struct printer *this = malloc(sizeof(struct printer));
+    component_init(printer_as_component(this), &printer_vtable);
 
     this->intervalString = intervalString;
     this->lastString = lastString;
     this->interval = interval;
     this->timer = 0.0;
+
+    return this;
 }
 
 static void printer_update(struct component *base, const struct update_context *context) {

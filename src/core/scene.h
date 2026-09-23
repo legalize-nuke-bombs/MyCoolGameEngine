@@ -5,19 +5,15 @@
 #ifndef MYCOOLGAMEENGINE_SCENE_H
 #define MYCOOLGAMEENGINE_SCENE_H
 
-#include "../utils/list.h"
 #include "update_context.h"
 #include "tmap.h"
 
-struct scene {
-    const char* _name;
-    struct list _entities;
-    struct tmap _tmap;
-};
+struct scene;
+struct entity;
 
-void scene_init(struct scene *this);
+struct scene* scene_create(void);
 void scene_awake(const struct scene *this);
-void scene_destroy(const struct scene *this);
+void scene_destroy(struct scene *this);
 
 const char* scene_get_name(const struct scene *this);
 void scene_set_name(struct scene *this, const char *name);

@@ -6,42 +6,47 @@
 
 #include <stdlib.h>
 
+#include "../utils/dictionary.h"
 #include "../utils/string_dictionary.h"
 #include "../utils/list.h"
 #include "../logging/logger.h"
 
 
-void tmap_init(struct tmap *this) {
-    this->_dictionary = string_dictionary_build(10);
+struct tmap {
+    struct dictionary *dictionary;
+};
+
+struct tmap* tmap_create(void) {
+    struct tmap *this = malloc(sizeof(struct tmap));
+    this->dictionary = string_dictionary_build(10);
+    return this;
 }
-void tmap_destroy(const struct tmap *this) {
-    for (int i = 0; i < dictionary_capacity(&this->_dictionary); i++) {
-        const struct dictionary_node dictionary_node = dictionary_get_node(&this->_dictionary, i);
+void tmap_destroy(struct tmap *this) {
+    for (int i = 0; i < dictionary_capacity(this->dictionary); i++) {
+        const struct dictionary_node dictionary_node = dictionary_get_node(this->dictionary, i);
         if (dictionary_node.value != NULL) {
             list_destroy(dictionary_node.value);
-            free(dictionary_node.value);
         }
     }
-    dictionary_destroy(&this->_dictionary);
+    dictionary_destroy(this->dictionary);
+    free(this);
 }
 
 void tmap_register_component(struct tmap *this, struct component *component) {
     const char* component_key = component_get_key(component);
 
-    if (dictionary_absent(&this->_dictionary, (void*) component_key)) {
-        struct list* list = malloc(sizeof(struct list));
-        list_init(list, 1);
-        if (dictionary_try_add(&this->_dictionary, (void*) component_key, list)) {
+    if (dictionary_absent(this->dictionary, (void*) component_key)) {
+        struct list* list = list_create(1);
+        if (dictionary_try_add(this->dictionary, (void*) component_key, list)) {
             logger_debug("TMap now knows component key %s", component_key);
         }
         else {
             list_destroy(list);
-            free(list);
-            logger_error("Failed to populate tmap, tmap count %d, tmap capacity %d", dictionary_count(&this->_dictionary), dictionary_capacity(&this->_dictionary));
+            logger_error("Failed to populate tmap, tmap count %d, tmap capacity %d", dictionary_count(this->dictionary), dictionary_capacity(this->dictionary));
         }
     }
 
-    struct list* list = dictionary_get(&this->_dictionary, (void*) component_key);
+    struct list* list = dictionary_get(this->dictionary, (void*) component_key);
     if (list != NULL) {
         list_add(list, component);
         logger_debug("TMap registered sample of %s", component_key);
@@ -52,5 +57,5 @@ void tmap_register_component(struct tmap *this, struct component *component) {
 }
 
 const struct list* tmap_try_get_components(const struct tmap *this, const char *component_key) {
-    return dictionary_get(&this->_dictionary, (void*) component_key);
+    return dictionary_get(this->dictionary, (void*) component_key);
 }
