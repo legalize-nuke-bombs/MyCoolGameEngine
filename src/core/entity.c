@@ -1,5 +1,6 @@
 #include "entity.h"
 
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -10,39 +11,44 @@
 
 struct entity {
     const char *name;
-    struct scene *parent;
+    bool awake;
+    bool alive;
     struct list *components;
     struct action *on_component_captured;
     struct transform *transform;
+    struct scene *parent;
 };
 
 struct entity* entity_create(void) {
     struct entity *this = malloc(sizeof(struct entity));
     this->name = "Default entity";
     logger_debug("Entity %s is initializing...", this->name);
-    this->parent = NULL;
+    this->awake = false;
+    this->alive = true;
     this->components = list_create(1);
     this->on_component_captured = action_create();
     this->transform = NULL;
+    this->parent = NULL;
     return this;
 }
 void entity_awake(struct entity *this) {
     logger_debug("Entity %s is awaking...", this->name);
+    this->awake = true;
     this->transform = (struct transform*)entity_get_component(this, "transform");
     for (int i = 0; i < list_count(this->components); i++) {
         struct component *component = list_get(this->components, i);
         component_awake(component);
     }
 }
-void entity_destroy(struct entity *this) {
+void entity_mark_destroyed(struct entity *this) {
     logger_debug("Entity %s is destroying...", this->name);
+    this->alive = false;
     for (int i = 0; i < list_count(this->components); i++) {
         struct component *component = list_get(this->components, i);
-        component_destroy(component);
+        component_mark_destroyed(component);
     }
     list_destroy(this->components);
     action_destroy(this->on_component_captured);
-    free(this);
 }
 
 const char* entity_get_name(const struct entity *this) {
@@ -51,6 +57,13 @@ const char* entity_get_name(const struct entity *this) {
 void entity_set_name(struct entity *this, const char *name) {
     logger_debug("Entity %s is renaming to %s", this->name, name);
     this->name = name;
+}
+
+bool entity_is_awake(const struct entity *this) {
+    return this->awake;
+}
+bool entity_is_alive(const struct entity *this) {
+    return this->alive;
 }
 
 struct scene* entity_get_parent(const struct entity *this) {
@@ -100,6 +113,9 @@ struct component* entity_get_component(const struct entity *this, const char *na
 
 void entity_update(const struct entity *this, const struct update_context *context) {
     for (int i = 0; i < list_count(this->components); i++) {
+        if (!entity_is_alive(this)) {
+            break;
+        }
         struct component *component = list_get(this->components, i);
         component_update(component, context);
     }

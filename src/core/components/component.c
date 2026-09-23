@@ -9,23 +9,33 @@
 
 void component_init(struct component *this, const struct component_vtable *vtable) {
     this->vtable = vtable;
-    this->parent = NULL;
-    logger_debug("Entity %s is creating component...", component_get_parent_name(this));
+    logger_debug("Component is initializing...");
+    this->awake = false;
+    this->alive = true;
     this->local_position = vector2_zero;
     this->local_scale = vector2_one;
+    this->parent = NULL;
 }
 void component_awake(struct component *this) {
     logger_debug("Entity %s is awaking component %s...", component_get_parent_name(this), component_get_key(this));
+    this->awake = true;
     if (this->vtable->on_awake != NULL) {
         this->vtable->on_awake(this);
     }
 }
-void component_destroy(struct component *this) {
+void component_mark_destroyed(struct component *this) {
     logger_debug("Entity %s is destroying component %s...", component_get_parent_name(this), component_get_key(this));
+    this->alive = false;
     if (this->vtable->on_destroy != NULL) {
         this->vtable->on_destroy(this);
     }
-    free(this);
+}
+
+bool component_is_awake(const struct component *this) {
+    return this->awake;
+}
+bool component_is_alive(const struct component *this) {
+    return this->alive;
 }
 
 struct entity* component_get_parent(const struct component *this) {
@@ -71,6 +81,9 @@ const char* component_get_key(const struct component *this) {
 }
 
 void component_update(struct component *this, const struct update_context *context) {
+    if (!component_is_alive(this)) {
+        return;
+    }
     if (this->vtable->on_update != NULL) {
         this->vtable->on_update(this, context);
     }

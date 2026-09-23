@@ -14,7 +14,7 @@ struct tmap;
 struct tmap* tmap_create(void);
 void tmap_destroy(struct tmap *this);
 
-void tmap_register_component(struct tmap *this, struct component *component);
+void tmap_register_component(const struct tmap *this, struct component *component);
 
 const struct list* tmap_try_get_components(const struct tmap *this, const char *component_key);
 

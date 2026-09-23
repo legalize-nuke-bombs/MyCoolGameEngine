@@ -37,4 +37,6 @@ add_executable(MyCoolGameEngine main.c
         src/utils/action.c
         src/core/components/custom/camera.h
         src/core/components/custom/camera.c
+        src/core/entity_collection.h
+        src/core/entity_collection.c
 )

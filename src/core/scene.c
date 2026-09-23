@@ -9,11 +9,12 @@
 
 #include "entity.h"
 #include "../utils/list.h"
+#include "entity_collection.h"
 
 
 struct scene {
     const char* name;
-    struct list *entities;
+    struct entity_collection* entities;
     struct tmap *tmap;
 };
 
@@ -21,26 +22,18 @@ struct scene* scene_create(void) {
     struct scene *this = malloc(sizeof(struct scene));
     this->name = "Default scene";
     logger_info("Scene %s is initializing...", this->name);
-    this->entities = list_create(16);
+    this->entities = entity_collection_create();
     this->tmap = tmap_create();
     return this;
 }
 void scene_awake(const struct scene *this) {
     logger_info("Scene %s is awaking...", this->name);
-    for (int i = 0; i < list_count(this->entities); i++) {
-        struct entity *entity = list_get(this->entities, i);
-        entity_awake(entity);
-    }
+    entity_collection_awake_everyone(this->entities);
 }
 void scene_destroy(struct scene *this) {
     logger_info("Scene %s is destroying...", this->name);
 
-    for (int i = 0; i < list_count(this->entities); i++) {
-        struct entity *entity = list_get(this->entities, i);
-        entity_destroy(entity);
-    }
-    list_destroy(this->entities);
-
+    entity_collection_destroy(this->entities);
     tmap_destroy(this->tmap);
     free(this);
 }
@@ -54,7 +47,7 @@ void scene_set_name(struct scene *this, const char *name) {
 }
 
 static void handle_new_component(void *base, void *component) {
-    struct scene *this = (struct scene *)base;
+    const struct scene *this = base;
     tmap_register_component(this->tmap, component);
 }
 
@@ -65,7 +58,7 @@ const struct tmap* scene_get_tmap(const struct scene *this) {
 void scene_capture_entity(struct scene *this, struct entity *entity) {
     logger_debug("Scene %s is capturing entity %s", this->name, entity_get_name(entity));
 
-    list_add(this->entities, entity);
+    entity_collection_add(this->entities, entity);
 
     entity_set_parent(entity, this);
 
@@ -78,8 +71,5 @@ void scene_capture_entity(struct scene *this, struct entity *entity) {
 }
 
 void scene_update(const struct scene *this, const struct update_context *context) {
-    for (int i = 0; i < list_count(this->entities); i++) {
-        const struct entity *entity = list_get(this->entities, i);
-        entity_update(entity, context);
-    }
+    entity_collection_update(this->entities, context);
 }

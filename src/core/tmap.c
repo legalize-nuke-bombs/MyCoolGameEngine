@@ -32,7 +32,7 @@ void tmap_destroy(struct tmap *this) {
     free(this);
 }
 
-void tmap_register_component(struct tmap *this, struct component *component) {
+void tmap_register_component(const struct tmap *this, struct component *component) {
     const char* component_key = component_get_key(component);
 
     if (dictionary_absent(this->dictionary, (void*) component_key)) {

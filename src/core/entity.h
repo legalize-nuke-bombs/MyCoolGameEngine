@@ -1,6 +1,8 @@
 #ifndef MYCOOLGAMEENGINE_ENTITY_H
 #define MYCOOLGAMEENGINE_ENTITY_H
 
+#include <stdbool.h>
+
 #include "update_context.h"
 #include "components/component.h"
 
@@ -10,10 +12,13 @@ struct transform;
 
 struct entity* entity_create(void);
 void entity_awake(struct entity *this);
-void entity_destroy(struct entity *this);
+void entity_mark_destroyed(struct entity *this);
 
 const char *entity_get_name(const struct entity *this);
 void entity_set_name(struct entity *this, const char *name);
+
+bool entity_is_awake(const struct entity *this);
+bool entity_is_alive(const struct entity *this);
 
 struct scene* entity_get_parent(const struct entity *this);
 void entity_set_parent(struct entity *this, struct scene* parent);
