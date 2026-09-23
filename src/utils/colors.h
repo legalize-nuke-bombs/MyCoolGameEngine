@@ -8,5 +8,6 @@
 #include "color.h"
 
 extern const struct color color_white;
+extern const struct color color_blue;
 
 #endif //MYCOOLGAMEENGINE_COLORS_H

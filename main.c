@@ -43,7 +43,7 @@ int main(void) {
     struct printer* printer = printer_create("hi", "bye", 1);
     struct transform* transform = transform_create(&vector2_zero, &vector2_one);
     struct camera* camera = camera_create();
-    struct box_renderer* box_renderer = box_renderer_create(color_white);
+    struct box_renderer* box_renderer = box_renderer_create(color_blue);
 
     struct entity* entity = entity_create();
     entity_set_name(entity, "My favourite entity");
