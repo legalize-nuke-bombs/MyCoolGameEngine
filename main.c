@@ -37,7 +37,9 @@ int main(void) {
         .renderer_pipeline = renderer_pipeline
     };
 
-    logger_info("Interpreter finished with exit code %d", interpreter_eval("script.txt"));
+    struct interpreter* interpreter = interpreter_create();
+    logger_info("Interpreter finished with exit code %d", interpreter_eval(interpreter, "script.txt"));
+    interpreter_destroy(interpreter);
 
     struct scene* scene = scene_create(&engine_context);
     scene_set_name(scene, "My scene name");

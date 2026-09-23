@@ -9,6 +9,11 @@
 #define INTERPRETER_OK 0
 #define INTERPRETER_FAILED_OPEN_SCRIPT 1
 
-int interpreter_eval(const char* script_path);
+struct interpreter;
+
+struct interpreter* interpreter_create();
+void interpreter_destroy(struct interpreter* interpreter);
+
+int interpreter_eval(const struct interpreter *this, const char* script_path);
 
 #endif //MYCOOLGAMEENGINE_INTERPRETER_H

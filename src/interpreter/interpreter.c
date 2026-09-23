@@ -5,12 +5,25 @@
 #include "interpreter.h"
 
 #include <stddef.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "../logging/logger.h"
 #include "../utils/parser.h"
 
 
+struct interpreter {
+
+};
+
+
+struct interpreter* interpreter_create() {
+    struct interpreter* interpreter = malloc(sizeof(struct interpreter));
+    return interpreter;
+}
+void interpreter_destroy(struct interpreter* interpreter) {
+    free(interpreter);
+}
 static int interpreter_run(struct parser *parser) {
     while (1) {
         const char *word = parser_next(parser);
@@ -27,8 +40,7 @@ static int interpreter_run(struct parser *parser) {
     }
 }
 
-
-int interpreter_eval(const char* script_path) {
+int interpreter_eval(const struct interpreter *this, const char* script_path) {
     struct parser* parser = parser_create(script_path);
     if (parser == NULL) {
         return INTERPRETER_FAILED_OPEN_SCRIPT;
