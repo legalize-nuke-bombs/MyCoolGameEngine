@@ -8,7 +8,6 @@
 #include <stdlib.h>
 
 #include "entity.h"
-#include "../utils/list.h"
 #include "entity_collection.h"
 
 
@@ -16,14 +15,16 @@ struct scene {
     const char* name;
     struct entity_collection* entities;
     struct tmap *tmap;
+    struct engine_context *engine_context;
 };
 
-struct scene* scene_create(void) {
+struct scene* scene_create(struct engine_context *engine_context) {
     struct scene *this = malloc(sizeof(struct scene));
     this->name = "Default scene";
     logger_info("Scene %s is initializing...", this->name);
     this->entities = entity_collection_create();
     this->tmap = tmap_create();
+    this->engine_context = engine_context;
     return this;
 }
 void scene_awake(const struct scene *this) {

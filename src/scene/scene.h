@@ -10,8 +10,9 @@
 
 struct scene;
 struct entity;
+struct engine_context;
 
-struct scene* scene_create(void);
+struct scene* scene_create(struct engine_context *engine_context);
 void scene_awake(const struct scene *this);
 void scene_destroy(struct scene *this);
 
