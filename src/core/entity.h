@@ -12,6 +12,7 @@ struct transform;
 
 struct entity* entity_create(void);
 void entity_awake(struct entity *this);
+void entity_destroy(struct entity *this);
 void entity_mark_destroyed(struct entity *this);
 
 const char *entity_get_name(const struct entity *this);

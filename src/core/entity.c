@@ -40,15 +40,23 @@ void entity_awake(struct entity *this) {
         component_awake(component);
     }
 }
+void entity_destroy(struct entity *this) {
+    logger_debug("Entity %s is destroying..", this->name);
+    for (int i = 0; i < list_count(this->components); i++) {
+        struct component *component = list_get(this->components, i);
+        component_destroy(component);
+    }
+    list_destroy(this->components);
+    action_destroy(this->on_component_captured);
+    free(this);
+}
 void entity_mark_destroyed(struct entity *this) {
-    logger_debug("Entity %s is destroying...", this->name);
+    logger_debug("Entity %s is marking destroyed..", this->name);
     this->alive = false;
     for (int i = 0; i < list_count(this->components); i++) {
         struct component *component = list_get(this->components, i);
         component_mark_destroyed(component);
     }
-    list_destroy(this->components);
-    action_destroy(this->on_component_captured);
 }
 
 const char* entity_get_name(const struct entity *this) {

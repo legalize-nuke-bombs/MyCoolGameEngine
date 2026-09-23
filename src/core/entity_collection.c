@@ -21,7 +21,7 @@ struct entity_collection *entity_collection_create(void) {
 void entity_collection_destroy(struct entity_collection *this) {
     for (int i = 0; i < list_count(this->list); i++) {
         struct entity *entity = list_get(this->list, i);
-        free(entity);
+        entity_destroy(entity);
     }
     list_destroy(this->list);
     free(this);

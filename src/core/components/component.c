@@ -23,12 +23,16 @@ void component_awake(struct component *this) {
         this->vtable->on_awake(this);
     }
 }
-void component_mark_destroyed(struct component *this) {
+void component_destroy(struct component *this) {
     logger_debug("Entity %s is destroying component %s...", component_get_parent_name(this), component_get_key(this));
-    this->alive = false;
     if (this->vtable->on_destroy != NULL) {
         this->vtable->on_destroy(this);
     }
+    free(this);
+}
+void component_mark_destroyed(struct component *this) {
+    logger_debug("Entity %s is marking destroyed component %s...", component_get_parent_name(this), component_get_key(this));
+    this->alive = false;
 }
 
 bool component_is_awake(const struct component *this) {

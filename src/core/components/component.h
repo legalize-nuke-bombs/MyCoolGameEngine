@@ -9,6 +9,7 @@ struct component;
 struct entity;
 
 void component_awake(struct component *this);
+void component_destroy(struct component *this);
 void component_mark_destroyed(struct component *this);
 
 bool component_is_awake(const struct component *this);
