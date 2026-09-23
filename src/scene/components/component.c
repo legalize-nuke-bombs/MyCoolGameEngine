@@ -7,14 +7,14 @@
 #include "../../utils/vector2_math.h"
 #include "transform.h"
 
-void component_init(struct component *this, const struct component_vtable *vtable) {
+void component_init(struct component *this, const struct component_vtable *vtable, struct entity *parent) {
     this->vtable = vtable;
     logger_debug("Component is initializing...");
     this->awake = false;
     this->alive = true;
     this->local_position = vector2_zero;
     this->local_scale = vector2_one;
-    this->parent = NULL;
+    this->parent = parent;
 }
 void component_awake(struct component *this) {
     logger_debug("Entity %s is awaking component %s...", component_get_parent_name(this), component_get_key(this));
@@ -51,9 +51,6 @@ bool component_is_alive(const struct component *this) {
 
 struct entity* component_get_parent(const struct component *this) {
     return this->parent;
-}
-void component_set_parent(struct component *this, struct entity *parent) {
-    this->parent = parent;
 }
 const char* component_get_parent_name(const struct component *this) {
     return this->parent != NULL ? entity_get_name(this->parent) : "<none>";

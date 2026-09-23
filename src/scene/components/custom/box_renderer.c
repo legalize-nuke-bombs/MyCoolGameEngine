@@ -37,9 +37,9 @@ static const char* box_renderer_component_key(void) {
     return "box_renderer";
 }
 
-struct box_renderer* box_renderer_create(struct color color) {
+struct box_renderer* box_renderer_create(struct entity *parent, struct color color) {
     struct box_renderer *this = malloc(sizeof(struct box_renderer));
-    component_init(box_renderer_as_component(this), &box_renderer_vtable);
+    component_init(box_renderer_as_component(this), &box_renderer_vtable, parent);
 
     this->renderer = NULL;
     this->square = renderer_square_create(color);

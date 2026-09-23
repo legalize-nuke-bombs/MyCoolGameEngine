@@ -35,9 +35,9 @@ static const char* camera_component_key(void) {
     return "camera";
 }
 
-struct camera* camera_create(void) {
+struct camera* camera_create(struct entity *parent) {
     struct camera *this = malloc(sizeof(struct camera));
-    component_init(camera_as_component(this), &camera_vtable);
+    component_init(camera_as_component(this), &camera_vtable, parent);
 
     this->renderer = NULL;
 

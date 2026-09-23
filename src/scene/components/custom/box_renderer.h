@@ -9,8 +9,9 @@
 
 
 struct box_renderer;
+struct entity;
 
-struct box_renderer* box_renderer_create(struct color color);
+struct box_renderer* box_renderer_create(struct entity *parent, struct color color);
 
 struct component * box_renderer_as_component(struct box_renderer *this);
 

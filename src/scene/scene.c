@@ -60,11 +60,14 @@ const struct engine_context *scene_get_engine_context(const struct scene *this) 
 }
 
 void scene_capture_entity(struct scene *this, struct entity *entity) {
+    const struct scene *owner = entity_get_parent(entity);
+    if (owner != this) {
+        logger_error("Scene %s cannot capture entity %s owned by scene %s", this->name, entity_get_name(entity), owner != NULL ? owner->name : "<none>");
+        return;
+    }
     logger_debug("Scene %s is capturing entity %s", this->name, entity_get_name(entity));
 
     entity_collection_add(this->entities, entity);
-
-    entity_set_parent(entity, this);
 
     for (int i = 0; i < entity_get_components_count(entity); i++) {
         struct component *component = entity_get_component_by_index(entity, i);

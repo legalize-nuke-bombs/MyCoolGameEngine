@@ -19,7 +19,7 @@ struct entity {
     struct scene *parent;
 };
 
-struct entity* entity_create(void) {
+struct entity* entity_create(struct scene *parent) {
     struct entity *this = malloc(sizeof(struct entity));
     this->name = "Default entity";
     logger_debug("Entity %s is initializing...", this->name);
@@ -28,7 +28,7 @@ struct entity* entity_create(void) {
     this->components = list_create(1);
     this->on_component_captured = action_create();
     this->transform = NULL;
-    this->parent = NULL;
+    this->parent = parent;
     return this;
 }
 void entity_awake(struct entity *this) {
@@ -80,9 +80,6 @@ bool entity_is_alive(const struct entity *this) {
 struct scene* entity_get_parent(const struct entity *this) {
     return this->parent;
 }
-void entity_set_parent(struct entity *this, struct scene* parent) {
-    this->parent = parent;
-}
 
 struct transform* entity_get_transform(const struct entity *this) {
     return this->transform;
@@ -96,8 +93,11 @@ int entity_get_components_count(const struct entity *this) {
     return list_count(this->components);
 }
 void entity_capture_component(struct entity *this, struct component *component) {
+    if (component_get_parent(component) != this) {
+        logger_error("Entity %s cannot capture component %s owned by entity %s", this->name, component_get_key(component), component_get_parent_name(component));
+        return;
+    }
     logger_debug("Entity %s is capturing component %s", this->name, component_get_key(component));
-    component_set_parent(component, this);
     list_add(this->components, component);
     action_invoke(this->on_component_captured, component);
 }

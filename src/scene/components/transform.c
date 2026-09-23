@@ -24,9 +24,9 @@ static const char* transform_component_key(void) {
     return "transform";
 }
 
-struct transform* transform_create(const struct vector2* position, const struct vector2* scale) {
+struct transform* transform_create(struct entity *parent, const struct vector2* position, const struct vector2* scale) {
     struct transform *this = malloc(sizeof(struct transform));
-    component_init(transform_as_component(this), &transform_vtable);
+    component_init(transform_as_component(this), &transform_vtable, parent);
 
     this->position = *position;
     this->scale = *scale;

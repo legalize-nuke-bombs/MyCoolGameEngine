@@ -16,7 +16,6 @@ bool component_is_awake(const struct component *this);
 bool component_is_alive(const struct component *this);
 
 struct entity* component_get_parent(const struct component *this);
-void component_set_parent(struct component *this, struct entity *parent);
 const char* component_get_parent_name(const struct component *this);
 
 struct vector2 component_get_local_position(const struct component *this);

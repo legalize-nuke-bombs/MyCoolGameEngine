@@ -30,9 +30,9 @@ static const char* printer_component_key(void) {
     return "printer";
 }
 
-struct printer* printer_create(const char *intervalString, const char *lastString, double interval) {
+struct printer* printer_create(struct entity *parent, const char *intervalString, const char *lastString, double interval) {
     struct printer *this = malloc(sizeof(struct printer));
-    component_init(printer_as_component(this), &printer_vtable);
+    component_init(printer_as_component(this), &printer_vtable, parent);
 
     this->intervalString = intervalString;
     this->lastString = lastString;

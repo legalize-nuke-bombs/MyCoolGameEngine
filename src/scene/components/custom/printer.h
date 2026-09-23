@@ -5,7 +5,7 @@
 
 struct printer;
 
-struct printer* printer_create(const char *intervalString, const char *lastString, double interval);
+struct printer* printer_create(struct entity *parent, const char *intervalString, const char *lastString, double interval);
 
 struct component* printer_as_component(struct printer *this);
 

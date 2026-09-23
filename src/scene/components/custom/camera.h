@@ -9,7 +9,7 @@
 
 struct camera;
 
-struct camera* camera_create(void);
+struct camera* camera_create(struct entity *parent);
 
 struct component* camera_as_component(struct camera *this);
 

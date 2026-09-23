@@ -10,7 +10,7 @@ struct entity;
 struct scene;
 struct transform;
 
-struct entity* entity_create(void);
+struct entity* entity_create(struct scene *parent);
 void entity_awake(struct entity *this);
 void entity_destroy(struct entity *this);
 void entity_mark_destroyed(struct entity *this);
@@ -22,7 +22,6 @@ bool entity_is_awake(const struct entity *this);
 bool entity_is_alive(const struct entity *this);
 
 struct scene* entity_get_parent(const struct entity *this);
-void entity_set_parent(struct entity *this, struct scene* parent);
 
 struct transform* entity_get_transform(const struct entity *this);
 

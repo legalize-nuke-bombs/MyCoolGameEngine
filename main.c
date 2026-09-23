@@ -36,28 +36,30 @@ int main(void) {
         .renderer_pipeline = renderer_pipeline
     };
 
-    struct printer* printer = printer_create("hi", "bye", 1);
-    struct transform* transform = transform_create(&vector2_zero, &vector2_one);
-    struct camera* camera = camera_create();
+    struct scene* scene = scene_create(&engine_context);
+    scene_set_name(scene, "My scene name");
+
+    struct entity* entity = entity_create(scene);
+    entity_set_name(entity, "My favourite entity");
+
+    struct printer* printer = printer_create(entity, "hi", "bye", 1);
+    struct transform* transform = transform_create(entity, &vector2_zero, &vector2_one);
+    struct camera* camera = camera_create(entity);
     component_set_local_scale(camera_as_component(camera), &(struct vector2){
                                   .x = 1280,
                                   .y = 720
                               });
-    struct box_renderer* box_renderer = box_renderer_create(color_blue);
+    struct box_renderer* box_renderer = box_renderer_create(entity, color_blue);
     component_set_local_scale(box_renderer_as_component(box_renderer), &(struct vector2){
                                   .x = 100,
                                   .y = 100
                               });
 
-    struct entity* entity = entity_create();
-    entity_set_name(entity, "My favourite entity");
     entity_capture_component(entity, transform_as_component(transform));
     entity_capture_component(entity, camera_as_component(camera));
     entity_capture_component(entity, printer_as_component(printer));
     entity_capture_component(entity, box_renderer_as_component(box_renderer));
 
-    struct scene* scene = scene_create(&engine_context);
-    scene_set_name(scene, "My scene name");
     scene_capture_entity(scene, entity);
 
     scene_awake(scene);

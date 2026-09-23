@@ -10,7 +10,7 @@
 
 struct transform;
 
-struct transform* transform_create(const struct vector2* position, const struct vector2* scale);
+struct transform* transform_create(struct entity *parent, const struct vector2* position, const struct vector2* scale);
 
 struct vector2 transform_get_position(const struct transform *this);
 void transform_set_position(struct transform *this, const struct vector2 *position);
