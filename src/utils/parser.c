@@ -33,7 +33,7 @@ void parser_destroy(struct parser* parser) {
 }
 
 char* parser_next(struct parser* parser) {
-    if (fscanf(parser->file, "%s", parser->word)) {
+    if (fscanf(parser->file, "%s", parser->word) == 1) {
         return parser->word;
     }
     return NULL;
