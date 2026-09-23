@@ -72,6 +72,8 @@ add_executable(MyCoolGameEngine main.c
         src/utils/color.h
         src/utils/colors.h
         src/utils/colors.c
+        src/rendering/renderer_layers.h
+        src/rendering/renderer_layers.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3)
