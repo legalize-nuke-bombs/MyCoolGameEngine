@@ -67,7 +67,7 @@ void renderer_pipeline_flush(struct renderer_pipeline *this) {
     qsort(this->draw_calls, this->draw_calls_count, sizeof(struct renderer_pipeline_draw_call), renderer_pipeline_draw_call_compare);
     for (int i = 0; i < this->draw_calls_count; i++) {
         const struct renderer_pipeline_draw_call draw_call = this->draw_calls[i];
-        rendering_primitive_draw(draw_call.primitive, draw_call.rect, this->viewport, this->native_renderer);
+        renderer_primitive_draw(draw_call.primitive, draw_call.rect, this->viewport, this->native_renderer);
     }
     this->draw_calls_count = 0;
 }

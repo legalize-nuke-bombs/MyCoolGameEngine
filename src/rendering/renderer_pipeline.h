@@ -6,8 +6,8 @@
 #define MYCOOLGAMEENGINE_RENDERER_PIPELINE_H
 
 #include "../utils/rect.h"
-#include "rendering_primitive.h"
-#include "rendering_layer.h"
+#include "renderer_primitive.h"
+#include "renderer_layer.h"
 
 struct renderer_pipeline;
 struct SDL_Renderer;
@@ -20,8 +20,8 @@ void renderer_pipeline_remove_viewport(struct renderer_pipeline *this);
 
 struct renderer_pipeline_draw_call {
     struct rect rect;
-    struct rendering_primitive* primitive;
-    struct rendering_layer layer;
+    struct renderer_primitive* primitive;
+    struct renderer_layer layer;
 };
 
 void renderer_pipeline_draw_primitive(struct renderer_pipeline *this, struct renderer_pipeline_draw_call draw_call);
