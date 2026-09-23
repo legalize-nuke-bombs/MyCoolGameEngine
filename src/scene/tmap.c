@@ -64,21 +64,19 @@ void tmap_remove_dead(const struct tmap *this) {
     int ctr = 0;
     for (int i = 0; i < dictionary_capacity(this->dictionary); i++) {
         const struct dictionary_node dictionary_node = dictionary_get_node(this->dictionary, i);
-        const struct list* list = dictionary_node.value;
+        struct list* list = dictionary_node.value;
         if (list == NULL) {
             continue;
         }
 
         for (int j = 0; j < list_count(list); j++) {
             const struct component *component = list_get(list, j);
-            if (component == NULL) {
-                continue;
-            }
             if (!component_is_alive(component)) {
                 list_set(list, j, NULL);
                 ctr++;
             }
         }
+        list_remove_nulls(list);
     }
     logger_debug("tmap removed %d dead components", ctr);
 }

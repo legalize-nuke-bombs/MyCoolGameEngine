@@ -54,3 +54,12 @@ void list_add(struct list *this, void *data) {
 void list_set(const struct list *this, int index, void *data) {
     this->data[index] = data;
 }
+void list_remove_nulls(struct list *this) {
+    int kept_count = 0;
+    for (int i = 0; i < this->count; i++) {
+        if (this->data[i] != NULL) {
+            this->data[kept_count++] = this->data[i];
+        }
+    }
+    this->count = kept_count;
+}

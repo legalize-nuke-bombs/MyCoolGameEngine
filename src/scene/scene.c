@@ -94,6 +94,6 @@ static void scene_run_gc(struct scene *this, double dt) {
 }
 
 void scene_update(struct scene *this, const struct update_context *context) {
-    entity_collection_update(this->entities, context);
     scene_run_gc(this, context->dt);
+    entity_collection_update(this->entities, context);
 }

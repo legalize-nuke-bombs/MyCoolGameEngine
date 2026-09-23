@@ -75,7 +75,7 @@ int main(void) {
         update_context.dt = (double)(now - previous) / 1e9;
         previous = now;
 
-        if (i > 100) {
+        if (i == 101) {
             entity_mark_destroyed(entity);
         }
 
