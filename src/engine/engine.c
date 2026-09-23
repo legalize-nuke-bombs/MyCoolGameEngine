@@ -60,10 +60,6 @@ struct engine* engine_create() {
 void engine_destroy(struct engine *this) {
     logger_info("Engine is destroying...");
 
-    if (this->scene != NULL) {
-        free(this->scene);
-    }
-
     interpreter_destroy(this->interpreter);
     renderer_pipeline_destroy(this->renderer_pipeline);
 
@@ -140,7 +136,7 @@ void engine_run(struct engine *this, const char *script_path) {
 
     this->running = false;
     if (this->scene != NULL) {
-        free(this->scene);
+        scene_destroy(this->scene);
     }
     this->scene = NULL;
 }
