@@ -13,12 +13,13 @@
 
 
 struct interpreter {
-
+    const struct engine_context *engine_context;
 };
 
 
-struct interpreter* interpreter_create() {
+struct interpreter* interpreter_create(const struct engine_context *engine_context) {
     struct interpreter* interpreter = malloc(sizeof(struct interpreter));
+    interpreter->engine_context = engine_context;
     return interpreter;
 }
 void interpreter_destroy(struct interpreter* interpreter) {

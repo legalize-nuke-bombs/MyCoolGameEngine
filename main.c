@@ -37,7 +37,7 @@ int main(void) {
         .renderer_pipeline = renderer_pipeline
     };
 
-    struct interpreter* interpreter = interpreter_create();
+    struct interpreter* interpreter = interpreter_create(&engine_context);
     logger_info("Interpreter finished with exit code %d", interpreter_eval(interpreter, "script.txt"));
     interpreter_destroy(interpreter);
 
