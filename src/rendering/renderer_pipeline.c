@@ -41,8 +41,8 @@ void renderer_pipeline_destroy(struct renderer_pipeline *this) {
     free(this);
 }
 
-void renderer_pipeline_set_viewport(struct renderer_pipeline *this, const struct rect rect) {
-    this->viewport = rect;
+void renderer_pipeline_set_viewpoint(struct renderer_pipeline *this, const struct vector2 viewpoint) {
+    this->viewport.position = viewpoint;
     this->viewport_enabled = true;
 }
 void renderer_pipeline_remove_viewport(struct renderer_pipeline *this) {
@@ -74,15 +74,11 @@ static void renderer_pipeline_sort_draw_calls(struct renderer_pipeline *this) {
     }
 }
 
-static void renderer_pipeline_present_viewport(struct renderer_pipeline *this) {
-    const int width = (int) this->viewport.size.x;
-    const int height = (int) this->viewport.size.y;
-    if (width == this->presentation_width && height == this->presentation_height) {
-        return;
-    }
-    SDL_SetRenderLogicalPresentation(this->native_renderer, width, height, SDL_LOGICAL_PRESENTATION_LETTERBOX);
-    this->presentation_width = width;
-    this->presentation_height = height;
+static void renderer_pipeline_update_viewport_resolution(struct renderer_pipeline *this) {
+    int native_renderer_w, native_renderer_h;
+    SDL_GetRenderOutputSize(this->native_renderer, &native_renderer_w, &native_renderer_h);
+    this->viewport.size.x = native_renderer_w;
+    this->viewport.size.y = native_renderer_h;
 }
 
 void renderer_pipeline_flush(struct renderer_pipeline *this) {
@@ -90,7 +86,7 @@ void renderer_pipeline_flush(struct renderer_pipeline *this) {
         this->draw_calls_count = 0;
         return;
     }
-    renderer_pipeline_present_viewport(this);
+    renderer_pipeline_update_viewport_resolution(this);
     renderer_pipeline_sort_draw_calls(this);
     for (int i = 0; i < this->draw_calls_count; i++) {
         const struct renderer_pipeline_draw_call draw_call = this->sorted_draw_calls[i];

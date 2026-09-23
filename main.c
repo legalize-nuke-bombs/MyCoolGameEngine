@@ -45,10 +45,6 @@ int main(void) {
     struct printer* printer = printer_create(entity, "hi", "bye", 1);
     struct transform* transform = transform_create(entity, &vector2_zero, &vector2_one);
     struct camera* camera = camera_create(entity);
-    component_set_local_scale(camera_as_component(camera), &(struct vector2){
-                                  .x = 1280,
-                                  .y = 720
-                              });
     struct box_renderer* box_renderer = box_renderer_create(entity, color_blue);
     component_set_local_scale(box_renderer_as_component(box_renderer), &(struct vector2){
                                   .x = 100,

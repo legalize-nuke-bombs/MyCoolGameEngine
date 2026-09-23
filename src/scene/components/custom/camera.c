@@ -10,6 +10,7 @@
 #include "../../../engine/engine_context.h"
 #include "../../scene.h"
 #include "../../../rendering/renderer_pipeline.h"
+#include <SDL3/SDL.h>
 
 
 struct camera {
@@ -54,11 +55,7 @@ static void camera_awake(struct component *base) {
 static void camera_update(struct component *base, const struct update_context *context) {
     const struct camera *this = (struct camera *) base;
 
-    const struct rect viewport = {
-        .position = component_get_position(base),
-        .size = component_get_scale(base)
-    };
-    renderer_pipeline_set_viewport(this->renderer, viewport);
+    renderer_pipeline_set_viewpoint(this->renderer, component_get_position(base));
 }
 
 static void camera_destroy(struct component *base) {
