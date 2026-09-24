@@ -10,6 +10,7 @@
 #include <SDL3/SDL.h>
 
 #include "../devices/devices.h"
+#include "../devices/keyboard.h"
 #include "../rendering/renderer_pipeline.h"
 #include "../interpreter/interpreter.h"
 #include "../rendering/renderer_layer_manager.h"
@@ -17,6 +18,7 @@
 #include "../scene/scene.h"
 #include "../scene/entity.h"
 #include "../scene/components/component_fabric.h"
+#include "../utils/action.h"
 
 struct engine {
     struct component_fabric *component_fabric;
@@ -121,6 +123,11 @@ void engine_execute(struct engine *this, const char *script_path) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_EVENT_QUIT) {
                 run = false;
+            }
+            else if (event.type == SDL_EVENT_KEY_DOWN) {
+                const SDL_Scancode scancode = event.key.scancode;
+                const char* scancode_name = SDL_GetScancodeName(scancode);
+                action_invoke(keyboard_get_action_on_key_pressed(devices_get_keyboard(engine_get_devices(this)), scancode_name), NULL);
             }
         }
     }
