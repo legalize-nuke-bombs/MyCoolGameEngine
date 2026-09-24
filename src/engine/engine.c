@@ -11,7 +11,6 @@
 
 #include "../scene/scene.h"
 #include "../scene/entity.h"
-#include "../scene/components/component.h"
 #include "../scene/components/component_fabric.h"
 
 struct engine {
@@ -27,7 +26,6 @@ struct engine {
 };
 
 struct engine* engine_create() {
-    logger_init(LOGGER_LEVEL_DEBUG);
     logger_info("Engine is creating...");
 
     if (!SDL_Init(SDL_INIT_VIDEO)) {

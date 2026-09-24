@@ -1,6 +1,8 @@
 #include <stddef.h>
 
 #include "src/engine/engine.h"
+#include "src/logging/logger.h"
+#include "version.h"
 
 static char* script_path_extract(const int argc, char* argv[]) {
     char* script_path;
@@ -15,6 +17,9 @@ static char* script_path_extract(const int argc, char* argv[]) {
 
 
 int main(const int argc, char *argv[]) {
+    logger_init(LOGGER_LEVEL_DEBUG);
+    logger_info("MyCoolGameEngine v%d.%d.%d", VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH);
+
     const char* script_path = script_path_extract(argc, argv);
 
     struct engine *engine = engine_create();
