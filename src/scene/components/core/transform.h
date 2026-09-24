@@ -5,8 +5,8 @@
 #ifndef MYCOOLGAMEENGINE_TRANSFORM_H
 #define MYCOOLGAMEENGINE_TRANSFORM_H
 
-#include "component.h"
-#include "../../utils/vector2.h"
+#include "../component.h"
+#include "../../../utils/vector2.h"
 
 struct transform;
 struct parser;

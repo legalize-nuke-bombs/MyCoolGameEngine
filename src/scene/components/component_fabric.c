@@ -6,14 +6,14 @@
 
 #include <stdlib.h>
 
-#include "transform.h"
+#include "core/transform.h"
 #include "../../utils/dictionary.h"
 #include "../../utils/string_dictionary.h"
 #include "../../logging/logger.h"
-#include "custom/box_renderer.h"
-#include "custom/camera.h"
-#include "custom/printer.h"
-#include "custom/suicidal.h"
+#include "rendering/box_renderer.h"
+#include "rendering/camera.h"
+#include "demo/printer.h"
+#include "demo/suicidal.h"
 
 struct component_fabric {
     struct dictionary* types;

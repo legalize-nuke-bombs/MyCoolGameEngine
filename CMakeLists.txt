@@ -30,14 +30,14 @@ add_executable(MyCoolGameEngine main.c
         src/scene/components/component_internal.h
         src/logging/logger.h
         src/logging/logger.c
-        src/scene/components/custom/printer.h
-        src/scene/components/custom/printer.c
+        src/scene/components/demo/printer.h
+        src/scene/components/demo/printer.c
         src/scene/update_context.h
         src/scene/scene.h
         src/scene/scene.c
         version.h
-        src/scene/components/transform.h
-        src/scene/components/transform.c
+        src/scene/components/core/transform.h
+        src/scene/components/core/transform.c
         src/utils/list.h
         src/utils/list.c
         src/utils/dictionary.h
@@ -50,8 +50,8 @@ add_executable(MyCoolGameEngine main.c
         src/scene/tmap.c
         src/utils/action.h
         src/utils/action.c
-        src/scene/components/custom/camera.h
-        src/scene/components/custom/camera.c
+        src/scene/components/rendering/camera.h
+        src/scene/components/rendering/camera.c
         src/scene/entity_collection.h
         src/scene/entity_collection.c
         example.c
@@ -66,8 +66,8 @@ add_executable(MyCoolGameEngine main.c
         src/rendering/custom/renderer_square.c
         src/utils/rect_math.h
         src/utils/rect_math.c
-        src/scene/components/custom/box_renderer.h
-        src/scene/components/custom/box_renderer.c
+        src/scene/components/rendering/box_renderer.h
+        src/scene/components/rendering/box_renderer.c
         src/utils/color.h
         src/utils/parser.h
         src/utils/parser.c
@@ -104,8 +104,8 @@ add_executable(MyCoolGameEngine main.c
         src/scene/components/component_fabric.c
         src/interpreter/scene/interpreter_scene_new_entity.h
         src/interpreter/scene/interpreter_scene_new_entity.c
-        src/scene/components/custom/suicidal.h
-        src/scene/components/custom/suicidal.c
+        src/scene/components/demo/suicidal.h
+        src/scene/components/demo/suicidal.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3)

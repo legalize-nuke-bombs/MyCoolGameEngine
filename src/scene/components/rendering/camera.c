@@ -2,7 +2,7 @@
 
 #include <stdlib.h>
 
-#include "../transform.h"
+#include "../core/transform.h"
 #include "../component_internal.h"
 #include "../../entity.h"
 #include "../../../engine/engine.h"

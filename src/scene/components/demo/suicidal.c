@@ -4,7 +4,6 @@
 
 #include "suicidal.h"
 
-#include <stddef.h>
 #include <stdlib.h>
 
 #include "../component_internal.h"

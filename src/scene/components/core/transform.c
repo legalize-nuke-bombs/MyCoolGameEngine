@@ -2,8 +2,8 @@
 
 #include <stdlib.h>
 
-#include "component_internal.h"
-#include "../../utils/parser.h"
+#include "../component_internal.h"
+#include "../../../utils/parser.h"
 
 struct transform {
     struct component base;

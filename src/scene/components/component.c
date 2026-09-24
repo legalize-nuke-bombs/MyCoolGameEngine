@@ -5,7 +5,7 @@
 #include "../entity.h"
 #include "../../logging/logger.h"
 #include "../../utils/vector2_math.h"
-#include "transform.h"
+#include "core/transform.h"
 #include "../../utils/parser.h"
 
 void component_init(struct component *this, const struct component_vtable *vtable, struct parser *parser, struct entity *parent) {
