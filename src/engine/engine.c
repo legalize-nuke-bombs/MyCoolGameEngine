@@ -14,6 +14,7 @@
 #include "../rendering/renderer_pipeline.h"
 #include "../interpreter/interpreter.h"
 #include "../profiler/profiler.h"
+#include "../profiler/time_estimator.h"
 #include "../rendering/renderer_layer_manager.h"
 
 #include "../scene/scene.h"
@@ -135,16 +136,22 @@ void engine_execute(struct engine *this, const char *script_path) {
 
     bool run = true;
     while (run) {
+        time_estimator_start_block(profiler_get_frame_estimator(this->profiler));
+
         const Uint64 now = SDL_GetTicksNS();
         update_context.dt = (double)(now - previous) / 1e9;
         previous = now;
 
+        time_estimator_start_block(profiler_get_update_estimator(this->profiler));
         scene_update(this->scene, &update_context);
+        time_estimator_stop_block(profiler_get_update_estimator(this->profiler));
 
+        time_estimator_start_block(profiler_get_rendering_estimator(this->profiler));
         SDL_SetRenderDrawColor(this->renderer, 0, 0, 0, 255);
         SDL_RenderClear(this->renderer);
         renderer_pipeline_flush(this->renderer_pipeline);
         SDL_RenderPresent(this->renderer);
+        time_estimator_stop_block(profiler_get_rendering_estimator(this->profiler));
 
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
