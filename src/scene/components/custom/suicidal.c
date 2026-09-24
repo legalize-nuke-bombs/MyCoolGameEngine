@@ -46,6 +46,8 @@ static void suicidal_update(struct component *base, const struct update_context 
     const struct suicidal *this = (struct suicidal *)base;
 
     if (SDL_GetKeyboardState(NULL)[this->code]) {
+        // TODO This shit must be implemented via actions.
+        // However, actions do not support unsubscribes yet
         entity_mark_destroyed(component_get_parent(base));
     }
 }
