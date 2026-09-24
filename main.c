@@ -1,26 +1,31 @@
 #include <stddef.h>
+#include <stdlib.h>
 
 #include "src/engine/engine.h"
 #include "src/logging/logger.h"
 #include "version.h"
 
 static char* script_path_extract(const int argc, char* argv[]) {
-    char* script_path;
     if (argc >= 2) {
-        script_path = argv[1];
+        return argv[1];
     }
-    else {
-        script_path = NULL;
+    return NULL;
+}
+
+int logger_level_extract(const int argc, char* argv[]) {
+    if (argc >= 3) {
+        return atoi(argv[2]);
     }
-    return script_path;
+    return LOGGER_LEVEL_INFO;
 }
 
 
 int main(const int argc, char *argv[]) {
-    logger_init(LOGGER_LEVEL_DEBUG);
-    logger_info("MyCoolGameEngine v%d.%d.%d", VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH);
-
     const char* script_path = script_path_extract(argc, argv);
+    const int logger_level = logger_level_extract(argc, argv);
+
+    logger_init(logger_level);
+    logger_info("MyCoolGameEngine v%d.%d.%d", VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH);
 
     struct engine *engine = engine_create();
     if (engine == NULL) {
