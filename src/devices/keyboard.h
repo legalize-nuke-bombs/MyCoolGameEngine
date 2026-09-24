@@ -12,5 +12,6 @@ struct keyboard* keyboard_create();
 void keyboard_destroy(struct keyboard *this);
 
 struct action* keyboard_get_action_on_key_pressed(const struct keyboard *this, const char* keycode);
+struct action* keyboard_get_action_on_key_released(const struct keyboard *this, const char* keycode);
 
 #endif //MYCOOLGAMEENGINE_KEYBOARD_H

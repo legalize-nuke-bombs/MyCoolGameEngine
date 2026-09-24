@@ -129,6 +129,11 @@ void engine_execute(struct engine *this, const char *script_path) {
                 const char* scancode_name = SDL_GetScancodeName(scancode);
                 action_invoke(keyboard_get_action_on_key_pressed(devices_get_keyboard(engine_get_devices(this)), scancode_name), NULL);
             }
+            else if (event.type == SDL_EVENT_KEY_UP) {
+                const SDL_Scancode scancode = event.key.scancode;
+                const char* scancode_name = SDL_GetScancodeName(scancode);
+                action_invoke(keyboard_get_action_on_key_released(devices_get_keyboard(engine_get_devices(this)), scancode_name), NULL);
+            }
         }
     }
 }
