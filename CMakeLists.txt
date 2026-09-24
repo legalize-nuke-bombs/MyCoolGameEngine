@@ -115,3 +115,4 @@ add_executable(MyCoolGameEngine main.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3)
+target_link_options(MyCoolGameEngine PRIVATE $<$<CONFIG:Release>:-s>)
