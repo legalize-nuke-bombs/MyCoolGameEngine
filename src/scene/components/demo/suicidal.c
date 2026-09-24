@@ -8,27 +8,58 @@
 
 #include "../component_internal.h"
 #include "../../entity.h"
+#include "../../scene.h"
+#include "../../../devices/devices.h"
+#include "../../../devices/keyboard.h"
+#include "../../../engine/engine.h"
+#include "../../../utils/action.h"
 #include "../../../utils/parser.h"
 #include "SDL3/SDL_keyboard.h"
 
 
 struct suicidal {
     struct component base;
-    SDL_Scancode code;
+    char *keycode;
+    unsigned int subscription_token;
+    struct action *on_key_pressed;
 };
 
-static void suicidal_update(struct component *base, const struct update_context *context);
+static void suicidal_on_awake(struct component *base);
+static void suicidal_on_disable(struct component *base);
+static void suicidal_on_destroy(struct component *base);
 
 static const struct component_vtable suicidal_vtable = {
     .component_key = suicidal_component_key,
-    .on_awake = NULL,
-    .on_update = suicidal_update,
-    .on_disable = NULL,
-    .on_destroy = NULL
+    .on_awake = suicidal_on_awake,
+    .on_update = NULL,
+    .on_disable = suicidal_on_disable,
+    .on_destroy = suicidal_on_destroy
 };
 
 const char* suicidal_component_key(void) {
     return "suicidal";
+}
+
+static void suicide(void* base, void *context) {
+    entity_mark_destroyed(component_get_parent(base));
+}
+
+static void suicidal_on_awake(struct component *base) {
+    struct suicidal *this = (struct suicidal *)base;
+
+    this->on_key_pressed = keyboard_get_action_on_key_pressed(
+        devices_get_keyboard(
+            engine_get_devices(
+                scene_get_engine(
+                    entity_get_parent(
+                        component_get_parent(base))))), this->keycode);
+    action_subscribe(this->on_key_pressed, this, suicide, &this->subscription_token);
+
+}
+static void suicidal_on_disable(struct component *base) {
+    const struct suicidal *this = (struct suicidal *)base;
+
+    action_unsubscribe(this->on_key_pressed, this->subscription_token);
 }
 
 struct component* suicidal_create(struct parser *parser, struct entity *parent) {
@@ -36,18 +67,13 @@ struct component* suicidal_create(struct parser *parser, struct entity *parent) 
     struct component *base = (struct component *)this;
     component_init(base, &suicidal_vtable, parser, parent);
 
-    const char* active_key = parser_next(parser);
-    this->code = SDL_GetScancodeFromName(active_key);
+    this->keycode = parser_next_dup(parser);
 
     return base;
 }
 
-static void suicidal_update(struct component *base, const struct update_context *context) {
+static void suicidal_on_destroy(struct component *base) {
     const struct suicidal *this = (struct suicidal *)base;
 
-    if (SDL_GetKeyboardState(NULL)[this->code]) {
-        // TODO This shit must be implemented via actions.
-        // However, actions do not support unsubscribes yet
-        entity_mark_destroyed(component_get_parent(base));
-    }
+    free(this->keycode);
 }
