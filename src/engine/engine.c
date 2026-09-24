@@ -3,6 +3,9 @@
 //
 
 #include "engine.h"
+
+#include <stdlib.h>
+
 #include "../logging/logger.h"
 #include <SDL3/SDL.h>
 #include "../rendering/renderer_pipeline.h"
