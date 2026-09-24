@@ -25,9 +25,9 @@ struct parser* parser_create(const char* filename) {
         logger_warn("Parser failed to open %s", filename);
         return NULL;
     }
-    _fseeki64(file, 0, SEEK_END);
-    const long long size = _ftelli64(file);
-    _fseeki64(file, 0, SEEK_SET);
+    fseek(file, 0, SEEK_END);
+    const long long size = ftell(file);
+    fseek(file, 0, SEEK_SET);
 
     struct parser* parser = malloc(sizeof(struct parser));
     parser->buffer = malloc(size + 1);
