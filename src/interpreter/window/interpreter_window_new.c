@@ -19,11 +19,11 @@ struct interpreter_window_new {
     struct interpreter_command base;
 };
 
-static const char* interpreter_window_new_get_key(const struct interpreter_command *this) {
+static const char* interpreter_scene_new_get_key(const struct interpreter_command *this) {
     return "new";
 }
 
-static void interpreter_window_new_execute(const struct interpreter_command *this, struct parser *parser, struct engine *engine) {
+static void interpreter_scene_new_execute(const struct interpreter_command *this, struct parser *parser, struct engine *engine) {
     const char* token_name = parser_next(parser);
     if (token_name == NULL) {
         logger_warn("Interpreter failed to find fist arg (window name) for window new");
@@ -64,14 +64,14 @@ static void interpreter_window_new_execute(const struct interpreter_command *thi
     free(name);
 }
 
-static const struct interpreter_command_vtable renderer_layer_manager_new_layer_vtable = {
-    .key = interpreter_window_new_get_key,
-    .execute = interpreter_window_new_execute,
+static const struct interpreter_command_vtable window_new_vtable = {
+    .key = interpreter_scene_new_get_key,
+    .execute = interpreter_scene_new_execute,
     .on_destroy = NULL
 };
 
 struct interpreter_command* interpreter_window_new_create() {
     struct interpreter_window_new *this = malloc(sizeof(struct interpreter_window_new));
-    this->base.vtable = &renderer_layer_manager_new_layer_vtable;
+    this->base.vtable = &window_new_vtable;
     return (struct interpreter_command*)this;
 }

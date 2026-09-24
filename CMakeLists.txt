@@ -98,6 +98,10 @@ add_executable(MyCoolGameEngine main.c
         src/interpreter/renderer_layer_manager/interpreter_renderer_layer_manager.c
         src/interpreter/renderer_layer_manager/interpreter_renderer_layer_manager_new_layer.h
         src/interpreter/renderer_layer_manager/interpreter_renderer_layer_manager_new_layer.c
+        src/interpreter/scene/interpreter_scene.h
+        src/interpreter/scene/interpreter_scene.c
+        src/interpreter/scene/interpreter_scene_new.h
+        src/interpreter/scene/interpreter_scene_new.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3)

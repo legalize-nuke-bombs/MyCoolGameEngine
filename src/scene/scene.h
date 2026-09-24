@@ -12,7 +12,7 @@ struct scene;
 struct entity;
 struct engine;
 
-struct scene* scene_create(const char* name, const struct engine *engine);
+struct scene* scene_create(char* name, const struct engine *engine);
 void scene_awake(struct scene *this);
 void scene_destroy(struct scene *this);
 

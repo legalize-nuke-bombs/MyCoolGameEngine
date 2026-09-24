@@ -52,12 +52,12 @@ static const struct interpreter_command_vtable command_parent_vtable = {
     .on_destroy = interpreter_command_parent_on_destroy
 };
 
-struct interpreter_command_parent* interpreter_command_parent_create(const char* name, int capacity) {
+struct interpreter_command_parent* interpreter_command_parent_create(const char* name, const int dim) {
     struct interpreter_command_parent *this = malloc(sizeof(struct interpreter_command_parent));
     this->base.vtable = &command_parent_vtable;
 
     this->name = name;
-    this->command_register = interpreter_command_register_create(name, capacity);
+    this->command_register = interpreter_command_register_create(name, dim);
 
     return this;
 }

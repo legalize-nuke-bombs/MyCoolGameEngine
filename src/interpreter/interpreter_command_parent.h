@@ -8,7 +8,7 @@
 struct interpreter_command_parent;
 struct interpreter_command;
 
-struct interpreter_command_parent* interpreter_command_parent_create(const char* name, int capacity);
+struct interpreter_command_parent* interpreter_command_parent_create(const char* name, int dim);
 
 void interpreter_command_parent_capture_child(const struct interpreter_command_parent* this, struct interpreter_command* child);
 

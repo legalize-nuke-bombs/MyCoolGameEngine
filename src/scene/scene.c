@@ -15,14 +15,14 @@
 
 
 struct scene {
-    const char* name;
+    char* name;
     struct entity_collection* entities;
     struct tmap *tmap;
     double gcTimer;
     const struct engine *engine;
 };
 
-struct scene* scene_create(const char *name, const struct engine* engine) {
+struct scene* scene_create(char *name, const struct engine* engine) {
     struct scene *this = malloc(sizeof(struct scene));
     this->name = name;
     logger_info("Scene %s is initializing...", this->name);
@@ -39,6 +39,7 @@ void scene_awake(struct scene *this) {
 void scene_destroy(struct scene *this) {
     logger_info("Scene %s is destroying...", this->name);
 
+    free(this->name);
     entity_collection_destroy(this->entities);
     tmap_destroy(this->tmap);
     free(this);
