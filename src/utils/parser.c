@@ -44,6 +44,19 @@ void parser_destroy(struct parser* parser) {
     }
 }
 
+static void parser_warn_expected(const struct parser* parser, const char* expected) {
+    fpos_t position;
+    char word[WORD_MAX_LEN + 1];
+    fgetpos(parser->file, &position);
+    if (fscanf(parser->file, WORD_FORMAT, word) == 1) {
+        logger_warn("Parser expected %s, got %s", expected, word);
+        fsetpos(parser->file, &position);
+    }
+    else {
+        logger_warn("Parser expected %s, got end of file", expected);
+    }
+}
+
 const char* parser_next(struct parser* parser) {
     if (fscanf(parser->file, WORD_FORMAT, parser->word) == 1) {
         return parser->word;
@@ -59,7 +72,7 @@ int parser_next_int(const struct parser* parser, int* out_value) {
     if (fscanf(parser->file, "%d", out_value) == 1) {
         return 1;
     }
-    logger_warn("Parser expected int");
+    parser_warn_expected(parser, "int");
     *out_value = 0;
     return 0;
 }
@@ -67,7 +80,7 @@ int parser_next_char(const struct parser* parser, char* out_value) {
     if (fscanf(parser->file, "%c", out_value) == 1) {
         return 1;
     }
-    logger_warn("Parser expected char");
+    parser_warn_expected(parser, "char");
     *out_value = '\0';
     return 0;
 }
@@ -75,7 +88,7 @@ uint8_t parser_next_uint8(const struct parser* parser, uint8_t* out_value) {
     if (fscanf(parser->file, "%" SCNu8, out_value) == 1) {
         return 1;
     }
-    logger_warn("Parser expected uint8");
+    parser_warn_expected(parser, "uint8");
     *out_value = 0;
     return 0;
 }
@@ -83,7 +96,7 @@ int parser_next_double(const struct parser* parser, double* out_value) {
     if (fscanf(parser->file, "%lf", out_value) == 1) {
         return 1;
     }
-    logger_warn("Parser expected double");
+    parser_warn_expected(parser, "double");
     *out_value = 0;
     return 0;
 }
