@@ -106,6 +106,8 @@ add_executable(MyCoolGameEngine main.c
         src/interpreter/scene/interpreter_scene_new_entity.c
         src/scene/components/demo/suicidal.h
         src/scene/components/demo/suicidal.c
+        src/scene/components/demo/armageddon.h
+        src/scene/components/demo/armageddon.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3)
