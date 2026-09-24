@@ -12,10 +12,6 @@
 #include "../scene/scene.h"
 #include "../scene/entity.h"
 #include "../scene/components/component.h"
-#include "../scene/components/custom/box_renderer.h"
-#include "../scene/components/custom/camera.h"
-#include "../scene/components/custom/printer.h"
-#include "../scene/components/transform.h"
 #include "../scene/components/component_fabric.h"
 
 struct engine {
