@@ -11,6 +11,7 @@
 #include "interpreter_command_register.h"
 #include "../utils/parser.h"
 #include "custom/interpreter_print.h"
+#include "renderer_layer_manager/interpreter_renderer_layer_manager.h"
 #include "window/interpreter_window.h"
 
 
@@ -25,6 +26,7 @@ struct interpreter* interpreter_create(struct engine *engine) {
 
     interpreter->command_register = interpreter_command_register_create("Main", 5);
     interpreter_command_register_capture_command(interpreter->command_register, interpreter_print_as_interpreter_command(interpreter_print_create()));
+    interpreter_command_register_capture_command(interpreter->command_register, interpreter_renderer_layer_manager_create());
     interpreter_command_register_capture_command(interpreter->command_register, interpreter_window_create());
 
     interpreter->engine = engine;

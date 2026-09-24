@@ -64,7 +64,7 @@ static void interpreter_window_new_execute(const struct interpreter_command *thi
     free(name);
 }
 
-static const struct interpreter_command_vtable window_new_create = {
+static const struct interpreter_command_vtable renderer_layer_manager_new_layer_vtable = {
     .key = interpreter_window_new_get_key,
     .execute = interpreter_window_new_execute,
     .on_destroy = NULL
@@ -72,6 +72,6 @@ static const struct interpreter_command_vtable window_new_create = {
 
 struct interpreter_command* interpreter_window_new_create() {
     struct interpreter_window_new *this = malloc(sizeof(struct interpreter_window_new));
-    this->base.vtable = &window_new_create;
+    this->base.vtable = &renderer_layer_manager_new_layer_vtable;
     return (struct interpreter_command*)this;
 }

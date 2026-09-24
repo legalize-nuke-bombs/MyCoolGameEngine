@@ -1,0 +1,10 @@
+//
+// Created by nikita on 24.09.2026.
+//
+
+#ifndef MYCOOLGAMEENGINE_INTERPRETER_RENDERER_LAYER_MANAGER_H
+#define MYCOOLGAMEENGINE_INTERPRETER_RENDERER_LAYER_MANAGER_H
+
+struct interpreter_command* interpreter_renderer_layer_manager_create();
+
+#endif //MYCOOLGAMEENGINE_INTERPRETER_RENDERER_LAYER_MANAGER_H

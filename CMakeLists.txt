@@ -94,6 +94,10 @@ add_executable(MyCoolGameEngine main.c
         src/rendering/renderer_layer_manager.h
         src/rendering/renderer_layer_manager.c
         src/rendering/renderer_layer.c
+        src/interpreter/renderer_layer_manager/interpreter_renderer_layer_manager.h
+        src/interpreter/renderer_layer_manager/interpreter_renderer_layer_manager.c
+        src/interpreter/renderer_layer_manager/interpreter_renderer_layer_manager_new_layer.h
+        src/interpreter/renderer_layer_manager/interpreter_renderer_layer_manager_new_layer.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3)

@@ -1,2 +1,3 @@
 print hello
+renderer_layer_manager new_layer bg1 0
 window new MyCoolGameEngine 800 600

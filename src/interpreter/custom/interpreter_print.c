@@ -32,7 +32,7 @@ static void interpreter_window_new_execute(const struct interpreter_command *thi
     logger_info("Interpreter print: %s", context);
 }
 
-static const struct interpreter_command_vtable window_new_create = {
+static const struct interpreter_command_vtable renderer_layer_manager_new_layer_vtable = {
     .key = interpreter_window_new_get_key,
     .execute = interpreter_window_new_execute,
     .on_destroy = NULL
@@ -40,7 +40,7 @@ static const struct interpreter_command_vtable window_new_create = {
 
 struct interpreter_print* interpreter_print_create() {
     struct interpreter_print *self = malloc(sizeof(struct interpreter_print));
-    self->base.vtable = &window_new_create;
+    self->base.vtable = &renderer_layer_manager_new_layer_vtable;
     return self;
 }
 
