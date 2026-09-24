@@ -83,9 +83,6 @@ void engine_execute(struct engine *this, const char *script_path) {
     logger_info("Engine is executing script %s...", script_path);
     logger_info("Interpreter finished with exit code %d", interpreter_eval(this->interpreter, script_path));
 
-    char* scene_name = strdup("My scene");
-    engine_capture_scene(this, scene_create(scene_name, this));
-
     struct entity* entity = entity_create("My favourite entity", this->scene);
 
     struct printer* printer = printer_create(entity, "hi", "bye", 1);
