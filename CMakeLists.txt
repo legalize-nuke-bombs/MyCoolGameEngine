@@ -134,6 +134,8 @@ add_executable(MyCoolGameEngine main.c
         src/profiler/profiler.c
         src/profiler/time_estimator.h
         src/profiler/time_estimator.c
+        src/scene/components/core/idle.h
+        src/scene/components/core/idle.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3)
