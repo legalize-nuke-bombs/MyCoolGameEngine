@@ -97,13 +97,11 @@ void engine_execute(struct engine *this, const char *script_path) {
 
     Uint64 previous = SDL_GetTicksNS();
 
-    for (long long i = 0; i < 200; i++) {
+    bool run = true;
+    while (run) {
         const Uint64 now = SDL_GetTicksNS();
         update_context.dt = (double)(now - previous) / 1e9;
         previous = now;
-
-        SDL_Event event;
-        while (SDL_PollEvent(&event)) {}
 
         scene_update(this->scene, &update_context);
 
@@ -111,6 +109,13 @@ void engine_execute(struct engine *this, const char *script_path) {
         SDL_RenderClear(this->renderer);
         renderer_pipeline_flush(this->renderer_pipeline);
         SDL_RenderPresent(this->renderer);
+
+        SDL_Event event;
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_EVENT_QUIT) {
+                run = false;
+            }
+        }
     }
 }
 
