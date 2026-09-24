@@ -42,3 +42,12 @@ struct time_estimator* profiler_get_rendering_estimator(const struct profiler* t
     return this->rendering;
 }
 
+void profiler_log(const struct profiler* this) {
+    logger_info("Profiler output. Frame average %f ms (average %f fps). Update average %f ms. Rendering average %f ms.",
+            time_estimator_average_block_ms(this->frame),
+            time_estimator_average_block_fps(this->frame),
+            time_estimator_average_block_ms(this->update),
+            time_estimator_average_block_ms(this->rendering)
+        );
+}
+

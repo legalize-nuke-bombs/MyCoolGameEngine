@@ -49,3 +49,9 @@ unsigned long long time_estimator_average_block_ns(const struct time_estimator* 
     }
     return this->blocks_ns / this->blocks;
 }
+double time_estimator_average_block_ms(const struct time_estimator* this) {
+    return (double)time_estimator_average_block_ns(this) / 1e+6;
+}
+double time_estimator_average_block_fps(const struct time_estimator* this) {
+    return 1e+3 / time_estimator_average_block_ms(this);
+}

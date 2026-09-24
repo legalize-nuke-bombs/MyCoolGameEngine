@@ -15,4 +15,6 @@ struct time_estimator* profiler_get_frame_estimator(const struct profiler* this)
 struct time_estimator* profiler_get_update_estimator(const struct profiler* this);
 struct time_estimator* profiler_get_rendering_estimator(const struct profiler* this);
 
+void profiler_log(const struct profiler* this);
+
 #endif //MYCOOLGAMEENGINE_PROFILER_H

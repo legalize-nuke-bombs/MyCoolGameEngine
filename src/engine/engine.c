@@ -159,6 +159,9 @@ void engine_execute(struct engine *this, const char *script_path) {
                 run = false;
             }
             else if (event.type == SDL_EVENT_KEY_DOWN) {
+                if (event.key.scancode == SDL_SCANCODE_F3) {
+                    profiler_log(this->profiler);
+                }
                 engine_handle_key(this, event.key.scancode, true);
             }
             else if (event.type == SDL_EVENT_KEY_UP) {
