@@ -121,7 +121,7 @@ void engine_execute(struct engine *this, const char *script_path) {
     }
 }
 
-struct renderer_layer_manager* engine_get_renderer_layer_manager(struct engine *this) {
+struct renderer_layer_manager* engine_get_renderer_layer_manager(const struct engine *this) {
     return this->renderer_layer_manager;
 }
 void engine_capture_window(struct engine *this, SDL_Window *window) {

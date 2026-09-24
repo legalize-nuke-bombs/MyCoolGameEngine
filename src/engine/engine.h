@@ -15,7 +15,7 @@ void engine_destroy(struct engine *this);
 
 void engine_execute(struct engine *this, const char* script_path);
 
-struct renderer_layer_manager* engine_get_renderer_layer_manager(struct engine *this);
+struct renderer_layer_manager* engine_get_renderer_layer_manager(const struct engine *this);
 void engine_capture_window(struct engine *this, SDL_Window *window);
 void engine_capture_renderer(struct engine *this, SDL_Renderer *renderer);
 struct renderer_pipeline *engine_get_renderer_pipeline(const struct engine *this);
