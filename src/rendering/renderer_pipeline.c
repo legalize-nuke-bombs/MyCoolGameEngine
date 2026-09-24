@@ -10,7 +10,7 @@
 #include "../logging/logger.h"
 
 
-#define DRAW_CALLS_BUFFER_SIZE 1024
+#define DRAW_CALLS_BUFFER_SIZE (1 << 14)
 #define LAYER_PRIORITIES_COUNT (UINT8_MAX + 1)
 
 
