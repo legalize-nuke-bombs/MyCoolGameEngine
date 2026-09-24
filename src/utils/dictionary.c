@@ -1,5 +1,6 @@
 #include "dictionary.h"
 #include <stdlib.h>
+#include "../logging/logger.h"
 
 struct dictionary {
     struct dictionary_node *nodes;
@@ -11,6 +12,11 @@ struct dictionary {
 
 struct dictionary* dictionary_create(int dim, int (*hash)(const void*), bool (*equals)(const void*, const void*)) {
     if (dim < 0) {
+        logger_warn("Dictionary bad dim passed (%d)", dim);
+        dim = 0;
+    }
+    if (dim > 30) {
+        logger_warn("Dictionary bad dim passed (%d)", dim);
         dim = 0;
     }
     struct dictionary *dictionary = malloc(sizeof(struct dictionary));
@@ -45,6 +51,7 @@ bool dictionary_try_add(struct dictionary *dictionary, void *key, void *value) {
     const int capacity = dictionary_capacity(dictionary);
 
     if (dictionary->count >= capacity) {
+        logger_debug("Dictionary overflow (count %d, capacity %d)", dictionary->count, capacity);
         return false;
     }
 

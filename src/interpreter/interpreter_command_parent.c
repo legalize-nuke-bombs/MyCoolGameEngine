@@ -20,7 +20,8 @@ struct interpreter_command_parent {
 };
 
 static const char* interpreter_command_parent_get_key(const struct interpreter_command *base) {
-    return "print";
+    const struct interpreter_command_parent* this = (struct interpreter_command_parent*)base;
+    return this->name;
 }
 
 static void interpreter_command_parent_execute(const struct interpreter_command *base, struct parser *parser, const struct engine *engine) {

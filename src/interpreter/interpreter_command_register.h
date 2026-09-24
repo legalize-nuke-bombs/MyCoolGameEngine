@@ -8,7 +8,7 @@
 struct interpreter_command_register;
 struct interpreter_command;
 
-struct interpreter_command_register* interpreter_command_register_create(const char *name, int capacity);
+struct interpreter_command_register* interpreter_command_register_create(const char *name, int dim);
 void interpreter_command_register_destroy(struct interpreter_command_register* this);
 
 void interpreter_command_register_capture_command(const struct interpreter_command_register* this, struct interpreter_command* command);

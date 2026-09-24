@@ -17,10 +17,10 @@ struct interpreter_command_register {
 };
 
 
-struct interpreter_command_register* interpreter_command_register_create(const char *name, const int capacity) {
+struct interpreter_command_register* interpreter_command_register_create(const char *name, const int dim) {
     struct interpreter_command_register* this = malloc(sizeof(struct interpreter_command_register));
     this->name = name;
-    this->dictionary = string_dictionary_build(capacity);
+    this->dictionary = string_dictionary_build(dim);
     return this;
 }
 void interpreter_command_register_destroy(struct interpreter_command_register* this) {
@@ -37,8 +37,10 @@ void interpreter_command_register_destroy(struct interpreter_command_register* t
 
 void interpreter_command_register_capture_command(const struct interpreter_command_register* this, struct interpreter_command* command) {
     const char* command_key = interpreter_command_get_key(command);
-    logger_debug("Interpreter command register %s is registering command %s...", this->name, command_key);
-    if (!dictionary_try_add(this->dictionary, (void*)command_key, command)) {
+    if (dictionary_try_add(this->dictionary, (void*)command_key, command)) {
+        logger_debug("Interpreter command register %s registered command %s", this->name, command_key);
+    }
+    else {
         logger_error("Interpreter command register %s failed to register command %s", this->name, command_key);
     }
 }

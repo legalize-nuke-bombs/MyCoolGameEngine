@@ -11,6 +11,7 @@
 #include "interpreter_command_register.h"
 #include "../utils/parser.h"
 #include "custom/interpreter_print.h"
+#include "window/interpreter_window.h"
 
 
 struct interpreter {
@@ -21,8 +22,11 @@ struct interpreter {
 
 struct interpreter* interpreter_create(const struct engine *engine) {
     struct interpreter* interpreter = malloc(sizeof(struct interpreter));
-    interpreter->command_register = interpreter_command_register_create("Main", 128);
+
+    interpreter->command_register = interpreter_command_register_create("Main", 5);
     interpreter_command_register_capture_command(interpreter->command_register, interpreter_print_as_interpreter_command(interpreter_print_create()));
+    interpreter_command_register_capture_command(interpreter->command_register, interpreter_window_create());
+
     interpreter->engine = engine;
     return interpreter;
 }
