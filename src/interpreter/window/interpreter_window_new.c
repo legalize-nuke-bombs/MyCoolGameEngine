@@ -34,7 +34,6 @@ static void interpreter_window_new_execute(const struct interpreter_command *thi
     if (SDL_CreateWindowAndRenderer(name, width, height, SDL_WINDOW_RESIZABLE, &window, &renderer)) {
         engine_capture_window(engine, window);
         engine_capture_renderer(engine, renderer);
-        SDL_SetRenderVSync(renderer, 1);
         SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     }
     else {
