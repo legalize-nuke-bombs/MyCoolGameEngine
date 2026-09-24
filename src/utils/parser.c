@@ -5,6 +5,7 @@
 #include "parser.h"
 
 #include <inttypes.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -18,6 +19,7 @@
 struct parser {
     FILE *file;
     char word[WORD_MAX_LEN + 1];
+    bool word_pending;
 };
 
 struct parser* parser_create(const char* filename) {
@@ -32,6 +34,7 @@ struct parser* parser_create(const char* filename) {
         free(parser);
         return NULL;
     }
+    parser->word_pending = false;
     return parser;
 }
 
@@ -44,20 +47,11 @@ void parser_destroy(struct parser* parser) {
     }
 }
 
-static void parser_warn_expected(const struct parser* parser, const char* expected) {
-    fpos_t position;
-    char word[WORD_MAX_LEN + 1];
-    fgetpos(parser->file, &position);
-    if (fscanf(parser->file, WORD_FORMAT, word) == 1) {
-        logger_warn("Parser expected %s, got %s", expected, word);
-        fsetpos(parser->file, &position);
-    }
-    else {
-        logger_warn("Parser expected %s, got end of file", expected);
-    }
-}
-
 const char* parser_next(struct parser* parser) {
+    if (parser->word_pending) {
+        parser->word_pending = false;
+        return parser->word;
+    }
     if (fscanf(parser->file, WORD_FORMAT, parser->word) == 1) {
         return parser->word;
     }
@@ -68,37 +62,35 @@ char* parser_next_dup(struct parser* parser) {
     return word != NULL ? strdup(word) : NULL;
 }
 
-int parser_next_int(const struct parser* parser, int* out_value) {
-    if (fscanf(parser->file, "%d", out_value) == 1) {
+static int parser_next_scanned(struct parser* parser, const char* expected, const char* format, void* out_value) {
+    const char* word = parser_next(parser);
+    if (word == NULL) {
+        logger_warn("Parser expected %s, got end of file", expected);
+        return 0;
+    }
+    int consumed = 0;
+    sscanf(word, format, out_value, &consumed);
+    if (consumed == (int)strlen(word)) {
         return 1;
     }
-    parser_warn_expected(parser, "int");
-    *out_value = 0;
+    logger_warn("Parser expected %s, got %s", expected, word);
+    parser->word_pending = true;
     return 0;
 }
-int parser_next_char(const struct parser* parser, char* out_value) {
-    if (fscanf(parser->file, "%c", out_value) == 1) {
-        return 1;
-    }
-    parser_warn_expected(parser, "char");
+
+int parser_next_int(struct parser* parser, int* out_value) {
+    *out_value = 0;
+    return parser_next_scanned(parser, "int", "%d%n", out_value);
+}
+int parser_next_char(struct parser* parser, char* out_value) {
     *out_value = '\0';
-    return 0;
+    return parser_next_scanned(parser, "char", "%c%n", out_value);
 }
-uint8_t parser_next_uint8(const struct parser* parser, uint8_t* out_value) {
-    if (fscanf(parser->file, "%" SCNu8, out_value) == 1) {
-        return 1;
-    }
-    parser_warn_expected(parser, "uint8");
+uint8_t parser_next_uint8(struct parser* parser, uint8_t* out_value) {
     *out_value = 0;
-    return 0;
+    return parser_next_scanned(parser, "uint8", "%" SCNu8 "%n", out_value);
 }
-int parser_next_double(const struct parser* parser, double* out_value) {
-    if (fscanf(parser->file, "%lf", out_value) == 1) {
-        return 1;
-    }
-    parser_warn_expected(parser, "double");
+int parser_next_double(struct parser* parser, double* out_value) {
     *out_value = 0;
-    return 0;
+    return parser_next_scanned(parser, "double", "%lf%n", out_value);
 }
-
-
