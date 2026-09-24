@@ -11,7 +11,7 @@
 #include "entity_collection.h"
 
 
-#define GC_INTERVAL 1
+#define GC_INTERVAL 5
 
 
 struct scene {
@@ -85,9 +85,12 @@ static void scene_run_gc(struct scene *this, double dt) {
         return;
     }
     this->gcTimer -= GC_INTERVAL;
-    logger_info("Scene %s launched gc", this->name);
-    tmap_remove_dead(this->tmap);
-    entity_collection_destroy_dead(this->entities);
+    logger_debug("Scene %s launched gc", this->name);
+    const int tmap_gc_num = tmap_remove_dead(this->tmap);
+    const int entity_collection_gc_num = entity_collection_destroy_dead(this->entities);
+    if (tmap_gc_num + entity_collection_gc_num > 0) {
+        logger_info("Scene %s gc report: tmap cleared %d components, entity collection cleared %d entities", this->name, tmap_gc_num, entity_collection_gc_num);
+    }
 }
 
 void scene_update(struct scene *this, const struct update_context *context) {

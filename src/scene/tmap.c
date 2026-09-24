@@ -62,7 +62,7 @@ const struct list* tmap_try_get_components(const struct tmap *this, const char *
     return dictionary_get(this->dictionary, (void*) component_key);
 }
 
-void tmap_remove_dead(const struct tmap *this) {
+int tmap_remove_dead(const struct tmap *this) {
     int ctr = 0;
     for (int i = 0; i < dictionary_capacity(this->dictionary); i++) {
         const struct dictionary_node dictionary_node = dictionary_get_node(this->dictionary, i);
@@ -81,4 +81,5 @@ void tmap_remove_dead(const struct tmap *this) {
         list_remove_nulls(list);
     }
     logger_debug("TMap removed %d dead components", ctr);
+    return ctr;
 }

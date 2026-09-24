@@ -48,7 +48,7 @@ void entity_collection_update(const struct entity_collection *this, const struct
     }
 }
 
-void entity_collection_destroy_dead(const struct entity_collection *this) {
+int entity_collection_destroy_dead(const struct entity_collection *this) {
     int ctr = 0;
     for (int i = 0; i < list_count(this->list); i++) {
         struct entity *entity = list_get(this->list, i);
@@ -60,4 +60,5 @@ void entity_collection_destroy_dead(const struct entity_collection *this) {
     }
     list_remove_nulls(this->list);
     logger_debug("Entity_collection destroyed %d dead entities", ctr);
+    return ctr;
 }

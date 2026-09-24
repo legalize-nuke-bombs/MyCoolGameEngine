@@ -18,6 +18,6 @@ void entity_collection_add(const struct entity_collection *this, struct entity *
 
 void entity_collection_update(const struct entity_collection *this, const struct update_context *context);
 
-void entity_collection_destroy_dead(const struct entity_collection *this);
+int entity_collection_destroy_dead(const struct entity_collection *this);
 
 #endif //MYCOOLGAMEENGINE_ENTITY_COLLECTION_H
