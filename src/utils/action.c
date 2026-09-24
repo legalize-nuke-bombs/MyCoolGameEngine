@@ -36,7 +36,6 @@ void action_destroy(struct action *this) {
 }
 
 void action_subscribe(const struct action *this, void *listener, void (*action)(void*, void*), unsigned int *subscription_token) {
-    logger_debug("Action subscription");
     struct action_method *action_method = malloc(sizeof(struct action_method));
     action_method->listener = listener;
     action_method->action = action;
@@ -44,14 +43,12 @@ void action_subscribe(const struct action *this, void *listener, void (*action)(
     list_add(this->list, action_method);
 }
 void action_unsubscribe(const struct action *this, unsigned int subscription_token) {
-    logger_debug("Action unsubscription");
     free(list_get(this->list, subscription_token));
     list_set(this->list, subscription_token, NULL);
 }
 
 
 void action_invoke(const struct action *this, void* action_context) {
-    logger_debug("Action is invoking...");
     int ctr = 0;
     for (int i = 0; i < list_count(this->list); i++) {
         const struct action_method* action_method = list_get(this->list, i);
@@ -61,5 +58,4 @@ void action_invoke(const struct action *this, void* action_context) {
         ctr++;
         action_method->action(action_method->listener, action_context);
     }
-    logger_debug("Actions invoked: %d", ctr);
 }
