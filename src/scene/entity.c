@@ -19,9 +19,9 @@ struct entity {
     struct scene *parent;
 };
 
-struct entity* entity_create(struct scene *parent) {
+struct entity* entity_create(const char *name, struct scene *parent) {
     struct entity *this = malloc(sizeof(struct entity));
-    this->name = "Default entity";
+    this->name = name;
     logger_debug("Entity %s is initializing...", this->name);
     this->awake = false;
     this->alive = true;
@@ -64,10 +64,6 @@ void entity_mark_destroyed(struct entity *this) {
 
 const char* entity_get_name(const struct entity *this) {
     return this->name;
-}
-void entity_set_name(struct entity *this, const char *name) {
-    logger_debug("Entity %s is renaming to %s", this->name, name);
-    this->name = name;
 }
 
 bool entity_is_awake(const struct entity *this) {

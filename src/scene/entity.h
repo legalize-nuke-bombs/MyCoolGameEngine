@@ -10,13 +10,12 @@ struct entity;
 struct scene;
 struct transform;
 
-struct entity* entity_create(struct scene *parent);
+struct entity* entity_create(const char *name, struct scene *parent);
 void entity_awake(struct entity *this);
 void entity_destroy(struct entity *this);
 void entity_mark_destroyed(struct entity *this);
 
 const char *entity_get_name(const struct entity *this);
-void entity_set_name(struct entity *this, const char *name);
 
 bool entity_is_awake(const struct entity *this);
 bool entity_is_alive(const struct entity *this);

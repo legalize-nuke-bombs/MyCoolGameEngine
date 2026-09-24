@@ -79,8 +79,7 @@ void engine_execute(struct engine *this, const char *script_path) {
 
     engine_capture_scene(this, scene_create("My scene", this));
 
-    struct entity* entity = entity_create(this->scene);
-    entity_set_name(entity, "My favourite entity");
+    struct entity* entity = entity_create("My favourite entity", this->scene);
 
     struct printer* printer = printer_create(entity, "hi", "bye", 1);
     struct transform* transform = transform_create(entity, &vector2_zero, &vector2_one);
