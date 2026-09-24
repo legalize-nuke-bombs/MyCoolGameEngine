@@ -13,6 +13,7 @@
 #include "custom/interpreter_print.h"
 #include "renderer_layer_manager/interpreter_renderer_layer_manager.h"
 #include "window/interpreter_window.h"
+#include "../logging/logger.h"
 
 
 struct interpreter {
@@ -22,6 +23,7 @@ struct interpreter {
 
 
 struct interpreter* interpreter_create(struct engine *engine) {
+    logger_info("Interpreter is creating...");
     struct interpreter* interpreter = malloc(sizeof(struct interpreter));
 
     interpreter->command_register = interpreter_command_register_create("Main", 5);
@@ -33,6 +35,7 @@ struct interpreter* interpreter_create(struct engine *engine) {
     return interpreter;
 }
 void interpreter_destroy(struct interpreter* this) {
+    logger_info("Interpreter is destroying...");
     interpreter_command_register_destroy(this->command_register);
     free(this);
 }

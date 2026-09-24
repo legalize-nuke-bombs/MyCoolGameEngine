@@ -15,11 +15,13 @@ struct entity_collection {
 };
 
 struct entity_collection *entity_collection_create(void) {
+    logger_info("Entity_collection is creating...");
     struct entity_collection *entities = malloc(sizeof(struct entity_collection));
     entities->list = list_create(16);
     return entities;
 }
 void entity_collection_destroy(struct entity_collection *this) {
+    logger_info("Entity_collection is destroying...");
     for (int i = 0; i < list_count(this->list); i++) {
         struct entity *entity = list_get(this->list, i);
         entity_destroy(entity);
@@ -57,5 +59,5 @@ void entity_collection_destroy_dead(const struct entity_collection *this) {
         }
     }
     list_remove_nulls(this->list);
-    logger_debug("entity_collection destroyed %d dead entities", ctr);
+    logger_debug("Entity_collection destroyed %d dead entities", ctr);
 }

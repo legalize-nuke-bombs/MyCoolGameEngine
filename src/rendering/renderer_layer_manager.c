@@ -17,11 +17,13 @@ struct renderer_layer_manager {
 
 
 struct renderer_layer_manager* renderer_layer_manager_create() {
+    logger_info("Renderer layer manager is creating...");
     struct renderer_layer_manager *this = malloc(sizeof(struct renderer_layer_manager));
     this->dictionary = string_dictionary_build(8);
     return this;
 }
 void renderer_layer_manager_destroy(struct renderer_layer_manager *this) {
+    logger_info("Renderer layer manager is destroying...");
     for (int i = 0; i < dictionary_capacity(this->dictionary); i++) {
         const struct dictionary_node node = dictionary_get_node(this->dictionary, i);
         if (node.value == NULL) {

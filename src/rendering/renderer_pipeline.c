@@ -29,6 +29,7 @@ struct renderer_pipeline {
 
 
 struct renderer_pipeline* renderer_pipeline_create(struct SDL_Renderer *native_renderer) {
+    logger_info("Renderer pipeline is creating...");
     struct renderer_pipeline *this = malloc(sizeof(struct renderer_pipeline));
     this->native_renderer = native_renderer;
     this->viewport_enabled = false;
@@ -38,6 +39,7 @@ struct renderer_pipeline* renderer_pipeline_create(struct SDL_Renderer *native_r
     return this;
 }
 void renderer_pipeline_destroy(struct renderer_pipeline *this) {
+    logger_info("Renderer pipeline is destroying...");
     free(this);
 }
 

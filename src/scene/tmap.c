@@ -17,11 +17,13 @@ struct tmap {
 };
 
 struct tmap* tmap_create(void) {
+    logger_info("TMap is creating...");
     struct tmap *this = malloc(sizeof(struct tmap));
     this->dictionary = string_dictionary_build(10);
     return this;
 }
 void tmap_destroy(struct tmap *this) {
+    logger_info("TMap is destroying...");
     for (int i = 0; i < dictionary_capacity(this->dictionary); i++) {
         const struct dictionary_node dictionary_node = dictionary_get_node(this->dictionary, i);
         if (dictionary_node.value != NULL) {
@@ -78,5 +80,5 @@ void tmap_remove_dead(const struct tmap *this) {
         }
         list_remove_nulls(list);
     }
-    logger_debug("tmap removed %d dead components", ctr);
+    logger_debug("TMap removed %d dead components", ctr);
 }

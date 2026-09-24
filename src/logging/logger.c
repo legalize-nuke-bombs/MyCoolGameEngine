@@ -7,13 +7,14 @@
 
 static int logger_level;
 
-void logger_init(int level) {
+void logger_init(const int level) {
     if (level >= LOGGER_LEVEL_MIN && level <= LOGGER_LEVEL_MAX) {
         logger_level = level;
     }
     else {
         logger_level = LOGGER_LEVEL_DISABLED;
     }
+    logger_info("Logger initialized with logging level %d", level);
 }
 
 void logger_log(int level, const char* format, ...) {
