@@ -10,7 +10,7 @@
 #include "../logging/logger.h"
 
 struct entity {
-    const char *name;
+    char *name;
     bool awake;
     bool alive;
     struct list *components;
@@ -19,7 +19,7 @@ struct entity {
     struct scene *parent;
 };
 
-struct entity* entity_create(const char *name, struct scene *parent) {
+struct entity* entity_create(char *name, struct scene *parent) {
     struct entity *this = malloc(sizeof(struct entity));
     this->name = name;
     logger_debug("Entity %s is initializing...", this->name);
@@ -42,6 +42,7 @@ void entity_awake(struct entity *this) {
 }
 void entity_destroy(struct entity *this) {
     logger_debug("Entity %s is destroying..", this->name);
+    free(this->name);
     for (int i = 0; i < list_count(this->components); i++) {
         struct component *component = list_get(this->components, i);
         component_destroy(component);

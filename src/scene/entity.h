@@ -10,7 +10,7 @@ struct entity;
 struct scene;
 struct transform;
 
-struct entity* entity_create(const char *name, struct scene *parent);
+struct entity* entity_create(char *name, struct scene *parent);
 void entity_awake(struct entity *this);
 void entity_destroy(struct entity *this);
 void entity_mark_destroyed(struct entity *this);

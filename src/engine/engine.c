@@ -88,7 +88,7 @@ void engine_execute(struct engine *this, const char *script_path) {
     logger_info("Engine is executing script %s...", script_path);
     logger_info("Interpreter finished with exit code %d", interpreter_eval(this->interpreter, script_path));
 
-    struct entity* entity = entity_create("My favourite entity", this->scene);
+    struct entity* entity = entity_create(strdup("My favourite entity"), this->scene);
 
     scene_capture_entity(this->scene, entity);
 
