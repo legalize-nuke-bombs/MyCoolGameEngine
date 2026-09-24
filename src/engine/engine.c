@@ -140,6 +140,10 @@ void engine_capture_renderer(struct engine *this, SDL_Renderer *renderer) {
         SDL_DestroyRenderer(this->renderer);
     }
     this->renderer = renderer;
+    if (this->renderer_pipeline != NULL) {
+        renderer_pipeline_destroy(this->renderer_pipeline);
+    }
+    this->renderer_pipeline = renderer_pipeline_create(renderer);
 }
 struct renderer_pipeline *engine_get_renderer_pipeline(const struct engine *this) {
     return this->renderer_pipeline;

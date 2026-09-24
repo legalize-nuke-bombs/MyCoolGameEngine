@@ -25,14 +25,20 @@ static const char* interpreter_command_parent_get_key(const struct interpreter_c
 }
 
 static void interpreter_command_parent_execute(const struct interpreter_command *base, struct parser *parser, struct engine *engine) {
-    const char* context = parser_next(parser);
+    const struct interpreter_command_parent* this = (struct interpreter_command_parent*)base;
 
-    if (context == NULL) {
-        logger_warn("Interpreter failed to find argument for `print`");
+    const char* command_key = parser_next(parser);
+    if (command_key == NULL) {
+        logger_warn("Interpreter `%s` failed to find next command key", this->name);
         return;
     }
 
-    logger_info("Interpreter print: %s", context);
+    const struct interpreter_command* command = interpreter_command_register_try_get_command(this->command_register, command_key);
+    if (command == NULL) {
+        return;
+    }
+
+    interpreter_command_execute(command, parser, engine);
 }
 
 static void interpreter_command_parent_on_destroy(struct interpreter_command* base) {

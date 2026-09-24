@@ -1,2 +1,2 @@
 print hello
-window new
+window new MyCoolGameEngine 800 600
