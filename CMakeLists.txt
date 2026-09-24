@@ -16,6 +16,24 @@ FetchContent_Declare(
         EXCLUDE_FROM_ALL
         SYSTEM
 )
+set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -ffunction-sections -fdata-sections")
+
+set(SDL_GPU OFF)
+set(SDL_VULKAN OFF)
+set(SDL_OPENGL OFF)
+set(SDL_OPENGLES OFF)
+set(SDL_RENDER_GPU OFF)
+set(SDL_RENDER_VULKAN OFF)
+set(SDL_RENDER_D3D12 OFF)
+set(SDL_RENDER_D3D OFF)
+set(SDL_JOYSTICK OFF)
+set(SDL_HAPTIC OFF)
+set(SDL_HIDAPI OFF)
+set(SDL_CAMERA OFF)
+set(SDL_SENSOR OFF)
+set(SDL_POWER OFF)
+set(SDL_DIALOG OFF)
+set(SDL_TRAY OFF)
 FetchContent_MakeAvailable(SDL3)
 
 add_executable(MyCoolGameEngine main.c
@@ -115,4 +133,12 @@ add_executable(MyCoolGameEngine main.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3)
-target_link_options(MyCoolGameEngine PRIVATE $<$<CONFIG:Release>:-s>)
+target_link_options(MyCoolGameEngine PRIVATE $<$<CONFIG:Release>:-s -Wl,--gc-sections>)
+
+include(CheckIPOSupported)
+check_ipo_supported(RESULT ipo_supported OUTPUT ipo_error LANGUAGES C)
+if(ipo_supported)
+    set_property(TARGET MyCoolGameEngine PROPERTY INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE)
+else()
+    message(WARNING "LTO is off: ${ipo_error}")
+endif()
