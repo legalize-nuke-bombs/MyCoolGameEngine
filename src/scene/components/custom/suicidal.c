@@ -24,6 +24,7 @@ static const struct component_vtable suicidal_vtable = {
     .component_key = suicidal_component_key,
     .on_awake = NULL,
     .on_update = suicidal_update,
+    .on_disable = NULL,
     .on_destroy = NULL
 };
 

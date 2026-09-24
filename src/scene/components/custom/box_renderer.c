@@ -34,6 +34,7 @@ static const struct component_vtable box_renderer_vtable = {
     .component_key = box_renderer_component_key,
     .on_awake = box_renderer_awake,
     .on_update = box_renderer_update,
+    .on_disable = NULL,
     .on_destroy = box_renderer_on_destroy
 };
 

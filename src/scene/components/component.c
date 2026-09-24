@@ -22,13 +22,14 @@ void component_init(struct component *this, const struct component_vtable *vtabl
 void component_awake(struct component *this) {
     logger_debug("Entity %s is awaking component %s...", component_get_parent_name(this), component_get_key(this));
     this->awake = true;
-    if (this->vtable->on_awake != NULL) {
+    if (this->vtable->on_awake) {
         this->vtable->on_awake(this);
     }
 }
 void component_destroy(struct component *this) {
     logger_debug("Entity %s is destroying component %s...", component_get_parent_name(this), component_get_key(this));
-    if (this->vtable->on_destroy != NULL) {
+    component_mark_destroyed(this);
+    if (this->vtable->on_destroy) {
         this->vtable->on_destroy(this);
     }
     free(this);
@@ -39,6 +40,9 @@ void component_mark_destroyed(struct component *this) {
     }
     logger_debug("Entity %s is marking destroyed component %s...", component_get_parent_name(this), component_get_key(this));
     this->alive = false;
+    if (this->vtable->on_disable) {
+        this->vtable->on_disable(this);
+    }
 }
 
 bool component_is_awake(const struct component *this) {

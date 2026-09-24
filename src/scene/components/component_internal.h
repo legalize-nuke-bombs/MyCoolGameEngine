@@ -11,6 +11,7 @@ struct component_vtable {
     const char* (*component_key)(void);
     void (*on_awake)(struct component *this);
     void (*on_update)(struct component *this, const struct update_context *context);
+    void (*on_disable)(struct component *this);
     void (*on_destroy)(struct component *this);
 };
 

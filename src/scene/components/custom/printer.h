@@ -1,9 +1,7 @@
 #ifndef MYCOOLGAMEENGINE_PRINTER_H
 #define MYCOOLGAMEENGINE_PRINTER_H
 
-#include "../component.h"
-
-struct printer;
+struct entity;
 struct parser;
 
 const char* printer_component_key(void);
