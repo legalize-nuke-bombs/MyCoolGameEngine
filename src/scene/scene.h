@@ -5,7 +5,7 @@
 #ifndef MYCOOLGAMEENGINE_SCENE_H
 #define MYCOOLGAMEENGINE_SCENE_H
 
-#include "../engine/update_context.h"
+#include "update_context.h"
 #include "tmap.h"
 
 struct scene;

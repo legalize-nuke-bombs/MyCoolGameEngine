@@ -2,7 +2,7 @@
 #define MYCOOLGAMEENGINE_COMPONENT_H
 
 #include <stdbool.h>
-#include "../../engine/update_context.h"
+#include "../update_context.h"
 #include "../../utils/vector2.h"
 
 struct component;

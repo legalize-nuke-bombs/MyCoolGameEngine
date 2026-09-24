@@ -50,7 +50,7 @@ add_executable(MyCoolGameEngine main.c
         src/logging/logger.c
         src/scene/components/demo/printer.h
         src/scene/components/demo/printer.c
-        src/engine/update_context.h
+        src/scene/update_context.h
         src/scene/scene.h
         src/scene/scene.c
         version.h

@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 
-#include "../engine/update_context.h"
+#include "update_context.h"
 #include "components/component.h"
 
 struct entity;
