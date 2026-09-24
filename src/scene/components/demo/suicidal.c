@@ -40,7 +40,7 @@ const char* suicidal_component_key(void) {
     return "suicidal";
 }
 
-static void suicide(void* base, void *context) {
+static void suicidal_suicide(void* base, void *context) {
     entity_mark_destroyed(component_get_parent(base));
 }
 
@@ -53,7 +53,7 @@ static void suicidal_on_awake(struct component *base) {
                 scene_get_engine(
                     entity_get_parent(
                         component_get_parent(base))))), this->keycode);
-    action_subscribe(this->on_key_pressed, this, suicide, &this->subscription_token);
+    action_subscribe(this->on_key_pressed, this, suicidal_suicide, &this->subscription_token);
 
 }
 static void suicidal_on_disable(struct component *base) {
