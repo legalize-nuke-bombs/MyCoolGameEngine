@@ -20,30 +20,18 @@ struct keyboard {
 
 struct keyboard* keyboard_create() {
     logger_info("Keyboard is creating...");
-    struct keyboard* this = malloc(sizeof(struct keyboard));
-    for (int i = 0; i < SDL3_SCANCODE_NUMBER; i++) {
-        this->on_key_pressed[i] = NULL;
-    }
-    for (int i = 0; i < SDL3_SCANCODE_NUMBER; i++) {
-        this->on_key_released[i] = NULL;
-    }
+    struct keyboard* this = calloc(1, sizeof(struct keyboard));
     return this;
 }
 void keyboard_destroy(struct keyboard *this) {
     logger_info("Keyboard is destroying...");
     for (int i = 0; i < SDL3_SCANCODE_NUMBER; i++) {
-        struct action* action = this->on_key_pressed[i];
-        if (action == NULL) {
-            continue;
+        if (this->on_key_pressed[i] != NULL) {
+            action_destroy(this->on_key_pressed[i]);
         }
-        action_destroy(action);
-    }
-    for (int i = 0; i < SDL3_SCANCODE_NUMBER; i++) {
-        struct action* action = this->on_key_released[i];
-        if (action == NULL) {
-            continue;
+        if (this->on_key_released[i] != NULL) {
+            action_destroy(this->on_key_released[i]);
         }
-        action_destroy(this->on_key_released[i]);
     }
     free(this);
 }
@@ -56,19 +44,23 @@ static int keyboard_keycode_to_native_keycode(const char* keycode) {
     return scancode;
 }
 
-struct action* keyboard_get_action_on_key_pressed(struct keyboard *this, const char* keycode) {
-    const int native_keycode = keyboard_keycode_to_native_keycode(keycode);
-    if (this->on_key_pressed[native_keycode]) {
-        return this->on_key_pressed[native_keycode];
+static struct action* keyboard_require_action(struct action **slot) {
+    if (*slot == NULL) {
+        *slot = action_create();
     }
-    this->on_key_pressed[native_keycode] = action_create();
-    return this->on_key_pressed[native_keycode];
+    return *slot;
 }
-struct action* keyboard_get_action_on_key_released(struct keyboard *this, const char* keycode) {
-    const int native_keycode = keyboard_keycode_to_native_keycode(keycode);
-    if (this->on_key_released[native_keycode]) {
-        return this->on_key_released[native_keycode];
-    }
-    this->on_key_released[native_keycode] = action_create();
-    return this->on_key_released[native_keycode];
+
+struct action* keyboard_try_get_action_on_key_pressed(const struct keyboard *this, const char* keycode) {
+    return this->on_key_pressed[keyboard_keycode_to_native_keycode(keycode)];
+}
+struct action* keyboard_try_get_action_on_key_released(const struct keyboard *this, const char* keycode) {
+    return this->on_key_released[keyboard_keycode_to_native_keycode(keycode)];
+}
+
+struct action* keyboard_require_action_on_key_pressed(struct keyboard *this, const char* keycode) {
+    return keyboard_require_action(&this->on_key_pressed[keyboard_keycode_to_native_keycode(keycode)]);
+}
+struct action* keyboard_require_action_on_key_released(struct keyboard *this, const char* keycode) {
+    return keyboard_require_action(&this->on_key_released[keyboard_keycode_to_native_keycode(keycode)]);
 }
