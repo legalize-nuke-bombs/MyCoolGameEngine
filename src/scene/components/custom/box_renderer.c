@@ -9,7 +9,6 @@
 #include "../component_internal.h"
 #include "../../../rendering/renderer_pipeline.h"
 #include "../../../rendering/custom/renderer_square.h"
-#include "../../../rendering/renderer_layers.h"
 #include "../../entity.h"
 #include "../../scene.h"
 #include "../../../engine/engine.h"
@@ -62,7 +61,7 @@ static void box_renderer_update(struct component *base, const struct update_cont
             .size = component_get_scale(base)
         },
         .primitive = renderer_square_as_renderer_primitive(this->square),
-        .layer = renderer_layer_bg1
+        .layer = NULL
     };
     renderer_pipeline_draw_primitive(this->renderer, draw_call);
 }

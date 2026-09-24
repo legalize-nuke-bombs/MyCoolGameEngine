@@ -7,6 +7,7 @@
 #include <SDL3/SDL.h>
 #include "../rendering/renderer_pipeline.h"
 #include "../interpreter/interpreter.h"
+#include "../rendering/renderer_layer_manager.h"
 
 #include "../scene/scene.h"
 #include "../scene/entity.h"
@@ -18,6 +19,7 @@
 #include "../utils/colors.h"
 
 struct engine {
+    struct renderer_layer_manager *renderer_layer_manager;
     SDL_Window *window;
     SDL_Renderer *renderer;
     struct renderer_pipeline *renderer_pipeline;
@@ -35,6 +37,7 @@ struct engine* engine_create() {
         return NULL;
     }
     struct engine *this = malloc(sizeof(struct engine));
+    this->renderer_layer_manager = renderer_layer_manager_create();
     this->window = NULL;
     this->renderer = NULL;
     this->renderer_pipeline = NULL;
@@ -64,6 +67,9 @@ void engine_destroy(struct engine *this) {
         SDL_DestroyWindow(this->window);
     }
     SDL_Quit();
+    if (this->renderer_layer_manager != NULL) {
+        renderer_layer_manager_destroy(this->renderer_layer_manager);
+    }
 
     free(this);
 }
@@ -126,6 +132,9 @@ void engine_execute(struct engine *this, const char *script_path) {
     }
 }
 
+struct renderer_layer_manager* engine_get_renderer_layer_manager(struct engine *this) {
+    return this->renderer_layer_manager;
+}
 void engine_capture_window(struct engine *this, SDL_Window *window) {
     logger_info("Engine is capturing window...");
     if (this->window != NULL) {

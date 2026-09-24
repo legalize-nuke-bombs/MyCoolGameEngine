@@ -61,7 +61,7 @@ void renderer_pipeline_draw_primitive(struct renderer_pipeline *this, struct ren
 static void renderer_pipeline_sort_draw_calls(struct renderer_pipeline *this) {
     int offsets[LAYER_PRIORITIES_COUNT] = {0};
     for (int i = 0; i < this->draw_calls_count; i++) {
-        offsets[this->draw_calls[i].layer.priority]++;
+        offsets[renderer_layer_get_priority(this->draw_calls[i].layer)]++;
     }
     int offset = 0;
     for (int priority = 0; priority < LAYER_PRIORITIES_COUNT; priority++) {
@@ -70,7 +70,7 @@ static void renderer_pipeline_sort_draw_calls(struct renderer_pipeline *this) {
         offset += count;
     }
     for (int i = 0; i < this->draw_calls_count; i++) {
-        this->sorted_draw_calls[offsets[this->draw_calls[i].layer.priority]++] = this->draw_calls[i];
+        this->sorted_draw_calls[offsets[renderer_layer_get_priority(this->draw_calls[i].layer)]++] = this->draw_calls[i];
     }
 }
 
