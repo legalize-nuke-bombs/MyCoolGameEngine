@@ -18,14 +18,11 @@
 #include "../utils/colors.h"
 
 struct engine {
-    bool running;
-
     SDL_Window *window;
     SDL_Renderer *renderer;
-
     struct renderer_pipeline *renderer_pipeline;
-    struct interpreter *interpreter;
 
+    struct interpreter *interpreter;
     struct scene *scene;
 };
 
@@ -38,21 +35,11 @@ struct engine* engine_create() {
         return NULL;
     }
     struct engine *this = malloc(sizeof(struct engine));
-    this->running = false;
     this->window = NULL;
     this->renderer = NULL;
-    if (!SDL_CreateWindowAndRenderer("MyCoolGameEngine", 800, 600, SDL_WINDOW_RESIZABLE, &this->window, &this->renderer)) {
-        logger_error("SDL_CreateWindowAndRenderer failed: %s", SDL_GetError());
-        SDL_Quit();
-        free(this);
-        return NULL;
-    }
-    SDL_SetRenderVSync(this->renderer, 1);
-    SDL_SetRenderDrawBlendMode(this->renderer, SDL_BLENDMODE_BLEND);
+    this->renderer_pipeline = NULL;
 
-    this->renderer_pipeline = renderer_pipeline_create(this->renderer);
     this->interpreter = interpreter_create(this);
-
     this->scene = NULL;
 
     return this;
@@ -60,32 +47,37 @@ struct engine* engine_create() {
 void engine_destroy(struct engine *this) {
     logger_info("Engine is destroying...");
 
-    interpreter_destroy(this->interpreter);
-    renderer_pipeline_destroy(this->renderer_pipeline);
+    if (this->scene != NULL) {
+        scene_destroy(this->scene);
+    }
+    if (this->interpreter != NULL) {
+        interpreter_destroy(this->interpreter);
+    }
 
-    SDL_DestroyRenderer(this->renderer);
-    SDL_DestroyWindow(this->window);
+    if (this->renderer_pipeline != NULL) {
+        renderer_pipeline_destroy(this->renderer_pipeline);
+    }
+    if (this->renderer != NULL) {
+        SDL_DestroyRenderer(this->renderer);
+    }
+    if (this->window != NULL) {
+        SDL_DestroyWindow(this->window);
+    }
     SDL_Quit();
 
     free(this);
 }
 
-void engine_run(struct engine *this, const char *script_path) {
-    if (this->running) {
-        logger_warn("Engine failed to start: already running");
-        return;
-    }
+void engine_execute(struct engine *this, const char *script_path) {
     if (script_path == NULL) {
         logger_warn("Engine will not start: script is not set");
         return;
     }
 
-    logger_info("Engine is starting using script %s...", script_path);
-    this->running = true;
-
+    logger_info("Engine is executing script %s...", script_path);
     logger_info("Interpreter finished with exit code %d", interpreter_eval(this->interpreter, script_path));
 
-    this->scene = scene_create("My scene", this);
+    engine_capture_scene(this, scene_create("My scene", this));
 
     struct entity* entity = entity_create(this->scene);
     entity_set_name(entity, "My favourite entity");
@@ -133,14 +125,30 @@ void engine_run(struct engine *this, const char *script_path) {
         renderer_pipeline_flush(this->renderer_pipeline);
         SDL_RenderPresent(this->renderer);
     }
+}
 
-    this->running = false;
+void engine_capture_window(struct engine *this, SDL_Window *window) {
+    logger_info("Engine is capturing window...");
+    if (this->window != NULL) {
+        SDL_DestroyWindow(this->window);
+    }
+    this->window = window;
+}
+void engine_capture_renderer(struct engine *this, SDL_Renderer *renderer) {
+    logger_info("Engine is capturing renderer...");
+    if (this->renderer != NULL) {
+        SDL_DestroyRenderer(this->renderer);
+    }
+    this->renderer = renderer;
+}
+struct renderer_pipeline *engine_get_renderer_pipeline(const struct engine *this) {
+    return this->renderer_pipeline;
+}
+
+void engine_capture_scene(struct engine *this, struct scene *scene) {
+    logger_info("Engine is capturing scene...");
     if (this->scene != NULL) {
         scene_destroy(this->scene);
     }
-    this->scene = NULL;
-}
-
-struct renderer_pipeline *engine_get_renderer_pipeline(const struct engine *this) {
-    return this->renderer_pipeline;
+    this->scene = scene;
 }

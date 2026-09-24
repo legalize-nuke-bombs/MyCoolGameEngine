@@ -22,7 +22,7 @@ int main(const int argc, char *argv[]) {
         return 1;
     }
 
-    engine_run(engine, script_path);
+    engine_execute(engine, script_path);
 
     engine_destroy(engine);
 
