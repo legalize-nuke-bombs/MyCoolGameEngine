@@ -22,7 +22,7 @@ static const char* interpreter_scene_new_get_key(const struct interpreter_comman
 
 static void interpreter_scene_new_execute(const struct interpreter_command *this, struct parser *parser, struct engine *engine) {
     const char* context = parser_next(parser);
-    logger_info("Interpreter print: %s", context);
+    logger_info("Interpreter: %s", context);
 }
 
 static const struct interpreter_command_vtable window_new_vtable = {
