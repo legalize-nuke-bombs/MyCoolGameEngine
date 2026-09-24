@@ -12,7 +12,7 @@
 struct interpreter;
 struct engine;
 
-struct interpreter* interpreter_create(const struct engine *engine);
+struct interpreter* interpreter_create(struct engine *engine);
 void interpreter_destroy(struct interpreter* this);
 
 int interpreter_eval(const struct interpreter *this, const char* script_path);

@@ -16,11 +16,11 @@
 
 struct interpreter {
     struct interpreter_command_register *command_register;
-    const struct engine *engine;
+    struct engine *engine;
 };
 
 
-struct interpreter* interpreter_create(const struct engine *engine) {
+struct interpreter* interpreter_create(struct engine *engine) {
     struct interpreter* interpreter = malloc(sizeof(struct interpreter));
 
     interpreter->command_register = interpreter_command_register_create("Main", 5);
