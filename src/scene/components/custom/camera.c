@@ -8,7 +8,6 @@
 #include "../../../engine/engine.h"
 #include "../../scene.h"
 #include "../../../rendering/renderer_pipeline.h"
-#include <SDL3/SDL.h>
 
 
 struct camera {
@@ -19,13 +18,11 @@ struct camera {
 
 static void camera_awake(struct component *base);
 static void camera_update(struct component *base, const struct update_context *context);
-static void camera_destroy(struct component *base);
 
 static const struct component_vtable camera_vtable = {
     .component_key = camera_component_key,
     .on_awake = camera_awake,
-    .on_update = camera_update,
-    .on_destroy = camera_destroy
+    .on_update = camera_update
 };
 
 const char* camera_component_key(void) {
@@ -52,10 +49,4 @@ static void camera_update(struct component *base, const struct update_context *c
     const struct camera *this = (struct camera *) base;
 
     renderer_pipeline_set_viewpoint(this->renderer, component_get_position(base));
-}
-
-static void camera_destroy(struct component *base) {
-    const struct camera *this = (struct camera *) base;
-
-    renderer_pipeline_remove_viewport(this->renderer);
 }

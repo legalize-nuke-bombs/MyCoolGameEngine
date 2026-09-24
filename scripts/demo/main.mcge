@@ -20,9 +20,8 @@ end
 
 scene new_entity MyFavouriteEntity
 transform 0 0 1 1 0 0 50 50
-camera 0 0 1 1
 box_renderer 0 0 1 1 character1 0 0 255 255
-suicidal 0 0 1 1 I
+camera 0 0 1 1
 end
 
 scene new_entity Enemy
@@ -35,6 +34,7 @@ scene new_entity Enemy
 transform 0 0 1 1 225 225 60 60
 box_renderer 0 0 1 1 character2 0 0 0 255
 box_renderer 0 0 8 8 shadow 0 0 0 100
+suicidal 0 0 1 1 I
 end
 
 print MainScriptEnded!
