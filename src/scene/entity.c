@@ -14,6 +14,7 @@ struct entity {
     bool awake;
     bool alive;
     struct list *components;
+    struct list *components_updateable;
     struct action *on_component_captured;
     struct transform *transform;
     struct scene *parent;
@@ -26,6 +27,7 @@ struct entity* entity_create(char *name, struct scene *parent) {
     this->awake = false;
     this->alive = true;
     this->components = list_create(1);
+    this->components_updateable = list_create(1);
     this->on_component_captured = action_create();
     this->transform = NULL;
     this->parent = parent;
@@ -47,6 +49,7 @@ void entity_destroy(struct entity *this) {
         component_destroy(component);
     }
     list_destroy(this->components);
+    list_destroy(this->components_updateable);
     action_destroy(this->on_component_captured);
     free(this->name);
     free(this);
@@ -99,6 +102,9 @@ void entity_capture_component(struct entity *this, struct component *component) 
     }
     logger_debug("Entity %s is capturing component %s", this->name, component_get_key(component));
     list_add(this->components, component);
+    if (component_is_updateable(component)) {
+        list_add(this->components_updateable, component);
+    }
     action_invoke(this->on_component_captured, component);
 }
 struct component* entity_get_component_by_index(const struct entity *this, const int index) {
@@ -123,11 +129,11 @@ struct component* entity_get_component(const struct entity *this, const char *na
 }
 
 void entity_update(const struct entity *this, const struct update_context *context) {
-    for (int i = 0; i < list_count(this->components); i++) {
+    for (int i = 0; i < list_count(this->components_updateable); i++) {
         if (!entity_is_alive(this)) {
             break;
         }
-        struct component *component = list_get(this->components, i);
+        struct component *component = list_get(this->components_updateable, i);
         component_update(component, context);
     }
 }
