@@ -9,6 +9,8 @@
 #include "../interpreter_command_internal.h"
 #include "../../utils/parser.h"
 #include "../../logging/logger.h"
+#include "../../scene/entity.h"
+#include "../../scene/scene.h"
 
 
 struct interpreter_scene_new_entity {
@@ -20,7 +22,16 @@ static const char* interpreter_scene_new_entity_get_key(const struct interpreter
 }
 
 static void interpreter_scene_new_entity_execute(const struct interpreter_command *this, struct parser *parser, struct engine *engine) {
-    logger_error("Not implemented yet");
+    struct scene *scene = engine_get_scene(engine);
+    if (scene == NULL) {
+        logger_warn("Interpreter failed to execute scene new_entity: scene is not set");
+        return;
+    }
+
+    char* entity_name = parser_next_dup(parser);
+
+    struct entity *entity = entity_create(entity_name, scene);
+    scene_capture_entity(scene, entity);
 }
 
 static const struct interpreter_command_vtable scene_new_entity_vtable = {

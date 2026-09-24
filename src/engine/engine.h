@@ -20,6 +20,7 @@ void engine_capture_window(struct engine *this, SDL_Window *window);
 void engine_capture_renderer(struct engine *this, SDL_Renderer *renderer);
 struct renderer_pipeline *engine_get_renderer_pipeline(const struct engine *this);
 
+struct scene* engine_get_scene(const struct engine *this);
 void engine_capture_scene(struct engine *this, struct scene *scene);
 
 #endif //MYCOOLGAMEENGINE_ENGINE_H

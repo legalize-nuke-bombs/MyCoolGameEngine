@@ -88,10 +88,6 @@ void engine_execute(struct engine *this, const char *script_path) {
     logger_info("Engine is executing script %s...", script_path);
     logger_info("Interpreter finished with exit code %d", interpreter_eval(this->interpreter, script_path));
 
-    struct entity* entity = entity_create(strdup("My favourite entity"), this->scene);
-
-    scene_capture_entity(this->scene, entity);
-
     scene_awake(this->scene);
 
     struct update_context update_context = {
@@ -104,10 +100,6 @@ void engine_execute(struct engine *this, const char *script_path) {
         const Uint64 now = SDL_GetTicksNS();
         update_context.dt = (double)(now - previous) / 1e9;
         previous = now;
-
-        if (i == 101) {
-            entity_mark_destroyed(entity);
-        }
 
         SDL_Event event;
         while (SDL_PollEvent(&event)) {}
@@ -146,6 +138,9 @@ struct renderer_pipeline *engine_get_renderer_pipeline(const struct engine *this
     return this->renderer_pipeline;
 }
 
+struct scene* engine_get_scene(const struct engine *this) {
+    return this->scene;
+}
 void engine_capture_scene(struct engine *this, struct scene *scene) {
     logger_info("Engine is capturing scene...");
     if (this->scene != NULL) {
