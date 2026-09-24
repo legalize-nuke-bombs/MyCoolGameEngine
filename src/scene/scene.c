@@ -40,9 +40,9 @@ void scene_awake(struct scene *this) {
 void scene_destroy(struct scene *this) {
     logger_info("Scene %s is destroying...", this->name);
 
-    free(this->name);
     entity_collection_destroy(this->entities);
     tmap_destroy(this->tmap);
+    free(this->name);
     free(this);
 }
 

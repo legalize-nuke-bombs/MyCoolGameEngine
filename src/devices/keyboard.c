@@ -41,7 +41,11 @@ void keyboard_destroy(struct keyboard *this) {
 }
 
 static int keyboard_keycode_to_native_keycode(const char* keycode) {
-    return SDL_GetScancodeFromName(keycode);
+    const SDL_Scancode scancode = SDL_GetScancodeFromName(keycode);
+    if (scancode == SDL_SCANCODE_UNKNOWN) {
+        logger_warn("Keyboard does not know key %s", keycode);
+    }
+    return scancode;
 }
 
 struct action* keyboard_get_action_on_key_pressed(const struct keyboard *this, const char* keycode) {

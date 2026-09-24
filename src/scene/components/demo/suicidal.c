@@ -8,7 +8,6 @@
 
 #include "../component_internal.h"
 #include "../../entity.h"
-#include "../../scene.h"
 #include "../../../devices/devices.h"
 #include "../../../devices/keyboard.h"
 #include "../../../engine/engine.h"
@@ -47,14 +46,10 @@ static void suicidal_suicide(void* base, void *context) {
 static void suicidal_on_awake(struct component *base) {
     struct suicidal *this = (struct suicidal *)base;
 
-    this->on_key_pressed = keyboard_get_action_on_key_pressed(
-        devices_get_keyboard(
-            engine_get_devices(
-                scene_get_engine(
-                    entity_get_parent(
-                        component_get_parent(base))))), this->keycode);
+    const struct engine *engine = entity_get_engine(component_get_parent(base));
+    const struct keyboard *keyboard = devices_get_keyboard(engine_get_devices(engine));
+    this->on_key_pressed = keyboard_get_action_on_key_pressed(keyboard, this->keycode);
     action_subscribe(this->on_key_pressed, this, suicidal_suicide, &this->subscription_token);
-
 }
 static void suicidal_on_disable(struct component *base) {
     const struct suicidal *this = (struct suicidal *)base;

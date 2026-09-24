@@ -19,11 +19,11 @@ struct interpreter_window_new {
     struct interpreter_command base;
 };
 
-static const char* interpreter_scene_new_get_key(const struct interpreter_command *this) {
+static const char* interpreter_window_new_get_key(const struct interpreter_command *this) {
     return "new";
 }
 
-static void interpreter_scene_new_execute(const struct interpreter_command *this, struct parser *parser, struct engine *engine) {
+static void interpreter_window_new_execute(const struct interpreter_command *this, struct parser *parser, struct engine *engine) {
     char* name = parser_next_dup(parser);
     int width, height;
     parser_next_int(parser, &width);
@@ -45,8 +45,8 @@ static void interpreter_scene_new_execute(const struct interpreter_command *this
 }
 
 static const struct interpreter_command_vtable window_new_vtable = {
-    .key = interpreter_scene_new_get_key,
-    .execute = interpreter_scene_new_execute,
+    .key = interpreter_window_new_get_key,
+    .execute = interpreter_window_new_execute,
     .on_destroy = NULL
 };
 

@@ -89,6 +89,18 @@ void engine_destroy(struct engine *this) {
     free(this);
 }
 
+static void engine_handle_key(const struct engine *this, const SDL_Scancode scancode, const bool down) {
+    const char* scancode_name = SDL_GetScancodeName(scancode);
+    if (scancode_name[0] == '\0') {
+        return;
+    }
+    const struct keyboard *keyboard = devices_get_keyboard(this->devices);
+    const struct action *action = down
+        ? keyboard_get_action_on_key_pressed(keyboard, scancode_name)
+        : keyboard_get_action_on_key_released(keyboard, scancode_name);
+    action_invoke(action, NULL);
+}
+
 void engine_execute(struct engine *this, const char *script_path) {
     if (script_path == NULL) {
         logger_warn("Engine will not start: script is not set");
@@ -97,6 +109,15 @@ void engine_execute(struct engine *this, const char *script_path) {
 
     logger_info("Engine is executing script %s...", script_path);
     logger_info("Interpreter finished with exit code %d", interpreter_eval(this->interpreter, script_path));
+
+    if (this->renderer == NULL) {
+        logger_warn("Engine will not start: script did not create a window");
+        return;
+    }
+    if (this->scene == NULL) {
+        logger_warn("Engine will not start: script did not create a scene");
+        return;
+    }
 
     scene_awake(this->scene);
 
@@ -125,14 +146,10 @@ void engine_execute(struct engine *this, const char *script_path) {
                 run = false;
             }
             else if (event.type == SDL_EVENT_KEY_DOWN) {
-                const SDL_Scancode scancode = event.key.scancode;
-                const char* scancode_name = SDL_GetScancodeName(scancode);
-                action_invoke(keyboard_get_action_on_key_pressed(devices_get_keyboard(engine_get_devices(this)), scancode_name), NULL);
+                engine_handle_key(this, event.key.scancode, true);
             }
             else if (event.type == SDL_EVENT_KEY_UP) {
-                const SDL_Scancode scancode = event.key.scancode;
-                const char* scancode_name = SDL_GetScancodeName(scancode);
-                action_invoke(keyboard_get_action_on_key_released(devices_get_keyboard(engine_get_devices(this)), scancode_name), NULL);
+                engine_handle_key(this, event.key.scancode, false);
             }
         }
     }

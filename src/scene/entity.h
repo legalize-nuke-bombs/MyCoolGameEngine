@@ -8,6 +8,7 @@
 
 struct entity;
 struct scene;
+struct engine;
 struct transform;
 
 struct entity* entity_create(char *name, struct scene *parent);
@@ -21,6 +22,7 @@ bool entity_is_awake(const struct entity *this);
 bool entity_is_alive(const struct entity *this);
 
 struct scene* entity_get_parent(const struct entity *this);
+const struct engine* entity_get_engine(const struct entity *this);
 
 struct transform* entity_get_transform(const struct entity *this);
 

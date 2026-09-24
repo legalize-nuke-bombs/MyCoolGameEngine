@@ -10,7 +10,6 @@
 #include "../../../rendering/renderer_pipeline.h"
 #include "../../../rendering/custom/renderer_square.h"
 #include "../../entity.h"
-#include "../../scene.h"
 #include "../../../engine/engine.h"
 #include "../../../rendering/renderer_layer_manager.h"
 #include "../../../utils/parser.h"
@@ -71,7 +70,7 @@ static void box_renderer_on_destroy(struct component *base) {
 static void box_renderer_awake(struct component *base) {
     struct box_renderer *this = (struct box_renderer *) base;
 
-    const struct engine *engine = scene_get_engine(entity_get_parent(component_get_parent(base)));
+    const struct engine *engine = entity_get_engine(component_get_parent(base));
     this->renderer = engine_get_renderer_pipeline(engine);
     this->renderer_layer = renderer_layer_manager_try_get(engine_get_renderer_layer_manager(engine), this->renderer_layer_name);
 }

@@ -42,13 +42,13 @@ void entity_awake(struct entity *this) {
 }
 void entity_destroy(struct entity *this) {
     logger_debug("Entity %s is destroying..", this->name);
-    free(this->name);
     for (int i = 0; i < list_count(this->components); i++) {
         struct component *component = list_get(this->components, i);
         component_destroy(component);
     }
     list_destroy(this->components);
     action_destroy(this->on_component_captured);
+    free(this->name);
     free(this);
 }
 void entity_mark_destroyed(struct entity *this) {
@@ -76,6 +76,9 @@ bool entity_is_alive(const struct entity *this) {
 
 struct scene* entity_get_parent(const struct entity *this) {
     return this->parent;
+}
+const struct engine* entity_get_engine(const struct entity *this) {
+    return scene_get_engine(this->parent);
 }
 
 struct transform* entity_get_transform(const struct entity *this) {

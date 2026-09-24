@@ -81,12 +81,9 @@ static void armageddon_execute(void *base, void *context) {
 
 static void armageddon_awake(struct component *base) {
     struct armageddon *this = (struct armageddon *)base;
-    this->on_key_pressed = keyboard_get_action_on_key_pressed(
-        devices_get_keyboard(
-            engine_get_devices(
-                scene_get_engine(
-                    entity_get_parent(
-                        component_get_parent(base))))), this->keycode);
+    const struct engine *engine = entity_get_engine(component_get_parent(base));
+    const struct keyboard *keyboard = devices_get_keyboard(engine_get_devices(engine));
+    this->on_key_pressed = keyboard_get_action_on_key_pressed(keyboard, this->keycode);
     action_subscribe(this->on_key_pressed, this, armageddon_execute, &this->subscription_token);
     this->tmap = scene_get_tmap(entity_get_parent(component_get_parent(base)));
 }

@@ -40,7 +40,7 @@ void component_mark_destroyed(struct component *this) {
     }
     logger_debug("Entity %s is marking destroyed component %s...", component_get_parent_name(this), component_get_key(this));
     this->alive = false;
-    if (this->vtable->on_disable) {
+    if (this->awake && this->vtable->on_disable) {
         this->vtable->on_disable(this);
     }
 }

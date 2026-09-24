@@ -10,11 +10,14 @@
 #include <string.h>
 #include "../logging/logger.h"
 
-#define WORD_MAX_LEN 128
+#define WORD_MAX_LEN 127
+#define STRINGIFY_(x) #x
+#define STRINGIFY(x) STRINGIFY_(x)
+#define WORD_FORMAT "%" STRINGIFY(WORD_MAX_LEN) "s"
 
 struct parser {
     FILE *file;
-    char word[WORD_MAX_LEN];
+    char word[WORD_MAX_LEN + 1];
 };
 
 struct parser* parser_create(const char* filename) {
@@ -42,40 +45,46 @@ void parser_destroy(struct parser* parser) {
 }
 
 const char* parser_next(struct parser* parser) {
-    if (fscanf(parser->file, "%s", parser->word) == 1) {
+    if (fscanf(parser->file, WORD_FORMAT, parser->word) == 1) {
         return parser->word;
     }
     return NULL;
 }
 char* parser_next_dup(struct parser* parser) {
-    if (fscanf(parser->file, "%s", parser->word) == 1) {
-        return strdup(parser->word);
-    }
-    return NULL;
+    const char* word = parser_next(parser);
+    return word != NULL ? strdup(word) : NULL;
 }
 
 int parser_next_int(const struct parser* parser, int* out_value) {
     if (fscanf(parser->file, "%d", out_value) == 1) {
         return 1;
     }
+    logger_warn("Parser expected int");
+    *out_value = 0;
     return 0;
 }
 int parser_next_char(const struct parser* parser, char* out_value) {
     if (fscanf(parser->file, "%c", out_value) == 1) {
         return 1;
     }
+    logger_warn("Parser expected char");
+    *out_value = '\0';
     return 0;
 }
 uint8_t parser_next_uint8(const struct parser* parser, uint8_t* out_value) {
     if (fscanf(parser->file, "%" SCNu8, out_value) == 1) {
         return 1;
     }
+    logger_warn("Parser expected uint8");
+    *out_value = 0;
     return 0;
 }
 int parser_next_double(const struct parser* parser, double* out_value) {
     if (fscanf(parser->file, "%lf", out_value) == 1) {
         return 1;
     }
+    logger_warn("Parser expected double");
+    *out_value = 0;
     return 0;
 }
 
