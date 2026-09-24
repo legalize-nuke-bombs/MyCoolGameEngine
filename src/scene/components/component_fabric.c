@@ -47,6 +47,12 @@ void component_fabric_destroy(struct component_fabric *this) {
     free(this);
 }
 
-struct component* component_fabric_try_produce_component(struct component_fabric *this, struct parser *parser, struct entity *parent) {
-
+struct component* component_fabric_try_produce_component(const struct component_fabric *this, const char *component_key, struct parser *parser, struct entity *parent) {
+    struct component*(*constructor)(struct parser *parser, struct entity *parent) = dictionary_get(this->types, (void*)component_key);
+    if (constructor) {
+        logger_debug("Component fabric is producing component %s...", component_key);
+        return constructor(parser, parent);
+    }
+    logger_warn("Component fabric failed to find component %s", component_key);
+    return NULL;
 }

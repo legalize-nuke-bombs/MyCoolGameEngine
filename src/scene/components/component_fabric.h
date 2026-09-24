@@ -13,6 +13,6 @@ struct entity;
 struct component_fabric* component_fabric_create();
 void component_fabric_destroy(struct component_fabric *this);
 
-struct component* component_fabric_try_produce_component(struct component_fabric *this, struct parser *parser, struct entity *parent);
+struct component* component_fabric_try_produce_component(const struct component_fabric *this, const char *component_key, struct parser *parser, struct entity *parent);
 
 #endif //MYCOOLGAMEENGINE_COMPONENT_FABRIC_H

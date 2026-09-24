@@ -4,6 +4,7 @@
 
 #include "interpreter_scene_new_entity.h"
 #include <stdlib.h>
+#include <string.h>
 
 #include "../../engine/engine.h"
 #include "../interpreter_command_internal.h"
@@ -11,6 +12,7 @@
 #include "../../logging/logger.h"
 #include "../../scene/entity.h"
 #include "../../scene/scene.h"
+#include "../../scene/components/component_fabric.h"
 
 
 struct interpreter_scene_new_entity {
@@ -25,6 +27,12 @@ static void interpreter_scene_new_entity_execute(const struct interpreter_comman
     struct scene *scene = engine_get_scene(engine);
     if (scene == NULL) {
         logger_warn("Interpreter failed to execute scene new_entity: scene is not set");
+        for (; ;) {
+            const char* word = parser_next(parser);
+            if (word == NULL || strcmp("word", "end") == 0) {
+                break;
+            }
+        }
         return;
     }
 
@@ -32,6 +40,19 @@ static void interpreter_scene_new_entity_execute(const struct interpreter_comman
 
     struct entity *entity = entity_create(entity_name, scene);
     scene_capture_entity(scene, entity);
+
+    struct component_fabric *component_fabric = engine_get_component_fabric(engine);
+    for (; ;) {
+        const char* word = parser_next(parser);
+        if (word == NULL || strcmp("word", "end") == 0) {
+            break;
+        }
+        struct component* component = component_fabric_try_produce_component(component_fabric, word, parser, entity);
+        if (component == NULL) {
+            continue;
+        }
+        entity_capture_component(entity, component);
+    }
 }
 
 static const struct interpreter_command_vtable scene_new_entity_vtable = {

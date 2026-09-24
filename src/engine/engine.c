@@ -113,9 +113,13 @@ void engine_execute(struct engine *this, const char *script_path) {
     }
 }
 
+struct component_fabric* engine_get_component_fabric(const struct engine *this) {
+    return this->component_fabric;
+}
 struct renderer_layer_manager* engine_get_renderer_layer_manager(const struct engine *this) {
     return this->renderer_layer_manager;
 }
+
 void engine_capture_window(struct engine *this, SDL_Window *window) {
     logger_info("Engine is capturing window...");
     if (this->window != NULL) {

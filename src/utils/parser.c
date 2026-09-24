@@ -4,6 +4,7 @@
 
 #include "parser.h"
 
+#include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -60,7 +61,7 @@ int parser_next_int(const struct parser* parser, int* out_value) {
     return 0;
 }
 uint8_t parser_next_uint8(const struct parser* parser, uint8_t* out_value) {
-    if (fscanf(parser->file, "%d", out_value) == 1) {
+    if (fscanf(parser->file, "%" SCNu8, out_value) == 1) {
         return 1;
     }
     return 0;
