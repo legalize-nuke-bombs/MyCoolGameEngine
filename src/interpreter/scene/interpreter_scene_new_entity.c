@@ -29,7 +29,7 @@ static void interpreter_scene_new_entity_execute(const struct interpreter_comman
         logger_warn("Interpreter failed to execute scene new_entity: scene is not set");
         for (; ;) {
             const char* word = parser_next(parser);
-            if (word == NULL || strcmp("word", "end") == 0) {
+            if (word == NULL || strcmp(word, "end") == 0) {
                 break;
             }
         }
@@ -44,7 +44,7 @@ static void interpreter_scene_new_entity_execute(const struct interpreter_comman
     struct component_fabric *component_fabric = engine_get_component_fabric(engine);
     for (; ;) {
         const char* word = parser_next(parser);
-        if (word == NULL || strcmp("word", "end") == 0) {
+        if (word == NULL || strcmp(word, "end") == 0) {
             break;
         }
         struct component* component = component_fabric_try_produce_component(component_fabric, word, parser, entity);
