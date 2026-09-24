@@ -42,6 +42,7 @@ void interpreter_command_register_capture_command(const struct interpreter_comma
     }
     else {
         logger_error("Interpreter command register %s failed to register command %s", this->name, command_key);
+        interpreter_command_destroy(command);
     }
 }
 
