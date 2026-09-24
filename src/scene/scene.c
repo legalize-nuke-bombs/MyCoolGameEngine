@@ -9,6 +9,7 @@
 
 #include "entity.h"
 #include "entity_collection.h"
+#include "../utils/action.h"
 
 
 #define GC_INTERVAL 5
@@ -76,8 +77,9 @@ void scene_capture_entity(struct scene *this, struct entity *entity) {
         handle_new_component(this, component);
     }
 
+    const struct action* entity_on_component_captured = entity_get_action_on_component_captured(entity);
     unsigned int subscription_token; // We do not unsubscribe because scene always lives longer than it's entities
-    entity_subscribe_on_component_captured(entity, this, handle_new_component, &subscription_token);
+    action_subscribe(entity_on_component_captured, this, handle_new_component, &subscription_token);
 }
 
 static void scene_run_gc(struct scene *this, double dt) {

@@ -82,8 +82,8 @@ struct transform* entity_get_transform(const struct entity *this) {
     return this->transform;
 }
 
-void entity_subscribe_on_component_captured(struct entity *this, void *listener, void (*action)(void*, void*), unsigned int *subscription_token) {
-    action_subscribe(this->on_component_captured, listener, action, subscription_token);
+struct action* entity_get_action_on_component_captured(const struct entity *this) {
+    return this->on_component_captured;
 }
 
 int entity_get_components_count(const struct entity *this) {
