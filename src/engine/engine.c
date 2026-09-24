@@ -94,7 +94,7 @@ static void engine_handle_key(const struct engine *this, const SDL_Scancode scan
     if (scancode_name[0] == '\0') {
         return;
     }
-    const struct keyboard *keyboard = devices_get_keyboard(this->devices);
+    struct keyboard *keyboard = devices_get_keyboard(this->devices);
     const struct action *action = down
         ? keyboard_get_action_on_key_pressed(keyboard, scancode_name)
         : keyboard_get_action_on_key_released(keyboard, scancode_name);

@@ -47,7 +47,7 @@ static void suicidal_on_awake(struct component *base) {
     struct suicidal *this = (struct suicidal *)base;
 
     const struct engine *engine = entity_get_engine(component_get_parent(base));
-    const struct keyboard *keyboard = devices_get_keyboard(engine_get_devices(engine));
+    struct keyboard *keyboard = devices_get_keyboard(engine_get_devices(engine));
     this->on_key_pressed = keyboard_get_action_on_key_pressed(keyboard, this->keycode);
     action_subscribe(this->on_key_pressed, this, suicidal_suicide, &this->subscription_token);
 }
