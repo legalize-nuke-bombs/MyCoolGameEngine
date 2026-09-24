@@ -130,6 +130,10 @@ add_executable(MyCoolGameEngine main.c
         src/devices/keyboard.c
         src/devices/devices.h
         src/devices/devices.c
+        src/profiler/profiler.h
+        src/profiler/profiler.c
+        src/profiler/time_estimator.h
+        src/profiler/time_estimator.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3)

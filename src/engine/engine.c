@@ -13,6 +13,7 @@
 #include "../devices/keyboard.h"
 #include "../rendering/renderer_pipeline.h"
 #include "../interpreter/interpreter.h"
+#include "../profiler/profiler.h"
 #include "../rendering/renderer_layer_manager.h"
 
 #include "../scene/scene.h"
@@ -24,6 +25,7 @@ struct engine {
     struct component_fabric *component_fabric;
     struct renderer_layer_manager *renderer_layer_manager;
     struct devices *devices;
+    struct profiler *profiler;
 
     SDL_Window *window;
     SDL_Renderer *renderer;
@@ -45,6 +47,7 @@ struct engine* engine_create() {
     this->component_fabric = component_fabric_create();
     this->renderer_layer_manager = renderer_layer_manager_create();
     this->devices = devices_create();
+    this->profiler = profiler_create();
 
     this->window = NULL;
     this->renderer = NULL;
@@ -166,6 +169,9 @@ struct renderer_layer_manager* engine_get_renderer_layer_manager(const struct en
 }
 struct devices* engine_get_devices(const struct engine *this) {
     return this->devices;
+}
+struct profiler* engine_get_profiler(const struct engine *this) {
+    return this->profiler;
 }
 
 void engine_capture_window(struct engine *this, SDL_Window *window) {
