@@ -8,8 +8,9 @@
 #include "interpreter_command.h"
 
 struct interpreter_command_vtable {
-    const char* (*key)();
-    void (*execute)(const struct interpreter_command *self, struct parser *parser, const struct engine *engine);
+    const char* (*key)(const struct interpreter_command *base);
+    void (*execute)(const struct interpreter_command *base, struct parser *parser, const struct engine *engine);
+    void (*on_destroy)(struct interpreter_command *base);
 };
 
 struct interpreter_command {

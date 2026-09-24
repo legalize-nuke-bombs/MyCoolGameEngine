@@ -17,15 +17,15 @@ struct interpreter_print {
     struct interpreter_command base;
 };
 
-static const char* interpreter_print_get_key() {
+static const char* interpreter_print_get_key(const struct interpreter_command *this) {
     return "print";
 }
 
-static void interpreter_print_execute(const struct interpreter_command *self, struct parser *parser, const struct engine *engine) {
+static void interpreter_print_execute(const struct interpreter_command *this, struct parser *parser, const struct engine *engine) {
     const char* context = parser_next(parser);
 
     if (context == NULL) {
-        logger_warn("Interpreter failed to find argument for `print`");
+        logger_warn("Interpreter failed to find argument for `%s`", interpreter_print_get_key(this));
         return;
     }
 
@@ -34,11 +34,16 @@ static void interpreter_print_execute(const struct interpreter_command *self, st
 
 static const struct interpreter_command_vtable print_vtable = {
     .key = interpreter_print_get_key,
-    .execute = interpreter_print_execute
+    .execute = interpreter_print_execute,
+    .on_destroy = NULL
 };
 
-struct interpreter_command* interpreter_print_create() {
+struct interpreter_print* interpreter_print_create() {
     struct interpreter_print *self = malloc(sizeof(struct interpreter_print));
     self->base.vtable = &print_vtable;
-    return (struct interpreter_command*)self;
+    return self;
+}
+
+struct interpreter_command* interpreter_print_as_interpreter_command(struct interpreter_print* this) {
+    return (struct interpreter_command*)this;
 }

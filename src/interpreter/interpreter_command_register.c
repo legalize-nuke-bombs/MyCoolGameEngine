@@ -29,7 +29,7 @@ void interpreter_command_register_destroy(struct interpreter_command_register* t
         if (node.value == NULL) {
             continue;
         }
-        free(node.value);
+        interpreter_command_destroy(node.value);
     }
     dictionary_destroy(this->dictionary);
     free(this);
