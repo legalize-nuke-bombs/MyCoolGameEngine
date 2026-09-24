@@ -5,14 +5,13 @@
 #ifndef MYCOOLGAMEENGINE_BOX_RENDERER_H
 #define MYCOOLGAMEENGINE_BOX_RENDERER_H
 
-#include "../../../utils/color.h"
-
 
 struct box_renderer;
 struct entity;
+struct parser;
 
-struct box_renderer* box_renderer_create(struct entity *parent, struct color color);
+const char* box_renderer_component_key(void);
 
-struct component * box_renderer_as_component(struct box_renderer *this);
+struct component* box_renderer_create(struct parser *parser, struct entity *parent);
 
 #endif //MYCOOLGAMEENGINE_BOX_RENDERER_H

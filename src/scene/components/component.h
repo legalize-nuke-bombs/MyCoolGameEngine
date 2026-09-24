@@ -19,9 +19,7 @@ struct entity* component_get_parent(const struct component *this);
 const char* component_get_parent_name(const struct component *this);
 
 struct vector2 component_get_local_position(const struct component *this);
-void component_set_local_position(struct component *this, const struct vector2 *local_position);
 struct vector2 component_get_local_scale(const struct component *this);
-void component_set_local_scale(struct component *this, const struct vector2 *local_scale);
 
 struct vector2 component_get_position(const struct component *this);
 struct vector2 component_get_scale(const struct component *this);

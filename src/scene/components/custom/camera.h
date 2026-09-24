@@ -8,9 +8,10 @@
 #include "../component.h"
 
 struct camera;
+struct parser;
 
-struct camera* camera_create(struct entity *parent);
+const char* camera_component_key(void);
 
-struct component* camera_as_component(struct camera *this);
+struct component* camera_create(struct parser *parser, struct entity *parent);
 
 #endif //MYCOOLGAMEENGINE_CAMERA_H

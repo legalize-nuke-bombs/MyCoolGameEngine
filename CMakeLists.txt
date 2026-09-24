@@ -69,8 +69,6 @@ add_executable(MyCoolGameEngine main.c
         src/scene/components/custom/box_renderer.h
         src/scene/components/custom/box_renderer.c
         src/utils/color.h
-        src/utils/colors.h
-        src/utils/colors.c
         src/utils/parser.h
         src/utils/parser.c
         src/interpreter/interpreter.h
@@ -102,6 +100,8 @@ add_executable(MyCoolGameEngine main.c
         src/interpreter/scene/interpreter_scene.c
         src/interpreter/scene/interpreter_scene_new.h
         src/interpreter/scene/interpreter_scene_new.c
+        src/scene/components/component_fabric.h
+        src/scene/components/component_fabric.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3)

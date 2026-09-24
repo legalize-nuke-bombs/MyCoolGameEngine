@@ -5,16 +5,16 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "../../../utils/parser.h"
 
 struct printer {
     struct component base;
-    const char* intervalString;
+    char* intervalString;
+    char* lastString;
     double interval;
     double timer;
-    const char* lastString;
 };
 
-static const char* printer_component_key(void);
 static void printer_update(struct component *base, const struct update_context *context);
 static void printer_destroy(struct component *base);
 
@@ -22,24 +22,24 @@ static const struct component_vtable printer_vtable = {
     .component_key = printer_component_key,
     .on_awake = NULL,
     .on_update = printer_update,
-    .on_destroy = printer_destroy,
-    .on_free = NULL
+    .on_destroy = printer_destroy
 };
 
-static const char* printer_component_key(void) {
+const char* printer_component_key(void) {
     return "printer";
 }
 
-struct printer* printer_create(struct entity *parent, const char *intervalString, const char *lastString, double interval) {
+struct component* printer_create(struct parser *parser, struct entity *parent) {
     struct printer *this = malloc(sizeof(struct printer));
-    component_init(printer_as_component(this), &printer_vtable, parent);
+    struct component *base = (struct component *)this;
+    component_init(base, &printer_vtable, parser, parent);
 
-    this->intervalString = intervalString;
-    this->lastString = lastString;
-    this->interval = interval;
+    this->intervalString = parser_next_dup(parser);
+    this->lastString = parser_next_dup(parser);
+    parser_next_double(parser, &this->interval);
     this->timer = 0.0;
 
-    return this;
+    return base;
 }
 
 static void printer_update(struct component *base, const struct update_context *context) {
@@ -63,8 +63,11 @@ static void printer_destroy(struct component *base) {
         return;
     }
     logger_info("Entity %s: %s", entity_get_name(component_get_parent(base)), this->lastString);
-}
 
-struct component *printer_as_component(struct printer *this) {
-    return (struct component *) this;
+    if (this->intervalString != NULL) {
+        free(this->intervalString);
+    }
+    if (this->lastString != NULL) {
+        free(this->lastString);
+    }
 }

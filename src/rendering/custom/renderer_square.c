@@ -8,8 +8,6 @@
 #include <stdlib.h>
 #include <SDL3/SDL.h>
 
-#include "../../logging/logger.h"
-
 struct renderer_square {
     struct renderer_primitive base;
     struct color color;

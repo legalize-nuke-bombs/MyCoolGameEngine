@@ -4,9 +4,10 @@
 #include "../component.h"
 
 struct printer;
+struct parser;
 
-struct printer* printer_create(struct entity *parent, const char *intervalString, const char *lastString, double interval);
+const char* printer_component_key(void);
 
-struct component* printer_as_component(struct printer *this);
+struct component* printer_create(struct parser *parser, struct entity *parent);
 
 #endif

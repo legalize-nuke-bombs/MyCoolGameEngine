@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include "component_internal.h"
+#include "../../utils/parser.h"
 
 struct transform {
     struct component base;
@@ -10,28 +11,27 @@ struct transform {
     struct vector2 scale;
 };
 
-static const char* transform_component_key(void);
-
 static const struct component_vtable transform_vtable = {
     .component_key = transform_component_key,
     .on_awake = NULL,
     .on_update = NULL,
-    .on_destroy = NULL,
-    .on_free = NULL
+    .on_destroy = NULL
 };
 
-static const char* transform_component_key(void) {
+const char* transform_component_key(void) {
     return "transform";
 }
 
-struct transform* transform_create(struct entity *parent, const struct vector2* position, const struct vector2* scale) {
+struct component* transform_create(struct parser *parser, struct entity *parent) {
     struct transform *this = malloc(sizeof(struct transform));
-    component_init(transform_as_component(this), &transform_vtable, parent);
+    component_init((struct component*)(this), &transform_vtable, parser, parent);
 
-    this->position = *position;
-    this->scale = *scale;
+    parser_next_double(parser, &this->position.x);
+    parser_next_double(parser, &this->position.y);
+    parser_next_double(parser, &this->scale.x);
+    parser_next_double(parser, &this->scale.y);
 
-    return this;
+    return (struct component *)this;
 }
 
 struct vector2 transform_get_position(const struct transform *this) {
@@ -45,8 +45,4 @@ struct vector2 transform_get_scale(const struct transform *this) {
 }
 void transform_set_scale(struct transform *this, const struct vector2 *scale) {
     this->scale = *scale;
-}
-
-struct component *transform_as_component(struct transform *this) {
-    return (struct component *) this;
 }

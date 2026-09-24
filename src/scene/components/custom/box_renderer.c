@@ -12,44 +12,67 @@
 #include "../../entity.h"
 #include "../../scene.h"
 #include "../../../engine/engine.h"
+#include "../../../rendering/renderer_layer_manager.h"
+#include "../../../utils/parser.h"
 
 struct box_renderer {
     struct component base;
+
     struct renderer_pipeline* renderer;
+
+    char* renderer_layer_name;
+    struct renderer_layer* renderer_layer;
+
     struct renderer_square* square;
 };
 
-static const char* box_renderer_component_key(void);
 static void box_renderer_awake(struct component *base);
 static void box_renderer_update(struct component *base, const struct update_context *context);
-static void box_renderer_free(struct component *base);
+static void box_renderer_on_destroy(struct component *base);
 
 static const struct component_vtable box_renderer_vtable = {
     .component_key = box_renderer_component_key,
     .on_awake = box_renderer_awake,
     .on_update = box_renderer_update,
-    .on_destroy = NULL,
-    .on_free = box_renderer_free
+    .on_destroy = box_renderer_on_destroy
 };
 
-static const char* box_renderer_component_key(void) {
+const char* box_renderer_component_key(void) {
     return "box_renderer";
 }
 
-struct box_renderer* box_renderer_create(struct entity *parent, struct color color) {
+struct component* box_renderer_create(struct parser *parser, struct entity *parent) {
     struct box_renderer *this = malloc(sizeof(struct box_renderer));
-    component_init(box_renderer_as_component(this), &box_renderer_vtable, parent);
+    struct component *base = (struct component*) this;
+    component_init(base, &box_renderer_vtable, parser, parent);
 
     this->renderer = NULL;
+
+    this->renderer_layer_name = parser_next_dup(parser);
+    this->renderer_layer = NULL;
+
+    struct color color;
+    parser_next_uint8(parser, &color.r);
+    parser_next_uint8(parser, &color.g);
+    parser_next_uint8(parser, &color.b);
+    parser_next_uint8(parser, &color.a);
     this->square = renderer_square_create(color);
 
-    return this;
+    return base;
+}
+
+static void box_renderer_on_destroy(struct component *base) {
+    const struct box_renderer *this = (struct box_renderer *) base;
+    renderer_square_destroy(this->square);
+    free(this->renderer_layer_name);
 }
 
 static void box_renderer_awake(struct component *base) {
     struct box_renderer *this = (struct box_renderer *) base;
 
-    this->renderer = engine_get_renderer_pipeline(scene_get_engine(entity_get_parent(component_get_parent(base))));
+    const struct engine *engine = scene_get_engine(entity_get_parent(component_get_parent(base)));
+    this->renderer = engine_get_renderer_pipeline(engine);
+    this->renderer_layer = renderer_layer_manager_try_get(engine_get_renderer_layer_manager(engine), this->renderer_layer_name);
 }
 
 static void box_renderer_update(struct component *base, const struct update_context *context) {
@@ -64,12 +87,6 @@ static void box_renderer_update(struct component *base, const struct update_cont
         .layer = NULL
     };
     renderer_pipeline_draw_primitive(this->renderer, draw_call);
-}
-
-static void box_renderer_free(struct component *base) {
-    const struct box_renderer *this = (struct box_renderer *) base;
-
-    renderer_square_destroy(this->square);
 }
 
 struct component * box_renderer_as_component(struct box_renderer *this) {

@@ -16,10 +16,12 @@
 #include "../scene/components/custom/camera.h"
 #include "../scene/components/custom/printer.h"
 #include "../scene/components/transform.h"
-#include "../utils/colors.h"
+#include "../scene/components/component_fabric.h"
 
 struct engine {
+    struct component_fabric *component_fabric;
     struct renderer_layer_manager *renderer_layer_manager;
+
     SDL_Window *window;
     SDL_Renderer *renderer;
     struct renderer_pipeline *renderer_pipeline;
@@ -37,7 +39,10 @@ struct engine* engine_create() {
         return NULL;
     }
     struct engine *this = malloc(sizeof(struct engine));
+
+    this->component_fabric = component_fabric_create();
     this->renderer_layer_manager = renderer_layer_manager_create();
+
     this->window = NULL;
     this->renderer = NULL;
     this->renderer_pipeline = NULL;
@@ -67,8 +72,12 @@ void engine_destroy(struct engine *this) {
         SDL_DestroyWindow(this->window);
     }
     SDL_Quit();
+
     if (this->renderer_layer_manager != NULL) {
         renderer_layer_manager_destroy(this->renderer_layer_manager);
+    }
+    if (this->component_fabric != NULL) {
+        component_fabric_destroy(this->component_fabric);
     }
 
     free(this);
@@ -84,20 +93,6 @@ void engine_execute(struct engine *this, const char *script_path) {
     logger_info("Interpreter finished with exit code %d", interpreter_eval(this->interpreter, script_path));
 
     struct entity* entity = entity_create("My favourite entity", this->scene);
-
-    struct printer* printer = printer_create(entity, "hi", "bye", 1);
-    struct transform* transform = transform_create(entity, &vector2_zero, &vector2_one);
-    struct camera* camera = camera_create(entity);
-    struct box_renderer* box_renderer = box_renderer_create(entity, color_blue);
-    component_set_local_scale(box_renderer_as_component(box_renderer), &(struct vector2){
-                                  .x = 100,
-                                  .y = 100
-                              });
-
-    entity_capture_component(entity, transform_as_component(transform));
-    entity_capture_component(entity, camera_as_component(camera));
-    entity_capture_component(entity, printer_as_component(printer));
-    entity_capture_component(entity, box_renderer_as_component(box_renderer));
 
     scene_capture_entity(this->scene, entity);
 

@@ -6,14 +6,17 @@
 #include "../../logging/logger.h"
 #include "../../utils/vector2_math.h"
 #include "transform.h"
+#include "../../utils/parser.h"
 
-void component_init(struct component *this, const struct component_vtable *vtable, struct entity *parent) {
+void component_init(struct component *this, const struct component_vtable *vtable, struct parser *parser, struct entity *parent) {
     this->vtable = vtable;
     logger_debug("Component is initializing...");
     this->awake = false;
     this->alive = true;
-    this->local_position = vector2_zero;
-    this->local_scale = vector2_one;
+    parser_next_double(parser, &this->local_position.x);
+    parser_next_double(parser, &this->local_position.y);
+    parser_next_double(parser, &this->local_scale.x);
+    parser_next_double(parser, &this->local_scale.y);
     this->parent = parent;
 }
 void component_awake(struct component *this) {
@@ -26,9 +29,6 @@ void component_awake(struct component *this) {
 void component_destroy(struct component *this) {
     logger_debug("Entity %s is destroying component %s...", component_get_parent_name(this), component_get_key(this));
     component_mark_destroyed(this);
-    if (this->vtable->on_free != NULL) {
-        this->vtable->on_free(this);
-    }
     free(this);
 }
 void component_mark_destroyed(struct component *this) {
@@ -59,14 +59,8 @@ const char* component_get_parent_name(const struct component *this) {
 struct vector2 component_get_local_position(const struct component *this) {
     return this->local_position;
 }
-void component_set_local_position(struct component *this, const struct vector2 *local_position) {
-    this->local_position = *local_position;
-}
 struct vector2 component_get_local_scale(const struct component *this) {
     return this->local_scale;
-}
-void component_set_local_scale(struct component *this, const struct vector2 *local_scale) {
-    this->local_scale = *local_scale;
 }
 
 struct vector2 component_get_position(const struct component *this) {
