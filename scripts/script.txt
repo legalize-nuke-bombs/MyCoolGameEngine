@@ -1,11 +1,41 @@
 print hello
-renderer_layer_manager new_layer bg1 0
+renderer_layer_manager new_layer bg1 1
+renderer_layer_manager new_layer bg2 2
+renderer_layer_manager new_layer bg3 3
+renderer_layer_manager new_layer bg4 4
+renderer_layer_manager new_layer character1 20
+renderer_layer_manager new_layer character2 21
+renderer_layer_manager new_layer character3 22
+renderer_layer_manager new_layer character4 23
+renderer_layer_manager new_layer shadow 41
 window new MyCoolGameEngine 800 600
 
 scene new ScriptedScene
 
-scene new_entity MyFavouriteEntity
-transform 0 0 1 1 0 0 100 100
-camera 0 0 1 1
-box_renderer 0 0 1 1 bg1 0 0 255 255
+scene new_entity Terrain
+transform 0 0 1 1 0 0 1000000 1000000
+box_renderer 0 0 1 1 bg1 255 255 255 255
 end
+
+scene new_entity MyFavouriteEntity
+transform 0 0 1 1 0 0 50 50
+camera 0 0 1 1
+box_renderer 0 0 1 1 character1 0 0 255 255
+end
+
+scene new_entity Enemy
+transform 0 0 1 1 -175 -175 40 40
+box_renderer 0 0 1 1 character2 0 0 0 255
+box_renderer 0 0 8 8 shadow 0 0 0 100
+end
+
+scene new_entity Enemy
+transform 0 0 1 1 225 225 60 60
+box_renderer 0 0 1 1 character2 0 0 0 255
+box_renderer 0 0 8 8 shadow 0 0 0 100
+end
+
+
+
+
+
