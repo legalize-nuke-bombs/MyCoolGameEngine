@@ -13,7 +13,7 @@ struct renderer_layer_manager;
 struct renderer_layer_manager* renderer_layer_manager_create();
 void renderer_layer_manager_destroy(struct renderer_layer_manager *this);
 
-bool renderer_layer_manager_try_capture(const struct renderer_layer_manager *this, struct renderer_layer* layer);
+void renderer_layer_manager_capture(const struct renderer_layer_manager *this, struct renderer_layer* layer);
 
 struct renderer_layer* renderer_layer_manager_try_get(const struct renderer_layer_manager *this, const char *layer_name);
 

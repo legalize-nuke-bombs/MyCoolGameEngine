@@ -4,7 +4,6 @@
 
 #include "interpreter_print.h"
 
-#include <stddef.h>
 #include <stdlib.h>
 
 #include "../interpreter_command.h"
@@ -23,12 +22,6 @@ static const char* interpreter_scene_new_get_key(const struct interpreter_comman
 
 static void interpreter_scene_new_execute(const struct interpreter_command *this, struct parser *parser, struct engine *engine) {
     const char* context = parser_next(parser);
-
-    if (context == NULL) {
-        logger_warn("Interpreter failed to find argument for `%s`", interpreter_scene_new_get_key(this));
-        return;
-    }
-
     logger_info("Interpreter print: %s", context);
 }
 

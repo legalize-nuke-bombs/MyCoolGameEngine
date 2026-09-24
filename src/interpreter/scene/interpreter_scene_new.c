@@ -23,14 +23,8 @@ static const char* interpreter_scene_new_get_key(const struct interpreter_comman
 }
 
 static void interpreter_scene_new_execute(const struct interpreter_command *this, struct parser *parser, struct engine *engine) {
-    const char* token_name = parser_next(parser);
-    if (token_name == NULL) {
-        logger_warn("Interpreter failed to find fist arg (scene name) for scene new");
-        return;
-    }
-    char* name = strdup(token_name);
-
-    struct scene *scene = scene_create(name, engine);
+    char* scene_name = parser_next_dup(parser);
+    struct scene *scene = scene_create(scene_name, engine);
     engine_capture_scene(engine, scene);
 }
 

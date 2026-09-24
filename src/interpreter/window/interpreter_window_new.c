@@ -24,30 +24,10 @@ static const char* interpreter_scene_new_get_key(const struct interpreter_comman
 }
 
 static void interpreter_scene_new_execute(const struct interpreter_command *this, struct parser *parser, struct engine *engine) {
-    const char* token_name = parser_next(parser);
-    if (token_name == NULL) {
-        logger_warn("Interpreter failed to find fist arg (window name) for window new");
-        return;
-    }
-    char* name = strdup(token_name);
-
-    const char* token_width = parser_next(parser);
-    const char* token_height = parser_next(parser);
-    if (token_width == NULL || token_height == NULL) {
-        logger_warn("Interpreter failed to find second and third args (window size) for window new");
-        free(name);
-        return;
-    }
-
-    char* end_ptr_w = NULL;
-    char* end_ptr_h = NULL;
-    int width = strtol(token_width, &end_ptr_w, 10);
-    int height = strtol(token_height, &end_ptr_h, 10);
-    if (*end_ptr_w != '\0' || end_ptr_w == token_width || *end_ptr_h != '\0' || end_ptr_h == token_height) {
-        logger_warn("Interpreter failed to cast second and third args (window size) for window new to integer");
-        free(name);
-        return;
-    }
+    char* name = parser_next_dup(parser);
+    int width, height;
+    parser_next_int(parser, &width);
+    parser_next_int(parser, &height);
 
     SDL_Window* window = NULL;
     SDL_Renderer* renderer = NULL;

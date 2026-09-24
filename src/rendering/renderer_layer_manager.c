@@ -35,14 +35,14 @@ void renderer_layer_manager_destroy(struct renderer_layer_manager *this) {
     free(this);
 }
 
-bool renderer_layer_manager_try_capture(const struct renderer_layer_manager *this, struct renderer_layer* layer) {
+void renderer_layer_manager_capture(const struct renderer_layer_manager *this, struct renderer_layer* layer) {
     const char *layer_name = renderer_layer_get_name(layer);
     if (dictionary_try_add(this->dictionary, (void*)layer_name, layer) == 1) {
         logger_debug("Renderer layer manager captured layer %s", layer_name);
-        return 1;
+        return;
     }
     logger_warn("Renderer layer manager failed to register layer %s", layer_name);
-    return 0;
+    renderer_layer_destroy(layer);
 }
 
 struct renderer_layer* renderer_layer_manager_try_get(const struct renderer_layer_manager *this, const char *layer_name) {
