@@ -25,22 +25,39 @@ struct action* action_create(void) {
 }
 void action_destroy(struct action *this) {
     for (int i = 0; i < list_count(this->list); i++) {
-        free(list_get(this->list, i));
+        struct action_method *action_method = list_get(this->list, i);
+        if (action_method == NULL) {
+            continue;
+        }
+        free(action_method);
     }
     list_destroy(this->list);
     free(this);
 }
 
-void action_add(struct action *this, void *listener, void (*action)(void*, void*)) {
+void action_subscribe(const struct action *this, void *listener, void (*action)(void*, void*), unsigned int *subscription_token) {
     struct action_method *action_method = malloc(sizeof(struct action_method));
     action_method->listener = listener;
     action_method->action = action;
+    *subscription_token = list_count(this->list);
     list_add(this->list, action_method);
 }
+void action_unsubscribe(const struct action *this, unsigned int subscription_token) {
+    free(list_get(this->list, subscription_token));
+    list_set(this->list, subscription_token, NULL);
+}
+
+
 void action_invoke(const struct action *this, void* action_context) {
-    logger_debug("Action invoked, actions to invoke: %d", list_count(this->list));
+    logger_debug("Action is invoking...");
+    int ctr = 0;
     for (int i = 0; i < list_count(this->list); i++) {
         const struct action_method* action_method = list_get(this->list, i);
+        if (action_method == NULL) {
+            continue;
+        }
+        ctr++;
         action_method->action(action_method->listener, action_context);
     }
+    logger_debug("Actions invoked: %d", ctr);
 }

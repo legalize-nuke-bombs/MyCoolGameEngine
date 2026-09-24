@@ -10,7 +10,9 @@ struct action;
 struct action* action_create(void);
 void action_destroy(struct action *this);
 
-void action_add(struct action *this, void *listener, void (*action)(void*, void*));
+void action_subscribe(const struct action *this, void *listener, void (*action)(void*, void*), unsigned int* subscription_token);
+void action_unsubscribe(const struct action *this, unsigned int subscription_token);
+
 void action_invoke(const struct action *this, void* action_context);
 
 #endif //MYCOOLGAMEENGINE_ACTION_H

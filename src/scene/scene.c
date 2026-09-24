@@ -76,7 +76,8 @@ void scene_capture_entity(struct scene *this, struct entity *entity) {
         handle_new_component(this, component);
     }
 
-    entity_subscribe_on_component_captured(entity, this, handle_new_component);
+    unsigned int subscription_token; // We do not unsubscribe because scene always lives longer than it's entities
+    entity_subscribe_on_component_captured(entity, this, handle_new_component, &subscription_token);
 }
 
 static void scene_run_gc(struct scene *this, double dt) {
