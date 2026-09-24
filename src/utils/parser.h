@@ -15,6 +15,7 @@ const char* parser_next(struct parser* parser);
 char* parser_next_dup(struct parser* parser);
 
 int parser_next_int(const struct parser* parser, int* out_value);
+int parser_next_char(const struct parser* parser, char* out_value);
 uint8_t parser_next_uint8(const struct parser* parser, uint8_t* out_value);
 int parser_next_double(const struct parser* parser, double* out_value);
 

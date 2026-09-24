@@ -13,6 +13,7 @@
 #include "custom/box_renderer.h"
 #include "custom/camera.h"
 #include "custom/printer.h"
+#include "custom/suicidal.h"
 
 struct component_fabric {
     struct dictionary* types;
@@ -32,6 +33,7 @@ static void component_fabric_register_all(const struct component_fabric *this) {
     component_fabric_register_component(this, printer_component_key(), printer_create);
     component_fabric_register_component(this, camera_component_key(), camera_create);
     component_fabric_register_component(this, box_renderer_component_key(), box_renderer_create);
+    component_fabric_register_component(this, suicidal_component_key(), suicidal_create);
 }
 
 struct component_fabric* component_fabric_create() {

@@ -22,6 +22,7 @@ scene new_entity MyFavouriteEntity
 transform 0 0 1 1 0 0 50 50
 camera 0 0 1 1
 box_renderer 0 0 1 1 character1 0 0 255 255
+suicidal 0 0 1 1 I
 end
 
 scene new_entity Enemy

@@ -60,6 +60,12 @@ int parser_next_int(const struct parser* parser, int* out_value) {
     }
     return 0;
 }
+int parser_next_char(const struct parser* parser, char* out_value) {
+    if (fscanf(parser->file, "%c", out_value) == 1) {
+        return 1;
+    }
+    return 0;
+}
 uint8_t parser_next_uint8(const struct parser* parser, uint8_t* out_value) {
     if (fscanf(parser->file, "%" SCNu8, out_value) == 1) {
         return 1;
