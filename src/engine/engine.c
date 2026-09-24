@@ -136,6 +136,7 @@ void engine_execute(struct engine *this, const char *script_path) {
 
     bool run = true;
     while (run) {
+        profiler_update(this->profiler);
         time_estimator_start_block(profiler_get_frame_estimator(this->profiler));
 
         const Uint64 now = SDL_GetTicksNS();

@@ -32,6 +32,12 @@ void profiler_destroy(struct profiler* this) {
     free(this);
 }
 
+void profiler_update(const struct profiler* this) {
+    time_estimator_update(this->frame);
+    time_estimator_update(this->update);
+    time_estimator_update(this->rendering);
+}
+
 struct time_estimator* profiler_get_frame_estimator(const struct profiler* this) {
     return this->frame;
 }
@@ -43,11 +49,17 @@ struct time_estimator* profiler_get_rendering_estimator(const struct profiler* t
 }
 
 void profiler_log(const struct profiler* this) {
-    logger_info("Profiler output. Frame average %f ms (average %f fps). Update average %f ms. Rendering average %f ms.",
-            time_estimator_average_block_ms(this->frame),
-            time_estimator_average_block_fps(this->frame),
-            time_estimator_average_block_ms(this->update),
-            time_estimator_average_block_ms(this->rendering)
-        );
+    const double frame_ms = time_estimator_average_block_ms(this->frame);
+    const double update_ms = time_estimator_average_block_ms(this->update);
+    const double render_ms = time_estimator_average_block_ms(this->rendering);
+    const double unknown_ms = frame_ms - update_ms - render_ms;
+
+    const double update_ms_percent = update_ms / frame_ms * 100;
+    const double render_ms_percent = render_ms / frame_ms * 100;
+    const double unknown_ms_percent = unknown_ms / frame_ms * 100;
+
+    const double fps = 1000 / frame_ms;
+
+    logger_info("Profiler output. FPS: %f. Frame: %f ms (update %f%%, render %f%%, unknown %f%%)", fps, frame_ms, update_ms_percent, render_ms_percent, unknown_ms_percent);
 }
 

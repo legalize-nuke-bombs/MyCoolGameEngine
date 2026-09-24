@@ -11,6 +11,8 @@ struct time_estimator;
 struct profiler* profiler_create();
 void profiler_destroy(struct profiler* this);
 
+void profiler_update(const struct profiler* this);
+
 struct time_estimator* profiler_get_frame_estimator(const struct profiler* this);
 struct time_estimator* profiler_get_update_estimator(const struct profiler* this);
 struct time_estimator* profiler_get_rendering_estimator(const struct profiler* this);
