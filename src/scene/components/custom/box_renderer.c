@@ -84,7 +84,7 @@ static void box_renderer_update(struct component *base, const struct update_cont
             .size = component_get_scale(base)
         },
         .primitive = renderer_square_as_renderer_primitive(this->square),
-        .layer = NULL
+        .layer = this->renderer_layer
     };
     renderer_pipeline_draw_primitive(this->renderer, draw_call);
 }
