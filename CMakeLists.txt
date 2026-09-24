@@ -108,6 +108,10 @@ add_executable(MyCoolGameEngine main.c
         src/scene/components/demo/suicidal.c
         src/scene/components/demo/armageddon.h
         src/scene/components/demo/armageddon.c
+        src/devices/keyboard.h
+        src/devices/keyboard.c
+        src/devices/devices.h
+        src/devices/devices.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3)

@@ -8,6 +8,8 @@
 
 #include "../logging/logger.h"
 #include <SDL3/SDL.h>
+
+#include "../devices/devices.h"
 #include "../rendering/renderer_pipeline.h"
 #include "../interpreter/interpreter.h"
 #include "../rendering/renderer_layer_manager.h"
@@ -19,6 +21,7 @@
 struct engine {
     struct component_fabric *component_fabric;
     struct renderer_layer_manager *renderer_layer_manager;
+    struct devices *devices;
 
     SDL_Window *window;
     SDL_Renderer *renderer;
@@ -39,6 +42,7 @@ struct engine* engine_create() {
 
     this->component_fabric = component_fabric_create();
     this->renderer_layer_manager = renderer_layer_manager_create();
+    this->devices = devices_create();
 
     this->window = NULL;
     this->renderer = NULL;
@@ -70,6 +74,9 @@ void engine_destroy(struct engine *this) {
     }
     SDL_Quit();
 
+    if (this->devices != NULL) {
+        devices_destroy(this->devices);
+    }
     if (this->renderer_layer_manager != NULL) {
         renderer_layer_manager_destroy(this->renderer_layer_manager);
     }
@@ -124,6 +131,9 @@ struct component_fabric* engine_get_component_fabric(const struct engine *this) 
 }
 struct renderer_layer_manager* engine_get_renderer_layer_manager(const struct engine *this) {
     return this->renderer_layer_manager;
+}
+struct devices* engine_get_devices(const struct engine *this) {
+    return this->devices;
 }
 
 void engine_capture_window(struct engine *this, SDL_Window *window) {
