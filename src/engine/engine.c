@@ -21,7 +21,6 @@ struct engine {
 };
 
 struct engine* engine_try_create(struct engine_init_arguments arguments) {
-    logger_info("Engine is creating...");
     struct engine *this = malloc(sizeof(struct engine));
     this->init_context = engine_init_context_try_create(this, arguments);
     if (this->init_context == NULL) {
