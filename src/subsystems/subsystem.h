@@ -12,6 +12,6 @@ void subsystem_destroy(struct subsystem *this);
 void subsystem_enable(struct subsystem *this);
 void subsystem_disable(struct subsystem *this);
 
-const char* subsystem_get_name(struct subsystem *this);
+const char* subsystem_get_name(const struct subsystem *this);
 
 #endif //MYCOOLGAMEENGINE_SUBSYSTEM_H

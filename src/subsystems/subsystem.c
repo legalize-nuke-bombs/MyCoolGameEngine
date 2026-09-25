@@ -39,6 +39,6 @@ void subsystem_disable(struct subsystem *this) {
     }
 }
 
-const char* subsystem_get_name(struct subsystem *this) {
+const char* subsystem_get_name(const struct subsystem *this) {
     return this->vtable->name();
 }
