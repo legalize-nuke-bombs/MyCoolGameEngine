@@ -5,6 +5,8 @@
 #ifndef MYCOOLGAMEENGINE_ENGINE_EXECUTION_CONTEXT_H
 #define MYCOOLGAMEENGINE_ENGINE_EXECUTION_CONTEXT_H
 
+#include <stdbool.h>
+
 #include "engine_execution_arguments.h"
 
 struct engine;

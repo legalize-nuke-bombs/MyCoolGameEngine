@@ -31,7 +31,8 @@ bool dev_mode_extract(const int argc, char* argv[]) {
 
 int main(const int argc, char *argv[]) {
     struct engine_init_arguments init_arguments = {
-        .logger_level = logger_level_extract(argc, argv)
+        .logger_level = logger_level_extract(argc, argv),
+        .dev_mode = dev_mode_extract(argc, argv)
     };
 
     struct engine *engine = engine_try_create(init_arguments);
@@ -41,7 +42,6 @@ int main(const int argc, char *argv[]) {
 
     const struct engine_execution_arguments execution_arguments = {
         .script_path = script_path_extract(argc, argv),
-        .dev_mode = dev_mode_extract(argc, argv)
     };
 
     engine_execute(engine, execution_arguments);
