@@ -9,6 +9,9 @@
 
 #include "entity.h"
 #include "entity_collection.h"
+#include "../engine/engine.h"
+#include "../engine/engine_execution_context.h"
+#include "../engine/events/engine_events.h"
 #include "../utils/action.h"
 
 
@@ -20,26 +23,59 @@ struct scene {
     struct entity_collection* entities;
     struct tmap *tmap;
     double gcTimer;
+
+    struct action* on_physics;
+    unsigned int on_physics_subscription_token;
     const struct engine *engine;
 };
 
 struct scene* scene_create(char *name, const struct engine* engine) {
     struct scene *this = malloc(sizeof(struct scene));
+
     this->name = name;
     logger_info("Scene %s is initializing...", this->name);
     this->entities = entity_collection_create();
     this->tmap = tmap_create();
+
+    this->on_physics = NULL;
+    this->on_physics_subscription_token = 0;
     this->engine = engine;
+
     return this;
 }
+
+static void scene_run_gc(struct scene *this, double dt) {
+    this->gcTimer += dt;
+    if (this->gcTimer < GC_INTERVAL) {
+        return;
+    }
+    this->gcTimer -= GC_INTERVAL;
+    logger_debug("Scene %s launched gc", this->name);
+    const int tmap_gc_num = tmap_remove_dead(this->tmap);
+    const int entity_collection_gc_num = entity_collection_destroy_dead(this->entities);
+    if (tmap_gc_num + entity_collection_gc_num > 0) {
+        logger_info("Scene %s gc report: tmap cleared %d components, entity collection cleared %d entities", this->name, tmap_gc_num, entity_collection_gc_num);
+    }
+}
+
+static void scene_update(void *listener, void *context) {
+    struct scene* this = listener;
+    const struct update_context* update_context = context;
+    entity_collection_update(this->entities, update_context);
+    scene_run_gc(this, update_context->dt);
+}
+
 void scene_awake(struct scene *this) {
     logger_info("Scene %s is awaking...", this->name);
     entity_collection_awake_everyone(this->entities);
     this->gcTimer = 0;
+    this->on_physics = engine_events_on_physics(engine_execution_context_get_events(engine_get_execution_context(this->engine)));
+    action_subscribe(this->on_physics, this, scene_update, &this->on_physics_subscription_token);
 }
 void scene_destroy(struct scene *this) {
     logger_info("Scene %s is destroying...", this->name);
 
+    action_unsubscribe(this->on_physics, this->on_physics_subscription_token);
     entity_collection_destroy(this->entities);
     tmap_destroy(this->tmap);
     free(this->name);
@@ -80,23 +116,4 @@ void scene_capture_entity(struct scene *this, struct entity *entity) {
     const struct action* entity_on_component_captured = entity_get_action_on_component_captured(entity);
     unsigned int subscription_token; // We do not unsubscribe because scene always lives longer than it's entities
     action_subscribe(entity_on_component_captured, this, handle_new_component, &subscription_token);
-}
-
-static void scene_run_gc(struct scene *this, double dt) {
-    this->gcTimer += dt;
-    if (this->gcTimer < GC_INTERVAL) {
-        return;
-    }
-    this->gcTimer -= GC_INTERVAL;
-    logger_debug("Scene %s launched gc", this->name);
-    const int tmap_gc_num = tmap_remove_dead(this->tmap);
-    const int entity_collection_gc_num = entity_collection_destroy_dead(this->entities);
-    if (tmap_gc_num + entity_collection_gc_num > 0) {
-        logger_info("Scene %s gc report: tmap cleared %d components, entity collection cleared %d entities", this->name, tmap_gc_num, entity_collection_gc_num);
-    }
-}
-
-void scene_update(struct scene *this, const struct update_context *context) {
-    scene_run_gc(this, context->dt);
-    entity_collection_update(this->entities, context);
 }

@@ -23,6 +23,4 @@ const struct engine* scene_get_engine(const struct scene *this);
 
 void scene_capture_entity(struct scene *this, struct entity *entity);
 
-void scene_update(struct scene *this, const struct update_context *context);
-
 #endif //MYCOOLGAMEENGINE_SCENE_H
