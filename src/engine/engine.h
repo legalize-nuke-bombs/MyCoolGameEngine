@@ -14,7 +14,7 @@ struct scene;
 struct engine* engine_create();
 void engine_destroy(struct engine *this);
 
-bool engine_execute(struct engine *this, const char* script_path);
+bool engine_execute(struct engine *this, const char* script_path, bool dev_mode);
 
 struct component_fabric* engine_get_component_fabric(const struct engine *this);
 struct renderer_layer_manager* engine_get_renderer_layer_manager(const struct engine *this);

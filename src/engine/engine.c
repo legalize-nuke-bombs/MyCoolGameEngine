@@ -109,7 +109,7 @@ static void engine_handle_key(const struct engine *this, const SDL_Scancode scan
     action_invoke(action, NULL);
 }
 
-bool engine_execute(struct engine *this, const char *script_path) {
+bool engine_execute(struct engine *this, const char *script_path, bool dev_mode) {
     if (script_path == NULL) {
         logger_warn("Engine will not start: script is not set");
         return 0;
@@ -130,7 +130,8 @@ bool engine_execute(struct engine *this, const char *script_path) {
 
     scene_awake(this->scene);
 
-    struct file_listener* script_file_listener = file_listener_create(script_path);
+    struct file_listener* script_file_listener = NULL;
+    if (dev_mode) script_file_listener = file_listener_create(script_path);
 
     struct update_context update_context = {
         .dt = 0
@@ -158,7 +159,7 @@ bool engine_execute(struct engine *this, const char *script_path) {
         SDL_RenderPresent(this->renderer);
         time_estimator_stop_block(profiler_get_rendering_estimator(this->profiler));
 
-        if (file_listener_update(script_file_listener, update_context.dt)) {
+        if (dev_mode && file_listener_update(script_file_listener, update_context.dt)) {
             run = false;
             restart = true;
         }
@@ -172,7 +173,7 @@ bool engine_execute(struct engine *this, const char *script_path) {
                 if (event.key.scancode == SDL_SCANCODE_F3) {
                     profiler_log(this->profiler);
                 }
-                else if (event.key.scancode == SDL_SCANCODE_F5) {
+                else if (dev_mode && event.key.scancode == SDL_SCANCODE_F5) {
                     run = false;
                     restart = true;
                 }
@@ -184,7 +185,9 @@ bool engine_execute(struct engine *this, const char *script_path) {
         }
     }
 
-    free(script_file_listener);
+    if (script_file_listener != NULL) {
+        free(script_file_listener);
+    }
 
     return restart;
 }

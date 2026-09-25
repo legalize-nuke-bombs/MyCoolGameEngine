@@ -19,10 +19,18 @@ int logger_level_extract(const int argc, char* argv[]) {
     return LOGGER_LEVEL_INFO;
 }
 
+bool dev_mode_extract(const int argc, char* argv[]) {
+    if (argc >= 4) {
+        return atoi(argv[3]);
+    }
+    return 0;
+}
+
 
 int main(const int argc, char *argv[]) {
     const char* script_path = script_path_extract(argc, argv);
     const int logger_level = logger_level_extract(argc, argv);
+    const bool dev_mode = dev_mode_extract(argc, argv);
 
     logger_init(logger_level);
     logger_info("MyCoolGameEngine v%d.%d.%d", VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH);
@@ -32,7 +40,7 @@ int main(const int argc, char *argv[]) {
         return 1;
     }
 
-    while (engine_execute(engine, script_path)) { }
+    while (engine_execute(engine, script_path, dev_mode)) { }
 
     engine_destroy(engine);
 
