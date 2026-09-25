@@ -14,6 +14,8 @@
 #include "update_context.h"
 #include "../utils/action.h"
 #include "events/engine_events.h"
+#include "version.h"
+#include "../subsystems/subsystem_collection.h"
 
 struct engine {
     /*
@@ -47,12 +49,16 @@ struct engine {
      * Если выносить запрос к подсистемам на awake (кеширование на awake стадартная практика),
      * то при неверном ключе программа будет падать хоть и в рантайме, но на самом ее старте.
      */
+    struct subsystem_collection *subsystems;
     struct engine_init_context *init_context;
     struct engine_execution_context *execution_context;
 };
 
-struct engine* engine_try_create(struct engine_init_arguments arguments) {
+struct engine* engine_create(struct engine_init_arguments arguments) {
+    logger_info("MyCoolGameEngine v%d.%d.%d", VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH);
+    logger_info("Engine is creating...");
     struct engine *this = malloc(sizeof(struct engine));
+    this->subsystems = subsystem_collection_create();
     this->init_context = engine_init_context_try_create(this, arguments);
     if (this->init_context == NULL) {
         free(this);
@@ -62,6 +68,7 @@ struct engine* engine_try_create(struct engine_init_arguments arguments) {
 }
 void engine_destroy(struct engine *this) {
     logger_info("Engine is destroying...");
+    subsystem_collection_destroy(this->subsystems);
     engine_init_context_destroy(this->init_context);
     free(this);
 }

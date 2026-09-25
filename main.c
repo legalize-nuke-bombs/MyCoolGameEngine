@@ -35,7 +35,7 @@ int main(const int argc, char *argv[]) {
         .dev_mode = dev_mode_extract(argc, argv)
     };
 
-    struct engine *engine = engine_try_create(init_arguments);
+    struct engine *engine = engine_create(init_arguments);
     if (engine == NULL) {
         return 1;
     }
