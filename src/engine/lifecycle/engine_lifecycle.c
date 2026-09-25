@@ -14,7 +14,7 @@ static const char* engine_lifecycle_get_name() {
     return "engine_lifecycle";
 }
 
-static void engine_lifecycle_on_enable(struct subsystem* base);
+static void engine_lifecycle_on_enable(struct subsystem* base, struct engine_arguments args);
 static void engine_lifecycle_on_disable(struct subsystem* base);
 
 
@@ -41,7 +41,7 @@ struct subsystem* engine_lifecycle_create(const struct subsystem_collection* col
     return base;
 }
 
-static void engine_lifecycle_on_enable(struct subsystem* base) {
+static void engine_lifecycle_on_enable(struct subsystem* base, struct engine_arguments args) {
     struct engine_lifecycle* this = (struct engine_lifecycle*)base;
     this->running = true;
     this->repeat_required = false;

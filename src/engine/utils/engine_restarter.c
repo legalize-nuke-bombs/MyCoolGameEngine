@@ -35,7 +35,7 @@ static const char* engine_restarter_get_name() {
     return "engine_restarter";
 }
 
-static void engine_restarter_on_enable(struct subsystem* base);
+static void engine_restarter_on_enable(struct subsystem* base, struct engine_arguments args);
 static void engine_restarter_on_disable(struct subsystem* base);
 
 static struct subsystem_vtable engine_restarter_vtable = {
@@ -73,9 +73,14 @@ static void engine_restarter_handle_pre_frame(void *listener, void *context) {
     }
 }
 
-void engine_restarter_on_enable(struct subsystem *base) {
+void engine_restarter_on_enable(struct subsystem *base, const struct engine_arguments args) {
     struct engine_restarter* this = (struct engine_restarter*)base;
-    this->script_listener = file_listener_create("123");
+
+    if (!args.dev_mode) {
+        return;
+    }
+
+    this->script_listener = file_listener_create(args.script_path);
 
     this->lifecycle = (struct engine_lifecycle*)subsystem_get_subsystem(base, "engine_lifecycle");
 
@@ -87,13 +92,17 @@ void engine_restarter_on_enable(struct subsystem *base) {
 }
 void engine_restarter_on_disable(struct subsystem *base) {
     struct engine_restarter* this = (struct engine_restarter*)base;
-    file_listener_destroy(this->script_listener);
+    if (this->script_listener != NULL) file_listener_destroy(this->script_listener);
 
     this->lifecycle = NULL;
 
-    action_unsubscribe(this->on_hotkey, this->on_hotkey_token);
-    this->on_hotkey = NULL;
+    if (this->on_hotkey != NULL) {
+        action_unsubscribe(this->on_hotkey, this->on_hotkey_token);
+        this->on_hotkey = NULL;
+    }
 
-    action_unsubscribe(this->pre_frame, this->pre_frame_token);
-    this->pre_frame = NULL;
+    if (this->pre_frame != NULL) {
+        action_unsubscribe(this->pre_frame, this->pre_frame_token);
+        this->pre_frame = NULL;
+    }
 }

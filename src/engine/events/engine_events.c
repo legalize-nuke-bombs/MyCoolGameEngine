@@ -30,7 +30,7 @@ static const char* engine_events_get_name() {
 }
 
 static void engine_events_on_destroy(struct subsystem* base);
-static void engine_events_on_enable(struct subsystem* base);
+static void engine_events_on_enable(struct subsystem* base, struct engine_arguments args);
 static void engine_events_on_disable(struct subsystem* base);
 
 
@@ -69,7 +69,7 @@ void engine_events_on_destroy(struct subsystem* base) {
     action_destroy(this->on_native_event);
 }
 
-void engine_events_on_enable(struct subsystem* base) {
+void engine_events_on_enable(struct subsystem* base, struct engine_arguments args) {
     struct engine_events *this = (struct engine_events*)base;
 }
 void engine_events_on_disable(struct subsystem* base) {

@@ -77,10 +77,10 @@ void subsystem_collection_destroy(struct subsystem_collection* this) {
     free(this);
 }
 
-void subsystem_collection_enable_all(const struct subsystem_collection* this) {
+void subsystem_collection_enable_all(const struct subsystem_collection* this, struct engine_arguments args) {
     logger_info("Subsystem collection is enabling all subsystems (%d)....", list_count(this->list));
     for (int i = 0; i < list_count(this->list); i++) {
-        subsystem_enable(list_get(this->list, i));
+        subsystem_enable(list_get(this->list, i), args);
     }
 }
 void subsystem_collection_disable_all(const struct subsystem_collection* this) {

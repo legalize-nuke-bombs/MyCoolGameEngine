@@ -147,6 +147,7 @@ add_executable(MyCoolGameEngine main.c
         src/subsystems/subsystem_collection.c
         src/engine/lifecycle/engine_lifecycle.h
         src/engine/lifecycle/engine_lifecycle.c
+        src/engine/engine_arguments.h
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3)

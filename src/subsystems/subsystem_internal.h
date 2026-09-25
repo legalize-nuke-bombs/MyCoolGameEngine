@@ -10,7 +10,7 @@
 #include "subsystem.h"
 
 struct subsystem_vtable {
-    void (*on_enable)(struct subsystem *this);
+    void (*on_enable)(struct subsystem *this, struct engine_arguments args);
     void (*on_disable)(struct subsystem *this);
     void (*on_destroy)(struct subsystem *this);
     const char* (*name)(void);

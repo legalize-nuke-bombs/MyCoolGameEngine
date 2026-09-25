@@ -37,7 +37,7 @@ static const char* scene_get_subsystem_key() {
 }
 
 static void scene_on_destroy(struct subsystem *base);
-static void scene_on_enable(struct subsystem *base);
+static void scene_on_enable(struct subsystem *base, struct engine_arguments args);
 static void scene_on_disable(struct subsystem *base);
 
 static struct subsystem_vtable scene_vtable = {
@@ -97,7 +97,7 @@ static void scene_update(void *listener, void *context) {
 
 
 
-void scene_on_enable(struct subsystem *base) {
+void scene_on_enable(struct subsystem *base, struct engine_arguments args) {
     struct scene *this = (struct scene*)base;
     entity_collection_awake_everyone(this->entities);
     this->gcTimer = 0;

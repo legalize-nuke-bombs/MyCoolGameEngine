@@ -29,7 +29,7 @@ static const char* keyboard_get_name() {
     return "keyboard";
 }
 static void keyboard_on_destroy(struct subsystem* base);
-static void keyboard_on_enable(struct subsystem* base);
+static void keyboard_on_enable(struct subsystem* base, struct engine_arguments args);
 static void keyboard_on_disable(struct subsystem* base);
 
 static struct subsystem_vtable keyboard_vtable = {
@@ -76,7 +76,7 @@ static void keyboard_register_native_event(void* listener, void* context) {
         }
     }
 }
-void keyboard_on_enable(struct subsystem* base) {
+void keyboard_on_enable(struct subsystem* base, struct engine_arguments args) {
     struct keyboard* this = (struct keyboard*)base;
     this->on_native_event = engine_events_on_native_event((struct engine_events*)subsystem_get_subsystem(base, "engine_events"));
     action_subscribe(this->on_native_event, this, keyboard_register_native_event, &this->subscription_token);

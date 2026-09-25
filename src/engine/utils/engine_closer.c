@@ -25,7 +25,7 @@ static const char* engine_closer_get_name() {
     return "engine_closer";
 }
 
-static void engine_closer_on_enable(struct subsystem* base);
+static void engine_closer_on_enable(struct subsystem* base, struct engine_arguments args);
 static void engine_closer_on_disable(struct subsystem* base);
 
 static struct subsystem_vtable engine_closer_vtable = {
@@ -51,7 +51,7 @@ static void engine_closer_handle_native_event(void* listener, void* context) {
     }
 }
 
-void engine_closer_on_enable(struct subsystem *base) {
+void engine_closer_on_enable(struct subsystem *base, struct engine_arguments args) {
     struct engine_closer* this = (struct engine_closer*)base;
     this->lifecycle = (struct engine_lifecycle*)subsystem_get_subsystem(base, "engine_lifecycle");
     this->on_native_event = engine_events_on_native_event((struct engine_events*)subsystem_get_subsystem(base, "engine_events"));

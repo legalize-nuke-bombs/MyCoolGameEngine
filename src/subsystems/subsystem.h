@@ -5,11 +5,13 @@
 #ifndef MYCOOLGAMEENGINE_SUBSYSTEM_H
 #define MYCOOLGAMEENGINE_SUBSYSTEM_H
 
+#include "../engine/engine_arguments.h"
+
 struct subsystem;
 
 void subsystem_destroy(struct subsystem *this);
 
-void subsystem_enable(struct subsystem *this);
+void subsystem_enable(struct subsystem *this, struct engine_arguments args);
 void subsystem_disable(struct subsystem *this);
 
 const char* subsystem_get_name(const struct subsystem *this);

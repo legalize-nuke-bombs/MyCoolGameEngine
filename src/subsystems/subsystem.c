@@ -21,14 +21,14 @@ void subsystem_destroy(struct subsystem *this) {
     }
 }
 
-void subsystem_enable(struct subsystem *this) {
+void subsystem_enable(struct subsystem *this, struct engine_arguments args) {
     if (this->enabled) {
         return;
     }
     logger_info("Subsystem `%s` is enabling...", subsystem_get_name(this));
     this->enabled = true;
     if (this->vtable->on_enable) {
-        this->vtable->on_enable(this);
+        this->vtable->on_enable(this, args);
     }
 }
 void subsystem_disable(struct subsystem *this) {

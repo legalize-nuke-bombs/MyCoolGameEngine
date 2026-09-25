@@ -33,7 +33,7 @@ static const char* renderer_get_name() {
     return "renderer";
 }
 static void renderer_on_destroy(struct subsystem* base);
-static void renderer_on_enable(struct subsystem* base);
+static void renderer_on_enable(struct subsystem* base, struct engine_arguments args);
 static void renderer_on_disable(struct subsystem* base);
 
 static struct subsystem_vtable renderer_vtable = {
@@ -85,7 +85,7 @@ static void renderer_render(void *listener, void *context) {
     SDL_RenderPresent(this->native);
 }
 
-void renderer_on_enable(struct subsystem* base) {
+void renderer_on_enable(struct subsystem* base, struct engine_arguments args) {
     struct renderer* this = (struct renderer*)base;
     this->on_rendering = engine_events_on_rendering((struct engine_events*)subsystem_get_subsystem(base, "engine_events"));
     action_subscribe(this->on_rendering, this, renderer_render, &this->on_rendering_subscription_token);

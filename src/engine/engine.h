@@ -5,6 +5,8 @@
 #ifndef MYCOOLGAMEENGINE_ENGINE_H
 #define MYCOOLGAMEENGINE_ENGINE_H
 
+#include "engine_arguments.h"
+
 typedef struct SDL_Window SDL_Window;
 typedef struct SDL_Renderer SDL_Renderer;
 struct scene;
@@ -13,6 +15,6 @@ struct scene;
 struct engine* engine_create();
 void engine_destroy(struct engine *this);
 
-void engine_execute(struct engine *this);
+void engine_execute(struct engine *this, struct engine_arguments args);
 
 #endif //MYCOOLGAMEENGINE_ENGINE_H

@@ -45,7 +45,7 @@ static const char* profiler_get_name() {
     return "profiler";
 }
 static void profiler_on_destroy(struct subsystem* base);
-static void profiler_on_enable(struct subsystem* base);
+static void profiler_on_enable(struct subsystem* base, struct engine_arguments args);
 static void profiler_on_disable(struct subsystem* base);
 
 static struct subsystem_vtable profiler_vtable = {
@@ -163,7 +163,7 @@ static void profiler_unsubscribe(struct profiler *this) {
     this->post_rendering = NULL;
 }
 
-void profiler_on_enable(struct subsystem *base) {
+void profiler_on_enable(struct subsystem *base, struct engine_arguments args) {
     struct profiler* this = (struct profiler*)(base);
     profiler_subscribe(this);
 }

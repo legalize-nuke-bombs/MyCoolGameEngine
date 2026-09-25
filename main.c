@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include "src/engine/engine.h"
+#include "src/engine/engine_arguments.h"
 #include "src/logging/logger.h"
 
 
@@ -29,8 +30,15 @@ bool dev_mode_extract(const int argc, char* argv[]) {
 
 
 int main(const int argc, char *argv[]) {
+    logger_init(logger_level_extract(argc, argv));
+    const struct engine_arguments engine_arguments = {
+        .script_path = script_path_extract(argc, argv),
+        .dev_mode = dev_mode_extract(argc, argv)
+    };
+
     struct engine *engine = engine_create();
-    engine_execute(engine);
+    engine_execute(engine, engine_arguments);
     engine_destroy(engine);
+
     return 0;
 }

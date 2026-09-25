@@ -33,19 +33,18 @@ void engine_destroy(struct engine *this) {
     free(this);
 }
 
-static bool engine_execute_step(struct engine *this) {
-    const char* script_path = "../scripts/demo/main.mcge";
-    if (script_path == NULL) {
+static bool engine_execute_step(struct engine *this, struct engine_arguments args) {
+    if (args.script_path == NULL) {
         logger_warn("Engine will not start: script is not set");
         return 0;
     }
-    subsystem_collection_enable_all(this->subsystems);
+    subsystem_collection_enable_all(this->subsystems, args);
 
     struct interpreter* interpreter = (struct interpreter*)subsystem_collection_get(this->subsystems, "interpreter");
     struct engine_lifecycle* lifecycle = (struct engine_lifecycle*)subsystem_collection_get(this->subsystems, "engine_lifecycle");
     struct engine_events* events = (struct engine_events*)subsystem_collection_get(this->subsystems, "engine_events");
 
-    if (interpreter_eval(interpreter, script_path) != INTERPRETER_OK) {
+    if (interpreter_eval(interpreter, args.script_path) != INTERPRETER_OK) {
         subsystem_collection_disable_all(this->subsystems);
         return 0;
     }
@@ -81,8 +80,8 @@ static bool engine_execute_step(struct engine *this) {
     return engine_lifecycle_restart_required(lifecycle);
 }
 
-void engine_execute(struct engine *this) {
-    while (engine_execute_step(this)) {}
+void engine_execute(struct engine *this, struct engine_arguments args) {
+    while (engine_execute_step(this, args)) {}
 }
 
 struct subsystem_collection* engine_get_subsystems(const struct engine* this) {
