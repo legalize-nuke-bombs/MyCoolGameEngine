@@ -9,12 +9,9 @@
 #include "../../engine/engine.h"
 #include "../interpreter_command_internal.h"
 #include "../../utils/parser.h"
-#include "../../logging/logger.h"
 #include "../../scene/entity.h"
 #include "../../scene/scene.h"
 #include "../../scene/components/component_fabric.h"
-#include "../../engine/engine_init_context.h"
-#include "../../engine/engine_execution_context.h"
 #include "../../subsystems/subsystem_collection.h"
 
 
@@ -26,24 +23,14 @@ static const char* interpreter_scene_new_entity_get_key(const struct interpreter
     return "new_entity";
 }
 
-static void interpreter_scene_new_entity_execute(const struct interpreter_command *this, struct parser *parser, struct engine *engine) {
-    struct scene *scene = (struct scene*)subsystem_collection_get(engine_get_subsystems(engine), "scene");
-    if (scene == NULL) {
-        logger_warn("Interpreter failed to execute scene new_entity: scene is not set");
-        for (; ;) {
-            const char* word = parser_next(parser);
-            if (word == NULL || strcmp(word, "end") == 0) {
-                break;
-            }
-        }
-        return;
-    }
+static void interpreter_scene_new_entity_execute(const struct interpreter_command *this, struct parser *parser, const struct subsystem_collection *subsystems) {
+    struct scene *scene = (struct scene*)subsystem_collection_get(subsystems, "scene");
 
     char* entity_name = parser_next_dup(parser);
 
     struct entity *entity = entity_create(entity_name, scene);
 
-    struct component_fabric *component_fabric = engine_init_context_get_component_fabric(engine_get_init_context(engine));
+    const struct component_fabric *component_fabric = scene_get_component_fabric(scene);
     for (; ;) {
         const char* word = parser_next(parser);
         if (word == NULL || strcmp(word, "end") == 0) {

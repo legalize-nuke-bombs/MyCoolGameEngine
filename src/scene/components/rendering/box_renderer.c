@@ -10,11 +10,11 @@
 #include "../../../rendering/renderer_pipeline.h"
 #include "../../../rendering/custom/renderer_square.h"
 #include "../../entity.h"
-#include "../../../engine/engine.h"
-#include "../../../engine/engine_execution_context.h"
-#include "../../../engine/engine_init_context.h"
+#include "../../scene.h"
+#include "../../../rendering/renderer.h"
 #include "../../../rendering/renderer_layer_manager.h"
 #include "../../../utils/parser.h"
+#include "../../../subsystems/subsystem_collection.h"
 
 struct box_renderer {
     struct component base;
@@ -72,9 +72,9 @@ static void box_renderer_on_destroy(struct component *base) {
 static void box_renderer_awake(struct component *base) {
     struct box_renderer *this = (struct box_renderer *) base;
 
-    const struct engine *engine = entity_get_engine(component_get_parent(base));
-    this->renderer = engine_init_context_get_renderer_pipeline(engine_get_init_context(engine));
-    this->renderer_layer = renderer_layer_manager_try_get(engine_execution_context_get_renderer_layer_manager(engine_get_execution_context(engine)), this->renderer_layer_name);
+    const struct renderer* renderer_subsystem = (struct renderer*)subsystem_collection_get(scene_get_subsystems(entity_get_parent(component_get_parent(base))), "renderer");
+    this->renderer = renderer_get_pipeline(renderer_subsystem);
+    this->renderer_layer = renderer_layer_manager_try_get(renderer_get_layer_manager(renderer_subsystem), this->renderer_layer_name);
 }
 
 static void box_renderer_update(struct component *base, const struct update_context *context) {

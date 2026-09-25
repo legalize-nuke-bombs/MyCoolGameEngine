@@ -4,6 +4,7 @@
 
 #include "subsystem_internal.h"
 #include "../logging/logger.h"
+#include "subsystem_collection.h"
 
 
 void subsystem_create(struct subsystem *this, const struct subsystem_vtable *vtable, const struct subsystem_collection *subsystems) {
@@ -43,4 +44,12 @@ void subsystem_disable(struct subsystem *this) {
 
 const char* subsystem_get_name(const struct subsystem *this) {
     return this->vtable->name();
+}
+
+struct subsystem* subsystem_get_subsystem(const struct subsystem *this, const char* name) {
+    return subsystem_collection_get(this->subsystems, name);
+}
+
+const struct subsystem_collection* subsystem_get_subsystems(const struct subsystem *this) {
+    return this->subsystems;
 }

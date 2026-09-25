@@ -10,10 +10,8 @@
 #include "../component_internal.h"
 #include "../../entity.h"
 #include "../../scene.h"
-#include "../../../devices/devices.h"
 #include "../../../devices/keyboard.h"
-#include "../../../engine/engine.h"
-#include "../../../engine/engine_init_context.h"
+#include "../../../subsystems/subsystem_collection.h"
 #include "../../../utils/action.h"
 #include "../../../utils/parser.h"
 
@@ -81,8 +79,7 @@ static void armageddon_execute(void *base, void *context) {
 
 static void armageddon_awake(struct component *base) {
     struct armageddon *this = (struct armageddon *)base;
-    const struct engine *engine = entity_get_engine(component_get_parent(base));
-    struct keyboard *keyboard = devices_get_keyboard(engine_init_context_get_devices(engine_get_init_context(engine)));
+    struct keyboard *keyboard = (struct keyboard*)subsystem_collection_get(scene_get_subsystems(entity_get_parent(component_get_parent(base))), "keyboard");
     this->on_key_pressed = keyboard_require_action_on_key_pressed(keyboard, this->keycode);
     action_subscribe(this->on_key_pressed, this, armageddon_execute, &this->subscription_token);
     this->tmap = scene_get_tmap(entity_get_parent(component_get_parent(base)));

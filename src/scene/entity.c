@@ -83,9 +83,6 @@ bool entity_is_alive(const struct entity *this) {
 struct scene* entity_get_parent(const struct entity *this) {
     return this->parent;
 }
-const struct engine* entity_get_engine(const struct entity *this) {
-    return scene_get_engine(this->parent);
-}
 
 struct transform* entity_get_transform(const struct entity *this) {
     return this->transform;

@@ -7,33 +7,46 @@
 #include <stdlib.h>
 #include <SDL3/SDL.h>
 
-#include "../engine/engine.h"
 #include "../engine/events/engine_events.h"
 #include "../utils/action.h"
 #include "../logging/logger.h"
-#include "../engine/engine_init_context.h"
+#include "../subsystems/subsystem_internal.h"
 
 #define SDL3_SCANCODE_NUMBER 512
 
 
 struct keyboard {
+    struct subsystem base;
+
     struct action* on_key_pressed[SDL3_SCANCODE_NUMBER];
     struct action* on_key_released[SDL3_SCANCODE_NUMBER];
 
     struct action* on_native_event;
     unsigned int subscription_token;
-
-    struct engine* engine;
 };
 
-struct keyboard* keyboard_create(struct engine *engine) {
-    logger_info("Keyboard is creating...");
-    struct keyboard* this = calloc(1, sizeof(struct keyboard));
-    this->engine = engine;
-    return this;
+static const char* keyboard_get_name() {
+    return "keyboard";
 }
-void keyboard_destroy(struct keyboard *this) {
-    logger_info("Keyboard is destroying...");
+static void keyboard_on_destroy(struct subsystem* base);
+static void keyboard_on_enable(struct subsystem* base);
+static void keyboard_on_disable(struct subsystem* base);
+
+static struct subsystem_vtable keyboard_vtable = {
+    .name = keyboard_get_name,
+    .on_destroy = keyboard_on_destroy,
+    .on_enable = keyboard_on_enable,
+    .on_disable = keyboard_on_disable
+};
+
+struct subsystem* keyboard_create(const struct subsystem_collection* subsystems) {
+    struct keyboard* this = calloc(1, sizeof(struct keyboard));
+    struct subsystem* base = (struct subsystem*)this;
+    subsystem_create(base, &keyboard_vtable, subsystems);
+    return base;
+}
+void keyboard_on_destroy(struct subsystem *base) {
+    const struct keyboard* this = (struct keyboard*)base;
     for (int i = 0; i < SDL3_SCANCODE_NUMBER; i++) {
         if (this->on_key_pressed[i] != NULL) {
             action_destroy(this->on_key_pressed[i]);
@@ -42,7 +55,6 @@ void keyboard_destroy(struct keyboard *this) {
             action_destroy(this->on_key_released[i]);
         }
     }
-    free(this);
 }
 
 static void keyboard_register_native_event(void* listener, void* context) {
@@ -64,13 +76,13 @@ static void keyboard_register_native_event(void* listener, void* context) {
         }
     }
 }
-void keyboard_awake(struct keyboard *this) {
-    logger_info("Keyboard is awaking...");
-    this->on_native_event = engine_events_on_native_event(engine_init_context_get_events(engine_get_init_context(this->engine)));
+void keyboard_on_enable(struct subsystem* base) {
+    struct keyboard* this = (struct keyboard*)base;
+    this->on_native_event = engine_events_on_native_event((struct engine_events*)subsystem_get_subsystem(base, "engine_events"));
     action_subscribe(this->on_native_event, this, keyboard_register_native_event, &this->subscription_token);
 }
-void keyboard_disable(struct keyboard *this) {
-    logger_info("Keyboard is disabling...");
+void keyboard_on_disable(struct subsystem* base) {
+    struct keyboard* this = (struct keyboard*)base;
     action_unsubscribe(this->on_native_event, this->subscription_token);
     this->on_native_event = NULL;
     this->subscription_token = 0;

@@ -17,4 +17,6 @@ void renderer_layer_manager_capture(const struct renderer_layer_manager *this, s
 
 struct renderer_layer* renderer_layer_manager_try_get(const struct renderer_layer_manager *this, const char *layer_name);
 
+void renderer_layer_manager_clear(const struct renderer_layer_manager *this);
+
 #endif //MYCOOLGAMEENGINE_RENDERER_LAYER_MANAGER_H

@@ -9,7 +9,7 @@ struct subsystem_collection;
 struct subsystem;
 struct engine;
 
-struct subsystem_collection* subsystem_collection_create(struct engine* engine);
+struct subsystem_collection* subsystem_collection_create();
 void subsystem_collection_destroy(struct subsystem_collection* this);
 
 void subsystem_collection_enable_all(const struct subsystem_collection* this);

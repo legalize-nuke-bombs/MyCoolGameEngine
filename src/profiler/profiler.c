@@ -7,16 +7,16 @@
 #include <stdlib.h>
 
 #include "time_estimator.h"
-#include "../devices/devices.h"
 #include "../devices/keyboard.h"
-#include "../engine/engine.h"
 #include "../logging/logger.h"
 #include "../engine/events/engine_events.h"
-#include "../engine/engine_init_context.h"
 #include "../utils/action.h"
+#include "../subsystems/subsystem_internal.h"
 
 
 struct profiler {
+    struct subsystem base;
+
     struct time_estimator *frame;
     struct time_estimator *update;
     struct time_estimator *rendering;
@@ -38,27 +38,38 @@ struct profiler {
 
     struct action* post_rendering;
     unsigned int post_rendering_token;
+};
 
-    struct engine *engine;
+
+static const char* profiler_get_name() {
+    return "profiler";
+}
+static void profiler_on_destroy(struct subsystem* base);
+static void profiler_on_enable(struct subsystem* base);
+static void profiler_on_disable(struct subsystem* base);
+
+static struct subsystem_vtable keyboard_vtable = {
+    .name = profiler_get_name,
+    .on_destroy = profiler_on_destroy,
+    .on_enable = profiler_on_enable,
+    .on_disable = profiler_on_disable
 };
 
 
 
-struct profiler* profiler_create(struct engine *engine) {
-    logger_info("Profiler is creating...");
-    struct profiler* this = malloc(sizeof(struct profiler));
+struct subsystem* profiler_create(struct subsystem_collection *subsystems) {
+    struct profiler* this = calloc(1, sizeof(struct profiler));
+    struct subsystem* base = (struct subsystem*)this;
     this->frame = time_estimator_create();
     this->update = time_estimator_create();
     this->rendering = time_estimator_create();
-    this->engine = engine;
-    return this;
+    return base;
 }
-void profiler_destroy(struct profiler* this) {
-    logger_info("Profiler is destroying...");
+void profiler_on_destroy(struct subsystem *base) {
+    const struct profiler* this = (struct profiler*)(base);
     time_estimator_destroy(this->frame);
     time_estimator_destroy(this->update);
     time_estimator_destroy(this->rendering);
-    free(this);
 }
 
 
@@ -109,10 +120,11 @@ static void profiler_handle_post_rendering(void *listener, void *context) {
 }
 
 static void profiler_subscribe(struct profiler *this) {
-    this->on_hotkey = keyboard_require_action_on_key_pressed(devices_get_keyboard(engine_init_context_get_devices(engine_get_init_context(this->engine))), "F3");
+    struct keyboard *keyboard = (struct keyboard*)subsystem_get_subsystem((struct subsystem*)this, "keyboard");
+    this->on_hotkey = keyboard_require_action_on_key_pressed(keyboard, "F3");
     action_subscribe(this->on_hotkey, this, profiler_handle_hotkey_pressed, &this->on_hotkey_token);
 
-    const struct engine_events* events = engine_init_context_get_events(engine_get_init_context(this->engine));
+    const struct engine_events *events = (struct engine_events*)subsystem_get_subsystem((struct subsystem*)this, "engine_events");
 
     this->pre_frame = engine_events_pre_frame(events);
     action_subscribe(this->pre_frame, this, profiler_handle_pre_frame, &this->pre_frame_token);
@@ -150,11 +162,12 @@ static void profiler_unsubscribe(struct profiler *this) {
     this->post_rendering = NULL;
 }
 
-void profiler_awake(struct profiler *this) {
-    logger_info("Profiler is awaking...");
+void profiler_on_enable(struct subsystem *base) {
+    struct profiler* this = (struct profiler*)(base);
     profiler_subscribe(this);
 }
-void profiler_disable(struct profiler *this) {
+void profiler_on_disable(struct subsystem *base) {
+    struct profiler* this = (struct profiler*)(base);
     profiler_unsubscribe(this);
 }
 

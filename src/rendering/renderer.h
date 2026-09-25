@@ -6,12 +6,11 @@
 #define MYCOOLGAMEENGINE_RENDERER_H
 
 struct renderer;
-struct engine;
+struct subsystem_collection;
 
-struct renderer* renderer_create(struct engine* engine);
-void renderer_destroy(struct renderer *this);
+struct subsystem* renderer_create(const struct subsystem_collection* subsystems);
 
-void renderer_awake(struct renderer *this);
-void renderer_disable(struct renderer *this);
+struct renderer_pipeline* renderer_get_pipeline(const struct renderer* this);
+struct renderer_layer_manager* renderer_get_layer_manager(const struct renderer* this);
 
 #endif //MYCOOLGAMEENGINE_RENDERER_H

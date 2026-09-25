@@ -5,11 +5,13 @@
 #include "engine_events.h"
 
 #include <stdlib.h>
-#include "../../logging/logger.h"
 #include "../../utils/action.h"
+#include "../../subsystems/subsystem_internal.h"
 
 
 struct engine_events {
+    struct subsystem base;
+
     struct action* pre_frame;
 
     struct action* pre_physics;
@@ -23,10 +25,28 @@ struct engine_events {
     struct action* on_native_event;
 };
 
+static const char* engine_events_get_name() {
+    return "engine_events";
+}
 
-struct engine_events* engine_events_create() {
-    logger_info("Engine events are creating...");
+static void engine_events_on_destroy(struct subsystem* base);
+static void engine_events_on_enable(struct subsystem* base);
+static void engine_events_on_disable(struct subsystem* base);
+
+
+static struct subsystem_vtable engine_events_vtable = {
+    .name = engine_events_get_name,
+    .on_destroy = engine_events_on_destroy,
+    .on_enable = engine_events_on_enable,
+    .on_disable = engine_events_on_disable
+};
+
+
+
+struct subsystem* engine_events_create(const struct subsystem_collection *subsystems) {
     struct engine_events *this = malloc(sizeof(struct engine_events));
+    struct subsystem* base = (struct subsystem*)this;
+    subsystem_create(base, &engine_events_vtable, subsystems);
     this->pre_frame = action_create();
     this->pre_physics = action_create();
     this->on_physics = action_create();
@@ -35,10 +55,10 @@ struct engine_events* engine_events_create() {
     this->on_rendering = action_create();
     this->post_rendering = action_create();
     this->on_native_event = action_create();
-    return this;
+    return base;
 }
-void engine_events_destroy(struct engine_events *this) {
-    logger_info("Engine events are destroying...");
+void engine_events_on_destroy(struct subsystem* base) {
+    struct engine_events *this = (struct engine_events*)base;
     action_destroy(this->pre_frame);
     action_destroy(this->pre_physics);
     action_destroy(this->on_physics);
@@ -47,14 +67,13 @@ void engine_events_destroy(struct engine_events *this) {
     action_destroy(this->on_rendering);
     action_destroy(this->post_rendering);
     action_destroy(this->on_native_event);
-    free(this);
 }
 
-void engine_events_awake(struct engine_events *this) {
-    logger_info("Engine events are waking up...");
+void engine_events_on_enable(struct subsystem* base) {
+    struct engine_events *this = (struct engine_events*)base;
 }
-void engine_events_disable(struct engine_events *this) {
-    logger_info("Engine events are disabling...");
+void engine_events_on_disable(struct subsystem* base) {
+    const struct engine_events *this = (struct engine_events*)base;
     action_clear(this->pre_frame);
     action_clear(this->pre_physics);
     action_clear(this->on_physics);

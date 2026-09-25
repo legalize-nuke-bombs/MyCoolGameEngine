@@ -124,8 +124,6 @@ add_executable(MyCoolGameEngine main.c
         src/scene/components/demo/armageddon.c
         src/devices/keyboard.h
         src/devices/keyboard.c
-        src/devices/devices.h
-        src/devices/devices.c
         src/profiler/profiler.h
         src/profiler/profiler.c
         src/profiler/time_estimator.h
@@ -134,22 +132,14 @@ add_executable(MyCoolGameEngine main.c
         src/scene/components/core/idle.c
         src/utils/file_listener.h
         src/utils/file_listener.c
-        src/engine/engine_init_context.h
-        src/engine/engine_init_context.c
-        src/engine/engine_execution_context.h
-        src/engine/engine_execution_context.c
         src/engine/events/engine_events.h
         src/engine/events/engine_events.c
-        src/engine/engine_execution_arguments.h
-        src/engine/engine_init_arguments.h
         src/rendering/renderer.h
         src/rendering/renderer.c
-        src/engine/utils/custom/engine_closer.h
-        src/engine/utils/custom/engine_closer.c
-        src/engine/utils/engine_utils.h
-        src/engine/utils/engine_utils.c
-        src/engine/utils/custom/engine_restarter.h
-        src/engine/utils/custom/engine_restarter.c
+        src/engine/utils/engine_closer.h
+        src/engine/utils/engine_closer.c
+        src/engine/utils/engine_restarter.h
+        src/engine/utils/engine_restarter.c
         src/subsystems/subsystem.h
         src/subsystems/subsystem.c
         src/subsystems/subsystem_internal.h

@@ -9,7 +9,7 @@
 
 struct interpreter_command_vtable {
     const char* (*key)(const struct interpreter_command *base);
-    void (*execute)(const struct interpreter_command *base, struct parser *parser, struct engine *engine);
+    void (*execute)(const struct interpreter_command *base, struct parser *parser, const struct subsystem_collection *subsystems);
     void (*on_destroy)(struct interpreter_command *base);
 };
 

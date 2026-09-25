@@ -9,11 +9,10 @@
 
 #include "entity.h"
 #include "entity_collection.h"
-#include "../engine/engine.h"
 #include "../engine/events/engine_events.h"
 #include "../utils/action.h"
-#include "../engine/engine_init_context.h"
 #include "../subsystems/subsystem_internal.h"
+#include "components/component_fabric.h"
 
 
 #define GC_INTERVAL 5
@@ -30,8 +29,7 @@ struct scene {
     struct action* on_physics;
     unsigned int on_physics_subscription_token;
 
-    const struct engine *engine;
-    const struct subsystem_collection *subsystems;
+    struct component_fabric* component_fabric;
 };
 
 static const char* scene_get_subsystem_key() {
@@ -49,8 +47,8 @@ static struct subsystem_vtable scene_vtable = {
     .on_disable = scene_on_disable
 };
 
-struct subsystem* scene_create(char *name, const struct engine* engine, const struct subsystem_collection *subsystems) {
-    struct scene *this = malloc(sizeof(struct scene));
+struct subsystem* scene_create(char *name, const struct subsystem_collection *subsystems) {
+    struct scene *this = calloc(1, sizeof(struct scene));
     struct subsystem *base = (struct subsystem*)this;
     subsystem_create(base, &scene_vtable, subsystems);
 
@@ -58,11 +56,7 @@ struct subsystem* scene_create(char *name, const struct engine* engine, const st
     this->entities = entity_collection_create();
     this->tmap = tmap_create();
 
-    this->on_physics = NULL;
-    this->on_physics_subscription_token = 0;
-
-    this->engine = engine;
-    this->subsystems = subsystems;
+    this->component_fabric = component_fabric_create();
 
     return base;
 }
@@ -71,6 +65,7 @@ void scene_on_destroy(struct subsystem *base) {
     const struct scene *this = (struct scene*)base;
     logger_info("Scene %s is destroying...", this->name);
 
+    component_fabric_destroy(this->component_fabric);
     entity_collection_destroy(this->entities);
     tmap_destroy(this->tmap);
     free(this->name);
@@ -106,7 +101,7 @@ void scene_on_enable(struct subsystem *base) {
     struct scene *this = (struct scene*)base;
     entity_collection_awake_everyone(this->entities);
     this->gcTimer = 0;
-    this->on_physics = engine_events_on_physics(engine_init_context_get_events(engine_get_init_context(this->engine)));
+    this->on_physics = engine_events_on_physics((struct engine_events*)subsystem_get_subsystem(base, "engine_events"));
     action_subscribe(this->on_physics, this, scene_update, &this->on_physics_subscription_token);
 }
 
@@ -130,11 +125,11 @@ static void handle_new_component(void *base, void *component) {
 const struct tmap* scene_get_tmap(const struct scene *this) {
     return this->tmap;
 }
-const struct engine *scene_get_engine(const struct scene *this) {
-    return this->engine;
+const struct component_fabric* scene_get_component_fabric(const struct scene* this) {
+    return this->component_fabric;
 }
 const struct subsystem_collection* scene_get_subsystems(const struct scene* this) {
-    return this->subsystems;
+    return subsystem_get_subsystems((const struct subsystem*)this);
 }
 
 void scene_capture_entity(struct scene *this, struct entity *entity) {

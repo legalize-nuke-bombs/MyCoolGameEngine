@@ -7,41 +7,74 @@
 #include <stdlib.h>
 
 #include "../engine/engine.h"
-#include "../logging/logger.h"
 #include "../engine/events/engine_events.h"
-#include "../engine/engine_init_context.h"
 #include "../utils/action.h"
 #include <SDL3/SDL.h>
-
+#include "../logging/logger.h"
+#include "renderer_layer_manager.h"
+#include "../subsystems/subsystem_internal.h"
 #include "renderer_pipeline.h"
 
 
 struct renderer {
+    struct subsystem base;
+
+    SDL_Window *window;
     SDL_Renderer *native;
+    struct renderer_layer_manager *layer_manager;
     struct renderer_pipeline *pipeline;
 
     struct action* on_rendering;
     unsigned int on_rendering_subscription_token;
-    struct engine *engine;
 };
 
 
-struct renderer* renderer_create(struct engine* engine) {
-    logger_info("Renderer is creating...");
-    struct renderer* this = malloc(sizeof(struct renderer));
-
-    this->native = NULL;
-    this->pipeline = NULL;
-
-    this->on_rendering = NULL;
-    this->on_rendering_subscription_token = 0;
-    this->engine = engine;
-
-    return this;
+static const char* renderer_get_name() {
+    return "renderer";
 }
-void renderer_destroy(struct renderer *this) {
-    logger_info("Renderer is destroying...");
-    free(this);
+static void renderer_on_destroy(struct subsystem* base);
+static void renderer_on_enable(struct subsystem* base);
+static void renderer_on_disable(struct subsystem* base);
+
+static struct subsystem_vtable renderer_vtable = {
+    .name = renderer_get_name,
+    .on_destroy = renderer_on_destroy,
+    .on_enable = renderer_on_enable,
+    .on_disable = renderer_on_disable
+};
+
+
+struct subsystem* renderer_create(const struct subsystem_collection* subsystems) {
+    struct renderer* this = calloc(1, sizeof(struct renderer));
+    struct subsystem* base = (struct subsystem*)this;
+    subsystem_create(base, &renderer_vtable, subsystems);
+
+    if (!SDL_Init(SDL_INIT_VIDEO)) {
+        logger_error("SDL_Init failed: %s", SDL_GetError());
+        return NULL;
+    }
+    if (SDL_CreateWindowAndRenderer("MyCoolGameEngine", 800, 600, SDL_WINDOW_RESIZABLE, &this->window, &this->native)) {
+        SDL_SetRenderDrawBlendMode(this->native, SDL_BLENDMODE_BLEND);
+    }
+    else {
+        logger_error("SDL Failed to create window and renderer: %s", SDL_GetError());
+        return NULL;
+    }
+    this->layer_manager = renderer_layer_manager_create();
+    this->pipeline = renderer_pipeline_create(this->native);
+
+    return base;
+}
+void renderer_on_destroy(struct subsystem* base) {
+    const struct renderer* this = (struct renderer*)base;
+
+    renderer_pipeline_destroy(this->pipeline);
+    renderer_layer_manager_destroy(this->layer_manager);
+    SDL_DestroyRenderer(this->native);
+    SDL_DestroyWindow(this->window);
+    SDL_Quit();
+
+    free(base);
 }
 
 static void renderer_render(void *listener, void *context) {
@@ -52,19 +85,21 @@ static void renderer_render(void *listener, void *context) {
     SDL_RenderPresent(this->native);
 }
 
-void renderer_awake(struct renderer *this) {
-    logger_info("Renderer is awaking...");
-    const struct engine_init_context* engine_init_context = engine_get_init_context(this->engine);
-    this->native = engine_init_context_get_native_renderer(engine_init_context);
-    this->pipeline = engine_init_context_get_renderer_pipeline(engine_init_context);
-    this->on_rendering = engine_events_on_rendering(engine_init_context_get_events(engine_get_init_context(this->engine)));
+void renderer_on_enable(struct subsystem* base) {
+    struct renderer* this = (struct renderer*)base;
+    this->on_rendering = engine_events_on_rendering((struct engine_events*)subsystem_get_subsystem(base, "engine_events"));
     action_subscribe(this->on_rendering, this, renderer_render, &this->on_rendering_subscription_token);
 }
-void renderer_disable(struct renderer *this) {
-    logger_info("Renderer is disabling...");
-    this->native = NULL;
-    this->pipeline = NULL;
+void renderer_on_disable(struct subsystem* base) {
+    struct renderer* this = (struct renderer*)base;
     action_unsubscribe(this->on_rendering, this->on_rendering_subscription_token);
     this->on_rendering = NULL;
-    this->on_rendering_subscription_token = 0;
+    renderer_layer_manager_clear(this->layer_manager);
+}
+
+struct renderer_pipeline* renderer_get_pipeline(const struct renderer* this) {
+    return this->pipeline;
+}
+struct renderer_layer_manager* renderer_get_layer_manager(const struct renderer* this) {
+    return this->layer_manager;
 }

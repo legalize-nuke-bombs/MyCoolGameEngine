@@ -14,4 +14,7 @@ void subsystem_disable(struct subsystem *this);
 
 const char* subsystem_get_name(const struct subsystem *this);
 
+struct subsystem* subsystem_get_subsystem(const struct subsystem *this, const char* name);
+const struct subsystem_collection* subsystem_get_subsystems(const struct subsystem *this);
+
 #endif //MYCOOLGAMEENGINE_SUBSYSTEM_H

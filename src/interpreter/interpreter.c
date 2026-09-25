@@ -15,17 +15,32 @@
 #include "window/interpreter_window.h"
 #include "../logging/logger.h"
 #include "scene/interpreter_scene.h"
+#include "../subsystems/subsystem_internal.h"
 
 
 struct interpreter {
+    struct subsystem base;
+
     struct interpreter_command_register *command_register;
-    struct engine *engine;
+};
+
+static const char* interpreter_get_name() {
+    return "interpreter";
+}
+static void interpreter_on_destroy(struct subsystem* base);
+
+static struct subsystem_vtable interpreter_vtable = {
+    .name = interpreter_get_name,
+    .on_destroy = interpreter_on_destroy,
+    .on_enable = NULL,
+    .on_disable = NULL
 };
 
 
-struct interpreter* interpreter_create(struct engine *engine) {
-    logger_info("Interpreter is creating...");
+struct subsystem* interpreter_create(const struct subsystem_collection* subsystems) {
     struct interpreter* interpreter = malloc(sizeof(struct interpreter));
+    struct subsystem* base = (struct subsystem*)interpreter;
+    subsystem_create(base, &interpreter_vtable, subsystems);
 
     interpreter->command_register = interpreter_command_register_create("Main", 5);
     interpreter_command_register_capture_command(interpreter->command_register, interpreter_print_as_interpreter_command(interpreter_print_create()));
@@ -33,13 +48,11 @@ struct interpreter* interpreter_create(struct engine *engine) {
     interpreter_command_register_capture_command(interpreter->command_register, interpreter_window_create());
     interpreter_command_register_capture_command(interpreter->command_register, interpreter_scene_create());
 
-    interpreter->engine = engine;
-    return interpreter;
+    return base;
 }
-void interpreter_destroy(struct interpreter* this) {
-    logger_info("Interpreter is destroying...");
+void interpreter_on_destroy(struct subsystem* base) {
+    const struct interpreter *this = (struct interpreter*)base;
     interpreter_command_register_destroy(this->command_register);
-    free(this);
 }
 
 static int interpreter_parse(const struct interpreter *this, struct parser *parser) {
@@ -54,7 +67,7 @@ static int interpreter_parse(const struct interpreter *this, struct parser *pars
             continue;
         }
 
-        interpreter_command_execute(command, parser, this->engine);
+        interpreter_command_execute(command, parser, subsystem_get_subsystems((struct subsystem*)this));
     }
 }
 

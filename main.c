@@ -1,9 +1,8 @@
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
 
 #include "src/engine/engine.h"
-#include "src/engine/engine_init_arguments.h"
-#include "src/engine/engine_execution_arguments.h"
 #include "src/logging/logger.h"
 
 
@@ -30,23 +29,8 @@ bool dev_mode_extract(const int argc, char* argv[]) {
 
 
 int main(const int argc, char *argv[]) {
-    struct engine_init_arguments init_arguments = {
-        .logger_level = logger_level_extract(argc, argv),
-        .dev_mode = dev_mode_extract(argc, argv)
-    };
-
-    struct engine *engine = engine_create(init_arguments);
-    if (engine == NULL) {
-        return 1;
-    }
-
-    const struct engine_execution_arguments execution_arguments = {
-        .script_path = script_path_extract(argc, argv),
-    };
-
-    engine_execute(engine, execution_arguments);
-
+    struct engine *engine = engine_create();
+    engine_execute(engine);
     engine_destroy(engine);
-
     return 0;
 }

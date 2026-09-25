@@ -10,10 +10,9 @@
 #define INTERPRETER_FAILED_OPEN_SCRIPT 1
 
 struct interpreter;
-struct engine;
+struct subsystem_collection;
 
-struct interpreter* interpreter_create(struct engine *engine);
-void interpreter_destroy(struct interpreter* this);
+struct subsystem* interpreter_create(const struct subsystem_collection *subsystems);
 
 int interpreter_eval(const struct interpreter *this, const char* script_path);
 

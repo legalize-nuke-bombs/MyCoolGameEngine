@@ -20,7 +20,7 @@ static const char* interpreter_print_get_key(const struct interpreter_command *t
     return "print";
 }
 
-static void interpreter_print_execute(const struct interpreter_command *this, struct parser *parser, struct engine *engine) {
+static void interpreter_print_execute(const struct interpreter_command *this, struct parser *parser, const struct subsystem_collection *subsystems) {
     const char* context = parser_next(parser);
     logger_info("Interpreter: %s", context);
 }

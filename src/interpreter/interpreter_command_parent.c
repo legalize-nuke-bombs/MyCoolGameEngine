@@ -24,7 +24,7 @@ static const char* interpreter_command_parent_get_key(const struct interpreter_c
     return this->name;
 }
 
-static void interpreter_command_parent_execute(const struct interpreter_command *base, struct parser *parser, struct engine *engine) {
+static void interpreter_command_parent_execute(const struct interpreter_command *base, struct parser *parser, const struct subsystem_collection *subsystems) {
     const struct interpreter_command_parent* this = (struct interpreter_command_parent*)base;
 
     const char* command_key = parser_next(parser);
@@ -38,7 +38,7 @@ static void interpreter_command_parent_execute(const struct interpreter_command 
         return;
     }
 
-    interpreter_command_execute(command, parser, engine);
+    interpreter_command_execute(command, parser, subsystems);
 }
 
 static void interpreter_command_parent_on_destroy(struct interpreter_command* base) {

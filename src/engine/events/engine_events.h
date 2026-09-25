@@ -6,12 +6,9 @@
 #define MYCOOLGAMEENGINE_ENGINE_EVENTS_H
 
 struct engine_events;
+struct subsystem_collection;
 
-struct engine_events* engine_events_create();
-void engine_events_destroy(struct engine_events *this);
-
-void engine_events_awake(struct engine_events *this);
-void engine_events_disable(struct engine_events *this);
+struct subsystem* engine_events_create(const struct subsystem_collection *subsystems);
 
 struct action* engine_events_pre_frame(const struct engine_events *this);
 struct action* engine_events_pre_physics(const struct engine_events *this);

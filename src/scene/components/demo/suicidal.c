@@ -8,12 +8,11 @@
 
 #include "../component_internal.h"
 #include "../../entity.h"
-#include "../../../devices/devices.h"
+#include "../../scene.h"
 #include "../../../devices/keyboard.h"
-#include "../../../engine/engine.h"
-#include "../../../engine/engine_init_context.h"
 #include "../../../utils/action.h"
 #include "../../../utils/parser.h"
+#include "../../../subsystems/subsystem_collection.h"
 
 
 struct suicidal {
@@ -46,8 +45,7 @@ static void suicidal_suicide(void* base, void *context) {
 static void suicidal_on_awake(struct component *base) {
     struct suicidal *this = (struct suicidal *)base;
 
-    const struct engine *engine = entity_get_engine(component_get_parent(base));
-    struct keyboard *keyboard = devices_get_keyboard(engine_init_context_get_devices(engine_get_init_context(engine)));
+    struct keyboard *keyboard = (struct keyboard*)subsystem_collection_get(scene_get_subsystems(entity_get_parent(component_get_parent(base))), "keyboard");
     this->on_key_pressed = keyboard_require_action_on_key_pressed(keyboard, this->keycode);
     action_subscribe(this->on_key_pressed, this, suicidal_suicide, &this->subscription_token);
 }

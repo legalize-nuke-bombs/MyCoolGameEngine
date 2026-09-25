@@ -1,5 +1,7 @@
 #include "dictionary.h"
 #include <stdlib.h>
+#include <string.h>
+
 #include "../logging/logger.h"
 
 struct dictionary {
@@ -104,4 +106,10 @@ bool dictionary_present(const struct dictionary *dictionary, void *key) {
 }
 bool dictionary_absent(const struct dictionary *dictionary, void *key) {
     return dictionary_get(dictionary, key) == NULL;
+}
+
+
+void dictionary_clear(struct dictionary *this) {
+    memset(this->nodes, 0, dictionary_capacity(this) * sizeof(struct dictionary_node));
+    this->count = 0;
 }

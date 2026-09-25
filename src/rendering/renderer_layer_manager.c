@@ -48,3 +48,14 @@ void renderer_layer_manager_capture(const struct renderer_layer_manager *this, s
 struct renderer_layer* renderer_layer_manager_try_get(const struct renderer_layer_manager *this, const char *layer_name) {
     return dictionary_get(this->dictionary, (void*)layer_name);
 }
+
+void renderer_layer_manager_clear(const struct renderer_layer_manager *this) {
+    for (int i = 0; i < dictionary_capacity(this->dictionary); i++) {
+        const struct dictionary_node node = dictionary_get_node(this->dictionary, i);
+        if (node.value == NULL) {
+            continue;
+        }
+        renderer_layer_destroy(node.value);
+    }
+    dictionary_clear(this->dictionary);
+}

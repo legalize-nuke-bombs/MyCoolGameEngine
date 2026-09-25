@@ -26,4 +26,6 @@ void *dictionary_get(const struct dictionary *dictionary, void *key);
 bool dictionary_present(const struct dictionary *dictionary, void *key);
 bool dictionary_absent(const struct dictionary *dictionary, void *key);
 
+void dictionary_clear(struct dictionary *this);
+
 #endif //MYCOOLGAMEENGINE_DICTIONARY_H

@@ -8,11 +8,15 @@
 #include <_string.h>
 
 #include "subsystem.h"
+#include "../devices/keyboard.h"
 #include "../logging/logger.h"
 #include "../scene/scene.h"
 #include "../utils/list.h"
 #include "../utils/dictionary.h"
 #include "../utils/string_dictionary.h"
+#include "../engine/events/engine_events.h"
+#include "../interpreter/interpreter.h"
+#include "../rendering/renderer.h"
 
 
 struct subsystem_collection {
@@ -37,17 +41,21 @@ static void subsystem_collection_capture(const struct subsystem_collection* this
     }
 }
 
-static void subsystem_collection_capture_all(const struct subsystem_collection *this, struct engine *engine) {
-    subsystem_collection_capture(this, scene_create(strdup("Default scene"), engine, this));
+static void subsystem_collection_capture_all(const struct subsystem_collection *this) {
+    subsystem_collection_capture(this, engine_events_create(this));
+    subsystem_collection_capture(this, keyboard_create(this));
+    subsystem_collection_capture(this, scene_create(strdup("Default scene"), this));
+    subsystem_collection_capture(this, renderer_create(this));
+    subsystem_collection_capture(this, interpreter_create(this));
 }
 
 
-struct subsystem_collection* subsystem_collection_create(struct engine* engine) {
+struct subsystem_collection* subsystem_collection_create() {
     logger_info("Subsystem collection is creating...");
     struct subsystem_collection* this = malloc(sizeof(struct subsystem_collection));
     this->list = list_create(1024);
     this->dict = string_dictionary_build(10);
-    subsystem_collection_capture_all(this, engine);
+    subsystem_collection_capture_all(this);
     return this;
 }
 void subsystem_collection_destroy(struct subsystem_collection* this) {
