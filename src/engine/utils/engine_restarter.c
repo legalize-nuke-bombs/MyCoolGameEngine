@@ -13,12 +13,15 @@
 #include "../events/engine_events.h"
 #include "../update_context.h"
 #include "../../subsystems/subsystem_internal.h"
+#include "../lifecycle/engine_lifecycle.h"
 
 
 struct engine_restarter {
     struct subsystem base;
 
     struct file_listener *script_listener;
+
+    struct engine_lifecycle* lifecycle;
 
     unsigned int on_hotkey_token;
     struct action* on_hotkey;
@@ -50,14 +53,15 @@ struct subsystem* engine_restarter_create(const struct subsystem_collection *sub
     return base;
 }
 
-static void engine_restarter_fire(struct subsystem* this) {
+static void engine_restarter_fire(const struct engine_restarter* this) {
     logger_info("Engine restarter fired");
-    // TODO
+    engine_lifecycle_mark_restart(this->lifecycle);
+    engine_lifecycle_mark_stop(this->lifecycle);
 }
 
 
 static void engine_restarter_handle_hotkey(void* listener, void *context) {
-    struct subsystem *this = listener;
+    const struct engine_restarter *this = listener;
     engine_restarter_fire(this);
 }
 
@@ -65,13 +69,15 @@ static void engine_restarter_handle_pre_frame(void *listener, void *context) {
     const struct engine_restarter *this = listener;
     const struct update_context* update_context = context;
     if (file_listener_update(this->script_listener, update_context->dt)) {
-        engine_restarter_fire((struct subsystem*)this);
+        engine_restarter_fire(this);
     }
 }
 
 void engine_restarter_on_enable(struct subsystem *base) {
     struct engine_restarter* this = (struct engine_restarter*)base;
     this->script_listener = file_listener_create("123");
+
+    this->lifecycle = (struct engine_lifecycle*)subsystem_get_subsystem(base, "engine_lifecycle");
 
     this->on_hotkey = keyboard_require_action_on_key_pressed((struct keyboard*)subsystem_get_subsystem(base, "keyboard"), "F5");
     action_subscribe(this->on_hotkey, this, engine_restarter_handle_hotkey, &this->on_hotkey_token);
@@ -82,6 +88,8 @@ void engine_restarter_on_enable(struct subsystem *base) {
 void engine_restarter_on_disable(struct subsystem *base) {
     struct engine_restarter* this = (struct engine_restarter*)base;
     file_listener_destroy(this->script_listener);
+
+    this->lifecycle = NULL;
 
     action_unsubscribe(this->on_hotkey, this->on_hotkey_token);
     this->on_hotkey = NULL;
