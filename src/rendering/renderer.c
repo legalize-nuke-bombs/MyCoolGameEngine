@@ -8,7 +8,7 @@
 
 #include "../engine/engine.h"
 #include "../logging/logger.h"
-#include "../engine/engine_events.h"
+#include "../engine/events/engine_events.h"
 #include "../engine/engine_init_context.h"
 #include "../utils/action.h"
 #include <SDL3/SDL.h>

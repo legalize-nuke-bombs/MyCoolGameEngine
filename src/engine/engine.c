@@ -13,7 +13,7 @@
 #include "../interpreter/interpreter.h"
 #include "update_context.h"
 #include "../utils/action.h"
-#include "engine_events.h"
+#include "events/engine_events.h"
 
 struct engine {
     struct engine_init_context *init_context;
