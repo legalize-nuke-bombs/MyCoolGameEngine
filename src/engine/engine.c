@@ -37,7 +37,7 @@ void engine_destroy(struct engine *this) {
     free(this);
 }
 
-void engine_execute(struct engine *this, const struct engine_execution_arguments arguments) {
+static bool engine_execute_step(struct engine *this, const struct engine_execution_arguments arguments) {
     if (arguments.script_path == NULL) {
         logger_warn("Engine will not start: script is not set");
     }
@@ -82,6 +82,12 @@ void engine_execute(struct engine *this, const struct engine_execution_arguments
     engine_init_context_disable(this->init_context);
     engine_execution_context_destroy(this->execution_context);
     engine_events_destroy(this->events);
+
+    return false;
+}
+
+void engine_execute(struct engine *this, const struct engine_execution_arguments arguments) {
+    while (engine_execute_step(this, arguments)) {}
 }
 
 struct engine_init_context* engine_get_init_context(const struct engine *this) {
