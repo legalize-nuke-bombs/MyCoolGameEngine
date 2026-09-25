@@ -80,9 +80,7 @@ void engine_execute(struct engine *this, const struct engine_execution_arguments
         action_invoke(engine_events_post_physics(engine_execution_context_get_events(this->execution_context)), &update_context);
 
         action_invoke(engine_events_pre_rendering(engine_execution_context_get_events(this->execution_context)), &update_context);
-        action_invoke(engine_events_on_rendering_phase1(engine_execution_context_get_events(this->execution_context)), &update_context);
-        action_invoke(engine_events_on_rendering_phase2(engine_execution_context_get_events(this->execution_context)), &update_context);
-        action_invoke(engine_events_on_rendering_phase3(engine_execution_context_get_events(this->execution_context)), &update_context);
+        action_invoke(engine_events_on_rendering(engine_execution_context_get_events(this->execution_context)), &update_context);
         action_invoke(engine_events_post_rendering(engine_execution_context_get_events(this->execution_context)), &update_context);
     }
 

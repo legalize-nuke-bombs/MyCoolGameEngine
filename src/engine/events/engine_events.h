@@ -15,9 +15,7 @@ struct action* engine_events_pre_physics(const struct engine_events *this);
 struct action* engine_events_on_physics(const struct engine_events *this);
 struct action* engine_events_post_physics(const struct engine_events *this);
 struct action* engine_events_pre_rendering(const struct engine_events *this);
-struct action* engine_events_on_rendering_phase1(const struct engine_events *this);
-struct action* engine_events_on_rendering_phase2(const struct engine_events *this);
-struct action* engine_events_on_rendering_phase3(const struct engine_events *this);
+struct action* engine_events_on_rendering(const struct engine_events *this);
 struct action* engine_events_post_rendering(const struct engine_events *this);
 struct action* engine_events_on_native_event(struct engine_events *this);
 

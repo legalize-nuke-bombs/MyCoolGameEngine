@@ -17,9 +17,7 @@ struct engine_events {
     struct action* post_physics;
 
     struct action* pre_rendering;
-    struct action* on_rendering_phase1;
-    struct action* on_rendering_phase2;
-    struct action* on_rendering_phase3;
+    struct action* on_rendering;
     struct action* post_rendering;
 
     struct action* on_native_event;
@@ -34,9 +32,7 @@ struct engine_events* engine_events_create() {
     this->on_physics = action_create();
     this->post_physics = action_create();
     this->pre_rendering = action_create();
-    this->on_rendering_phase1 = action_create();
-    this->on_rendering_phase2 = action_create();
-    this->on_rendering_phase3 = action_create();
+    this->on_rendering = action_create();
     this->post_rendering = action_create();
     this->on_native_event = action_create();
     return this;
@@ -48,9 +44,7 @@ void engine_events_destroy(struct engine_events *this) {
     action_destroy(this->on_physics);
     action_destroy(this->post_physics);
     action_destroy(this->pre_rendering);
-    action_destroy(this->on_rendering_phase1);
-    action_destroy(this->on_rendering_phase2);
-    action_destroy(this->on_rendering_phase3);
+    action_destroy(this->on_rendering);
     action_destroy(this->post_rendering);
     action_destroy(this->on_native_event);
     free(this);
@@ -74,14 +68,8 @@ struct action* engine_events_post_physics(const struct engine_events *this) {
 struct action* engine_events_pre_rendering(const struct engine_events *this) {
     return this->pre_rendering;
 }
-struct action* engine_events_on_rendering_phase1(const struct engine_events *this) {
-    return this->on_rendering_phase1;
-}
-struct action* engine_events_on_rendering_phase2(const struct engine_events *this) {
-    return this->on_rendering_phase2;
-}
-struct action* engine_events_on_rendering_phase3(const struct engine_events *this) {
-    return this->on_rendering_phase3;
+struct action* engine_events_on_rendering(const struct engine_events *this) {
+    return this->on_rendering;
 }
 struct action* engine_events_post_rendering(const struct engine_events *this) {
     return this->post_rendering;
