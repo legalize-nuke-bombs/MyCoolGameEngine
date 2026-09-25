@@ -104,3 +104,6 @@ struct engine_init_context* engine_get_init_context(const struct engine *this) {
 struct engine_execution_context* engine_get_execution_context(const struct engine *this) {
     return this->execution_context;
 }
+struct subsystem_collection* engine_get_subsystems(const struct engine* this) {
+    return this->subsystems;
+}

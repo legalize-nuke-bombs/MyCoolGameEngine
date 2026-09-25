@@ -26,10 +26,12 @@ struct scene {
 
     struct action* on_physics;
     unsigned int on_physics_subscription_token;
+
     const struct engine *engine;
+    const struct subsystem_collection *subsystems;
 };
 
-struct scene* scene_create(char *name, const struct engine* engine) {
+struct scene* scene_create(char *name, const struct engine* engine, const struct subsystem_collection *subsystems) {
     struct scene *this = malloc(sizeof(struct scene));
 
     this->name = name;
@@ -39,7 +41,9 @@ struct scene* scene_create(char *name, const struct engine* engine) {
 
     this->on_physics = NULL;
     this->on_physics_subscription_token = 0;
+
     this->engine = engine;
+    this->subsystems = subsystems;
 
     return this;
 }
@@ -107,6 +111,9 @@ const struct tmap* scene_get_tmap(const struct scene *this) {
 }
 const struct engine *scene_get_engine(const struct scene *this) {
     return this->engine;
+}
+const struct subsystem_collection* scene_get_subsystems(const struct scene* this) {
+    return this->subsystems;
 }
 
 void scene_capture_entity(struct scene *this, struct entity *entity) {

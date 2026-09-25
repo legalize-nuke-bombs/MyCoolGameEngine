@@ -10,6 +10,7 @@
 #include "../rendering/renderer_layer_manager.h"
 #include "../scene/scene.h"
 #include "../logging/logger.h"
+#include "engine.h"
 
 
 struct engine_execution_context {
@@ -32,7 +33,7 @@ struct engine_execution_context* engine_execution_context_create(struct engine *
     this->rerun_required = false;
     this->arguments = arguments;
     this->renderer_layer_manager = renderer_layer_manager_create();
-    this->scene = scene_create(strdup("Default scene"), engine);
+    this->scene = scene_create(strdup("Default scene"), engine, engine_get_subsystems(engine));
     this->profiler = profiler_create(engine);
 
     return this;
