@@ -21,10 +21,10 @@ void engine_execution_context_disable(struct engine_execution_context *this);
 
 
 bool engine_execution_context_is_running(const struct engine_execution_context *this);
-void engine_execution_context_stop(struct engine_execution_context *this);
+void engine_execution_context_mark_stop_required(struct engine_execution_context *this);
 
-bool engine_execution_context_if_return_required(const struct engine_execution_context *this);
-void engine_execution_context_mark_return_required(struct engine_execution_context *this);
+bool engine_execution_context_if_rerun_required(const struct engine_execution_context *this);
+void engine_execution_context_mark_rerun_required(struct engine_execution_context *this);
 
 struct renderer_layer_manager* engine_execution_context_get_renderer_layer_manager(const struct engine_execution_context *this);
 struct scene* engine_execution_context_get_scene(const struct engine_execution_context *this);

@@ -33,11 +33,11 @@ void engine_closer_destroy(struct engine_closer *this) {
 }
 
 static void engine_closer_handle_native_event(void* listener, void* context) {
-    struct engine_closer* this = listener;
+    const struct engine_closer* this = listener;
     const SDL_Event *event = context;
     if (event->type == SDL_EVENT_QUIT) {
-        logger_debug("Engine closer registered SDL_EVENT_QUIT");
-        engine_execution_context_stop(engine_get_execution_context(this->engine));
+        logger_info("Engine closer fired");
+        engine_execution_context_mark_stop_required(engine_get_execution_context(this->engine));
     }
 }
 

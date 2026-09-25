@@ -63,7 +63,7 @@ struct engine_init_context* engine_init_context_try_create(struct engine *engine
     this->devices = devices_create(engine);
     this->component_fabric = component_fabric_create();
     this->interpreter = interpreter_create(engine);
-    this->utils = engine_utils_create(engine);
+    this->utils = engine_utils_create(engine, arguments);
 
     return this;
 }
