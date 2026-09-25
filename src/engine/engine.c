@@ -14,6 +14,7 @@
 #include "events/engine_events.h"
 #include "version.h"
 #include "../subsystems/subsystem_collection.h"
+#include "lifecycle/engine_lifecycle.h"
 
 struct engine {
     struct subsystem_collection *subsystems;
@@ -41,6 +42,7 @@ static bool engine_execute_step(struct engine *this) {
     subsystem_collection_enable_all(this->subsystems);
 
     struct interpreter* interpreter = (struct interpreter*)subsystem_collection_get(this->subsystems, "interpreter");
+    struct engine_lifecycle* lifecycle = (struct engine_lifecycle*)subsystem_collection_get(this->subsystems, "engine_lifecycle");
     struct engine_events* events = (struct engine_events*)subsystem_collection_get(this->subsystems, "engine_events");
 
     if (interpreter_eval(interpreter, script_path) != INTERPRETER_OK) {
@@ -53,7 +55,7 @@ static bool engine_execute_step(struct engine *this) {
     };
     Uint64 previous = SDL_GetTicksNS();
 
-    while (1) {
+    while (engine_lifecycle_is_running(lifecycle)) {
         const Uint64 now = SDL_GetTicksNS();
         update_context.dt = (double)(now - previous) / 1e9;
         previous = now;
@@ -76,7 +78,7 @@ static bool engine_execute_step(struct engine *this) {
 
     subsystem_collection_disable_all(this->subsystems);
 
-    return false;
+    return engine_lifecycle_restart_required(lifecycle);
 }
 
 void engine_execute(struct engine *this) {

@@ -21,6 +21,7 @@
 #include "../rendering/renderer.h"
 #include "../engine/utils/engine_closer.h"
 #include "../engine/utils/engine_restarter.h"
+#include "../engine/lifecycle/engine_lifecycle.h"
 
 
 struct subsystem_collection {
@@ -46,6 +47,7 @@ static void subsystem_collection_capture(const struct subsystem_collection* this
 }
 
 static void subsystem_collection_capture_all(const struct subsystem_collection *this) {
+    subsystem_collection_capture(this, engine_lifecycle_create(this));
     subsystem_collection_capture(this, engine_events_create(this));
     subsystem_collection_capture(this, keyboard_create(this));
     subsystem_collection_capture(this, scene_create(strdup("Default scene"), this));

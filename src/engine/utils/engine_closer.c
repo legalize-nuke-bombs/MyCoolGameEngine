@@ -10,9 +10,12 @@
 #include "../../utils/action.h"
 #include <SDL3/SDL.h>
 #include "../../subsystems/subsystem_internal.h"
+#include "../lifecycle/engine_lifecycle.h"
 
 struct engine_closer {
     struct subsystem base;
+
+    struct engine_lifecycle* lifecycle;
 
     struct action* on_native_event;
     unsigned int on_native_event_subscription_token;
@@ -44,18 +47,19 @@ static void engine_closer_handle_native_event(void* listener, void* context) {
     const SDL_Event *event = context;
     if (event->type == SDL_EVENT_QUIT) {
         logger_info("Engine closer fired");
-        // TODO
+        engine_lifecycle_mark_stop(this->lifecycle);
     }
 }
 
 void engine_closer_on_enable(struct subsystem *base) {
     struct engine_closer* this = (struct engine_closer*)base;
+    this->lifecycle = (struct engine_lifecycle*)subsystem_get_subsystem(base, "engine_lifecycle");
     this->on_native_event = engine_events_on_native_event((struct engine_events*)subsystem_get_subsystem(base, "engine_events"));
     action_subscribe(this->on_native_event, this, engine_closer_handle_native_event, &this->on_native_event_subscription_token);
 }
 void engine_closer_on_disable(struct subsystem *base) {
     struct engine_closer* this = (struct engine_closer*)base;
+    this->lifecycle = NULL;
     action_unsubscribe(this->on_native_event, this->on_native_event_subscription_token);
     this->on_native_event = NULL;
-    this->on_native_event_subscription_token = 0;
 }
