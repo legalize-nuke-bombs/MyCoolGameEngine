@@ -18,6 +18,7 @@ bool engine_execute(struct engine *this, const char* script_path);
 
 struct component_fabric* engine_get_component_fabric(const struct engine *this);
 struct renderer_layer_manager* engine_get_renderer_layer_manager(const struct engine *this);
+void engine_capture_renderer_layer_manager(struct engine *this, struct renderer_layer_manager *renderer_layer_manager);
 struct devices* engine_get_devices(const struct engine *this);
 struct profiler* engine_get_profiler(const struct engine *this);
 

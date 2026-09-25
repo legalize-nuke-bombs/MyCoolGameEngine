@@ -115,9 +115,10 @@ bool engine_execute(struct engine *this, const char *script_path) {
     }
 
     logger_info("Engine is executing script %s...", script_path);
+    engine_capture_renderer_layer_manager(this, renderer_layer_manager_create());
     logger_info("Interpreter finished with exit code %d", interpreter_eval(this->interpreter, script_path));
 
-    if (this->renderer == NULL) {
+    if (this->window == NULL || this->renderer == NULL) {
         logger_warn("Engine will not start: script did not create a window");
         return 0;
     }
@@ -182,6 +183,13 @@ struct component_fabric* engine_get_component_fabric(const struct engine *this) 
 }
 struct renderer_layer_manager* engine_get_renderer_layer_manager(const struct engine *this) {
     return this->renderer_layer_manager;
+}
+void engine_capture_renderer_layer_manager(struct engine *this, struct renderer_layer_manager *renderer_layer_manager) {
+    logger_info("Engine is capturing renderer_layer_manager...");
+    if (this->renderer_layer_manager != NULL) {
+        renderer_layer_manager_destroy(this->renderer_layer_manager);
+    }
+    this->renderer_layer_manager = renderer_layer_manager;
 }
 struct devices* engine_get_devices(const struct engine *this) {
     return this->devices;
