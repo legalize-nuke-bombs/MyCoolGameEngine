@@ -14,6 +14,7 @@
 #include "version.h"
 #include "../devices/devices.h"
 #include "../rendering/renderer.h"
+#include "utils/engine_utils.h"
 
 
 struct engine_init_context {
@@ -25,6 +26,7 @@ struct engine_init_context {
     struct devices *devices;
     struct component_fabric *component_fabric;
     struct interpreter *interpreter;
+    struct engine_utils *utils;
 };
 
 
@@ -55,12 +57,14 @@ struct engine_init_context* engine_init_context_try_create(struct engine *engine
     this->devices = devices_create(engine);
     this->component_fabric = component_fabric_create();
     this->interpreter = interpreter_create(engine);
+    this->utils = engine_utils_create(engine);
 
     return this;
 }
 void engine_init_context_destroy(struct engine_init_context *this) {
     logger_info("Engine init context is destroying...");
 
+    engine_utils_destroy(this->utils);
     interpreter_destroy(this->interpreter);
     component_fabric_destroy(this->component_fabric);
     devices_destroy(this->devices);
@@ -75,15 +79,17 @@ void engine_init_context_destroy(struct engine_init_context *this) {
 }
 
 
-void engine_init_context_awake(struct engine_init_context *this) {
+void engine_init_context_awake(const struct engine_init_context *this) {
     logger_info("Engine init context is awaking...");
     renderer_awake(this->renderer);
     devices_awake(this->devices);
+    engine_utils_awake(this->utils);
 }
-void engine_init_context_disable(struct engine_init_context *this) {
+void engine_init_context_disable(const struct engine_init_context *this) {
     logger_info("Engine init context is disabling...");
     renderer_disable(this->renderer);
     devices_disable(this->devices);
+    engine_utils_disable(this->utils);
 }
 
 

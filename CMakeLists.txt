@@ -144,6 +144,10 @@ add_executable(MyCoolGameEngine main.c
         src/engine/engine_init_arguments.h
         src/rendering/renderer.h
         src/rendering/renderer.c
+        src/engine/utils/custom/engine_closer.h
+        src/engine/utils/custom/engine_closer.c
+        src/engine/utils/engine_utils.h
+        src/engine/utils/engine_utils.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3)
