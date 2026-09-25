@@ -5,11 +5,14 @@
 #ifndef MYCOOLGAMEENGINE_DEVICES_H
 #define MYCOOLGAMEENGINE_DEVICES_H
 
+struct engine;
 struct devices;
 struct keyboard;
 
-struct devices* devices_create();
+struct devices* devices_create(struct engine* engine);
 void devices_destroy(struct devices* this);
+
+void devices_awake(struct devices *this);
 
 struct keyboard* devices_get_keyboard(const struct devices *this);
 

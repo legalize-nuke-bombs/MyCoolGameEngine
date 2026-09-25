@@ -9,6 +9,7 @@
 
 #include "../interpreter_command_internal.h"
 #include "../../engine/engine.h"
+#include "../../engine/engine_execution_context.h"
 #include "../../utils/parser.h"
 #include "../../rendering/renderer_layer_manager.h"
 
@@ -27,7 +28,7 @@ static void interpreter_renderer_layer_manager_new_layer_execute(const struct in
 
     struct renderer_layer *layer = renderer_layer_create(layer_name, layer_priority);
 
-    const struct renderer_layer_manager *manager = engine_get_renderer_layer_manager(engine);
+    const struct renderer_layer_manager *manager = engine_execution_context_get_renderer_layer_manager(engine_get_execution_context(engine));
     renderer_layer_manager_capture(manager, layer);
 }
 

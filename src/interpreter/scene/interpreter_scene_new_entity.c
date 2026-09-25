@@ -13,6 +13,8 @@
 #include "../../scene/entity.h"
 #include "../../scene/scene.h"
 #include "../../scene/components/component_fabric.h"
+#include "../../engine/engine_init_context.h"
+#include "../../engine/engine_execution_context.h"
 
 
 struct interpreter_scene_new_entity {
@@ -24,7 +26,7 @@ static const char* interpreter_scene_new_entity_get_key(const struct interpreter
 }
 
 static void interpreter_scene_new_entity_execute(const struct interpreter_command *this, struct parser *parser, struct engine *engine) {
-    struct scene *scene = engine_get_scene(engine);
+    struct scene *scene = engine_execution_context_get_scene(engine_get_execution_context(engine));
     if (scene == NULL) {
         logger_warn("Interpreter failed to execute scene new_entity: scene is not set");
         for (; ;) {
@@ -41,7 +43,7 @@ static void interpreter_scene_new_entity_execute(const struct interpreter_comman
     struct entity *entity = entity_create(entity_name, scene);
     scene_capture_entity(scene, entity);
 
-    struct component_fabric *component_fabric = engine_get_component_fabric(engine);
+    struct component_fabric *component_fabric = engine_init_context_get_component_fabric(engine_get_init_context(engine));
     for (; ;) {
         const char* word = parser_next(parser);
         if (word == NULL || strcmp(word, "end") == 0) {

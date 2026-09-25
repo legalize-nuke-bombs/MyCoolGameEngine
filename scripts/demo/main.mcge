@@ -9,9 +9,6 @@ renderer_layer_manager new_layer character2 21
 renderer_layer_manager new_layer character3 22
 renderer_layer_manager new_layer character4 23
 renderer_layer_manager new_layer shadow 41
-window new MyCoolGameEngine 800 600
-
-scene new ScriptedScene
 
 scene new_entity Terrain
 transform 0 0 1 1 0 0 1000000 1000000

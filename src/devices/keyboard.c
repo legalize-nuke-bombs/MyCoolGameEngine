@@ -7,6 +7,9 @@
 #include <stdlib.h>
 #include <SDL3/SDL.h>
 
+#include "../engine/engine.h"
+#include "../engine/engine_execution_context.h"
+#include "../engine/events/engine_events.h"
 #include "../utils/action.h"
 #include "../logging/logger.h"
 
@@ -16,11 +19,14 @@
 struct keyboard {
     struct action* on_key_pressed[SDL3_SCANCODE_NUMBER];
     struct action* on_key_released[SDL3_SCANCODE_NUMBER];
+
+    struct engine* engine;
 };
 
-struct keyboard* keyboard_create() {
+struct keyboard* keyboard_create(struct engine *engine) {
     logger_info("Keyboard is creating...");
     struct keyboard* this = calloc(1, sizeof(struct keyboard));
+    this->engine = engine;
     return this;
 }
 void keyboard_destroy(struct keyboard *this) {
@@ -34,6 +40,33 @@ void keyboard_destroy(struct keyboard *this) {
         }
     }
     free(this);
+}
+
+static void keyboard_register_native_event(void* listener, void* context) {
+    const struct keyboard *this = listener;
+    const SDL_Event *event = context;
+    const int scancode = event->key.scancode;
+    if (event->type == SDL_EVENT_KEY_DOWN) {
+        logger_debug("Keyboard registered key down");
+        const struct action* on_key_pressed = this->on_key_pressed[scancode];
+        if (on_key_pressed != NULL) {
+            action_invoke(on_key_pressed, NULL);
+        }
+    }
+    else if (event->type == SDL_EVENT_KEY_UP) {
+        logger_debug("Keyboard registered key up");
+        const struct action* on_key_released = this->on_key_released[scancode];
+        if (on_key_released != NULL) {
+            action_invoke(on_key_released, NULL);
+        }
+    }
+}
+void keyboard_awake(struct keyboard *this) {
+    logger_info("Keyboard is awaking...");
+
+    const struct action* on_native_event = engine_events_on_native_event(engine_execution_context_get_events(engine_get_execution_context(this->engine)));
+    unsigned int subscription_token; // We do not need to unsubscribe because engine_events and keyboard have same lifecycle
+    action_subscribe(on_native_event, this, keyboard_register_native_event, &subscription_token);
 }
 
 static int keyboard_keycode_to_native_keycode(const char* keycode) {
@@ -50,14 +83,6 @@ static struct action* keyboard_require_action(struct action **slot) {
     }
     return *slot;
 }
-
-struct action* keyboard_try_get_action_on_key_pressed(const struct keyboard *this, const char* keycode) {
-    return this->on_key_pressed[keyboard_keycode_to_native_keycode(keycode)];
-}
-struct action* keyboard_try_get_action_on_key_released(const struct keyboard *this, const char* keycode) {
-    return this->on_key_released[keyboard_keycode_to_native_keycode(keycode)];
-}
-
 struct action* keyboard_require_action_on_key_pressed(struct keyboard *this, const char* keycode) {
     return keyboard_require_action(&this->on_key_pressed[keyboard_keycode_to_native_keycode(keycode)]);
 }

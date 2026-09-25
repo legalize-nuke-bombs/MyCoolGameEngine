@@ -15,16 +15,21 @@ struct devices {
 };
 
 
-struct devices* devices_create() {
+struct devices* devices_create(struct engine* engine) {
     logger_info("Devices are creating...");
     struct devices* this = malloc(sizeof(struct devices));
-    this->keyboard = keyboard_create();
+    this->keyboard = keyboard_create(engine);
     return this;
 }
 void devices_destroy(struct devices* this) {
     logger_info("Devices are destroying...");
     keyboard_destroy(this->keyboard);
     free(this);
+}
+
+void devices_awake(struct devices *this) {
+    logger_info("Devices are awaking...");
+    keyboard_awake(this->keyboard);
 }
 
 struct keyboard* devices_get_keyboard(const struct devices *this) {

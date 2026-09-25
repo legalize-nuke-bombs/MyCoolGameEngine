@@ -2,8 +2,10 @@
 #include <stdlib.h>
 
 #include "src/engine/engine.h"
+#include "src/engine/engine_init_arguments.h"
+#include "src/engine/engine_execution_arguments.h"
 #include "src/logging/logger.h"
-#include "version.h"
+
 
 static char* script_path_extract(const int argc, char* argv[]) {
     if (argc >= 2) {
@@ -28,19 +30,21 @@ bool dev_mode_extract(const int argc, char* argv[]) {
 
 
 int main(const int argc, char *argv[]) {
-    const char* script_path = script_path_extract(argc, argv);
-    const int logger_level = logger_level_extract(argc, argv);
-    const bool dev_mode = dev_mode_extract(argc, argv);
+    struct engine_init_arguments init_arguments = {
+        .logger_level = logger_level_extract(argc, argv)
+    };
 
-    logger_init(logger_level);
-    logger_info("MyCoolGameEngine v%d.%d.%d", VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH);
-
-    struct engine *engine = engine_create();
+    struct engine *engine = engine_try_create(init_arguments);
     if (engine == NULL) {
         return 1;
     }
 
-    while (engine_execute(engine, script_path, dev_mode)) { }
+    const struct engine_execution_arguments execution_arguments = {
+        .script_path = script_path_extract(argc, argv),
+        .dev_mode = dev_mode_extract(argc, argv)
+    };
+
+    engine_execute(engine, execution_arguments);
 
     engine_destroy(engine);
 

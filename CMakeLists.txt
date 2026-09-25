@@ -50,10 +50,10 @@ add_executable(MyCoolGameEngine main.c
         src/logging/logger.c
         src/scene/components/demo/printer.h
         src/scene/components/demo/printer.c
-        src/scene/update_context.h
+        src/engine/update_context.h
         src/scene/scene.h
         src/scene/scene.c
-        version.h
+        src/engine/version.h
         src/scene/components/core/transform.h
         src/scene/components/core/transform.c
         src/utils/list.h
@@ -105,8 +105,6 @@ add_executable(MyCoolGameEngine main.c
         src/interpreter/window/interpreter_window.h
         src/interpreter/window/interpreter_window.c
         src/logging/ansi.h
-        src/interpreter/window/interpreter_window_new.h
-        src/interpreter/window/interpreter_window_new.c
         src/rendering/renderer_layer_manager.h
         src/rendering/renderer_layer_manager.c
         src/rendering/renderer_layer.c
@@ -116,8 +114,6 @@ add_executable(MyCoolGameEngine main.c
         src/interpreter/renderer_layer_manager/interpreter_renderer_layer_manager_new_layer.c
         src/interpreter/scene/interpreter_scene.h
         src/interpreter/scene/interpreter_scene.c
-        src/interpreter/scene/interpreter_scene_new.h
-        src/interpreter/scene/interpreter_scene_new.c
         src/scene/components/component_fabric.h
         src/scene/components/component_fabric.c
         src/interpreter/scene/interpreter_scene_new_entity.h
@@ -138,6 +134,16 @@ add_executable(MyCoolGameEngine main.c
         src/scene/components/core/idle.c
         src/utils/file_listener.h
         src/utils/file_listener.c
+        src/engine/engine_init_context.h
+        src/engine/engine_init_context.c
+        src/engine/engine_execution_context.h
+        src/engine/engine_executation_context.c
+        src/engine/events/engine_events.h
+        src/engine/events/engine_events.c
+        src/engine/dev_mode/engine_restarter.h
+        src/engine/dev_mode/engine_restarter.c
+        src/engine/engine_execution_arguments.h
+        src/engine/engine_init_arguments.h
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3)

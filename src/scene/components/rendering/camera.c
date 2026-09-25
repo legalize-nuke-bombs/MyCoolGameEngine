@@ -6,6 +6,7 @@
 #include "../component_internal.h"
 #include "../../entity.h"
 #include "../../../engine/engine.h"
+#include "../../../engine/engine_init_context.h"
 #include "../../../rendering/renderer_pipeline.h"
 
 
@@ -43,7 +44,7 @@ struct component* camera_create(struct parser *parser, struct entity *parent) {
 static void camera_awake(struct component *base) {
     struct camera *this = (struct camera *) base;
 
-    this->renderer = engine_get_renderer_pipeline(entity_get_engine(component_get_parent(base)));
+    this->renderer = engine_init_context_get_renderer_pipeline(engine_get_init_context(entity_get_engine(component_get_parent(base))));
 }
 
 static void camera_update(struct component *base, const struct update_context *context) {

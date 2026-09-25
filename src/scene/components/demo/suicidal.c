@@ -11,6 +11,7 @@
 #include "../../../devices/devices.h"
 #include "../../../devices/keyboard.h"
 #include "../../../engine/engine.h"
+#include "../../../engine/engine_execution_context.h"
 #include "../../../utils/action.h"
 #include "../../../utils/parser.h"
 #include "SDL3/SDL_keyboard.h"
@@ -47,7 +48,7 @@ static void suicidal_on_awake(struct component *base) {
     struct suicidal *this = (struct suicidal *)base;
 
     const struct engine *engine = entity_get_engine(component_get_parent(base));
-    struct keyboard *keyboard = devices_get_keyboard(engine_get_devices(engine));
+    struct keyboard *keyboard = devices_get_keyboard(engine_execution_context_get_devices(engine_get_execution_context(engine)));
     this->on_key_pressed = keyboard_require_action_on_key_pressed(keyboard, this->keycode);
     action_subscribe(this->on_key_pressed, this, suicidal_suicide, &this->subscription_token);
 }
