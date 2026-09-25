@@ -132,8 +132,6 @@ add_executable(MyCoolGameEngine main.c
         src/profiler/time_estimator.c
         src/scene/components/core/idle.h
         src/scene/components/core/idle.c
-        src/utils/file_listener.h
-        src/utils/file_listener.c
         src/engine/engine_init_context.h
         src/engine/engine_init_context.c
         src/engine/engine_execution_context.h
