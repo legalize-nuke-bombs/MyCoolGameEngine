@@ -5,21 +5,47 @@
 #include "subsystem_collection.h"
 
 #include <stdlib.h>
+
+#include "subsystem.h"
 #include "../logging/logger.h"
+#include "../utils/list.h"
+#include "../utils/dictionary.h"
+#include "../utils/string_dictionary.h"
 
 
 struct subsystem_collection {
-
+    struct list* list;
+    struct dictionary* dict;
 };
+
+
+static void subsystem_collection_capture(const struct subsystem_collection* this, struct subsystem* subsystem) {
+    const char* subsystem_name = subsystem_get_name(subsystem);
+    if (dictionary_try_add(this->dict, (void*)subsystem_name, subsystem)) {
+        list_add(this->list, subsystem);
+        logger_info("Subsystem collection captured subsystem %s", subsystem_name);
+    }
+    else {
+        logger_error("Subsystem collection failed to capture subsystem %s", subsystem_name);
+        subsystem_destroy(subsystem);
+    }
+}
 
 
 struct subsystem_collection* subsystem_collection_create() {
     logger_info("Subsystem collection is creating...");
     struct subsystem_collection* this = malloc(sizeof(struct subsystem_collection));
+    this->list = list_create(1024);
+    this->dict = string_dictionary_build(10);
     return this;
 }
 void subsystem_collection_destroy(struct subsystem_collection* this) {
     logger_info("Subsystem collection is destroying...");
+    for (int i = 0; i < list_count(this->list); i++) {
+        subsystem_destroy(list_get(this->list, i));
+    }
+    list_destroy(this->list);
+    dictionary_destroy(this->dict);
     free(this);
 }
 
@@ -30,6 +56,10 @@ void subsystem_collection_disable_all(struct subsystem_collection* this) {
     logger_info("Subsystem collection is disabling all subsystems...");
 }
 
-struct subsystem* subsystem_collection_get(struct subsystem_collection* this, const char* name) {
+struct subsystem* subsystem_collection_get(const struct subsystem_collection* this, const char* name) {
+    const struct subsystem* result = dictionary_get(this->dict, (void*)name);
+    if (result == NULL) {
+        logger_error("Subsystem collection failed to find subsystem %s", name);
+    }
     return NULL;
 }

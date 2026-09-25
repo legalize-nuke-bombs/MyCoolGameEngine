@@ -14,6 +14,6 @@ void subsystem_collection_destroy(struct subsystem_collection* this);
 void subsystem_collection_enable_all(struct subsystem_collection* this);
 void subsystem_collection_disable_all(struct subsystem_collection* this);
 
-struct subsystem* subsystem_collection_get(struct subsystem_collection* this, const char* name);
+struct subsystem* subsystem_collection_get(const struct subsystem_collection* this, const char* name);
 
 #endif //MYCOOLGAMEENGINE_SUBSYSTEM_COLLECTION_H
