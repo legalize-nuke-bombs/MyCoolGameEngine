@@ -10,7 +10,7 @@
 
 void component_create(struct component *this, const struct component_vtable *vtable, struct parser *parser, struct entity *parent) {
     this->vtable = vtable;
-    logger_debug("Component is initializing...");
+    logger_debug("Component %s is creating...", component_get_key(this));
     this->awake = false;
     this->alive = true;
     parser_next_double(parser, &this->local_position.x);

@@ -5,6 +5,8 @@
 #ifndef MYCOOLGAMEENGINE_SUBSYSTEM_INTERNAL_H
 #define MYCOOLGAMEENGINE_SUBSYSTEM_INTERNAL_H
 
+#include <stdbool.h>
+
 #include "subsystem.h"
 
 struct subsystem_vtable {
@@ -18,6 +20,7 @@ struct subsystem_collection;
 
 struct subsystem {
     const struct subsystem_vtable *vtable;
+    bool enabled;
     const struct subsystem_collection *subsystems;
 };
 
