@@ -1,42 +1,47 @@
-print MainScriptLaunched!
+print DemoSceneLaunched!
 
 renderer_layer_manager new_layer bg1 1
 renderer_layer_manager new_layer bg2 2
-renderer_layer_manager new_layer bg3 3
-renderer_layer_manager new_layer bg4 4
-renderer_layer_manager new_layer character1 20
-renderer_layer_manager new_layer character2 21
-renderer_layer_manager new_layer character3 22
-renderer_layer_manager new_layer character4 23
 renderer_layer_manager new_layer shadow 10
+renderer_layer_manager new_layer character1 20
+renderer_layer_manager new_layer character1_2 21
 
 scene new_entity Terrain
 transform 0 0 1 1 0 0 1000000 1000000
-box_renderer 0 0 1 1 bg1 255 255 255 255
+box_renderer 0 0 1 1 bg1 54 78 62 255
 end
 
-scene new_entity MyFavouriteEntity
+scene new_entity Grass
+transform 0 0 1 1 0 0 1 1
+box_renderer -170 -90 130 80 bg2 62 88 68 255
+box_renderer 170 100 120 70 bg2 62 88 68 255
+box_renderer -80 190 110 60 bg2 46 68 54 255
+box_renderer 240 -170 90 60 bg2 46 68 54 255
+end
+
+scene new_entity Stone1
+transform 0 0 1 1 165 -70 1 1
+box_renderer 5 -4 32 18 shadow 0 0 0 50
+box_renderer 0 0 30 22 bg2 88 92 98 255
+end
+
+scene new_entity Stone2
+transform 0 0 1 1 -150 120 0.7 0.7
+box_renderer 5 -4 32 18 shadow 0 0 0 50
+box_renderer 0 0 30 22 bg2 88 92 98 255
+end
+
+scene new_entity Cube
 transform 0 0 1 1 0 0 50 50
-box_renderer 0 0 1 1 character1 0 0 255 255
-armageddon 0 0 1 1 2
+box_renderer 14 -12 1.2 1.2 shadow 0 0 0 55
+box_renderer 0 0 1 1 character1 38 58 132 255
+box_renderer -9 5 0.12 0.18 character1_2 18 20 26 255
+box_renderer 9 5 0.12 0.18 character1_2 18 20 26 255
+end
+
+scene new_entity CameraRig
+transform 0 0 1 1 0 0 1 1
 camera 0 0 1 1
 end
 
-scene new_entity Enemy
-transform 0 0 1 1 -175 -175 40 40
-box_renderer 0 0 1 1 character2 0 0 0 255
-box_renderer 0 0 8 8 shadow 0 0 0 100
-end
-
-scene new_entity Enemy
-transform 0 0 1 1 225 225 60 60
-box_renderer 0 0 1 1 character2 0 0 0 255
-box_renderer 0 0 8 8 shadow 0 0 0 100
-suicidal 0 0 1 1 1
-printer 0 0 1 1 hi bye 5
-end
-
-print MainScriptEnded!
-
-
-
+print DemoSceneEnded!
