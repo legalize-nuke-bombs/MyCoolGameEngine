@@ -13,6 +13,7 @@ struct devices* devices_create(struct engine* engine);
 void devices_destroy(struct devices* this);
 
 void devices_awake(struct devices *this);
+void devices_disable(struct devices *this);
 
 struct keyboard* devices_get_keyboard(const struct devices *this);
 

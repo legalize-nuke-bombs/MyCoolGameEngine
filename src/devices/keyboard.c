@@ -20,6 +20,9 @@ struct keyboard {
     struct action* on_key_pressed[SDL3_SCANCODE_NUMBER];
     struct action* on_key_released[SDL3_SCANCODE_NUMBER];
 
+    struct action* on_native_event;
+    unsigned int subscription_token;
+
     struct engine* engine;
 };
 
@@ -63,10 +66,12 @@ static void keyboard_register_native_event(void* listener, void* context) {
 }
 void keyboard_awake(struct keyboard *this) {
     logger_info("Keyboard is awaking...");
-
-    const struct action* on_native_event = engine_events_on_native_event(engine_execution_context_get_events(engine_get_execution_context(this->engine)));
-    unsigned int subscription_token; // We do not need to unsubscribe because engine_events and keyboard have same lifecycle
-    action_subscribe(on_native_event, this, keyboard_register_native_event, &subscription_token);
+    this->on_native_event = engine_events_on_native_event(engine_execution_context_get_events(engine_get_execution_context(this->engine)));
+    action_subscribe(this->on_native_event, this, keyboard_register_native_event, &this->subscription_token);
+}
+void keyboard_disable(struct keyboard *this) {
+    logger_info("Keyboard is disabling...");
+    action_unsubscribe(this->on_native_event, this->subscription_token);
 }
 
 static int keyboard_keycode_to_native_keycode(const char* keycode) {

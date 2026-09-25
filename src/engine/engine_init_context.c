@@ -12,13 +12,17 @@
 #include "../rendering/renderer_pipeline.h"
 #include "../scene/components/component_fabric.h"
 #include "version.h"
+#include "../devices/devices.h"
+#include "../rendering/renderer.h"
 
 
 struct engine_init_context {
     SDL_Window *window;
-    SDL_Renderer *renderer;
+    SDL_Renderer *native_renderer;
     struct renderer_pipeline *renderer_pipeline;
+    struct renderer *renderer;
 
+    struct devices *devices;
     struct component_fabric *component_fabric;
     struct interpreter *interpreter;
 };
@@ -36,17 +40,19 @@ struct engine_init_context* engine_init_context_try_create(struct engine *engine
         return NULL;
     }
     this->window = NULL;
-    this->renderer = NULL;
-    if (SDL_CreateWindowAndRenderer("MyCoolGameEngine", 800, 600, SDL_WINDOW_RESIZABLE, &this->window, &this->renderer)) {
-        SDL_SetRenderDrawBlendMode(this->renderer, SDL_BLENDMODE_BLEND);
+    this->native_renderer = NULL;
+    if (SDL_CreateWindowAndRenderer("MyCoolGameEngine", 800, 600, SDL_WINDOW_RESIZABLE, &this->window, &this->native_renderer)) {
+        SDL_SetRenderDrawBlendMode(this->native_renderer, SDL_BLENDMODE_BLEND);
     }
     else {
         logger_error("Engine init context failed to create window: %s", SDL_GetError());
         free(this);
         return NULL;
     }
-    this->renderer_pipeline = renderer_pipeline_create(this->renderer);
+    this->renderer_pipeline = renderer_pipeline_create(this->native_renderer);
+    this->renderer = renderer_create(engine);
 
+    this->devices = devices_create(engine);
     this->component_fabric = component_fabric_create();
     this->interpreter = interpreter_create(engine);
 
@@ -57,9 +63,11 @@ void engine_init_context_destroy(struct engine_init_context *this) {
 
     interpreter_destroy(this->interpreter);
     component_fabric_destroy(this->component_fabric);
+    devices_destroy(this->devices);
 
+    renderer_destroy(this->renderer);
     renderer_pipeline_destroy(this->renderer_pipeline);
-    SDL_DestroyRenderer(this->renderer);
+    SDL_DestroyRenderer(this->native_renderer);
     SDL_DestroyWindow(this->window);
     SDL_Quit();
 
@@ -67,8 +75,26 @@ void engine_init_context_destroy(struct engine_init_context *this) {
 }
 
 
+void engine_init_context_awake(struct engine_init_context *this) {
+    logger_info("Engine init context is awaking...");
+    renderer_awake(this->renderer);
+    devices_awake(this->devices);
+}
+void engine_init_context_disable(struct engine_init_context *this) {
+    logger_info("Engine init context is disabling...");
+    renderer_disable(this->renderer);
+    devices_disable(this->devices);
+}
+
+
+SDL_Renderer* engine_init_context_get_native_renderer(const struct engine_init_context *this) {
+    return this->native_renderer;
+}
 struct renderer_pipeline* engine_init_context_get_renderer_pipeline(const struct engine_init_context *this) {
     return this->renderer_pipeline;
+}
+struct devices* engine_init_context_get_devices(struct engine_init_context *this) {
+    return this->devices;
 }
 struct interpreter* engine_init_context_get_interpreter(const struct engine_init_context *this) {
     return this->interpreter;

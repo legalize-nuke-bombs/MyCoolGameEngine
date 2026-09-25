@@ -55,6 +55,7 @@ void engine_execute(struct engine *this, const struct engine_execution_arguments
         return;
     }
 
+    engine_init_context_awake(this->init_context);
     engine_execution_context_awake(this->execution_context);
 
     struct update_context update_context = {
@@ -85,6 +86,7 @@ void engine_execute(struct engine *this, const struct engine_execution_arguments
         action_invoke(engine_events_post_rendering(engine_execution_context_get_events(this->execution_context)), &update_context);
     }
 
+    engine_init_context_disable(this->init_context);
     engine_execution_context_destroy(this->execution_context);
 }
 

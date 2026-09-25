@@ -79,6 +79,3 @@ struct renderer_layer_manager* engine_execution_context_get_renderer_layer_manag
 struct scene* engine_execution_context_get_scene(const struct engine_execution_context *this) {
     return this->scene;
 }
-struct devices* engine_execution_context_get_devices(const struct engine_execution_context *this) {
-    return this->devices;
-}

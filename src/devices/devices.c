@@ -31,6 +31,10 @@ void devices_awake(struct devices *this) {
     logger_info("Devices are awaking...");
     keyboard_awake(this->keyboard);
 }
+void devices_disable(struct devices *this) {
+    logger_info("Devices are disabling...");
+    keyboard_disable(this->keyboard);
+}
 
 struct keyboard* devices_get_keyboard(const struct devices *this) {
     return this->keyboard;
