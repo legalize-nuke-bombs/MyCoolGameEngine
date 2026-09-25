@@ -32,7 +32,7 @@ int main(const int argc, char *argv[]) {
         return 1;
     }
 
-    engine_execute(engine, script_path);
+    while (engine_execute(engine, script_path)) { }
 
     engine_destroy(engine);
 

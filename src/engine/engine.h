@@ -4,6 +4,7 @@
 
 #ifndef MYCOOLGAMEENGINE_ENGINE_H
 #define MYCOOLGAMEENGINE_ENGINE_H
+#include <stdbool.h>
 
 typedef struct SDL_Window SDL_Window;
 typedef struct SDL_Renderer SDL_Renderer;
@@ -13,7 +14,7 @@ struct scene;
 struct engine* engine_create();
 void engine_destroy(struct engine *this);
 
-void engine_execute(struct engine *this, const char* script_path);
+bool engine_execute(struct engine *this, const char* script_path);
 
 struct component_fabric* engine_get_component_fabric(const struct engine *this);
 struct renderer_layer_manager* engine_get_renderer_layer_manager(const struct engine *this);

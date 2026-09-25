@@ -108,10 +108,10 @@ static void engine_handle_key(const struct engine *this, const SDL_Scancode scan
     action_invoke(action, NULL);
 }
 
-void engine_execute(struct engine *this, const char *script_path) {
+bool engine_execute(struct engine *this, const char *script_path) {
     if (script_path == NULL) {
         logger_warn("Engine will not start: script is not set");
-        return;
+        return 0;
     }
 
     logger_info("Engine is executing script %s...", script_path);
@@ -119,11 +119,11 @@ void engine_execute(struct engine *this, const char *script_path) {
 
     if (this->renderer == NULL) {
         logger_warn("Engine will not start: script did not create a window");
-        return;
+        return 0;
     }
     if (this->scene == NULL) {
         logger_warn("Engine will not start: script did not create a scene");
-        return;
+        return 0;
     }
 
     scene_awake(this->scene);
@@ -163,6 +163,9 @@ void engine_execute(struct engine *this, const char *script_path) {
                 if (event.key.scancode == SDL_SCANCODE_F3) {
                     profiler_log(this->profiler);
                 }
+                else if (event.key.scancode == SDL_SCANCODE_F5) {
+                    return 1;
+                }
                 engine_handle_key(this, event.key.scancode, true);
             }
             else if (event.type == SDL_EVENT_KEY_UP) {
@@ -170,6 +173,8 @@ void engine_execute(struct engine *this, const char *script_path) {
             }
         }
     }
+
+    return 0;
 }
 
 struct component_fabric* engine_get_component_fabric(const struct engine *this) {
