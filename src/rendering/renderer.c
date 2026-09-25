@@ -9,14 +9,18 @@
 #include "../engine/engine.h"
 #include "../logging/logger.h"
 #include "../engine/engine_execution_context.h"
-#include <SDL3/SDL.h>
+#include "../engine/engine_events.h"
 
 #include "../engine/engine_init_context.h"
+#include "../utils/action.h"
 
 
 struct renderer {
     SDL_Renderer *native;
     struct renderer_pipeline *pipeline;
+
+    struct action* on_rendering;
+    unsigned int on_rendering_subscription_token;
     struct engine *engine;
 };
 
@@ -24,9 +28,14 @@ struct renderer {
 struct renderer* renderer_create(struct engine* engine) {
     logger_info("Renderer is creating...");
     struct renderer* this = malloc(sizeof(struct renderer));
+
     this->native = NULL;
     this->pipeline = NULL;
+
+    this->on_rendering = NULL;
+    this->on_rendering_subscription_token = 0;
     this->engine = engine;
+
     return this;
 }
 void renderer_destroy(struct renderer *this) {
@@ -34,12 +43,24 @@ void renderer_destroy(struct renderer *this) {
     free(this);
 }
 
+static void renderer_render(void *listener, void *context) {
+    struct renderer* this = listener;
+
+}
+
 void renderer_awake(struct renderer *this) {
     logger_info("Renderer is awaking...");
-    struct engine_init_context* engine_init_context = engine_get_init_context(this->engine);
+    const struct engine_init_context* engine_init_context = engine_get_init_context(this->engine);
     this->native = engine_init_context_get_native_renderer(engine_init_context);
     this->pipeline = engine_init_context_get_renderer_pipeline(engine_init_context);
+    this->on_rendering = engine_events_on_rendering(engine_get_events(this->engine));
+    action_subscribe(this->on_rendering, this, renderer_render, &this->on_rendering_subscription_token);
 }
 void renderer_disable(struct renderer *this) {
     logger_info("Renderer is disabling...");
+    this->native = NULL;
+    this->pipeline = NULL;
+    action_unsubscribe(this->on_rendering, this->on_rendering_subscription_token);
+    this->on_rendering = NULL;
+    this->on_rendering_subscription_token = 0;
 }

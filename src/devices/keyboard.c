@@ -9,7 +9,7 @@
 
 #include "../engine/engine.h"
 #include "../engine/engine_execution_context.h"
-#include "../engine/events/engine_events.h"
+#include "../engine/engine_events.h"
 #include "../utils/action.h"
 #include "../logging/logger.h"
 
@@ -66,7 +66,7 @@ static void keyboard_register_native_event(void* listener, void* context) {
 }
 void keyboard_awake(struct keyboard *this) {
     logger_info("Keyboard is awaking...");
-    this->on_native_event = engine_events_on_native_event(engine_execution_context_get_events(engine_get_execution_context(this->engine)));
+    this->on_native_event = engine_events_on_native_event(engine_get_events(this->engine));
     action_subscribe(this->on_native_event, this, keyboard_register_native_event, &this->subscription_token);
 }
 void keyboard_disable(struct keyboard *this) {

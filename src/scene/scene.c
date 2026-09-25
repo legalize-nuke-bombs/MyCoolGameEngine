@@ -11,7 +11,7 @@
 #include "entity_collection.h"
 #include "../engine/engine.h"
 #include "../engine/engine_execution_context.h"
-#include "../engine/events/engine_events.h"
+#include "../engine/engine_events.h"
 #include "../utils/action.h"
 
 
@@ -69,7 +69,7 @@ void scene_awake(struct scene *this) {
     logger_info("Scene %s is awaking...", this->name);
     entity_collection_awake_everyone(this->entities);
     this->gcTimer = 0;
-    this->on_physics = engine_events_on_physics(engine_execution_context_get_events(engine_get_execution_context(this->engine)));
+    this->on_physics = engine_events_on_physics(engine_get_events(this->engine));
     action_subscribe(this->on_physics, this, scene_update, &this->on_physics_subscription_token);
 }
 void scene_destroy(struct scene *this) {

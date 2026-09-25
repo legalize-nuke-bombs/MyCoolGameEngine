@@ -12,12 +12,11 @@
 #include "../scene/scene.h"
 #include "../logging/logger.h"
 #include "dev_mode/engine_restarter.h"
-#include "events/engine_events.h"
+#include "engine_events.h"
 
 
 struct engine_execution_context {
     bool running;
-    struct engine_events *events;
     struct renderer_layer_manager *renderer_layer_manager;
     struct scene *scene;
     struct devices *devices;
@@ -31,7 +30,6 @@ struct engine_execution_context* engine_execution_context_create(struct engine *
     struct engine_execution_context *this = malloc(sizeof(struct engine_execution_context));
 
     this->running = false;
-    this->events = engine_events_create();
     this->renderer_layer_manager = renderer_layer_manager_create();
     this->scene = scene_create(strdup("Default scene"), engine);
     this->devices = devices_create(engine);
@@ -48,7 +46,6 @@ void engine_execution_context_destroy(struct engine_execution_context *this) {
     devices_destroy(this->devices);
     scene_destroy(this->scene);
     renderer_layer_manager_destroy(this->renderer_layer_manager);
-    engine_events_destroy(this->events);
 
     free(this);
 }
@@ -70,9 +67,6 @@ void engine_execution_context_stop(struct engine_execution_context *this) {
     this->running = false;
 }
 
-struct engine_events* engine_execution_context_get_events(const struct engine_execution_context *this) {
-    return this->events;
-}
 struct renderer_layer_manager* engine_execution_context_get_renderer_layer_manager(const struct engine_execution_context *this) {
     return this->renderer_layer_manager;
 }

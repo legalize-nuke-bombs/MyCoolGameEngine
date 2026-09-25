@@ -5,8 +5,8 @@
 #include "engine_events.h"
 
 #include <stdlib.h>
-#include "../../logging/logger.h"
-#include "../../utils/action.h"
+#include "../logging/logger.h"
+#include "../utils/action.h"
 
 
 struct engine_events {
