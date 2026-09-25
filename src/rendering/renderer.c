@@ -73,8 +73,6 @@ void renderer_on_destroy(struct subsystem* base) {
     SDL_DestroyRenderer(this->native);
     SDL_DestroyWindow(this->window);
     SDL_Quit();
-
-    free(base);
 }
 
 static void renderer_render(void *listener, void *context) {

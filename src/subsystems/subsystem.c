@@ -3,6 +3,7 @@
 //
 
 #include "subsystem_internal.h"
+#include <stdlib.h>
 #include "../logging/logger.h"
 #include "subsystem_collection.h"
 
@@ -19,6 +20,7 @@ void subsystem_destroy(struct subsystem *this) {
     if (this->vtable->on_destroy) {
         this->vtable->on_destroy(this);
     }
+    free(this);
 }
 
 void subsystem_enable(struct subsystem *this, struct engine_arguments args) {

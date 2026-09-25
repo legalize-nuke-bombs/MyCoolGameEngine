@@ -30,6 +30,7 @@ struct file_listener* file_listener_create(const char* path) {
     struct file_listener* this = malloc(sizeof(struct file_listener));
 
     this->path = strdup(path);
+    this->timer = 0;
     this->last_modified = get_file_modification_time(path);
 
     return this;

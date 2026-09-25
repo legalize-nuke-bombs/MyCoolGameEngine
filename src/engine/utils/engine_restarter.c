@@ -92,7 +92,10 @@ void engine_restarter_on_enable(struct subsystem *base, const struct engine_argu
 }
 void engine_restarter_on_disable(struct subsystem *base) {
     struct engine_restarter* this = (struct engine_restarter*)base;
-    if (this->script_listener != NULL) file_listener_destroy(this->script_listener);
+    if (this->script_listener != NULL) {
+        file_listener_destroy(this->script_listener);
+        this->script_listener = NULL;
+    }
 
     this->lifecycle = NULL;
 

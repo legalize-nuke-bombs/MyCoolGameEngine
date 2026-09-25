@@ -11,7 +11,7 @@ struct idle {
     struct component base;
 };
 
-static const struct component_vtable camera_vtable = {
+static const struct component_vtable idle_vtable = {
     .component_key = idle_component_key,
     .on_awake = NULL,
     .on_update = NULL,
@@ -23,8 +23,8 @@ const char* idle_component_key(void) {
 }
 
 struct component* idle_create(struct parser *parser, struct entity *parent) {
-    struct camera *this = malloc(sizeof(struct idle));
+    struct idle *this = malloc(sizeof(struct idle));
     struct component *base = (struct component *) this;
-    component_create(base, &camera_vtable, parser, parent);
+    component_create(base, &idle_vtable, parser, parent);
     return base;
 }
