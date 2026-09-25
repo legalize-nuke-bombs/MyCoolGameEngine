@@ -5,7 +5,7 @@
 #include "subsystem_collection.h"
 
 #include <stdlib.h>
-#include <_string.h>
+#include <string.h>
 
 #include "subsystem.h"
 #include "../devices/keyboard.h"
@@ -20,7 +20,6 @@
 #include "../profiler/profiler.h"
 #include "../rendering/renderer.h"
 #include "../engine/utils/engine_closer.h"
-#include "../engine/utils/engine_restarter.h"
 #include "../engine/lifecycle/engine_lifecycle.h"
 
 
