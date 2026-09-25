@@ -153,6 +153,8 @@ add_executable(MyCoolGameEngine main.c
         src/subsystems/subsystem.h
         src/subsystems/subsystem.c
         src/subsystems/subsystem_internal.h
+        src/subsystems/subsystem_collection.h
+        src/subsystems/subsystem_collection.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3)
