@@ -21,7 +21,6 @@ struct engine_execution_context {
     struct engine_execution_arguments arguments;
 
     struct renderer_layer_manager *renderer_layer_manager;
-    struct scene *scene;
     struct profiler *profiler;
 };
 
@@ -34,7 +33,6 @@ struct engine_execution_context* engine_execution_context_create(struct engine *
     this->rerun_required = false;
     this->arguments = arguments;
     this->renderer_layer_manager = renderer_layer_manager_create();
-    this->scene = (struct scene*)scene_create(strdup("Default scene"), engine, engine_get_subsystems(engine));
     this->profiler = profiler_create(engine);
 
     return this;
@@ -43,7 +41,6 @@ void engine_execution_context_destroy(struct engine_execution_context *this) {
     logger_info("Engine execution context is destroying...");
 
     profiler_destroy(this->profiler);
-    subsystem_destroy((struct subsystem*)this->scene);
     renderer_layer_manager_destroy(this->renderer_layer_manager);
 
     free(this);
@@ -54,13 +51,11 @@ void engine_execution_context_awake(struct engine_execution_context *this) {
     logger_info("Engine execution context is awaking...");
 
     this->running = true;
-    subsystem_enable((struct subsystem*)this->scene);
     profiler_awake(this->profiler);
 }
 void engine_execution_context_disable(struct engine_execution_context *this) {
     logger_info("Engine execution context is disabling...");
 
-    subsystem_disable((struct subsystem*)this->scene);
     profiler_disable(this->profiler);
 }
 
@@ -86,7 +81,4 @@ struct engine_execution_arguments engine_execution_context_get_arguments(struct 
 
 struct renderer_layer_manager* engine_execution_context_get_renderer_layer_manager(const struct engine_execution_context *this) {
     return this->renderer_layer_manager;
-}
-struct scene* engine_execution_context_get_scene(const struct engine_execution_context *this) {
-    return this->scene;
 }

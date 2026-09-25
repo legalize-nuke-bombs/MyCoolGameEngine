@@ -36,6 +36,14 @@ void entity_collection_awake_everyone(const struct entity_collection *this) {
         entity_awake(entity);
     }
 }
+void entity_collection_clear(const struct entity_collection *this) {
+    logger_info("Entity_collection is clearing...");
+    for (int i = 0; i < list_count(this->list); i++) {
+        struct entity *entity = list_get(this->list, i);
+        entity_destroy(entity);
+    }
+    list_clear(this->list);
+}
 
 void entity_collection_add(const struct entity_collection *this, struct entity *entity) {
     list_add(this->list, entity);

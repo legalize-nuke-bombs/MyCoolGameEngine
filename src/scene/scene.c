@@ -114,6 +114,8 @@ void scene_on_disable(struct subsystem *base) {
     struct scene *this = (struct scene*)base;
     action_unsubscribe(this->on_physics, this->on_physics_subscription_token);
     this->on_physics = NULL;
+    entity_collection_clear(this->entities);
+    tmap_clear(this->tmap);
 }
 
 const char* scene_get_name(const struct scene *this) {
@@ -142,6 +144,8 @@ void scene_capture_entity(struct scene *this, struct entity *entity) {
         return;
     }
     logger_debug("Scene %s is capturing entity %s", this->name, entity_get_name(entity));
+
+    entity_awake(entity);
 
     entity_collection_add(this->entities, entity);
 

@@ -34,6 +34,15 @@ void tmap_destroy(struct tmap *this) {
     free(this);
 }
 
+void tmap_clear(const struct tmap *this) {
+    for (int i = 0; i < dictionary_capacity(this->dictionary); i++) {
+        const struct dictionary_node dictionary_node = dictionary_get_node(this->dictionary, i);
+        if (dictionary_node.value != NULL) {
+            list_clear(dictionary_node.value);
+        }
+    }
+}
+
 void tmap_register_component(const struct tmap *this, struct component *component) {
     const char* component_key = component_get_key(component);
 

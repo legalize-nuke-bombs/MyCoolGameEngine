@@ -34,6 +34,9 @@ struct entity* entity_create(char *name, struct scene *parent) {
     return this;
 }
 void entity_awake(struct entity *this) {
+    if (this->awake) {
+        return;
+    }
     logger_debug("Entity %s is awaking...", this->name);
     this->awake = true;
     this->transform = (struct transform*)entity_get_component(this, "transform");

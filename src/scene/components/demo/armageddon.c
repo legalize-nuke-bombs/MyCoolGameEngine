@@ -59,7 +59,7 @@ static void armageddon_on_destroy(struct component *base) {
 }
 
 static void armageddon_execute(void *base, void *context) {
-    struct armageddon *this = (struct armageddon *)base;
+    struct armageddon *this = base;
 
     const struct list *everyone = tmap_try_get_components(this->tmap, "transform");
     if (everyone == NULL) {

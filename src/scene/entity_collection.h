@@ -13,6 +13,7 @@ struct entity_collection *entity_collection_create(void);
 void entity_collection_destroy(struct entity_collection *this);
 
 void entity_collection_awake_everyone(const struct entity_collection *this);
+void entity_collection_clear(const struct entity_collection *this);
 
 void entity_collection_add(const struct entity_collection *this, struct entity *entity);
 

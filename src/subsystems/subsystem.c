@@ -25,6 +25,7 @@ void subsystem_enable(struct subsystem *this) {
         return;
     }
     logger_info("Subsystem `%s` is enabling...", subsystem_get_name(this));
+    this->enabled = true;
     if (this->vtable->on_enable) {
         this->vtable->on_enable(this);
     }
@@ -34,6 +35,7 @@ void subsystem_disable(struct subsystem *this) {
         return;
     }
     logger_info("Subsystem `%s` is disabling...", subsystem_get_name(this));
+    this->enabled = false;
     if (this->vtable->on_disable) {
         this->vtable->on_disable(this);
     }

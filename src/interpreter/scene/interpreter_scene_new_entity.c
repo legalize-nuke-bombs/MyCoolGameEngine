@@ -15,6 +15,7 @@
 #include "../../scene/components/component_fabric.h"
 #include "../../engine/engine_init_context.h"
 #include "../../engine/engine_execution_context.h"
+#include "../../subsystems/subsystem_collection.h"
 
 
 struct interpreter_scene_new_entity {
@@ -26,7 +27,7 @@ static const char* interpreter_scene_new_entity_get_key(const struct interpreter
 }
 
 static void interpreter_scene_new_entity_execute(const struct interpreter_command *this, struct parser *parser, struct engine *engine) {
-    struct scene *scene = engine_execution_context_get_scene(engine_get_execution_context(engine));
+    struct scene *scene = (struct scene*)subsystem_collection_get(engine_get_subsystems(engine), "scene");
     if (scene == NULL) {
         logger_warn("Interpreter failed to execute scene new_entity: scene is not set");
         for (; ;) {
@@ -41,7 +42,6 @@ static void interpreter_scene_new_entity_execute(const struct interpreter_comman
     char* entity_name = parser_next_dup(parser);
 
     struct entity *entity = entity_create(entity_name, scene);
-    scene_capture_entity(scene, entity);
 
     struct component_fabric *component_fabric = engine_init_context_get_component_fabric(engine_get_init_context(engine));
     for (; ;) {
@@ -55,6 +55,8 @@ static void interpreter_scene_new_entity_execute(const struct interpreter_comman
         }
         entity_capture_component(entity, component);
     }
+
+    scene_capture_entity(scene, entity);
 }
 
 static const struct interpreter_command_vtable scene_new_entity_vtable = {

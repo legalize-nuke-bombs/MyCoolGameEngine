@@ -5,9 +5,11 @@
 #include "subsystem_collection.h"
 
 #include <stdlib.h>
+#include <_string.h>
 
 #include "subsystem.h"
 #include "../logging/logger.h"
+#include "../scene/scene.h"
 #include "../utils/list.h"
 #include "../utils/dictionary.h"
 #include "../utils/string_dictionary.h"
@@ -20,23 +22,32 @@ struct subsystem_collection {
 
 
 static void subsystem_collection_capture(const struct subsystem_collection* this, struct subsystem* subsystem) {
+    if (subsystem == NULL) {
+        logger_error("Subsystem collection received nullptr instead of subsystem");
+        return;
+    }
     const char* subsystem_name = subsystem_get_name(subsystem);
     if (dictionary_try_add(this->dict, (void*)subsystem_name, subsystem)) {
         list_add(this->list, subsystem);
-        logger_info("Subsystem collection captured subsystem %s", subsystem_name);
+        logger_info("Subsystem collection captured subsystem `%s`", subsystem_name);
     }
     else {
-        logger_error("Subsystem collection failed to capture subsystem %s", subsystem_name);
+        logger_error("Subsystem collection failed to capture subsystem `%s`", subsystem_name);
         subsystem_destroy(subsystem);
     }
 }
 
+static void subsystem_collection_capture_all(const struct subsystem_collection *this, struct engine *engine) {
+    subsystem_collection_capture(this, scene_create(strdup("Default scene"), engine, this));
+}
 
-struct subsystem_collection* subsystem_collection_create() {
+
+struct subsystem_collection* subsystem_collection_create(struct engine* engine) {
     logger_info("Subsystem collection is creating...");
     struct subsystem_collection* this = malloc(sizeof(struct subsystem_collection));
     this->list = list_create(1024);
     this->dict = string_dictionary_build(10);
+    subsystem_collection_capture_all(this, engine);
     return this;
 }
 void subsystem_collection_destroy(struct subsystem_collection* this) {
@@ -49,17 +60,23 @@ void subsystem_collection_destroy(struct subsystem_collection* this) {
     free(this);
 }
 
-void subsystem_collection_enable_all(struct subsystem_collection* this) {
-    logger_info("Subsystem collection is enabling all subsystems....");
+void subsystem_collection_enable_all(const struct subsystem_collection* this) {
+    logger_info("Subsystem collection is enabling all subsystems (%d)....", list_count(this->list));
+    for (int i = 0; i < list_count(this->list); i++) {
+        subsystem_enable(list_get(this->list, i));
+    }
 }
-void subsystem_collection_disable_all(struct subsystem_collection* this) {
-    logger_info("Subsystem collection is disabling all subsystems...");
+void subsystem_collection_disable_all(const struct subsystem_collection* this) {
+    logger_info("Subsystem collection is disabling all subsystems (%d)...", list_count(this->list));
+    for (int i = 0; i < list_count(this->list); i++) {
+        subsystem_disable(list_get(this->list, i));
+    }
 }
 
 struct subsystem* subsystem_collection_get(const struct subsystem_collection* this, const char* name) {
-    const struct subsystem* result = dictionary_get(this->dict, (void*)name);
+    struct subsystem* result = dictionary_get(this->dict, (void*)name);
     if (result == NULL) {
         logger_error("Subsystem collection failed to find subsystem %s", name);
     }
-    return NULL;
+    return result;
 }

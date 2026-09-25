@@ -37,7 +37,8 @@ void action_subscribe(const struct action *this, void *listener, void (*action)(
     list_add(this->list, action_method);
 }
 void action_unsubscribe(const struct action *this, unsigned int subscription_token) {
-    free(list_get(this->list, subscription_token));
+    struct action_method* action_method = list_get(this->list, subscription_token);
+    free(action_method);
     list_set(this->list, subscription_token, NULL);
 }
 
