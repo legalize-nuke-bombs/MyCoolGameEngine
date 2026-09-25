@@ -11,6 +11,7 @@
 #include "../scene/scene.h"
 #include "../logging/logger.h"
 #include "engine.h"
+#include "../subsystems/subsystem.h"
 
 
 struct engine_execution_context {
@@ -33,7 +34,7 @@ struct engine_execution_context* engine_execution_context_create(struct engine *
     this->rerun_required = false;
     this->arguments = arguments;
     this->renderer_layer_manager = renderer_layer_manager_create();
-    this->scene = scene_create(strdup("Default scene"), engine, engine_get_subsystems(engine));
+    this->scene = (struct scene*)scene_create(strdup("Default scene"), engine, engine_get_subsystems(engine));
     this->profiler = profiler_create(engine);
 
     return this;
@@ -42,7 +43,7 @@ void engine_execution_context_destroy(struct engine_execution_context *this) {
     logger_info("Engine execution context is destroying...");
 
     profiler_destroy(this->profiler);
-    scene_destroy(this->scene);
+    subsystem_destroy((struct subsystem*)this->scene);
     renderer_layer_manager_destroy(this->renderer_layer_manager);
 
     free(this);
@@ -53,13 +54,13 @@ void engine_execution_context_awake(struct engine_execution_context *this) {
     logger_info("Engine execution context is awaking...");
 
     this->running = true;
-    scene_awake(this->scene);
+    subsystem_enable((struct subsystem*)this->scene);
     profiler_awake(this->profiler);
 }
 void engine_execution_context_disable(struct engine_execution_context *this) {
     logger_info("Engine execution context is disabling...");
 
-    scene_disable(this->scene);
+    subsystem_disable((struct subsystem*)this->scene);
     profiler_disable(this->profiler);
 }
 

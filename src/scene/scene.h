@@ -10,13 +10,10 @@
 struct scene;
 struct entity;
 struct engine;
+struct subsystem;
 struct subsystem_collection;
 
-struct scene* scene_create(char* name, const struct engine *engine, const struct subsystem_collection *subsystems);
-void scene_destroy(struct scene *this);
-
-void scene_awake(struct scene *this);
-void scene_disable(struct scene *this);
+struct subsystem* scene_create(char* name, const struct engine *engine, const struct subsystem_collection *subsystems);
 
 const char* scene_get_name(const struct scene *this);
 

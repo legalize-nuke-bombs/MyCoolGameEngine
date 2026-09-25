@@ -13,12 +13,15 @@
 #include "../engine/events/engine_events.h"
 #include "../utils/action.h"
 #include "../engine/engine_init_context.h"
+#include "../subsystems/subsystem_internal.h"
 
 
 #define GC_INTERVAL 5
 
 
 struct scene {
+    struct subsystem base;
+
     char* name;
     struct entity_collection* entities;
     struct tmap *tmap;
@@ -31,11 +34,27 @@ struct scene {
     const struct subsystem_collection *subsystems;
 };
 
-struct scene* scene_create(char *name, const struct engine* engine, const struct subsystem_collection *subsystems) {
+static const char* scene_get_subsystem_key() {
+    return "scene";
+}
+
+static void scene_on_destroy(struct subsystem *base);
+static void scene_on_enable(struct subsystem *base);
+static void scene_on_disable(struct subsystem *base);
+
+static struct subsystem_vtable scene_vtable = {
+    .name = scene_get_subsystem_key,
+    .on_destroy = scene_on_destroy,
+    .on_enable = scene_on_enable,
+    .on_disable = scene_on_disable
+};
+
+struct subsystem* scene_create(char *name, const struct engine* engine, const struct subsystem_collection *subsystems) {
     struct scene *this = malloc(sizeof(struct scene));
+    struct subsystem *base = (struct subsystem*)this;
+    subsystem_create(base, &scene_vtable, subsystems);
 
     this->name = name;
-    logger_info("Scene %s is initializing...", this->name);
     this->entities = entity_collection_create();
     this->tmap = tmap_create();
 
@@ -45,16 +64,16 @@ struct scene* scene_create(char *name, const struct engine* engine, const struct
     this->engine = engine;
     this->subsystems = subsystems;
 
-    return this;
+    return base;
 }
 
-void scene_destroy(struct scene *this) {
+void scene_on_destroy(struct subsystem *base) {
+    const struct scene *this = (struct scene*)base;
     logger_info("Scene %s is destroying...", this->name);
 
     entity_collection_destroy(this->entities);
     tmap_destroy(this->tmap);
     free(this->name);
-    free(this);
 }
 
 
@@ -83,16 +102,16 @@ static void scene_update(void *listener, void *context) {
 
 
 
-void scene_awake(struct scene *this) {
-    logger_info("Scene %s is awaking...", this->name);
+void scene_on_enable(struct subsystem *base) {
+    struct scene *this = (struct scene*)base;
     entity_collection_awake_everyone(this->entities);
     this->gcTimer = 0;
     this->on_physics = engine_events_on_physics(engine_init_context_get_events(engine_get_init_context(this->engine)));
     action_subscribe(this->on_physics, this, scene_update, &this->on_physics_subscription_token);
 }
 
-void scene_disable(struct scene *this) {
-    logger_info("Scene %s is disabling...", this->name);
+void scene_on_disable(struct subsystem *base) {
+    struct scene *this = (struct scene*)base;
     action_unsubscribe(this->on_physics, this->on_physics_subscription_token);
     this->on_physics = NULL;
 }
