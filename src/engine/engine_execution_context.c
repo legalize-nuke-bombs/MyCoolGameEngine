@@ -28,7 +28,7 @@ struct engine_execution_context* engine_execution_context_create(struct engine *
     this->running = false;
     this->renderer_layer_manager = renderer_layer_manager_create();
     this->scene = scene_create(strdup("Default scene"), engine);
-    this->profiler = profiler_create();
+    this->profiler = profiler_create(engine);
 
     return this;
 }
@@ -48,6 +48,7 @@ void engine_execution_context_awake(struct engine_execution_context *this) {
 
     this->running = true;
     scene_awake(this->scene);
+    profiler_awake(this->profiler);
 }
 
 

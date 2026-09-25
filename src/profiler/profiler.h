@@ -5,18 +5,13 @@
 #ifndef MYCOOLGAMEENGINE_PROFILER_H
 #define MYCOOLGAMEENGINE_PROFILER_H
 
+struct engine;
 struct profiler;
 struct time_estimator;
 
-struct profiler* profiler_create();
+struct profiler* profiler_create(struct engine *engine);
 void profiler_destroy(struct profiler* this);
 
-void profiler_update(const struct profiler* this);
-
-struct time_estimator* profiler_get_frame_estimator(const struct profiler* this);
-struct time_estimator* profiler_get_update_estimator(const struct profiler* this);
-struct time_estimator* profiler_get_rendering_estimator(const struct profiler* this);
-
-void profiler_log(const struct profiler* this);
+void profiler_awake(struct profiler *this);
 
 #endif //MYCOOLGAMEENGINE_PROFILER_H
