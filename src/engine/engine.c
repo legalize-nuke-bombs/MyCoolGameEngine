@@ -80,6 +80,6 @@ static bool engine_execute_step(const struct engine *this, const struct engine_a
     return engine_lifecycle_restart_required(lifecycle);
 }
 
-void engine_execute(struct engine *this, const struct engine_arguments args) {
+void engine_execute(const struct engine *this, const struct engine_arguments args) {
     while (engine_execute_step(this, args)) {}
 }

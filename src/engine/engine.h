@@ -10,6 +10,6 @@
 struct engine* engine_create();
 void engine_destroy(struct engine *this);
 
-void engine_execute(struct engine *this, struct engine_arguments args);
+void engine_execute(const struct engine *this, struct engine_arguments args);
 
 #endif //MYCOOLGAMEENGINE_ENGINE_H
