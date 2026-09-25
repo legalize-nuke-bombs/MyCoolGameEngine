@@ -78,10 +78,12 @@ static bool engine_execute_step(struct engine *this, const struct engine_executi
         action_invoke(engine_events_post_rendering(events), &update_context);
     }
 
+    const bool rerun_required = engine_execution_context_if_return_required(this->execution_context);
+
     engine_execution_context_destroy(this->execution_context);
     engine_init_context_disable(this->init_context);
 
-    return false;
+    return rerun_required;
 }
 
 void engine_execute(struct engine *this, const struct engine_execution_arguments arguments) {

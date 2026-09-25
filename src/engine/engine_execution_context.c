@@ -6,7 +6,6 @@
 #include <_string.h>
 
 #include "engine_execution_context.h"
-#include "../devices/devices.h"
 #include "../profiler/profiler.h"
 #include "../rendering/renderer_layer_manager.h"
 #include "../scene/scene.h"
@@ -15,6 +14,7 @@
 
 struct engine_execution_context {
     bool running;
+    bool rerun_required;
     struct renderer_layer_manager *renderer_layer_manager;
     struct scene *scene;
     struct profiler *profiler;
@@ -26,6 +26,7 @@ struct engine_execution_context* engine_execution_context_create(struct engine *
     struct engine_execution_context *this = malloc(sizeof(struct engine_execution_context));
 
     this->running = false;
+    this->rerun_required = false;
     this->renderer_layer_manager = renderer_layer_manager_create();
     this->scene = scene_create(strdup("Default scene"), engine);
     this->profiler = profiler_create(engine);
@@ -58,6 +59,13 @@ bool engine_execution_context_is_running(const struct engine_execution_context *
 }
 void engine_execution_context_stop(struct engine_execution_context *this) {
     this->running = false;
+}
+
+bool engine_execution_context_if_return_required(const struct engine_execution_context *this) {
+    return this->rerun_required;
+}
+void engine_execution_context_mark_return_required(struct engine_execution_context *this) {
+    this->rerun_required = true;
 }
 
 struct renderer_layer_manager* engine_execution_context_get_renderer_layer_manager(const struct engine_execution_context *this) {
