@@ -17,7 +17,6 @@ struct engine_execution_context {
     bool running;
     struct renderer_layer_manager *renderer_layer_manager;
     struct scene *scene;
-    struct devices *devices;
     struct profiler *profiler;
 };
 
@@ -29,7 +28,6 @@ struct engine_execution_context* engine_execution_context_create(struct engine *
     this->running = false;
     this->renderer_layer_manager = renderer_layer_manager_create();
     this->scene = scene_create(strdup("Default scene"), engine);
-    this->devices = devices_create(engine);
     this->profiler = profiler_create();
 
     return this;
@@ -38,7 +36,6 @@ void engine_execution_context_destroy(struct engine_execution_context *this) {
     logger_info("Engine execution context is destroying...");
 
     profiler_destroy(this->profiler);
-    devices_destroy(this->devices);
     scene_destroy(this->scene);
     renderer_layer_manager_destroy(this->renderer_layer_manager);
 
@@ -51,7 +48,6 @@ void engine_execution_context_awake(struct engine_execution_context *this) {
 
     this->running = true;
     scene_awake(this->scene);
-    devices_awake(this->devices);
 }
 
 
