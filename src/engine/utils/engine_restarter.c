@@ -43,7 +43,7 @@ static struct subsystem_vtable engine_restarter_vtable = {
 };
 
 
-struct subsystem* engine_restarter_create(struct subsystem_collection *subsystems) {
+struct subsystem* engine_restarter_create(const struct subsystem_collection *subsystems) {
     struct engine_restarter* this = calloc(1, sizeof(struct engine_restarter));
     struct subsystem* base = (struct subsystem*)this;
     subsystem_create(base, &engine_restarter_vtable, subsystems);

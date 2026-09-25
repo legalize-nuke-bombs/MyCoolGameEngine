@@ -32,7 +32,7 @@ static struct subsystem_vtable engine_closer_vtable = {
     .on_disable = engine_closer_on_disable
 };
 
-struct subsystem* engine_closer_create(struct subsystem_collection *subsystems) {
+struct subsystem* engine_closer_create(const struct subsystem_collection *subsystems) {
     struct engine_closer* this = calloc(1, sizeof(struct engine_closer));
     struct subsystem* base = (struct subsystem*)this;
     subsystem_create(base, &engine_closer_vtable, subsystems);

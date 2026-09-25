@@ -15,8 +15,12 @@
 #include "../utils/dictionary.h"
 #include "../utils/string_dictionary.h"
 #include "../engine/events/engine_events.h"
+#include "../engine/utils/engine_restarter.h"
 #include "../interpreter/interpreter.h"
+#include "../profiler/profiler.h"
 #include "../rendering/renderer.h"
+#include "../engine/utils/engine_closer.h"
+#include "../engine/utils/engine_restarter.h"
 
 
 struct subsystem_collection {
@@ -47,6 +51,9 @@ static void subsystem_collection_capture_all(const struct subsystem_collection *
     subsystem_collection_capture(this, scene_create(strdup("Default scene"), this));
     subsystem_collection_capture(this, renderer_create(this));
     subsystem_collection_capture(this, interpreter_create(this));
+    subsystem_collection_capture(this, profiler_create(this));
+    subsystem_collection_capture(this, engine_closer_create(this));
+    subsystem_collection_capture(this, engine_restarter_create(this));
 }
 
 

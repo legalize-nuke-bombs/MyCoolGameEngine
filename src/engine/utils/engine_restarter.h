@@ -8,6 +8,6 @@
 struct subsystem_collection;
 struct engine_restarter;
 
-struct subsystem* engine_restarter_create(struct subsystem_collection *subsystems);
+struct subsystem* engine_restarter_create(const struct subsystem_collection *subsystems);
 
 #endif //MYCOOLGAMEENGINE_ENGINE_RESTARTER_H

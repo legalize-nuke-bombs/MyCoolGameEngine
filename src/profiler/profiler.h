@@ -9,6 +9,6 @@ struct subsystem_collection;
 struct profiler;
 struct time_estimator;
 
-struct subsystem* profiler_create(struct subsystem_collection* subsystems);
+struct subsystem* profiler_create(const struct subsystem_collection* subsystems);
 
 #endif //MYCOOLGAMEENGINE_PROFILER_H

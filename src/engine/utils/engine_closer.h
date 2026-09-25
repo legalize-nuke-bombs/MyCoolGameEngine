@@ -8,6 +8,6 @@
 struct subsystem_collection;
 struct engine_closer;
 
-struct subsystem* engine_closer_create(struct subsystem_collection* subsystems);
+struct subsystem* engine_closer_create(const struct subsystem_collection* subsystems);
 
 #endif //MYCOOLGAMEENGINE_ENGINE_CLOSER_H

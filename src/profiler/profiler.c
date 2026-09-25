@@ -48,7 +48,7 @@ static void profiler_on_destroy(struct subsystem* base);
 static void profiler_on_enable(struct subsystem* base);
 static void profiler_on_disable(struct subsystem* base);
 
-static struct subsystem_vtable keyboard_vtable = {
+static struct subsystem_vtable profiler_vtable = {
     .name = profiler_get_name,
     .on_destroy = profiler_on_destroy,
     .on_enable = profiler_on_enable,
@@ -57,9 +57,10 @@ static struct subsystem_vtable keyboard_vtable = {
 
 
 
-struct subsystem* profiler_create(struct subsystem_collection *subsystems) {
+struct subsystem* profiler_create(const struct subsystem_collection *subsystems) {
     struct profiler* this = calloc(1, sizeof(struct profiler));
     struct subsystem* base = (struct subsystem*)this;
+    subsystem_create(base, &profiler_vtable, subsystems);
     this->frame = time_estimator_create();
     this->update = time_estimator_create();
     this->rendering = time_estimator_create();
