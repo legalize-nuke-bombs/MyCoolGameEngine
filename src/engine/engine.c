@@ -48,14 +48,7 @@ void engine_execute(struct engine *this, const struct engine_execution_arguments
 
     const struct interpreter* interpreter = engine_init_context_get_interpreter(this->init_context);
     const int code = interpreter_eval(interpreter, arguments.script_path);
-    if (code == INTERPRETER_OK) {
-        logger_info("Interpreter finished with exit code %d", code);
-    }
-    else {
-        engine_execution_context_destroy(this->execution_context);
-        logger_error("Interpreter finished with exit code %d", code);
-        return;
-    }
+    logger_info("Interpreter finished with exit code %d", code);
 
     engine_init_context_awake(this->init_context);
     engine_execution_context_awake(this->execution_context);
