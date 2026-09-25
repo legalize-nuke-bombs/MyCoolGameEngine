@@ -20,13 +20,13 @@
 
 struct engine_init_context {
     struct engine_events* events;
+    struct devices *devices;
 
     SDL_Window *window;
     SDL_Renderer *native_renderer;
     struct renderer_pipeline *renderer_pipeline;
     struct renderer *renderer;
 
-    struct devices *devices;
     struct component_fabric *component_fabric;
     struct interpreter *interpreter;
     struct engine_utils *utils;
@@ -41,6 +41,7 @@ struct engine_init_context* engine_init_context_try_create(struct engine *engine
     struct engine_init_context *this = malloc(sizeof(struct engine_init_context));
 
     this->events = engine_events_create();
+    this->devices = devices_create(engine);
 
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         logger_error("SDL_Init failed: %s", SDL_GetError());
@@ -53,6 +54,7 @@ struct engine_init_context* engine_init_context_try_create(struct engine *engine
     }
     else {
         logger_error("Engine init context failed to create window: %s", SDL_GetError());
+        devices_destroy(this->devices);
         engine_events_destroy(this->events);
         free(this);
         return NULL;
@@ -60,7 +62,6 @@ struct engine_init_context* engine_init_context_try_create(struct engine *engine
     this->renderer_pipeline = renderer_pipeline_create(this->native_renderer);
     this->renderer = renderer_create(engine);
 
-    this->devices = devices_create(engine);
     this->component_fabric = component_fabric_create();
     this->interpreter = interpreter_create(engine);
     this->utils = engine_utils_create(engine, arguments);
@@ -73,7 +74,6 @@ void engine_init_context_destroy(struct engine_init_context *this) {
     engine_utils_destroy(this->utils);
     interpreter_destroy(this->interpreter);
     component_fabric_destroy(this->component_fabric);
-    devices_destroy(this->devices);
 
     renderer_destroy(this->renderer);
     renderer_pipeline_destroy(this->renderer_pipeline);
@@ -81,6 +81,7 @@ void engine_init_context_destroy(struct engine_init_context *this) {
     SDL_DestroyWindow(this->window);
     SDL_Quit();
 
+    devices_destroy(this->devices);
     engine_events_destroy(this->events);
 
     free(this);
@@ -97,8 +98,8 @@ void engine_init_context_awake(const struct engine_init_context *this) {
 void engine_init_context_disable(const struct engine_init_context *this) {
     logger_info("Engine init context is disabling...");
     renderer_disable(this->renderer);
-    devices_disable(this->devices);
     engine_utils_disable(this->utils);
+    devices_disable(this->devices);
     engine_events_disable(this->events);
 }
 

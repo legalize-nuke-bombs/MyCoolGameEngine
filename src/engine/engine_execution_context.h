@@ -26,6 +26,8 @@ void engine_execution_context_mark_stop_required(struct engine_execution_context
 bool engine_execution_context_if_rerun_required(const struct engine_execution_context *this);
 void engine_execution_context_mark_rerun_required(struct engine_execution_context *this);
 
+struct engine_execution_arguments engine_execution_context_get_arguments(struct engine_execution_context *this);
+
 struct renderer_layer_manager* engine_execution_context_get_renderer_layer_manager(const struct engine_execution_context *this);
 struct scene* engine_execution_context_get_scene(const struct engine_execution_context *this);
 

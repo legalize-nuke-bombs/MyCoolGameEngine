@@ -15,6 +15,9 @@
 struct engine_execution_context {
     bool running;
     bool rerun_required;
+
+    struct engine_execution_arguments arguments;
+
     struct renderer_layer_manager *renderer_layer_manager;
     struct scene *scene;
     struct profiler *profiler;
@@ -27,6 +30,7 @@ struct engine_execution_context* engine_execution_context_create(struct engine *
 
     this->running = false;
     this->rerun_required = false;
+    this->arguments = arguments;
     this->renderer_layer_manager = renderer_layer_manager_create();
     this->scene = scene_create(strdup("Default scene"), engine);
     this->profiler = profiler_create(engine);
@@ -72,6 +76,10 @@ bool engine_execution_context_if_rerun_required(const struct engine_execution_co
 }
 void engine_execution_context_mark_rerun_required(struct engine_execution_context *this) {
     this->rerun_required = true;
+}
+
+struct engine_execution_arguments engine_execution_context_get_arguments(struct engine_execution_context *this) {
+    return this->arguments;
 }
 
 struct renderer_layer_manager* engine_execution_context_get_renderer_layer_manager(const struct engine_execution_context *this) {

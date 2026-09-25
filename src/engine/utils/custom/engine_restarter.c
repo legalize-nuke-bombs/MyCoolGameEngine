@@ -16,7 +16,11 @@
 
 
 struct engine_restarter {
-    struct action* on_hotkey;;
+    unsigned int on_hotkey_token;
+    struct action* on_hotkey;
+
+    unsigned int pre_frame_token;
+    struct action* pre_frame;
 
     struct engine *engine;
 };
@@ -54,13 +58,16 @@ void engine_restarter_awake(struct engine_restarter *this) {
         return;
     }
     logger_info("Engine restarter is awaking...");
+
     this->on_hotkey = keyboard_require_action_on_key_pressed(devices_get_keyboard(engine_init_context_get_devices(engine_get_init_context(this->engine))), "F5");
-    unsigned int on_hotkey_subscription_token; // Engine tools have same lifecycle with devices
-    action_subscribe(this->on_hotkey, this, engine_restarter_handle_hotkey, &on_hotkey_subscription_token);
+    action_subscribe(this->on_hotkey, this, engine_restarter_handle_hotkey, &this->on_hotkey_token);
 }
 void engine_restarter_disable(struct engine_restarter *this) {
     if (this->engine == NULL) {
         return;
     }
     logger_info("Engine restarter is disabling...");
+
+    action_unsubscribe(this->on_hotkey, this->on_hotkey_token);
+    this->on_hotkey = NULL;
 }
