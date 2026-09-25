@@ -38,14 +38,15 @@ void engine_destroy(struct engine *this) {
 static bool engine_execute_step(struct engine *this, const struct engine_execution_arguments arguments) {
     if (arguments.script_path == NULL) {
         logger_warn("Engine will not start: script is not set");
+        return 0;
     }
-    logger_info("Engine is executing script %s...", arguments.script_path);
-
     this->execution_context = engine_execution_context_create(this, arguments);
 
     const struct interpreter* interpreter = engine_init_context_get_interpreter(this->init_context);
-    const int code = interpreter_eval(interpreter, arguments.script_path);
-    logger_info("Interpreter finished with exit code %d", code);
+    if (interpreter_eval(interpreter, arguments.script_path) != INTERPRETER_OK) {
+        engine_execution_context_destroy(this->execution_context);
+        return 0;
+    }
 
     engine_init_context_awake(this->init_context);
     engine_execution_context_awake(this->execution_context);
@@ -79,6 +80,7 @@ static bool engine_execute_step(struct engine *this, const struct engine_executi
 
     const bool rerun_required = engine_execution_context_if_return_required(this->execution_context);
 
+    engine_execution_context_disable(this->execution_context);
     engine_execution_context_destroy(this->execution_context);
     engine_init_context_disable(this->init_context);
 

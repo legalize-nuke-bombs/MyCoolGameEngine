@@ -44,6 +44,18 @@ struct scene* scene_create(char *name, const struct engine* engine) {
     return this;
 }
 
+void scene_destroy(struct scene *this) {
+    logger_info("Scene %s is destroying...", this->name);
+
+    entity_collection_destroy(this->entities);
+    tmap_destroy(this->tmap);
+    free(this->name);
+    free(this);
+}
+
+
+
+
 static void scene_run_gc(struct scene *this, double dt) {
     this->gcTimer += dt;
     if (this->gcTimer < GC_INTERVAL) {
@@ -65,6 +77,8 @@ static void scene_update(void *listener, void *context) {
     scene_run_gc(this, update_context->dt);
 }
 
+
+
 void scene_awake(struct scene *this) {
     logger_info("Scene %s is awaking...", this->name);
     entity_collection_awake_everyone(this->entities);
@@ -72,14 +86,11 @@ void scene_awake(struct scene *this) {
     this->on_physics = engine_events_on_physics(engine_init_context_get_events(engine_get_init_context(this->engine)));
     action_subscribe(this->on_physics, this, scene_update, &this->on_physics_subscription_token);
 }
-void scene_destroy(struct scene *this) {
-    logger_info("Scene %s is destroying...", this->name);
 
+void scene_disable(struct scene *this) {
+    logger_info("Scene %s is disabling...", this->name);
     action_unsubscribe(this->on_physics, this->on_physics_subscription_token);
-    entity_collection_destroy(this->entities);
-    tmap_destroy(this->tmap);
-    free(this->name);
-    free(this);
+    this->on_physics = NULL;
 }
 
 const char* scene_get_name(const struct scene *this) {

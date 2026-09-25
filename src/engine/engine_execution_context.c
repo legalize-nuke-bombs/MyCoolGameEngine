@@ -51,6 +51,12 @@ void engine_execution_context_awake(struct engine_execution_context *this) {
     scene_awake(this->scene);
     profiler_awake(this->profiler);
 }
+void engine_execution_context_disable(struct engine_execution_context *this) {
+    logger_info("Engine execution context is disabling...");
+
+    scene_disable(this->scene);
+    profiler_disable(this->profiler);
+}
 
 
 

@@ -42,7 +42,7 @@ void interpreter_destroy(struct interpreter* this) {
     free(this);
 }
 
-static int interpreter_run(const struct interpreter *this, struct parser *parser) {
+static int interpreter_parse(const struct interpreter *this, struct parser *parser) {
     while (1) {
         const char *word = parser_next(parser);
         if (word == NULL) {
@@ -58,13 +58,29 @@ static int interpreter_run(const struct interpreter *this, struct parser *parser
     }
 }
 
-int interpreter_eval(const struct interpreter *this, const char* script_path) {
+static int interpreter_eval_quite(const struct interpreter *this, const char* script_path) {
     struct parser* parser = parser_create(script_path);
     if (parser == NULL) {
         return INTERPRETER_FAILED_OPEN_SCRIPT;
     }
 
-    const int result = interpreter_run(this, parser);
+    const int result = interpreter_parse(this, parser);
     parser_destroy(parser);
+
     return result;
+}
+
+int interpreter_eval(const struct interpreter *this, const char* script_path) {
+    logger_info("Interpreter is executing %s...", script_path);
+
+    const int code = interpreter_eval_quite(this, script_path);
+
+    if (code == INTERPRETER_OK) {
+        logger_info("Interpreter finished with exit code %d", code);
+    }
+    else {
+        logger_error("Interpreter finished with exit code %d", code);
+    }
+
+    return code;
 }

@@ -42,6 +42,28 @@ struct profiler {
     struct engine *engine;
 };
 
+
+
+struct profiler* profiler_create(struct engine *engine) {
+    logger_info("Profiler is creating...");
+    struct profiler* this = malloc(sizeof(struct profiler));
+    this->frame = time_estimator_create();
+    this->update = time_estimator_create();
+    this->rendering = time_estimator_create();
+    this->engine = engine;
+    return this;
+}
+void profiler_destroy(struct profiler* this) {
+    logger_info("Profiler is destroying...");
+    time_estimator_destroy(this->frame);
+    time_estimator_destroy(this->update);
+    time_estimator_destroy(this->rendering);
+    free(this);
+}
+
+
+
+
 static void profiler_handle_hotkey_pressed(void *listener, void *context) {
     const struct profiler* this = listener;
 
@@ -128,26 +150,11 @@ static void profiler_unsubscribe(struct profiler *this) {
     this->post_rendering = NULL;
 }
 
-struct profiler* profiler_create(struct engine *engine) {
-    logger_info("Profiler is creating...");
-    struct profiler* this = malloc(sizeof(struct profiler));
-    this->frame = time_estimator_create();
-    this->update = time_estimator_create();
-    this->rendering = time_estimator_create();
-    this->engine = engine;
-    return this;
-}
-void profiler_destroy(struct profiler* this) {
-    logger_info("Profiler is destroying...");
-    profiler_unsubscribe(this);
-    time_estimator_destroy(this->frame);
-    time_estimator_destroy(this->update);
-    time_estimator_destroy(this->rendering);
-    free(this);
-}
-
 void profiler_awake(struct profiler *this) {
     logger_info("Profiler is awaking...");
     profiler_subscribe(this);
+}
+void profiler_disable(struct profiler *this) {
+    profiler_unsubscribe(this);
 }
 

@@ -14,6 +14,7 @@ struct engine_execution_context* engine_execution_context_create(struct engine *
 void engine_execution_context_destroy(struct engine_execution_context *this);
 
 void engine_execution_context_awake(struct engine_execution_context *this);
+void engine_execution_context_disable(struct engine_execution_context *this);
 
 
 

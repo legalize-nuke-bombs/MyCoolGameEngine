@@ -13,8 +13,10 @@ struct entity;
 struct engine;
 
 struct scene* scene_create(char* name, const struct engine *engine);
-void scene_awake(struct scene *this);
 void scene_destroy(struct scene *this);
+
+void scene_awake(struct scene *this);
+void scene_disable(struct scene *this);
 
 const char* scene_get_name(const struct scene *this);
 
