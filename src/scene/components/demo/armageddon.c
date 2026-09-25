@@ -45,7 +45,7 @@ const char* armageddon_component_key(void) {
 struct component* armageddon_create(struct parser *parser, struct entity *parent) {
     struct armageddon *this = malloc(sizeof(struct armageddon));
     struct component *base = (struct component *)this;
-    component_init(base, &armageddon_vtable, parser, parent);
+    component_create(base, &armageddon_vtable, parser, parent);
 
     this->keycode = parser_next_dup(parser);
 

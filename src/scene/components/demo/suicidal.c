@@ -60,7 +60,7 @@ static void suicidal_on_disable(struct component *base) {
 struct component* suicidal_create(struct parser *parser, struct entity *parent) {
     struct suicidal *this = malloc(sizeof(struct suicidal));
     struct component *base = (struct component *)this;
-    component_init(base, &suicidal_vtable, parser, parent);
+    component_create(base, &suicidal_vtable, parser, parent);
 
     this->keycode = parser_next_dup(parser);
 

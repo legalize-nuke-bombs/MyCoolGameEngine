@@ -150,6 +150,9 @@ add_executable(MyCoolGameEngine main.c
         src/engine/utils/engine_utils.c
         src/engine/utils/custom/engine_restarter.h
         src/engine/utils/custom/engine_restarter.c
+        src/subsystems/subsystem.h
+        src/subsystems/subsystem.c
+        src/subsystems/subsystem_internal.h
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3)

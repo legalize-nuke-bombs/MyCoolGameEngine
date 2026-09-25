@@ -24,7 +24,7 @@ const char* transform_component_key(void) {
 
 struct component* transform_create(struct parser *parser, struct entity *parent) {
     struct transform *this = malloc(sizeof(struct transform));
-    component_init((struct component*)(this), &transform_vtable, parser, parent);
+    component_create((struct component*)(this), &transform_vtable, parser, parent);
 
     parser_next_double(parser, &this->position.x);
     parser_next_double(parser, &this->position.y);

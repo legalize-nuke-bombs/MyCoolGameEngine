@@ -34,7 +34,7 @@ const char* printer_component_key(void) {
 struct component* printer_create(struct parser *parser, struct entity *parent) {
     struct printer *this = malloc(sizeof(struct printer));
     struct component *base = (struct component *)this;
-    component_init(base, &printer_vtable, parser, parent);
+    component_create(base, &printer_vtable, parser, parent);
 
     this->intervalString = parser_next_dup(parser);
     this->lastString = parser_next_dup(parser);

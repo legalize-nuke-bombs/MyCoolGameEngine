@@ -25,6 +25,6 @@ const char* idle_component_key(void) {
 struct component* idle_create(struct parser *parser, struct entity *parent) {
     struct camera *this = malloc(sizeof(struct idle));
     struct component *base = (struct component *) this;
-    component_init(base, &camera_vtable, parser, parent);
+    component_create(base, &camera_vtable, parser, parent);
     return base;
 }

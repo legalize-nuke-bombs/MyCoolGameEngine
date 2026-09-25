@@ -46,7 +46,7 @@ const char* box_renderer_component_key(void) {
 struct component* box_renderer_create(struct parser *parser, struct entity *parent) {
     struct box_renderer *this = malloc(sizeof(struct box_renderer));
     struct component *base = (struct component*) this;
-    component_init(base, &box_renderer_vtable, parser, parent);
+    component_create(base, &box_renderer_vtable, parser, parent);
 
     this->renderer = NULL;
 

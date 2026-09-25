@@ -8,7 +8,7 @@
 #include "core/transform.h"
 #include "../../utils/parser.h"
 
-void component_init(struct component *this, const struct component_vtable *vtable, struct parser *parser, struct entity *parent) {
+void component_create(struct component *this, const struct component_vtable *vtable, struct parser *parser, struct entity *parent) {
     this->vtable = vtable;
     logger_debug("Component is initializing...");
     this->awake = false;
