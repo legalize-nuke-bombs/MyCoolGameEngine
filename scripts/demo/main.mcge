@@ -21,8 +21,8 @@ end
 scene new_entity MyFavouriteEntity
 transform 0 0 1 1 0 0 50 50
 box_renderer 0 0 1 1 character1 0 0 255 255
-camera 0 0 1 1
 armageddon 0 0 1 1 2
+camera 0 0 1 1
 end
 
 scene new_entity Enemy

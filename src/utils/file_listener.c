@@ -9,8 +9,12 @@
 #include <sys/stat.h>
 
 
+#define CHECK_INTERVAL 0.10
+
+
 struct file_listener {
     char* path;
+    double timer;
     time_t last_modified;
 };
 
@@ -36,7 +40,13 @@ void file_listener_destroy(struct file_listener *this) {
     free(this);
 }
 
-bool file_listener_is_file_changed(struct file_listener *this) {
+bool file_listener_update(struct file_listener *this, double dt) {
+    this->timer += dt;
+    if (this->timer < CHECK_INTERVAL) {
+        return 0;
+    }
+    this->timer = 0;
+
     const time_t current_modified = get_file_modification_time(this->path);
 
     if (current_modified != this->last_modified) {

@@ -21,6 +21,7 @@
 #include "../scene/entity.h"
 #include "../scene/components/component_fabric.h"
 #include "../utils/action.h"
+#include "../utils/file_listener.h"
 
 struct engine {
     struct component_fabric *component_fabric;
@@ -129,13 +130,15 @@ bool engine_execute(struct engine *this, const char *script_path) {
 
     scene_awake(this->scene);
 
+    struct file_listener* script_file_listener = file_listener_create(script_path);
+
     struct update_context update_context = {
         .dt = 0
     };
-
     Uint64 previous = SDL_GetTicksNS();
 
     bool run = true;
+    bool restart = false;
     while (run) {
         profiler_update(this->profiler);
         time_estimator_start_block(profiler_get_frame_estimator(this->profiler));
@@ -155,6 +158,11 @@ bool engine_execute(struct engine *this, const char *script_path) {
         SDL_RenderPresent(this->renderer);
         time_estimator_stop_block(profiler_get_rendering_estimator(this->profiler));
 
+        if (file_listener_update(script_file_listener, update_context.dt)) {
+            run = false;
+            restart = true;
+        }
+
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_EVENT_QUIT) {
@@ -165,7 +173,8 @@ bool engine_execute(struct engine *this, const char *script_path) {
                     profiler_log(this->profiler);
                 }
                 else if (event.key.scancode == SDL_SCANCODE_F5) {
-                    return 1;
+                    run = false;
+                    restart = true;
                 }
                 engine_handle_key(this, event.key.scancode, true);
             }
@@ -175,7 +184,9 @@ bool engine_execute(struct engine *this, const char *script_path) {
         }
     }
 
-    return 0;
+    free(script_file_listener);
+
+    return restart;
 }
 
 struct component_fabric* engine_get_component_fabric(const struct engine *this) {
