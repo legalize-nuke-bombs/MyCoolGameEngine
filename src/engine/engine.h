@@ -7,11 +7,6 @@
 
 #include "engine_arguments.h"
 
-typedef struct SDL_Window SDL_Window;
-typedef struct SDL_Renderer SDL_Renderer;
-struct scene;
-
-
 struct engine* engine_create();
 void engine_destroy(struct engine *this);
 
