@@ -3,7 +3,7 @@
 //
 
 #include <stdlib.h>
-#include <_string.h>
+#include <string.h>
 
 #include "engine_execution_context.h"
 #include "../profiler/profiler.h"

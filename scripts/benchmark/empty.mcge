@@ -1,2 +1,1 @@
-window new MyCoolGameEngine 800 600
-scene new EmptyScene
+print EmptySceneStart!
