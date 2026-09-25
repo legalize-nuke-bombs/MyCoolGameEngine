@@ -69,7 +69,7 @@ struct subsystem_collection* subsystem_collection_create() {
 }
 void subsystem_collection_destroy(struct subsystem_collection* this) {
     logger_info("Subsystem collection is destroying...");
-    for (int i = 0; i < list_count(this->list); i++) {
+    for (int i = list_count(this->list) - 1; i >= 0; i--) {
         subsystem_destroy(list_get(this->list, i));
     }
     list_destroy(this->list);
@@ -85,7 +85,7 @@ void subsystem_collection_enable_all(const struct subsystem_collection* this) {
 }
 void subsystem_collection_disable_all(const struct subsystem_collection* this) {
     logger_info("Subsystem collection is disabling all subsystems (%d)...", list_count(this->list));
-    for (int i = 0; i < list_count(this->list); i++) {
+    for (int i = list_count(this->list) - 1; i >= 0; i--) {
         subsystem_disable(list_get(this->list, i));
     }
 }
