@@ -8,11 +8,12 @@
 
 #include "../engine/engine.h"
 #include "../logging/logger.h"
-#include "../engine/engine_execution_context.h"
 #include "../engine/engine_events.h"
-
 #include "../engine/engine_init_context.h"
 #include "../utils/action.h"
+#include <SDL3/SDL.h>
+
+#include "renderer_pipeline.h"
 
 
 struct renderer {
@@ -44,8 +45,11 @@ void renderer_destroy(struct renderer *this) {
 }
 
 static void renderer_render(void *listener, void *context) {
-    struct renderer* this = listener;
-
+    const struct renderer* this = listener;
+    SDL_SetRenderDrawColor(this->native, 0, 0, 0, 255);
+    SDL_RenderClear(this->native);
+    renderer_pipeline_flush(this->pipeline);
+    SDL_RenderPresent(this->native);
 }
 
 void renderer_awake(struct renderer *this) {

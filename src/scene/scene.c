@@ -10,7 +10,6 @@
 #include "entity.h"
 #include "entity_collection.h"
 #include "../engine/engine.h"
-#include "../engine/engine_execution_context.h"
 #include "../engine/engine_events.h"
 #include "../utils/action.h"
 

@@ -55,6 +55,7 @@ void engine_execution_context_awake(struct engine_execution_context *this) {
     logger_info("Engine execution context is awaking...");
 
     this->running = true;
+    scene_awake(this->scene);
     devices_awake(this->devices);
 }
 
