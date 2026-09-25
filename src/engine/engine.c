@@ -16,6 +16,19 @@
 #include "events/engine_events.h"
 
 struct engine {
+    /*
+     * TODO
+     * Мне не очень нравится что тут получилось.
+     * Много шаблонного кода.
+     * Большой шанс где-то забыть позвать create / awake / disable / destroy или перепутать их порядок.
+     * Семантика init_context execution_context мне кажется достаточно высосанная.
+     * Может быть это надо переписать. Наверное стоит рассмотреть вариант переписать это по тому паттерну что используется для компонентов сущностей сцен.
+     * Т.е. engine_subsystem - базовый класс с виртуальным ключом подсистемы, on_awake, on_disable, on_destroy,
+     * engine_subsystem_collection - класс-коллекция подсистем.
+     * Может быть вместо вручную написанных геттеров писать что-то вроде
+     * struct engine_subsystem* engine_subsystem_collection_get(struct engine_subsystem_collection *this, const char* subsystem_key)
+     * с последующим кастом указателя.
+     */
     struct engine_init_context *init_context;
     struct engine_execution_context *execution_context;
 };
