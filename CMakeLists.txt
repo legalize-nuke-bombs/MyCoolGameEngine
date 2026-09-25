@@ -137,11 +137,9 @@ add_executable(MyCoolGameEngine main.c
         src/engine/engine_init_context.h
         src/engine/engine_init_context.c
         src/engine/engine_execution_context.h
-        src/engine/engine_executation_context.c
+        src/engine/engine_execution_context.c
         src/engine/engine_events.h
         src/engine/engine_events.c
-        src/engine/dev_mode/engine_restarter.h
-        src/engine/dev_mode/engine_restarter.c
         src/engine/engine_execution_arguments.h
         src/engine/engine_init_arguments.h
         src/rendering/renderer.h

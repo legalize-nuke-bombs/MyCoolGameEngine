@@ -11,8 +11,6 @@
 #include "../rendering/renderer_layer_manager.h"
 #include "../scene/scene.h"
 #include "../logging/logger.h"
-#include "dev_mode/engine_restarter.h"
-#include "engine_events.h"
 
 
 struct engine_execution_context {
@@ -21,7 +19,6 @@ struct engine_execution_context {
     struct scene *scene;
     struct devices *devices;
     struct profiler *profiler;
-    struct engine_restarter *restarter;
 };
 
 
@@ -34,14 +31,12 @@ struct engine_execution_context* engine_execution_context_create(struct engine *
     this->scene = scene_create(strdup("Default scene"), engine);
     this->devices = devices_create(engine);
     this->profiler = profiler_create();
-    this->restarter = engine_restarter_create(engine, arguments);
 
     return this;
 }
 void engine_execution_context_destroy(struct engine_execution_context *this) {
     logger_info("Engine execution context is destroying...");
 
-    engine_restarter_destroy(this->restarter);
     profiler_destroy(this->profiler);
     devices_destroy(this->devices);
     scene_destroy(this->scene);
