@@ -8,7 +8,6 @@
 #include <SDL3/SDL.h>
 
 #include "../engine/engine.h"
-#include "../engine/engine_execution_context.h"
 #include "../engine/engine_events.h"
 #include "../utils/action.h"
 #include "../logging/logger.h"
@@ -72,6 +71,8 @@ void keyboard_awake(struct keyboard *this) {
 void keyboard_disable(struct keyboard *this) {
     logger_info("Keyboard is disabling...");
     action_unsubscribe(this->on_native_event, this->subscription_token);
+    this->on_native_event = NULL;
+    this->subscription_token = 0;
 }
 
 static int keyboard_keycode_to_native_keycode(const char* keycode) {
