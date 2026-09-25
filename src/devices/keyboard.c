@@ -11,6 +11,7 @@
 #include "../engine/events/engine_events.h"
 #include "../utils/action.h"
 #include "../logging/logger.h"
+#include "../engine/engine_init_context.h"
 
 #define SDL3_SCANCODE_NUMBER 512
 
@@ -65,7 +66,7 @@ static void keyboard_register_native_event(void* listener, void* context) {
 }
 void keyboard_awake(struct keyboard *this) {
     logger_info("Keyboard is awaking...");
-    this->on_native_event = engine_events_on_native_event(engine_get_events(this->engine));
+    this->on_native_event = engine_events_on_native_event(engine_init_context_get_events(engine_get_init_context(this->engine)));
     action_subscribe(this->on_native_event, this, keyboard_register_native_event, &this->subscription_token);
 }
 void keyboard_disable(struct keyboard *this) {
@@ -73,6 +74,14 @@ void keyboard_disable(struct keyboard *this) {
     action_unsubscribe(this->on_native_event, this->subscription_token);
     this->on_native_event = NULL;
     this->subscription_token = 0;
+    for (int i = 0; i < SDL3_SCANCODE_NUMBER; i++) {
+        if (this->on_key_pressed[i] != NULL) {
+            action_clear(this->on_key_pressed[i]);
+        }
+        if (this->on_key_released[i] != NULL) {
+            action_clear(this->on_key_released[i]);
+        }
+    }
 }
 
 static int keyboard_keycode_to_native_keycode(const char* keycode) {

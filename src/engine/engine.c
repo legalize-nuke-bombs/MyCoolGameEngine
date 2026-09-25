@@ -17,7 +17,6 @@
 
 struct engine {
     struct engine_init_context *init_context;
-    struct engine_events *events;
     struct engine_execution_context *execution_context;
 };
 
@@ -43,7 +42,6 @@ static bool engine_execute_step(struct engine *this, const struct engine_executi
     }
     logger_info("Engine is executing script %s...", arguments.script_path);
 
-    this->events = engine_events_create();
     this->execution_context = engine_execution_context_create(this, arguments);
 
     const struct interpreter* interpreter = engine_init_context_get_interpreter(this->init_context);
@@ -58,30 +56,30 @@ static bool engine_execute_step(struct engine *this, const struct engine_executi
     };
     Uint64 previous = SDL_GetTicksNS();
 
+    struct engine_events* events = engine_init_context_get_events(this->init_context);
     while (engine_execution_context_is_running(this->execution_context)) {
         const Uint64 now = SDL_GetTicksNS();
         update_context.dt = (double)(now - previous) / 1e9;
         previous = now;
 
-        action_invoke(engine_events_pre_frame(this->events), &update_context);
+        action_invoke(engine_events_pre_frame(events), &update_context);
 
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
-            action_invoke(engine_events_on_native_event(this->events), &event);
+            action_invoke(engine_events_on_native_event(events), &event);
         }
 
-        action_invoke(engine_events_pre_physics(this->events), &update_context);
-        action_invoke(engine_events_on_physics(this->events), &update_context);
-        action_invoke(engine_events_post_physics(this->events), &update_context);
+        action_invoke(engine_events_pre_physics(events), &update_context);
+        action_invoke(engine_events_on_physics(events), &update_context);
+        action_invoke(engine_events_post_physics(events), &update_context);
 
-        action_invoke(engine_events_pre_rendering(this->events), &update_context);
-        action_invoke(engine_events_on_rendering(this->events), &update_context);
-        action_invoke(engine_events_post_rendering(this->events), &update_context);
+        action_invoke(engine_events_pre_rendering(events), &update_context);
+        action_invoke(engine_events_on_rendering(events), &update_context);
+        action_invoke(engine_events_post_rendering(events), &update_context);
     }
 
-    engine_init_context_disable(this->init_context);
     engine_execution_context_destroy(this->execution_context);
-    engine_events_destroy(this->events);
+    engine_init_context_disable(this->init_context);
 
     return false;
 }
@@ -92,9 +90,6 @@ void engine_execute(struct engine *this, const struct engine_execution_arguments
 
 struct engine_init_context* engine_get_init_context(const struct engine *this) {
     return this->init_context;
-}
-struct engine_events* engine_get_events(const struct engine *this) {
-    return this->events;
 }
 struct engine_execution_context* engine_get_execution_context(const struct engine *this) {
     return this->execution_context;

@@ -24,13 +24,7 @@ struct action* action_create(void) {
     return this;
 }
 void action_destroy(struct action *this) {
-    for (int i = 0; i < list_count(this->list); i++) {
-        struct action_method *action_method = list_get(this->list, i);
-        if (action_method == NULL) {
-            continue;
-        }
-        free(action_method);
-    }
+    action_clear(this);
     list_destroy(this->list);
     free(this);
 }
@@ -58,4 +52,15 @@ void action_invoke(const struct action *this, void* action_context) {
         ctr++;
         action_method->action(action_method->listener, action_context);
     }
+}
+
+void action_clear(struct action *this) {
+    for (int i = 0; i < list_count(this->list); i++) {
+        struct action_method *action_method = list_get(this->list, i);
+        if (action_method == NULL) {
+            continue;
+        }
+        free(action_method);
+    }
+    list_clear(this->list);
 }

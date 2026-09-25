@@ -14,10 +14,13 @@
 #include "version.h"
 #include "../devices/devices.h"
 #include "../rendering/renderer.h"
+#include "events/engine_events.h"
 #include "utils/engine_utils.h"
 
 
 struct engine_init_context {
+    struct engine_events* events;
+
     SDL_Window *window;
     SDL_Renderer *native_renderer;
     struct renderer_pipeline *renderer_pipeline;
@@ -37,6 +40,8 @@ struct engine_init_context* engine_init_context_try_create(struct engine *engine
     logger_info("Engine init context is creating...");
     struct engine_init_context *this = malloc(sizeof(struct engine_init_context));
 
+    this->events = engine_events_create();
+
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         logger_error("SDL_Init failed: %s", SDL_GetError());
         return NULL;
@@ -48,6 +53,7 @@ struct engine_init_context* engine_init_context_try_create(struct engine *engine
     }
     else {
         logger_error("Engine init context failed to create window: %s", SDL_GetError());
+        engine_events_destroy(this->events);
         free(this);
         return NULL;
     }
@@ -75,6 +81,8 @@ void engine_init_context_destroy(struct engine_init_context *this) {
     SDL_DestroyWindow(this->window);
     SDL_Quit();
 
+    engine_events_destroy(this->events);
+
     free(this);
 }
 
@@ -84,15 +92,20 @@ void engine_init_context_awake(const struct engine_init_context *this) {
     renderer_awake(this->renderer);
     devices_awake(this->devices);
     engine_utils_awake(this->utils);
+    engine_events_awake(this->events);
 }
 void engine_init_context_disable(const struct engine_init_context *this) {
     logger_info("Engine init context is disabling...");
     renderer_disable(this->renderer);
     devices_disable(this->devices);
     engine_utils_disable(this->utils);
+    engine_events_disable(this->events);
 }
 
 
+struct engine_events* engine_init_context_get_events(const struct engine_init_context *this) {
+    return this->events;
+}
 SDL_Renderer* engine_init_context_get_native_renderer(const struct engine_init_context *this) {
     return this->native_renderer;
 }

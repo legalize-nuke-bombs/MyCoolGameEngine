@@ -50,7 +50,20 @@ void engine_events_destroy(struct engine_events *this) {
     free(this);
 }
 
-
+void engine_events_awake(struct engine_events *this) {
+    logger_info("Engine events are waking up...");
+}
+void engine_events_disable(struct engine_events *this) {
+    logger_info("Engine events are disabling...");
+    action_clear(this->pre_frame);
+    action_clear(this->pre_physics);
+    action_clear(this->on_physics);
+    action_clear(this->post_physics);
+    action_clear(this->pre_rendering);
+    action_clear(this->on_rendering);
+    action_clear(this->post_rendering);
+    action_clear(this->on_native_event);
+}
 
 struct action* engine_events_pre_frame(const struct engine_events *this) {
     return this->pre_frame;

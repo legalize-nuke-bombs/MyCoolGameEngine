@@ -19,7 +19,6 @@ void engine_destroy(struct engine *this);
 void engine_execute(struct engine *this, struct engine_execution_arguments arguments);
 
 struct engine_init_context* engine_get_init_context(const struct engine *this);
-struct engine_events* engine_get_events(const struct engine *this);
 struct engine_execution_context* engine_get_execution_context(const struct engine *this);
 
 #endif //MYCOOLGAMEENGINE_ENGINE_H

@@ -15,4 +15,6 @@ void action_unsubscribe(const struct action *this, unsigned int subscription_tok
 
 void action_invoke(const struct action *this, void* action_context);
 
+void action_clear(struct action *this);
+
 #endif //MYCOOLGAMEENGINE_ACTION_H

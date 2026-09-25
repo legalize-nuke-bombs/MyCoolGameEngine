@@ -90,7 +90,7 @@ static void profiler_subscribe(struct profiler *this) {
     this->on_hotkey = keyboard_require_action_on_key_pressed(devices_get_keyboard(engine_init_context_get_devices(engine_get_init_context(this->engine))), "F3");
     action_subscribe(this->on_hotkey, this, profiler_handle_hotkey_pressed, &this->on_hotkey_token);
 
-    const struct engine_events* events = engine_get_events(this->engine);
+    const struct engine_events* events = engine_init_context_get_events(engine_get_init_context(this->engine));
 
     this->pre_frame = engine_events_pre_frame(events);
     action_subscribe(this->pre_frame, this, profiler_handle_pre_frame, &this->pre_frame_token);

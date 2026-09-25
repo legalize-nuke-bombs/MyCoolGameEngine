@@ -57,7 +57,7 @@ void renderer_awake(struct renderer *this) {
     const struct engine_init_context* engine_init_context = engine_get_init_context(this->engine);
     this->native = engine_init_context_get_native_renderer(engine_init_context);
     this->pipeline = engine_init_context_get_renderer_pipeline(engine_init_context);
-    this->on_rendering = engine_events_on_rendering(engine_get_events(this->engine));
+    this->on_rendering = engine_events_on_rendering(engine_init_context_get_events(engine_get_init_context(this->engine)));
     action_subscribe(this->on_rendering, this, renderer_render, &this->on_rendering_subscription_token);
 }
 void renderer_disable(struct renderer *this) {
