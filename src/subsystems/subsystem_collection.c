@@ -37,7 +37,7 @@ static void subsystem_collection_capture(const struct subsystem_collection* this
     const char* subsystem_name = subsystem_get_name(subsystem);
     if (dictionary_try_add(this->dict, (void*)subsystem_name, subsystem)) {
         list_add(this->list, subsystem);
-        logger_info("Subsystem collection captured subsystem `%s`", subsystem_name);
+        logger_debug("Subsystem collection captured subsystem `%s`", subsystem_name);
     }
     else {
         logger_error("Subsystem collection failed to capture subsystem `%s`", subsystem_name);
@@ -64,6 +64,7 @@ struct subsystem_collection* subsystem_collection_create() {
     this->list = list_create(1024);
     this->dict = string_dictionary_build(10);
     subsystem_collection_capture_all(this);
+    logger_info("Subsystem collection knows %d subsystems", list_count(this->list));
     return this;
 }
 void subsystem_collection_destroy(struct subsystem_collection* this) {
@@ -77,13 +78,13 @@ void subsystem_collection_destroy(struct subsystem_collection* this) {
 }
 
 void subsystem_collection_enable_all(const struct subsystem_collection* this, struct engine_arguments args) {
-    logger_info("Subsystem collection is enabling all subsystems (%d)....", list_count(this->list));
+    logger_info("Subsystem collection is enabling all subsystems....");
     for (int i = 0; i < list_count(this->list); i++) {
         subsystem_enable(list_get(this->list, i), args);
     }
 }
 void subsystem_collection_disable_all(const struct subsystem_collection* this) {
-    logger_info("Subsystem collection is disabling all subsystems (%d)...", list_count(this->list));
+    logger_info("Subsystem collection is disabling all subsystems...");
     for (int i = list_count(this->list) - 1; i >= 0; i--) {
         subsystem_disable(list_get(this->list, i));
     }

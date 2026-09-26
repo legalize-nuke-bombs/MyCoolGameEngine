@@ -27,7 +27,7 @@ struct component_fabric {
 
 static void component_fabric_register_component(const struct component_fabric *this, const char* component_key, struct component*(*constructor)(struct parser *parser, struct entity *parent)) {
     if (dictionary_try_add(this->types, (void*)component_key, constructor)) {
-        logger_info("Component fabric knows component %s", component_key);
+        logger_debug("Component fabric knows component %s", component_key);
     }
     else {
         logger_warn("Component fabric failed to register component %s", component_key);
@@ -53,6 +53,7 @@ struct component_fabric* component_fabric_create() {
     struct component_fabric* this = malloc(sizeof(struct component_fabric));
     this->types = string_dictionary_build(10);
     component_fabric_register_all(this);
+    logger_info("Component fabric knows %d components", dictionary_count(this->types));
     return this;
 }
 void component_fabric_destroy(struct component_fabric *this) {
