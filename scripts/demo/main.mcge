@@ -1,7 +1,6 @@
 print DemoSceneLaunched!
 
 renderer_layer_manager new_layer bg1 1
-renderer_layer_manager new_layer bg2 2
 renderer_layer_manager new_layer character1 20
 renderer_layer_manager new_layer character1_2 21
 
@@ -10,29 +9,11 @@ transform 0 0 1 1 0 0 1000000 1000000
 box_renderer 0 0 1 1 bg1 54 78 62 255
 end
 
-scene new_entity Grass
-transform 0 0 1 1 0 0 1 1
-box_renderer -170 -90 130 80 bg2 62 88 68 255
-box_renderer 170 100 120 70 bg2 62 88 68 255
-box_renderer -80 190 110 60 bg2 46 68 54 255
-box_renderer 240 -170 90 60 bg2 46 68 54 255
-end
-
-scene new_entity Stone1
-transform 0 0 1 1 165 -70 1 1
-box_renderer 0 0 30 22 bg2 88 92 98 255
-end
-
-scene new_entity Stone2
-transform 0 0 1 1 -150 120 0.7 0.7
-box_renderer 0 0 30 22 bg2 88 92 98 255
-end
-
 scene new_entity Cube
 transform 0 0 1 1 0 0 50 50
 box_renderer 0 0 1 1 character1 38 58 132 255
-box_renderer -9 5 0.12 0.18 character1_2 18 20 26 255
-box_renderer 9 5 0.12 0.18 character1_2 18 20 26 255
+box_renderer -0.2 0.2 0.1 0.2 character1_2 18 20 26 255
+box_renderer 0.2 0.2 0.1 0.2 character1_2 18 20 26 255
 box_light 0 0 4 4
 controller 0 0 1 1 250
 keyboard_controller 0 0 1 1
