@@ -3,6 +3,8 @@
 //
 
 #include "light_map.h"
+
+#include <stdlib.h>
 #include <SDL3/SDL.h>
 
 #include "../renderer_pipeline.h"
