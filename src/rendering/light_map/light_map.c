@@ -117,14 +117,17 @@ static void light_map_flush(void* listener, void* context) {
 }
 
 void light_map_reset(struct light_map* this) {
+    light_map_reset_darkness_color(this);
+}
+
+void light_map_set_darkness_color(struct light_map* this, const struct color color) {
+    this->darkness_color = color;
+}
+void light_map_reset_darkness_color(struct light_map* this) {
     this->darkness_color = (struct color){
         .r = 20,
         .g = 20,
         .b = 20,
         .a = 100
     };
-}
-
-void light_map_set_darkness_color(struct light_map* this, struct color color) {
-    this->darkness_color = color;
 }

@@ -25,5 +25,6 @@ void light_map_draw_primitive(struct light_map* this, struct light_map_draw_call
 void light_map_reset(struct light_map* this);
 
 void light_map_set_darkness_color(struct light_map* this, struct color color);
+void light_map_reset_darkness_color(struct light_map* this);
 
 #endif //MYCOOLGAMEENGINE_RENDERER_LIGHTNING_MAP_H
