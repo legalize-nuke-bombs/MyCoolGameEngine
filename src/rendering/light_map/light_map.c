@@ -93,7 +93,9 @@ static void light_map_flush(void* listener, void* context) {
     struct light_map* this = listener;
     const struct rect* viewport = context;
 
+    SDL_Texture* original_target = SDL_GetRenderTarget(this->native_renderer);
     SDL_SetRenderTarget(this->native_renderer, this->darkness_mask);
+
     SDL_SetRenderDrawColor(this->native_renderer, DARKNESS_R, DARKNESS_G, DARKNESS_B, DARKNESS_A);
     SDL_RenderClear(this->native_renderer);
 
@@ -109,6 +111,7 @@ static void light_map_flush(void* listener, void* context) {
 
     SDL_SetRenderDrawBlendMode(this->native_renderer, original_blend_mode);
 
-    SDL_SetRenderTarget(this->native_renderer, NULL);
+    SDL_SetRenderTarget(this->native_renderer, original_target);
+
     SDL_RenderTexture(this->native_renderer, this->darkness_mask, NULL, NULL);
 }
