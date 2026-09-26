@@ -8,15 +8,15 @@
 
 struct rect rect_sum(const struct rect *rect1, const struct rect *rect2) {
     const struct rect result = {
-        .position = vector_sum(&rect1->position, &rect2->position),
-        .size = vector_sum(&rect1->size, &rect2->size)
+        .position = vector_sum(rect1->position, rect2->position),
+        .size = vector_sum(rect1->size, rect2->size)
     };
     return result;
 }
 struct rect rect_sub(const struct rect *rect1, const struct rect *rect2) {
     const struct rect result = {
-        .position = vector_sub(&rect1->position, &rect2->position),
-        .size = vector_sub(&rect1->size, &rect2->size)
+        .position = vector_sub(rect1->position, rect2->position),
+        .size = vector_sub(rect1->size, rect2->size)
     };
     return result;
 }

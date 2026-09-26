@@ -71,7 +71,7 @@ struct vector2 component_get_position(const struct component *this) {
         return this->local_position;
     }
     const struct vector2 parent_position = transform_get_position(entity_get_transform(this->parent));
-    return vector_sum(&parent_position, &this->local_position);
+    return vector_sum(parent_position, this->local_position);
 }
 struct vector2 component_get_scale(const struct component *this) {
     if (this->parent == NULL) {

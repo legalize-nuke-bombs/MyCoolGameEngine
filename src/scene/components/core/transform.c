@@ -37,8 +37,8 @@ struct component* transform_create(struct parser *parser, struct entity *parent)
 struct vector2 transform_get_position(const struct transform *this) {
     return this->position;
 }
-void transform_set_position(struct transform *this, const struct vector2 *position) {
-    this->position = *position;
+void transform_set_position(struct transform *this, struct vector2 position) {
+    this->position = position;
 }
 struct vector2 transform_get_scale(const struct transform *this) {
     return this->scale;

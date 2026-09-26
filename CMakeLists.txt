@@ -148,6 +148,8 @@ add_executable(MyCoolGameEngine main.c
         src/engine/lifecycle/engine_lifecycle.h
         src/engine/lifecycle/engine_lifecycle.c
         src/engine/engine_arguments.h
+        src/scene/components/core/controller.h
+        src/scene/components/core/controller.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3)

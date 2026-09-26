@@ -42,6 +42,7 @@ end
 scene new_entity CameraRig
 transform 0 0 1 1 0 0 1 1
 camera 0 0 1 1
+controller 0 0 1 1 250 750
 end
 
 print DemoSceneEnded!
