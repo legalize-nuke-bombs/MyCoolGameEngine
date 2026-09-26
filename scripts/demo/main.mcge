@@ -37,6 +37,7 @@ box_renderer 14 -12 1.2 1.2 shadow 0 0 0 55
 box_renderer 0 0 1 1 character1 38 58 132 255
 box_renderer -9 5 0.12 0.18 character1_2 18 20 26 255
 box_renderer 9 5 0.12 0.18 character1_2 18 20 26 255
+box_light 0 0 1 1
 end
 
 scene new_entity CameraRig

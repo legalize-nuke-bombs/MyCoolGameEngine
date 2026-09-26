@@ -72,6 +72,7 @@ static void light_map_resize(void* listener, void* context) {
 void light_map_draw_primitive(struct light_map* this, const struct light_map_draw_call draw_call) {
     if (this->draw_calls_count >= DRAW_CALLS_BUFFER_SIZE) {
         logger_warn("Light map buffer size overflow");
+        return;
     }
     this->draw_calls[this->draw_calls_count++] = draw_call;
 }
