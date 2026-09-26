@@ -78,7 +78,7 @@ struct vector2 component_get_scale(const struct component *this) {
         return this->local_scale;
     }
     const struct vector2 parent_scale = transform_get_scale(entity_get_transform(this->parent));
-    return vector_multiply_vector(&parent_scale, &this->local_scale);
+    return vector_multiply_vector(parent_scale, this->local_scale);
 }
 
 const char* component_get_key(const struct component *this) {

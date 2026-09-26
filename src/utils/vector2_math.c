@@ -2,37 +2,45 @@
 
 #include <math.h>
 
-double vector_get_length(const struct vector2 *vector) {
+double vector_get_length(const struct vector2 vector) {
     return sqrt(vector_get_sqr_length(vector));
 }
-double vector_get_sqr_length(const struct vector2 *vector) {
-    return vector->x * vector->x + vector->y * vector->y;
+double vector_get_sqr_length(struct vector2 vector) {
+    return vector.x * vector.x + vector.y * vector.y;
 }
 
-struct vector2 vector_sum(struct vector2 vector1, struct vector2 vector2) {
+struct vector2 vector_sum(const struct vector2 vector1, const struct vector2 vector2) {
     struct vector2 result;
     result.x = vector1.x + vector2.x;
     result.y = vector1.y + vector2.y;
     return result;
 }
-struct vector2 vector_sub(struct vector2 vector1, struct vector2 vector2) {
+struct vector2 vector_sub(const struct vector2 vector1, const struct vector2 vector2) {
     struct vector2 result;
     result.x = vector1.x - vector2.x;
     result.y = vector1.y - vector2.y;
     return result;
 }
-struct vector2 vector_multiply_vector(const struct vector2 *vector1, const struct vector2 *vector2) {
+struct vector2 vector_multiply_vector(const struct vector2 vector1, const struct vector2 vector2) {
     struct vector2 result;
-    result.x = vector1->x * vector2->x;
-    result.y = vector1->y * vector2->y;
+    result.x = vector1.x * vector2.x;
+    result.y = vector1.y * vector2.y;
     return result;
 }
-struct vector2 vector_multiply_scalar(const struct vector2 *vector1, double scalar) {
+struct vector2 vector_multiply_scalar(const struct vector2 vector1, double scalar) {
     const struct vector2 result = {
-        .x = vector1->x * scalar,
-        .y = vector1->y * scalar
+        .x = vector1.x * scalar,
+        .y = vector1.y * scalar
     };
     return result;
+}
+
+struct vector2 vector_normalize(const struct vector2 this) {
+    const double length = vector_get_length(this);
+    if (length < 0.00001) {
+        return vector2_zero;
+    }
+    return vector_multiply_scalar(this, 1 / length);
 }
 
 double vector_distance(const struct vector2 *point1, const struct vector2 *point2) {
