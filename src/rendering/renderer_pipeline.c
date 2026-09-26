@@ -8,7 +8,6 @@
 #include <stdlib.h>
 #include <SDL3/SDL.h>
 #include "../logging/logger.h"
-#include "../utils/action.h"
 #include "custom/light_map.h"
 
 
@@ -90,7 +89,7 @@ void renderer_pipeline_flush(struct renderer_pipeline *this) {
     renderer_pipeline_draw_primitive(this, (struct renderer_pipeline_draw_call) {
         .primitive = this->light_map,
         .rect = rect_0,
-        .layer = NULL
+        .layer = this->light_map_layer
     });
 
     if (!this->viewport_enabled) {

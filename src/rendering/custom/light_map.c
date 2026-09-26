@@ -113,6 +113,7 @@ static void light_map_draw(struct renderer_primitive* base, const struct rect re
 
     SDL_SetRenderTarget(native_renderer, original_target);
 
+    SDL_SetTextureBlendMode(this->darkness_mask, SDL_BLENDMODE_BLEND);
     SDL_RenderTexture(native_renderer, this->darkness_mask, NULL, NULL);
 }
 
