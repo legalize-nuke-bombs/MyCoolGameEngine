@@ -123,3 +123,7 @@ struct action* renderer_pipeline_on_viewpoint_resize(const struct renderer_pipel
 struct action* renderer_pipeline_on_post_process(const struct renderer_pipeline *this) {
     return this->on_post_process;
 }
+
+struct light_map* renderer_pipeline_get_light_map(const struct renderer_pipeline *this) {
+    return this->light_map;
+}

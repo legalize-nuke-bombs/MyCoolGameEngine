@@ -69,6 +69,13 @@ static void light_map_resize(void* listener, void* context) {
     this->darkness_mask = SDL_CreateTexture(this->native_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, (int)size->x, (int)size->y);
 }
 
+void light_map_draw_primitive(struct light_map* this, const struct light_map_draw_call draw_call) {
+    if (this->draw_calls_count >= DRAW_CALLS_BUFFER_SIZE) {
+        logger_warn("Light map buffer size overflow");
+    }
+    this->draw_calls[this->draw_calls_count++] = draw_call;
+}
+
 static void light_map_flush(void* listener, void* context) {
     struct light_map* this = listener;
     const struct rect* viewport = context;

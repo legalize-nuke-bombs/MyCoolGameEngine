@@ -90,7 +90,3 @@ static void box_renderer_update(struct component *base, const struct update_cont
     };
     renderer_pipeline_draw_primitive(this->renderer, draw_call);
 }
-
-struct component * box_renderer_as_component(struct box_renderer *this) {
-    return (struct component*) this;
-}
