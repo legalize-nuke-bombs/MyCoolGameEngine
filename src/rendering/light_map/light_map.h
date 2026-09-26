@@ -6,6 +6,7 @@
 #define MYCOOLGAMEENGINE_RENDERER_LIGHTNING_MAP_H
 
 #include "../../utils/rect.h"
+#include "../../utils/color.h"
 
 struct light_map;
 struct renderer_pipeline;
@@ -20,5 +21,9 @@ struct light_map_draw_call {
 };
 
 void light_map_draw_primitive(struct light_map* this, struct light_map_draw_call draw_call);
+
+void light_map_reset(struct light_map* this);
+
+void light_map_set_darkness_color(struct light_map* this, struct color color);
 
 #endif //MYCOOLGAMEENGINE_RENDERER_LIGHTNING_MAP_H

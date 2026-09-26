@@ -113,6 +113,11 @@ void renderer_pipeline_flush(struct renderer_pipeline *this) {
     action_invoke(this->on_post_process, &this->viewport);
 }
 
+void renderer_pipeline_reset(struct renderer_pipeline *this) {
+    renderer_pipeline_remove_viewport(this);
+    light_map_reset(this->light_map);
+}
+
 SDL_Renderer* renderer_pipeline_get_native_renderer(const struct renderer_pipeline *this) {
     return this->native_renderer;
 }

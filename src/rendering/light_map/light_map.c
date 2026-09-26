@@ -10,17 +10,13 @@
 #include "../renderer_pipeline.h"
 #include "../../utils/action.h"
 #include "../../logging/logger.h"
-
-
-#define DARKNESS_R 20
-#define DARKNESS_G 20
-#define DARKNESS_B 20
-#define DARKNESS_A 100
+#include "../../utils/color.h"
 
 #define DRAW_CALLS_BUFFER_SIZE (1 << 10)
 
 
 struct light_map {
+    struct color darkness_color;
     SDL_Texture *darkness_mask;
     SDL_BlendMode light_source_blend_mode;
 
@@ -44,6 +40,7 @@ struct light_map* light_map_create(struct renderer_pipeline *pipeline) {
     logger_info("Renderer lightning map is creating...");
     struct light_map* this = calloc(1, sizeof(struct light_map));
 
+    light_map_reset(this);
     this->light_source_blend_mode = SDL_ComposeCustomBlendMode(
        SDL_BLENDFACTOR_ZERO,
        SDL_BLENDFACTOR_ONE,
@@ -99,7 +96,7 @@ static void light_map_flush(void* listener, void* context) {
     SDL_Texture* original_target = SDL_GetRenderTarget(this->native_renderer);
     SDL_SetRenderTarget(this->native_renderer, this->darkness_mask);
 
-    SDL_SetRenderDrawColor(this->native_renderer, DARKNESS_R, DARKNESS_G, DARKNESS_B, DARKNESS_A);
+    SDL_SetRenderDrawColor(this->native_renderer, this->darkness_color.r, this->darkness_color.g, this->darkness_color.b, this->darkness_color.a);
     SDL_RenderClear(this->native_renderer);
 
     SDL_BlendMode original_blend_mode;
@@ -117,4 +114,17 @@ static void light_map_flush(void* listener, void* context) {
     SDL_SetRenderTarget(this->native_renderer, original_target);
 
     SDL_RenderTexture(this->native_renderer, this->darkness_mask, NULL, NULL);
+}
+
+void light_map_reset(struct light_map* this) {
+    this->darkness_color = (struct color){
+        .r = 20,
+        .g = 20,
+        .b = 20,
+        .a = 100
+    };
+}
+
+void light_map_set_darkness_color(struct light_map* this, struct color color) {
+    this->darkness_color = color;
 }
