@@ -110,7 +110,7 @@ void renderer_pipeline_flush(struct renderer_pipeline *this) {
 
     this->draw_calls_count = 0;
 
-    action_invoke(this->on_post_process, NULL);
+    action_invoke(this->on_post_process, &this->viewport);
 }
 
 SDL_Renderer* renderer_pipeline_get_native_renderer(const struct renderer_pipeline *this) {
