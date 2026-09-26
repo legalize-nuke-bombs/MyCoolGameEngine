@@ -39,7 +39,7 @@ struct renderer_pipeline* renderer_pipeline_create(SDL_Renderer *native_renderer
     this->native_renderer = native_renderer;
     this->on_viewpoint_resize = action_create();
     this->on_post_process = action_create();
-    renderer_lightning_map_create(this);
+    this->lightning_map = renderer_lightning_map_create(this);
     return this;
 }
 void renderer_pipeline_destroy(struct renderer_pipeline *this) {
