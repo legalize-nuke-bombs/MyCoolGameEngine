@@ -58,7 +58,7 @@ struct component* box_renderer_create(struct parser *parser, struct entity *pare
     parser_next_uint8(parser, &color.g);
     parser_next_uint8(parser, &color.b);
     parser_next_uint8(parser, &color.a);
-    this->square = renderer_square_create(color);
+    this->square = renderer_square_create_from_color(color);
 
     return base;
 }

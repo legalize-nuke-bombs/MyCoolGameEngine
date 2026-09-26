@@ -11,6 +11,7 @@
 struct renderer_square {
     struct renderer_primitive base;
     struct color color;
+    SDL_Texture* texture;
 };
 
 static void renderer_square_draw(const void* self, const struct rect rect, const struct rect viewport, SDL_Renderer* renderer) {
@@ -24,18 +25,29 @@ static void renderer_square_draw(const void* self, const struct rect rect, const
         .h = target_rect.size.y
     };
 
-    SDL_SetRenderDrawColor(renderer, this->color.r, this->color.g, this->color.b, this->color.a);
-    SDL_RenderFillRect(renderer, &sdl_target_rect);
+    if (this->texture) {
+        SDL_RenderTexture(renderer, this->texture, NULL, &sdl_target_rect);
+    }
+    else {
+        SDL_SetRenderDrawColor(renderer, this->color.r, this->color.g, this->color.b, this->color.a);
+        SDL_RenderFillRect(renderer, &sdl_target_rect);
+    }
 }
 
 static const struct rendering_primitive_vtable renderer_square_vtable = {
     .draw = renderer_square_draw
 };
 
-struct renderer_square* renderer_square_create(const struct color color) {
-    struct renderer_square* this = malloc(sizeof(struct renderer_square));
+struct renderer_square* renderer_square_create_from_color(const struct color color) {
+    struct renderer_square* this = calloc(1, sizeof(struct renderer_square));
     this->base.vtable = &renderer_square_vtable;
     this->color = color;
+    return this;
+}
+struct renderer_square* renderer_square_create_from_texture(SDL_Texture* texture) {
+    struct renderer_square* this = calloc(1, sizeof(struct renderer_square));
+    this->base.vtable = &renderer_square_vtable;
+    this->texture = texture;
     return this;
 }
 
