@@ -10,6 +10,12 @@
 #include "../logging/logger.h"
 
 
+#define DARKNESS_R 20
+#define DARKNESS_G 20
+#define DARKNESS_B 20
+#define DARKNESS_A 100
+
+
 struct renderer_lightning_map {
     SDL_Texture *darkness_mask;
 
@@ -59,5 +65,12 @@ static void renderer_lightning_map_resize(void* listener, void* context) {
 }
 
 static void renderer_lightning_map_draw(void* listener, void* context) {
+    struct renderer_lightning_map* this = listener;
 
+    SDL_SetRenderTarget(this->native_renderer, this->darkness_mask);
+    SDL_SetRenderDrawColor(this->native_renderer, DARKNESS_R, DARKNESS_G, DARKNESS_B, DARKNESS_A);
+    SDL_RenderClear(this->native_renderer);
+
+    SDL_SetRenderTarget(this->native_renderer, NULL);
+    SDL_RenderTexture(this->native_renderer, this->darkness_mask, NULL, NULL);
 }
