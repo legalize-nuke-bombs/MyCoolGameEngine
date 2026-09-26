@@ -25,7 +25,7 @@ static void interpreter_ignore_execute(const struct interpreter_command *this, s
     do {
         word = parser_next(parser);
     }
-    while (word != NULL && strcmp(word, "*\\") != 0);
+    while (word != NULL && strcmp(word, "*/") != 0);
 }
 
 static const struct interpreter_command_vtable ignore_vtable = {
