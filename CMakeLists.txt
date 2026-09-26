@@ -150,6 +150,8 @@ add_executable(MyCoolGameEngine main.c
         src/engine/engine_arguments.h
         src/scene/components/core/controller.h
         src/scene/components/core/controller.c
+        src/scene/components/core/keyboard_controller.h
+        src/scene/components/core/keyboard_controller.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3)
