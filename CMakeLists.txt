@@ -92,8 +92,8 @@ add_executable(MyCoolGameEngine main.c
         src/interpreter/interpreter.h
         src/interpreter/interpreter.c
         src/interpreter/interpreter_command.h
-        src/interpreter/custom/interpreter_print.h
-        src/interpreter/custom/interpreter_print.c
+        src/interpreter/core/interpreter_print.h
+        src/interpreter/core/interpreter_print.c
         src/interpreter/interpreter_command_register.h
         src/interpreter/interpreter_command_register.c
         src/engine/engine.h

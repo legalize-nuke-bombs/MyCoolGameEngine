@@ -10,7 +10,7 @@
 #include "interpreter_command.h"
 #include "interpreter_command_register.h"
 #include "../utils/parser.h"
-#include "custom/interpreter_print.h"
+#include "core/interpreter_print.h"
 #include "renderer_layer_manager/interpreter_renderer_layer_manager.h"
 #include "window/interpreter_window.h"
 #include "../logging/logger.h"
