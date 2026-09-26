@@ -13,14 +13,14 @@
 #include "../../scene.h"
 #include "../../../rendering/renderer.h"
 #include "../../../subsystems/subsystem_collection.h"
-#include "../../../rendering/light_map/light_map.h"
+#include "../../../rendering/custom/light_map.h"
 
 struct box_light {
     struct component base;
 
     struct light_map* light_map;
 
-    struct renderer_square* square;
+    struct renderer_primitive* square;
 };
 
 static void box_light_awake(struct component *base);
@@ -59,7 +59,7 @@ struct component* box_light_create(struct parser *parser, struct entity *parent)
 
 static void box_light_on_destroy(struct component *base) {
     const struct box_light *this = (struct box_light *) base;
-    renderer_square_destroy(this->square);
+    renderer_primitive_destroy(this->square);
 }
 
 static void box_light_awake(struct component *base) {
@@ -77,7 +77,7 @@ static void box_light_update(struct component *base, const struct update_context
             .position = component_get_position(base),
             .size = component_get_scale(base)
         },
-        .primitive = renderer_square_as_renderer_primitive(this->square),
+        .primitive = this->square,
     };
     light_map_draw_primitive(this->light_map, draw_call);
 }

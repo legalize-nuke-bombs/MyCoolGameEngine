@@ -13,4 +13,6 @@ struct rect {
     struct vector2 size;
 };
 
+extern const struct rect rect_0;
+
 #endif //MYCOOLGAMEENGINE_RECT_H

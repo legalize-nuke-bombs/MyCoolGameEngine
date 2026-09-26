@@ -29,13 +29,6 @@ void renderer_pipeline_draw_primitive(struct renderer_pipeline *this, struct ren
 
 void renderer_pipeline_flush(struct renderer_pipeline *this);
 
-void renderer_pipeline_reset(struct renderer_pipeline *this);
-
-struct SDL_Renderer* renderer_pipeline_get_native_renderer(const struct renderer_pipeline *this);
-
-struct action* renderer_pipeline_on_viewpoint_resize(const struct renderer_pipeline *this);
-struct action* renderer_pipeline_on_post_process(const struct renderer_pipeline *this);
-
 struct light_map* renderer_pipeline_get_light_map(const struct renderer_pipeline *this);
 
 #endif //MYCOOLGAMEENGINE_RENDERER_PIPELINE_H

@@ -6,7 +6,6 @@
 
 #include <stdlib.h>
 
-#include "../engine/engine.h"
 #include "../engine/events/engine_events.h"
 #include "../utils/action.h"
 #include <SDL3/SDL.h>

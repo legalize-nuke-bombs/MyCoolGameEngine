@@ -13,8 +13,9 @@
 #include "../../../subsystems/subsystem_collection.h"
 #include "../../../rendering/renderer.h"
 #include "../../../rendering/renderer_pipeline.h"
-#include "../../../rendering/light_map/light_map.h"
 #include "../../../utils/parser.h"
+#include "../../../utils/color.h"
+#include "../../../rendering/custom/light_map.h"
 
 
 struct renderer_settings {

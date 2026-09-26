@@ -14,8 +14,8 @@ struct renderer_square {
     SDL_Texture* texture;
 };
 
-static void renderer_square_draw(const void* self, const struct rect rect, const struct rect viewport, SDL_Renderer* renderer) {
-    const struct renderer_square* this = (struct renderer_square*)self;
+static void renderer_square_draw(struct renderer_primitive* base, const struct rect rect, const struct rect viewport, SDL_Renderer* renderer) {
+    const struct renderer_square* this = (struct renderer_square*)base;
 
     const struct rect target_rect = rect_sdl(&rect, &viewport);
     const SDL_FRect sdl_target_rect = {
@@ -35,26 +35,19 @@ static void renderer_square_draw(const void* self, const struct rect rect, const
 }
 
 static const struct rendering_primitive_vtable renderer_square_vtable = {
+    .on_destroy = NULL,
     .draw = renderer_square_draw
 };
 
-struct renderer_square* renderer_square_create_from_color(const struct color color) {
+struct renderer_primitive* renderer_square_create_from_color(const struct color color) {
     struct renderer_square* this = calloc(1, sizeof(struct renderer_square));
     this->base.vtable = &renderer_square_vtable;
     this->color = color;
-    return this;
+    return (struct renderer_primitive*)this;
 }
-struct renderer_square* renderer_square_create_from_texture(SDL_Texture* texture) {
+struct renderer_primitive* renderer_square_create_from_texture(SDL_Texture* texture) {
     struct renderer_square* this = calloc(1, sizeof(struct renderer_square));
     this->base.vtable = &renderer_square_vtable;
     this->texture = texture;
-    return this;
-}
-
-void renderer_square_destroy(struct renderer_square* this) {
-    free(this);
-}
-
-struct renderer_primitive* renderer_square_as_renderer_primitive(struct renderer_square* this) {
-    return (struct renderer_primitive*) this;
+    return (struct renderer_primitive*)this;
 }

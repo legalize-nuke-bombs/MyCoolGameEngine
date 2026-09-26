@@ -24,7 +24,7 @@ struct box_renderer {
     char* renderer_layer_name;
     struct renderer_layer* renderer_layer;
 
-    struct renderer_square* square;
+    struct renderer_primitive* square;
 };
 
 static void box_renderer_awake(struct component *base);
@@ -65,7 +65,7 @@ struct component* box_renderer_create(struct parser *parser, struct entity *pare
 
 static void box_renderer_on_destroy(struct component *base) {
     const struct box_renderer *this = (struct box_renderer *) base;
-    renderer_square_destroy(this->square);
+    renderer_primitive_destroy(this->square);
     free(this->renderer_layer_name);
 }
 
@@ -85,7 +85,7 @@ static void box_renderer_update(struct component *base, const struct update_cont
             .position = component_get_position(base),
             .size = component_get_scale(base)
         },
-        .primitive = renderer_square_as_renderer_primitive(this->square),
+        .primitive = this->square,
         .layer = this->renderer_layer
     };
     renderer_pipeline_draw_primitive(this->renderer, draw_call);

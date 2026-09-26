@@ -12,4 +12,6 @@ struct renderer_primitive;
 
 void renderer_primitive_draw(struct renderer_primitive* self, struct rect rect, struct rect viewport, struct SDL_Renderer* renderer);
 
+void renderer_primitive_destroy(struct renderer_primitive* this);
+
 #endif //MYCOOLGAMEENGINE_RENDERER_PRIMITIVE_H
