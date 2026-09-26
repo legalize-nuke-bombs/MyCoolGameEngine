@@ -60,6 +60,9 @@ static void keyboard_controller_on_update(struct component* base, const struct u
 static void keyboard_controller_on_awake(struct component* base) {
     struct keyboard_controller* this = (struct keyboard_controller*)base;
     this->controller = (struct controller*)entity_get_component(component_get_parent(base), "controller");
+    if (this->controller == NULL) {
+        entity_mark_destroyed(component_get_parent(base));
+    }
     this->keyboard = (struct keyboard*)subsystem_collection_get(scene_get_subsystems(entity_get_parent(component_get_parent(base))), "keyboard");
 }
 
