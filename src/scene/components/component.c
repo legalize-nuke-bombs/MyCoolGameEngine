@@ -71,14 +71,14 @@ struct vector2 component_get_position(const struct component *this) {
         return this->local_position;
     }
     const struct vector2 parent_position = transform_get_position(entity_get_transform(this->parent));
-    return vector_sum(&parent_position, &this->local_position);
+    return vector_sum(parent_position, this->local_position);
 }
 struct vector2 component_get_scale(const struct component *this) {
     if (this->parent == NULL) {
         return this->local_scale;
     }
     const struct vector2 parent_scale = transform_get_scale(entity_get_transform(this->parent));
-    return vector_multiply_vector(&parent_scale, &this->local_scale);
+    return vector_multiply_vector(parent_scale, this->local_scale);
 }
 
 const char* component_get_key(const struct component *this) {

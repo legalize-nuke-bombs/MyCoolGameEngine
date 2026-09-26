@@ -18,6 +18,8 @@
 struct keyboard {
     struct subsystem base;
 
+    bool status[SDL3_SCANCODE_NUMBER];
+
     struct action* on_key_pressed[SDL3_SCANCODE_NUMBER];
     struct action* on_key_released[SDL3_SCANCODE_NUMBER];
 
@@ -58,11 +60,12 @@ void keyboard_on_destroy(struct subsystem *base) {
 }
 
 static void keyboard_register_native_event(void* listener, void* context) {
-    const struct keyboard *this = listener;
+    struct keyboard *this = listener;
     const SDL_Event *event = context;
     const int scancode = event->key.scancode;
     if (event->type == SDL_EVENT_KEY_DOWN) {
         logger_debug("Keyboard registered key down");
+        this->status[scancode] = true;
         const struct action* on_key_pressed = this->on_key_pressed[scancode];
         if (on_key_pressed != NULL) {
             action_invoke(on_key_pressed, NULL);
@@ -70,6 +73,7 @@ static void keyboard_register_native_event(void* listener, void* context) {
     }
     else if (event->type == SDL_EVENT_KEY_UP) {
         logger_debug("Keyboard registered key up");
+        this->status[scancode] = false;
         const struct action* on_key_released = this->on_key_released[scancode];
         if (on_key_released != NULL) {
             action_invoke(on_key_released, NULL);
@@ -78,6 +82,9 @@ static void keyboard_register_native_event(void* listener, void* context) {
 }
 void keyboard_on_enable(struct subsystem* base, struct engine_arguments args) {
     struct keyboard* this = (struct keyboard*)base;
+    for (int i = 0; i < SDL3_SCANCODE_NUMBER; i++) {
+        this->status[i] = 0;
+    }
     this->on_native_event = engine_events_on_native_event((struct engine_events*)subsystem_get_subsystem(base, "engine_events"));
     action_subscribe(this->on_native_event, this, keyboard_register_native_event, &this->subscription_token);
 }
@@ -110,6 +117,11 @@ static struct action* keyboard_require_action(struct action **slot) {
     }
     return *slot;
 }
+
+bool keyboard_is_pressed(const struct keyboard *this, const char* keycode) {
+    return this->status[keyboard_keycode_to_native_keycode(keycode)];
+}
+
 struct action* keyboard_require_action_on_key_pressed(struct keyboard *this, const char* keycode) {
     return keyboard_require_action(&this->on_key_pressed[keyboard_keycode_to_native_keycode(keycode)]);
 }

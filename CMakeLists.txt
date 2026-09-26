@@ -148,6 +148,10 @@ add_executable(MyCoolGameEngine main.c
         src/engine/lifecycle/engine_lifecycle.h
         src/engine/lifecycle/engine_lifecycle.c
         src/engine/engine_arguments.h
+        src/scene/components/core/controller.h
+        src/scene/components/core/controller.c
+        src/scene/components/core/keyboard_controller.h
+        src/scene/components/core/keyboard_controller.c
         src/rendering/renderer_lightning_map.h
         src/rendering/renderer_lightning_map.c
 )
