@@ -20,6 +20,7 @@
 
 struct light_map {
     SDL_Texture *darkness_mask;
+    SDL_BlendMode light_source_blend_mode;
 
     SDL_Renderer* native_renderer;
 
@@ -40,6 +41,16 @@ static void light_map_flush(void* listener, void* context);
 struct light_map* light_map_create(struct renderer_pipeline *pipeline) {
     logger_info("Renderer lightning map is creating...");
     struct light_map* this = calloc(1, sizeof(struct light_map));
+
+    this->light_source_blend_mode = SDL_ComposeCustomBlendMode(
+       SDL_BLENDFACTOR_ZERO,
+       SDL_BLENDFACTOR_ONE,
+       SDL_BLENDOPERATION_ADD,
+       SDL_BLENDFACTOR_ZERO,
+       SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA,
+       SDL_BLENDOPERATION_ADD
+   );
+
     this->native_renderer = renderer_pipeline_get_native_renderer(pipeline);
 
     this->on_viewpoint_resize = renderer_pipeline_on_viewpoint_resize(pipeline);
@@ -67,6 +78,7 @@ static void light_map_resize(void* listener, void* context) {
         SDL_DestroyTexture(this->darkness_mask);
     }
     this->darkness_mask = SDL_CreateTexture(this->native_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, (int)size->x, (int)size->y);
+    SDL_SetTextureBlendMode(this->darkness_mask, SDL_BLENDMODE_BLEND);
 }
 
 void light_map_draw_primitive(struct light_map* this, const struct light_map_draw_call draw_call) {
@@ -85,11 +97,17 @@ static void light_map_flush(void* listener, void* context) {
     SDL_SetRenderDrawColor(this->native_renderer, DARKNESS_R, DARKNESS_G, DARKNESS_B, DARKNESS_A);
     SDL_RenderClear(this->native_renderer);
 
+    SDL_BlendMode original_blend_mode;
+    SDL_GetRenderDrawBlendMode(this->native_renderer, &original_blend_mode);
+    SDL_SetRenderDrawBlendMode(this->native_renderer, this->light_source_blend_mode);
+
     for (int i = 0; i < this->draw_calls_count; i++) {
         const struct light_map_draw_call draw_call = this->draw_calls[i];
         renderer_primitive_draw(draw_call.primitive, draw_call.rect, *viewport, this->native_renderer);
     }
     this->draw_calls_count = 0;
+
+    SDL_SetRenderDrawBlendMode(this->native_renderer, original_blend_mode);
 
     SDL_SetRenderTarget(this->native_renderer, NULL);
     SDL_RenderTexture(this->native_renderer, this->darkness_mask, NULL, NULL);

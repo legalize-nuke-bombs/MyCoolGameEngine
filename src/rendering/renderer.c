@@ -77,7 +77,6 @@ void renderer_on_destroy(struct subsystem* base) {
 
 static void renderer_render(void *listener, void *context) {
     const struct renderer* this = listener;
-    SDL_SetRenderTarget(this->native, NULL);
     SDL_SetRenderDrawColor(this->native, 0, 0, 0, 255);
     SDL_RenderClear(this->native);
     renderer_pipeline_flush(this->pipeline);
