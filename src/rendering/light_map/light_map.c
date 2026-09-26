@@ -68,6 +68,7 @@ void light_map_destroy(struct light_map* this) {
     }
     action_unsubscribe(this->on_viewpoint_resize, this->on_viewpoint_resize_token);
     action_unsubscribe(this->on_post_process, this->on_post_process_token);
+    free(this);
 }
 
 static void light_map_resize(void* listener, void* context) {
