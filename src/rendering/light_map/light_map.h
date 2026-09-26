@@ -5,10 +5,10 @@
 #ifndef MYCOOLGAMEENGINE_RENDERER_LIGHTNING_MAP_H
 #define MYCOOLGAMEENGINE_RENDERER_LIGHTNING_MAP_H
 
-struct renderer_lightning_map;
+struct light_map;
 struct renderer_pipeline;
 
-struct renderer_lightning_map* renderer_lightning_map_create(struct renderer_pipeline *pipeline);
-void renderer_lightning_map_destroy(struct renderer_lightning_map* this);
+struct light_map* light_map_create(struct renderer_pipeline *pipeline);
+void light_map_destroy(struct light_map* this);
 
 #endif //MYCOOLGAMEENGINE_RENDERER_LIGHTNING_MAP_H

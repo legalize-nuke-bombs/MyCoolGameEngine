@@ -9,7 +9,7 @@
 #include <SDL3/SDL.h>
 #include "../logging/logger.h"
 #include "../utils/action.h"
-#include "renderer_lightning_map.h"
+#include "light_map/light_map.h"
 
 
 #define DRAW_CALLS_BUFFER_SIZE (1 << 14)
@@ -29,7 +29,7 @@ struct renderer_pipeline {
     struct action* on_viewpoint_resize;
     struct action* on_post_process;
 
-    struct renderer_lightning_map *lightning_map;
+    struct light_map *light_map;
 };
 
 
@@ -39,12 +39,12 @@ struct renderer_pipeline* renderer_pipeline_create(SDL_Renderer *native_renderer
     this->native_renderer = native_renderer;
     this->on_viewpoint_resize = action_create();
     this->on_post_process = action_create();
-    this->lightning_map = renderer_lightning_map_create(this);
+    this->light_map = light_map_create(this);
     return this;
 }
 void renderer_pipeline_destroy(struct renderer_pipeline *this) {
     logger_info("Renderer pipeline is destroying...");
-    renderer_lightning_map_destroy(this->lightning_map);
+    light_map_destroy(this->light_map);
     action_destroy(this->on_viewpoint_resize);
     action_destroy(this->on_post_process);
     free(this);

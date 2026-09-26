@@ -152,8 +152,8 @@ add_executable(MyCoolGameEngine main.c
         src/scene/components/core/controller.c
         src/scene/components/core/keyboard_controller.h
         src/scene/components/core/keyboard_controller.c
-        src/rendering/renderer_lightning_map.h
-        src/rendering/renderer_lightning_map.c
+        src/rendering/light_map/light_map.h
+        src/rendering/light_map/light_map.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3)
