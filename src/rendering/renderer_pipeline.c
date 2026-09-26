@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <SDL3/SDL.h>
 #include "../logging/logger.h"
+#include "../utils/action.h"
+#include "renderer_lightning_map.h"
 
 
 #define DRAW_CALLS_BUFFER_SIZE (1 << 14)
@@ -15,31 +17,36 @@
 
 
 struct renderer_pipeline {
-    struct SDL_Renderer *native_renderer;
+    SDL_Renderer *native_renderer;
 
     struct rect viewport;
     bool viewport_enabled;
-    int presentation_width;
-    int presentation_height;
 
     struct renderer_pipeline_draw_call draw_calls[DRAW_CALLS_BUFFER_SIZE];
     struct renderer_pipeline_draw_call sorted_draw_calls[DRAW_CALLS_BUFFER_SIZE];
     int draw_calls_count;
+
+    struct action* on_viewpoint_resize;
+    struct action* on_post_process;
+
+    struct renderer_lightning_map *lightning_map;
 };
 
 
-struct renderer_pipeline* renderer_pipeline_create(struct SDL_Renderer *native_renderer) {
+struct renderer_pipeline* renderer_pipeline_create(SDL_Renderer *native_renderer) {
     logger_info("Renderer pipeline is creating...");
-    struct renderer_pipeline *this = malloc(sizeof(struct renderer_pipeline));
+    struct renderer_pipeline *this = calloc(1, sizeof(struct renderer_pipeline));
     this->native_renderer = native_renderer;
-    this->viewport_enabled = false;
-    this->presentation_width = 0;
-    this->presentation_height = 0;
-    this->draw_calls_count = 0;
+    this->on_viewpoint_resize = action_create();
+    this->on_post_process = action_create();
+    renderer_lightning_map_create(this);
     return this;
 }
 void renderer_pipeline_destroy(struct renderer_pipeline *this) {
     logger_info("Renderer pipeline is destroying...");
+    renderer_lightning_map_destroy(this->lightning_map);
+    action_destroy(this->on_viewpoint_resize);
+    action_destroy(this->on_post_process);
     free(this);
 }
 
@@ -79,8 +86,12 @@ static void renderer_pipeline_sort_draw_calls(struct renderer_pipeline *this) {
 static void renderer_pipeline_update_viewport_resolution(struct renderer_pipeline *this) {
     int native_renderer_w, native_renderer_h;
     SDL_GetRenderOutputSize(this->native_renderer, &native_renderer_w, &native_renderer_h);
+    if (this->viewport.size.x == native_renderer_w && this->viewport.size.y == native_renderer_h) {
+        return;
+    }
     this->viewport.size.x = native_renderer_w;
     this->viewport.size.y = native_renderer_h;
+    action_invoke(this->on_viewpoint_resize, &this->viewport.size);
 }
 
 void renderer_pipeline_flush(struct renderer_pipeline *this) {
@@ -98,5 +109,17 @@ void renderer_pipeline_flush(struct renderer_pipeline *this) {
     }
 
     this->draw_calls_count = 0;
-    renderer_pipeline_remove_viewport(this);
+
+    action_invoke(this->on_post_process, NULL);
+}
+
+SDL_Renderer* renderer_pipeline_get_native_renderer(const struct renderer_pipeline *this) {
+    return this->native_renderer;
+}
+
+struct action* renderer_pipeline_on_viewpoint_resize(const struct renderer_pipeline *this) {
+    return this->on_viewpoint_resize;
+}
+struct action* renderer_pipeline_on_post_process(const struct renderer_pipeline *this) {
+    return this->on_post_process;
 }
