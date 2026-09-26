@@ -16,6 +16,7 @@
 #include "../logging/logger.h"
 #include "scene/interpreter_scene.h"
 #include "../subsystems/subsystem_internal.h"
+#include "core/interpreter_ignore.h"
 
 
 struct interpreter {
@@ -44,6 +45,7 @@ struct subsystem* interpreter_create(const struct subsystem_collection* subsyste
 
     interpreter->command_register = interpreter_command_register_create("Main", 5);
     interpreter_command_register_capture_command(interpreter->command_register, interpreter_print_as_interpreter_command(interpreter_print_create()));
+    interpreter_command_register_capture_command(interpreter->command_register, interpreter_ignore_as_interpreter_command(interpreter_ignore_create()));
     interpreter_command_register_capture_command(interpreter->command_register, interpreter_renderer_layer_manager_create());
     interpreter_command_register_capture_command(interpreter->command_register, interpreter_window_create());
     interpreter_command_register_capture_command(interpreter->command_register, interpreter_scene_create());

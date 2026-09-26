@@ -158,6 +158,8 @@ add_executable(MyCoolGameEngine main.c
         src/scene/components/rendering/box_light.c
         src/scene/components/rendering/renderer_settings.h
         src/scene/components/rendering/renderer_settings.c
+        src/interpreter/core/interpreter_ignore.h
+        src/interpreter/core/interpreter_ignore.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3)

@@ -47,5 +47,3 @@ scene new_entity Settings
 transform 0 0 1 1 0 0 1 1
 renderer_settings 0 0 1 1 20 20 20 100
 end
-
-print DemoSceneEnded!
