@@ -19,6 +19,7 @@
 #include "demo/printer.h"
 #include "demo/suicidal.h"
 #include "rendering/box_light.h"
+#include "rendering/renderer_settings.h"
 
 struct component_fabric {
     struct dictionary* types;
@@ -37,6 +38,7 @@ static void component_fabric_register_all(const struct component_fabric *this) {
     component_fabric_register_component(this, transform_component_key(), transform_create);
     component_fabric_register_component(this, idle_component_key(), idle_create);
     component_fabric_register_component(this, camera_component_key(), camera_create);
+    component_fabric_register_component(this, renderer_settings_component_key(), renderer_settings_create);
     component_fabric_register_component(this, box_renderer_component_key(), box_renderer_create);
     component_fabric_register_component(this, box_light_component_key(), box_light_create);
     component_fabric_register_component(this, controller_component_key(), controller_create);
