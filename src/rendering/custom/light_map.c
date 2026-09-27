@@ -16,6 +16,8 @@
 struct light_map {
     struct renderer_primitive base;
 
+    bool enabled;
+
     struct color darkness_color;
     SDL_Texture *darkness_mask;
     SDL_BlendMode light_source_blend_mode;
@@ -38,6 +40,7 @@ struct renderer_primitive* light_map_create() {
     this->base.vtable = &light_map_vtable;
 
     light_map_reset(this);
+
     this->light_source_blend_mode = SDL_ComposeCustomBlendMode(
        SDL_BLENDFACTOR_ZERO,
        SDL_BLENDFACTOR_ONE,
@@ -81,6 +84,9 @@ static void light_map_sync_darkness_size(struct light_map* this, SDL_Renderer *n
 }
 
 void light_map_draw_primitive(struct light_map* this, const struct light_map_draw_call draw_call) {
+    if (!this->enabled) {
+        return;
+    }
     if (this->draw_calls_count >= DRAW_CALLS_BUFFER_SIZE) {
         logger_warn("Light map buffer size overflow");
         return;
@@ -90,6 +96,9 @@ void light_map_draw_primitive(struct light_map* this, const struct light_map_dra
 
 static void light_map_draw(struct renderer_primitive* base, const struct rect rect, const struct rect viewport, SDL_Renderer* native_renderer) {
     struct light_map* this = (struct light_map*)base;
+    if (!this->enabled) {
+        return;
+    }
 
     light_map_sync_darkness_size(this, native_renderer);
 
@@ -119,6 +128,7 @@ static void light_map_draw(struct renderer_primitive* base, const struct rect re
 
 void light_map_reset(struct light_map* this) {
     light_map_reset_darkness_color(this);
+    light_map_reset_enable(this);
 }
 
 void light_map_set_darkness_color(struct light_map* this, const struct color color) {
@@ -131,4 +141,16 @@ void light_map_reset_darkness_color(struct light_map* this) {
         .b = 20,
         .a = 100
     };
+}
+
+void light_map_set_enable(struct light_map* this, const bool value) {
+    if (this->enabled && !value) {
+        if (this->darkness_mask != NULL) {
+            SDL_DestroyTexture(this->darkness_mask);
+        }
+    }
+    this->enabled = value;
+}
+void light_map_reset_enable(struct light_map* this) {
+    light_map_set_enable(this, true);
 }

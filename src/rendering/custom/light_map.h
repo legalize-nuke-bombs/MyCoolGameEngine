@@ -5,6 +5,8 @@
 #ifndef MYCOOLGAMEENGINE_LIGHT_MAP_H
 #define MYCOOLGAMEENGINE_LIGHT_MAP_H
 
+#include <stdbool.h>
+
 #include "../../utils/rect.h"
 #include "../../utils/color.h"
 
@@ -25,5 +27,8 @@ void light_map_reset(struct light_map* this);
 
 void light_map_set_darkness_color(struct light_map* this, struct color color);
 void light_map_reset_darkness_color(struct light_map* this);
+
+void light_map_set_enable(struct light_map* this, bool value);
+void light_map_reset_enable(struct light_map* this);
 
 #endif //MYCOOLGAMEENGINE_LIGHT_MAP_H
