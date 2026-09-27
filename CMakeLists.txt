@@ -165,6 +165,7 @@ add_executable(MyCoolGameEngine main.c
         src/rendering/textures/texture_manager.c
         src/rendering/textures/texture.h
         src/rendering/textures/texture.c
+        src/rendering/textures/texture_loading_mode.h
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3)

@@ -13,6 +13,7 @@
 #include "layers/renderer_layer_manager.h"
 #include "../subsystems/subsystem_internal.h"
 #include "renderer_pipeline.h"
+#include "textures/texture_manager.h"
 
 
 struct renderer {
@@ -21,6 +22,7 @@ struct renderer {
     SDL_Window *window;
     SDL_Renderer *native;
     struct renderer_layer_manager *layer_manager;
+    struct texture_manager *texture_manager;
     struct renderer_pipeline *pipeline;
 
     struct action* on_rendering;
@@ -60,6 +62,7 @@ struct subsystem* renderer_create(const struct subsystem_collection* subsystems)
         return NULL;
     }
     this->layer_manager = renderer_layer_manager_create();
+    this->texture_manager = texture_manager_create();
     this->pipeline = renderer_pipeline_create(this->native);
 
     return base;
@@ -68,6 +71,7 @@ void renderer_on_destroy(struct subsystem* base) {
     const struct renderer* this = (struct renderer*)base;
 
     renderer_pipeline_destroy(this->pipeline);
+    texture_manager_destroy(this->texture_manager);
     renderer_layer_manager_destroy(this->layer_manager);
     SDL_DestroyRenderer(this->native);
     SDL_DestroyWindow(this->window);
@@ -92,6 +96,7 @@ void renderer_on_disable(struct subsystem* base) {
     action_unsubscribe(this->on_rendering, this->on_rendering_subscription_token);
     this->on_rendering = NULL;
     renderer_layer_manager_clear(this->layer_manager);
+    texture_manager_clear(this->texture_manager);
 }
 
 struct renderer_pipeline* renderer_get_pipeline(const struct renderer* this) {
@@ -99,4 +104,7 @@ struct renderer_pipeline* renderer_get_pipeline(const struct renderer* this) {
 }
 struct renderer_layer_manager* renderer_get_layer_manager(const struct renderer* this) {
     return this->layer_manager;
+}
+struct texture_manager* renderer_get_texture_manager(const struct renderer* this) {
+    return this->texture_manager;
 }

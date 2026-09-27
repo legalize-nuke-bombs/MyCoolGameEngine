@@ -12,5 +12,6 @@ struct subsystem* renderer_create(const struct subsystem_collection* subsystems)
 
 struct renderer_pipeline* renderer_get_pipeline(const struct renderer* this);
 struct renderer_layer_manager* renderer_get_layer_manager(const struct renderer* this);
+struct texture_manager* renderer_get_texture_manager(const struct renderer* this);
 
 #endif //MYCOOLGAMEENGINE_RENDERER_H
