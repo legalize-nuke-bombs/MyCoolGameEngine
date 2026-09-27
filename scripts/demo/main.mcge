@@ -5,7 +5,7 @@ renderer_layer_manager new_layer prop1 10
 renderer_layer_manager new_layer character1 20
 renderer_layer_manager new_layer character1_2 21
 
-texture_manager new_texture cube ../textures/demo/cube.png lazy 10
+texture_manager new_texture cube ../textures/demo/cube.png lazy 1
 
 scene new_entity Terrain
 transform default 0 0 1000000 1000000

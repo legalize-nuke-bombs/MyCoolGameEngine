@@ -6,12 +6,16 @@
 #define MYCOOLGAMEENGINE_RECT_H
 
 
+#include <stdbool.h>
+
 #include "vector2.h"
 
 struct rect {
     struct vector2 position;
     struct vector2 size;
 };
+
+bool rects_intersection(struct rect rect1, struct rect rect2);
 
 extern const struct rect rect_0;
 

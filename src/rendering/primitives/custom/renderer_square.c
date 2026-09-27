@@ -19,6 +19,10 @@ struct renderer_square {
 static void renderer_square_draw(struct renderer_primitive* base, const struct rect rect, const struct rect viewport, SDL_Renderer* renderer) {
     const struct renderer_square* this = (struct renderer_square*)base;
 
+    if (!rects_intersection(rect, viewport)) {
+        return;
+    }
+
     const struct rect target_rect = rect_sdl(&rect, &viewport);
     const SDL_FRect sdl_target_rect = {
         .x = target_rect.position.x,
