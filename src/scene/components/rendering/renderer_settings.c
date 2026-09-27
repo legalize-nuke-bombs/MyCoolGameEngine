@@ -15,7 +15,7 @@
 #include "../../../rendering/renderer_pipeline.h"
 #include "../../../utils/parser.h"
 #include "../../../utils/color.h"
-#include "../../../rendering/custom/light_map.h"
+#include "../../../rendering/primitives/custom/light_map.h"
 
 
 struct renderer_settings {

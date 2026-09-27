@@ -76,12 +76,12 @@ add_executable(MyCoolGameEngine main.c
         src/rendering/renderer_pipeline.h
         src/rendering/renderer_pipeline.c
         src/utils/rect.h
-        src/rendering/renderer_primitive.h
-        src/rendering/renderer_layer.h
-        src/rendering/renderer_primitive_internal.h
-        src/rendering/renderer_primitive.c
-        src/rendering/custom/renderer_square.h
-        src/rendering/custom/renderer_square.c
+        src/rendering/primitives/renderer_primitive.h
+        src/rendering/layers/renderer_layer.h
+        src/rendering/primitives/renderer_primitive_internal.h
+        src/rendering/primitives/renderer_primitive.c
+        src/rendering/primitives/custom/renderer_square.h
+        src/rendering/primitives/custom/renderer_square.c
         src/utils/rect_math.h
         src/utils/rect_math.c
         src/scene/components/rendering/box_renderer.h
@@ -105,9 +105,9 @@ add_executable(MyCoolGameEngine main.c
         src/interpreter/window/interpreter_window.h
         src/interpreter/window/interpreter_window.c
         src/logging/ansi.h
-        src/rendering/renderer_layer_manager.h
-        src/rendering/renderer_layer_manager.c
-        src/rendering/renderer_layer.c
+        src/rendering/layers/renderer_layer_manager.h
+        src/rendering/layers/renderer_layer_manager.c
+        src/rendering/layers/renderer_layer.c
         src/interpreter/renderer_layer_manager/interpreter_renderer_layer_manager.h
         src/interpreter/renderer_layer_manager/interpreter_renderer_layer_manager.c
         src/interpreter/renderer_layer_manager/interpreter_renderer_layer_manager_new_layer.h
@@ -158,9 +158,13 @@ add_executable(MyCoolGameEngine main.c
         src/scene/components/rendering/renderer_settings.c
         src/interpreter/core/interpreter_ignore.h
         src/interpreter/core/interpreter_ignore.c
-        src/rendering/custom/light_map.h
-        src/rendering/custom/light_map.c
+        src/rendering/primitives/custom/light_map.h
+        src/rendering/primitives/custom/light_map.c
         src/utils/rect.c
+        src/rendering/textures/texture_manager.h
+        src/rendering/textures/texture_manager.c
+        src/rendering/textures/texture.h
+        src/rendering/textures/texture.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3)

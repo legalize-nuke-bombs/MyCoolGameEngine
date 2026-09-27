@@ -6,7 +6,7 @@
 
 #include <stdlib.h>
 #include <SDL3/SDL.h>
-#include "../../logging/logger.h"
+#include "../../../logging/logger.h"
 #include "../renderer_primitive_internal.h"
 
 

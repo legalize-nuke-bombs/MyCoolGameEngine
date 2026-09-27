@@ -8,11 +8,11 @@
 
 #include "../component_internal.h"
 #include "../../../rendering/renderer_pipeline.h"
-#include "../../../rendering/custom/renderer_square.h"
+#include "../../../rendering/primitives/custom/renderer_square.h"
 #include "../../entity.h"
 #include "../../scene.h"
 #include "../../../rendering/renderer.h"
-#include "../../../rendering/renderer_layer_manager.h"
+#include "../../../rendering/layers/renderer_layer_manager.h"
 #include "../../../utils/parser.h"
 #include "../../../subsystems/subsystem_collection.h"
 

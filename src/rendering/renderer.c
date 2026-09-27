@@ -10,7 +10,7 @@
 #include "../utils/action.h"
 #include <SDL3/SDL.h>
 #include "../logging/logger.h"
-#include "renderer_layer_manager.h"
+#include "layers/renderer_layer_manager.h"
 #include "../subsystems/subsystem_internal.h"
 #include "renderer_pipeline.h"
 

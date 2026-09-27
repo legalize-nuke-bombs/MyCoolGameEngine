@@ -3,8 +3,8 @@
 //
 #include "renderer_square.h"
 #include "../renderer_primitive_internal.h"
-#include "../../utils/rect_math.h"
-#include "../../utils/vector2_math.h"
+#include "../../../utils/rect_math.h"
+#include "../../../utils/vector2_math.h"
 #include <stdlib.h>
 #include <SDL3/SDL.h>
 

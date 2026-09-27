@@ -7,8 +7,8 @@
 
 #include <stdbool.h>
 
-#include "../../utils/rect.h"
-#include "../../utils/color.h"
+#include "../../../utils/rect.h"
+#include "../../../utils/color.h"
 
 
 struct light_map;

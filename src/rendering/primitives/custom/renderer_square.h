@@ -5,7 +5,7 @@
 #ifndef MYCOOLGAMEENGINE_RENDERER_SQUARE_H
 #define MYCOOLGAMEENGINE_RENDERER_SQUARE_H
 
-#include "../../utils/color.h"
+#include "../../../utils/color.h"
 
 struct renderer_square;
 struct SDL_Texture;

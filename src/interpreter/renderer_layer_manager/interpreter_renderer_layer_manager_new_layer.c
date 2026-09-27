@@ -10,7 +10,7 @@
 #include "../interpreter_command_internal.h"
 #include "../../rendering/renderer.h"
 #include "../../utils/parser.h"
-#include "../../rendering/renderer_layer_manager.h"
+#include "../../rendering/layers/renderer_layer_manager.h"
 #include "../../subsystems/subsystem_collection.h"
 
 struct interpreter_renderer_layer_manager_new_layer {

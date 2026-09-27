@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <SDL3/SDL.h>
 #include "../logging/logger.h"
-#include "custom/light_map.h"
+#include "primitives/custom/light_map.h"
 
 
 #define DRAW_CALLS_BUFFER_SIZE (1 << 14)

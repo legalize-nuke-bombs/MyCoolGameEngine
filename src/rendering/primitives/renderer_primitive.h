@@ -5,7 +5,7 @@
 #ifndef MYCOOLGAMEENGINE_RENDERER_PRIMITIVE_H
 #define MYCOOLGAMEENGINE_RENDERER_PRIMITIVE_H
 
-#include "../utils/rect.h"
+#include "../../utils/rect.h"
 
 struct SDL_Renderer;
 struct renderer_primitive;

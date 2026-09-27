@@ -8,12 +8,12 @@
 
 #include "../component_internal.h"
 #include "../../../rendering/renderer_pipeline.h"
-#include "../../../rendering/custom/renderer_square.h"
+#include "../../../rendering/primitives/custom/renderer_square.h"
 #include "../../entity.h"
 #include "../../scene.h"
 #include "../../../rendering/renderer.h"
 #include "../../../subsystems/subsystem_collection.h"
-#include "../../../rendering/custom/light_map.h"
+#include "../../../rendering/primitives/custom/light_map.h"
 
 struct box_light {
     struct component base;

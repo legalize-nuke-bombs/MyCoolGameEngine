@@ -6,9 +6,9 @@
 
 #include <stdlib.h>
 
-#include "../logging/logger.h"
-#include "../utils/dictionary.h"
-#include "../utils/string_dictionary.h"
+#include "../../logging/logger.h"
+#include "../../utils/dictionary.h"
+#include "../../utils/string_dictionary.h"
 
 
 struct renderer_layer_manager {
