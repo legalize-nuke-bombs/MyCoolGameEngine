@@ -1,6 +1,7 @@
 print DemoSceneLaunched!
 
 renderer_layer_manager new_layer bg1 1
+renderer_layer_manager new_layer prop1 10
 renderer_layer_manager new_layer character1 20
 renderer_layer_manager new_layer character1_2 21
 
@@ -14,14 +15,24 @@ transform 0 0 1 1 0 0 50 50
 box_renderer 0 0 1 1 character1 38 58 132 255
 box_renderer -0.2 0.2 0.1 0.2 character1_2 18 20 26 255
 box_renderer 0.2 0.2 0.1 0.2 character1_2 18 20 26 255
-box_light 0 0 4 4
-controller 0 0 1 1 250
-keyboard_controller 0 0 1 1
 end
 
 scene new_entity CameraRig
 transform 0 0 1 1 0 0 1 1
 camera 0 0 1 1
+controller 0 0 1 1 250
+keyboard_controller 0 0 1 1
+end
+
+scene new_entity Box
+transform 0 0 1 1 200 0 100 100
+box_renderer 0 0 1 1 prop1 0 0 0 255
+end
+
+scene new_entity Torch
+transform 0 0 1 1 0 200 10 10
+box_renderer 0 0 1 1 prop1 175 175 255 255
+box_light 0 0 10 10
 end
 
 scene new_entity Settings
