@@ -16,6 +16,7 @@ struct texture {
     char* path;
 
     bool loading_failed;
+    bool used;
 
     double unload_timer;
     double unload_interval;
@@ -53,7 +54,7 @@ const char* texture_get_id(const struct texture* this) {
     return this->id;
 }
 SDL_Texture* texture_get_native_texture(struct texture* this) {
-    this->unload_timer = 0;
+    this->used = true;
     if (this->native_texture != NULL) {
         return this->native_texture;
     }
@@ -77,14 +78,19 @@ static void texture_load(struct texture* this) {
     }
 }
 
-void texture_update(struct texture *this, const double dt) {
+void texture_update(struct texture *this, const double elapsed) {
     if (this->native_texture == NULL) {
         return;
     }
     if (this->unload_interval < 0) {
         return;
     }
-    this->unload_timer += dt;
+    if (this->used) {
+        this->used = false;
+        this->unload_timer = 0;
+        return;
+    }
+    this->unload_timer += elapsed;
     if (this->unload_timer >= this->unload_interval) {
         logger_debug("Texture %s will be unloaded because it was not used in %f seconds", this->id, this->unload_interval);
         this->unload_timer = 0;

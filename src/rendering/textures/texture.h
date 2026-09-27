@@ -16,6 +16,6 @@ void texture_destroy(struct texture* this);
 const char* texture_get_id(const struct texture* this);
 struct SDL_Texture* texture_get_native_texture(struct texture* this);
 
-void texture_update(struct texture* this, double dt);
+void texture_update(struct texture* this, double elapsed);
 
 #endif //MYCOOLGAMEENGINE_TEXTURE_H

@@ -44,6 +44,7 @@ void texture_manager_capture(const struct texture_manager* this, struct texture*
     }
     else {
         logger_warn("Texture manager failed to capture %s", texture_get_id(texture));
+        texture_destroy(texture);
     }
 }
 
@@ -63,10 +64,12 @@ void texture_manager_clear(const struct texture_manager* this) {
 
 void texture_manager_update(struct texture_manager* this, const double dt) {
     this->texture_update_timer += dt;
-    if (this->texture_update_timer >= TEXTURE_UPDATE_INTERVAL) {
-        for (int i = 0; i < list_count(this->list); i++) {
-            struct texture* texture = list_get(this->list, i);
-            texture_update(texture, dt);
-        }
+    if (this->texture_update_timer < TEXTURE_UPDATE_INTERVAL) {
+        return;
     }
+    for (int i = 0; i < list_count(this->list); i++) {
+        struct texture* texture = list_get(this->list, i);
+        texture_update(texture, this->texture_update_timer);
+    }
+    this->texture_update_timer = 0;
 }
