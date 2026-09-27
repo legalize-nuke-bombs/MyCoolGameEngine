@@ -79,6 +79,7 @@ struct component* box_renderer_create(struct parser *parser, struct entity *pare
     }
     else {
         logger_warn("Box renderer unexpected type token `%s`", type);
+        this->square = renderer_square_create_from_color(color_black);
     }
 
 
