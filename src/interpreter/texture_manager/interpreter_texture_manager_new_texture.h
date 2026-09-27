@@ -1,0 +1,10 @@
+//
+// Created by Nikita on 27.09.2026.
+//
+
+#ifndef MYCOOLGAMEENGINE_INTERPRETER_TEXTURE_MANAGER_NEW_TEXTURE_H
+#define MYCOOLGAMEENGINE_INTERPRETER_TEXTURE_MANAGER_NEW_TEXTURE_H
+
+struct interpreter_command* interpreter_texture_manager_new_texture_create();
+
+#endif //MYCOOLGAMEENGINE_INTERPRETER_TEXTURE_MANAGER_NEW_TEXTURE_H
