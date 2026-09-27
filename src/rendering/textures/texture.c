@@ -49,10 +49,10 @@ const char* texture_get_id(const struct texture* this) {
     return this->id;
 }
 SDL_Texture* texture_get_native_texture(struct texture* this) {
+    this->unload_timer = 0;
     if (this->native_texture != NULL) {
         return this->native_texture;
     }
-    this->unload_timer = 0;
     texture_load(this);
     return this->native_texture;
 }
