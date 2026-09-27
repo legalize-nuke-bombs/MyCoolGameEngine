@@ -15,4 +15,6 @@ void texture_manager_capture(const struct texture_manager* this, struct texture*
 
 void texture_manager_clear(const struct texture_manager* this);
 
+void texture_manager_update(struct texture_manager* this, double dt);
+
 #endif //MYCOOLGAMEENGINE_TEXTURE_MANAGER_H

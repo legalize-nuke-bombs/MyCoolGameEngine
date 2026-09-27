@@ -14,6 +14,7 @@
 #include "../subsystems/subsystem_internal.h"
 #include "renderer_pipeline.h"
 #include "textures/texture_manager.h"
+#include "../engine/update_context.h"
 
 
 struct renderer {
@@ -78,8 +79,10 @@ void renderer_on_destroy(struct subsystem* base) {
     SDL_Quit();
 }
 
-static void renderer_render(void *listener, void *context) {
+static void renderer_update(void *listener, void *context) {
     const struct renderer* this = listener;
+    struct update_context* update_context = (struct update_context*)context;
+    texture_manager_update(this->texture_manager, update_context->dt);
     SDL_SetRenderDrawColor(this->native, 0, 0, 0, 255);
     SDL_RenderClear(this->native);
     renderer_pipeline_flush(this->pipeline);
@@ -89,7 +92,7 @@ static void renderer_render(void *listener, void *context) {
 void renderer_on_enable(struct subsystem* base, struct engine_arguments args) {
     struct renderer* this = (struct renderer*)base;
     this->on_rendering = engine_events_on_rendering((struct engine_events*)subsystem_get_subsystem(base, "engine_events"));
-    action_subscribe(this->on_rendering, this, renderer_render, &this->on_rendering_subscription_token);
+    action_subscribe(this->on_rendering, this, renderer_update, &this->on_rendering_subscription_token);
 }
 void renderer_on_disable(struct subsystem* base) {
     struct renderer* this = (struct renderer*)base;
