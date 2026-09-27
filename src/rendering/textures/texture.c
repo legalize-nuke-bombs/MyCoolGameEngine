@@ -13,8 +13,12 @@
 struct texture {
     char* id;
     char* path;
+
+    bool loading_failed;
+
     double unload_timer;
     double unload_interval;
+
     SDL_Texture* native_texture;
 };
 
@@ -57,12 +61,18 @@ static void texture_load(const struct texture* this) {
     if (this->native_texture != NULL) {
         return;
     }
+    if (this->loading_failed) {
+        return;
+    }
     logger_debug("Texture %s is loading from %s...", this->id, this->path);
     // TODO
 }
 
 void texture_update(struct texture *this, double dt) {
     if (this->native_texture == NULL) {
+        return;
+    }
+    if (this->unload_interval < 0) {
         return;
     }
     this->unload_timer += dt;
