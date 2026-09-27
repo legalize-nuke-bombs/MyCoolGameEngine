@@ -144,10 +144,9 @@ void light_map_reset_darkness_color(struct light_map* this) {
 }
 
 void light_map_set_enable(struct light_map* this, const bool value) {
-    if (this->enabled && !value) {
-        if (this->darkness_mask != NULL) {
-            SDL_DestroyTexture(this->darkness_mask);
-        }
+    if (this->enabled && !value && this->darkness_mask != NULL) {
+        SDL_DestroyTexture(this->darkness_mask);
+        this->darkness_mask = NULL;
     }
     this->enabled = value;
 }
