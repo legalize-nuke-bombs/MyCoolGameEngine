@@ -8,8 +8,9 @@
 #include "texture_loading_mode.h"
 
 struct texture;
+struct SDL_Renderer;
 
-struct texture* texture_create(char* id, char* path, enum texture_loading_mode loading_mode, double unload_interval);
+struct texture* texture_create(char* id, char* path, enum texture_loading_mode loading_mode, double unload_interval, struct SDL_Renderer* native_renderer);
 void texture_destroy(struct texture* this);
 
 const char* texture_get_id(const struct texture* this);

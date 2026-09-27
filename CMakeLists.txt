@@ -34,7 +34,26 @@ set(SDL_SENSOR OFF)
 set(SDL_POWER OFF)
 set(SDL_DIALOG OFF)
 set(SDL_TRAY OFF)
-FetchContent_MakeAvailable(SDL3)
+
+set(BUILD_SHARED_LIBS OFF)
+set(SDL3_image_VENDORED OFF)
+set(SDL3_image_AVIF OFF)
+set(SDL3_image_JXL OFF)
+set(SDL3_image_TIF OFF)
+set(SDL3_image_WEBP OFF)
+set(SDL3_image_SAMPLES OFF)
+set(SDL3_image_TESTS OFF)
+
+FetchContent_Declare(
+        SDL3_image
+        GIT_REPOSITORY https://github.com/libsdl-org/SDL_image.git
+        GIT_TAG release-3.4.6
+        GIT_SHALLOW TRUE
+        EXCLUDE_FROM_ALL
+        SYSTEM
+)
+
+FetchContent_MakeAvailable(SDL3 SDL3_image)
 
 add_executable(MyCoolGameEngine main.c
         src/scene/entity.h
@@ -172,7 +191,7 @@ add_executable(MyCoolGameEngine main.c
         src/interpreter/texture_manager/interpreter_texture_manager_new_texture.c
 )
 
-target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3)
+target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)
 target_link_options(MyCoolGameEngine PRIVATE $<$<CONFIG:Release>:-s -Wl,--gc-sections>)
 
 include(CheckIPOSupported)

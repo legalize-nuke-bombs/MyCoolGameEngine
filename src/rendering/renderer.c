@@ -102,6 +102,9 @@ void renderer_on_disable(struct subsystem* base) {
     texture_manager_clear(this->texture_manager);
 }
 
+SDL_Renderer* renderer_get_native_renderer(const struct renderer* this) {
+    return this->native;
+}
 struct renderer_pipeline* renderer_get_pipeline(const struct renderer* this) {
     return this->pipeline;
 }

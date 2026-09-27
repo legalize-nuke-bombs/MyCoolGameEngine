@@ -24,28 +24,34 @@ static const char* interpreter_texture_manager_new_texture_get_key(const struct 
 }
 
 static void interpreter_texture_manager_new_texture_execute(const struct interpreter_command *this, struct parser *parser, const struct subsystem_collection *subsystems) {
+    const struct renderer* renderer = (struct renderer*)subsystem_collection_get(subsystems, "renderer");
+    struct SDL_Renderer* native_renderer = renderer_get_native_renderer(renderer);
+    const struct texture_manager *manager = renderer_get_texture_manager(renderer);
+
     char* texture_id = parser_next_dup(parser);
     char* texture_path = parser_next_dup(parser);
     char* texture_loading_mode = parser_next_dup(parser);
     double texture_unload_interval;
     parser_next_double(parser, &texture_unload_interval);
 
-    struct texture* texture;
+    enum texture_loading_mode texture_loading_mode_enum;
     if (strcmp(texture_loading_mode, "eager") == 0) {
-        texture = texture_create(texture_id, texture_path, texture_loading_mode_eager, texture_unload_interval);
+        texture_loading_mode_enum = texture_loading_mode_eager;
     }
     else if (strcmp(texture_loading_mode, "lazy") == 0) {
-        texture = texture_create(texture_id, texture_path, texture_loading_mode_lazy, texture_unload_interval);
+        texture_loading_mode_enum = texture_loading_mode_lazy;
     }
     else {
         logger_warn("Unexpected texture loading mode `%s`, `lazy` will be used instead", texture_loading_mode);
-        texture = texture_create(texture_id, texture_path, texture_loading_mode_lazy, texture_unload_interval);
+        texture_loading_mode_enum = texture_loading_mode_lazy;
+
     }
 
     free(texture_loading_mode);
 
-    const struct texture_manager *manager = renderer_get_texture_manager((struct renderer*)subsystem_collection_get(subsystems, "renderer"));
-    texture_manager_capture(manager, texture);
+    texture_manager_capture(manager,
+            texture_create(texture_id, texture_path, texture_loading_mode_enum, texture_unload_interval, native_renderer)
+    );
 }
 
 static const struct interpreter_command_vtable texture_manager_new_texture_vtable = {
