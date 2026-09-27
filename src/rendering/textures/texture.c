@@ -48,6 +48,7 @@ SDL_Texture* texture_get_native_texture(struct texture* this) {
     if (this->native_texture != NULL) {
         return this->native_texture;
     }
+    this->unload_timer = 0;
     texture_load(this);
     return this->native_texture;
 }
