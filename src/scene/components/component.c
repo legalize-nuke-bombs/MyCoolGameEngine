@@ -1,6 +1,7 @@
 #include "component_internal.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 #include "../entity.h"
 #include "../../logging/logger.h"
@@ -13,10 +14,21 @@ void component_create(struct component *this, const struct component_vtable *vta
     logger_debug("Component %s is creating...", component_get_key(this));
     this->awake = false;
     this->alive = true;
-    parser_next_double(parser, &this->local_position.x);
-    parser_next_double(parser, &this->local_position.y);
-    parser_next_double(parser, &this->local_scale.x);
-    parser_next_double(parser, &this->local_scale.y);
+
+    const char* word = parser_next(parser);
+    if (strcmp(word, "default") == 0) {
+        this->local_position = vector2_zero;
+        this->local_scale = vector2_one;
+    }
+    else if (strcmp(word, "custom") == 0) {
+        parser_next_double(parser, &this->local_position.x);
+        parser_next_double(parser, &this->local_position.y);
+        parser_next_double(parser, &this->local_scale.x);
+        parser_next_double(parser, &this->local_scale.y);
+    }
+    else {
+        logger_warn("Unexpected component local transform start token `%s`", word);
+    }
     this->parent = parent;
 }
 void component_awake(struct component *this) {

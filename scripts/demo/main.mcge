@@ -6,36 +6,36 @@ renderer_layer_manager new_layer character1 20
 renderer_layer_manager new_layer character1_2 21
 
 scene new_entity Terrain
-transform 0 0 1 1 0 0 1000000 1000000
-box_renderer 0 0 1 1 bg1 54 78 62 255
+transform default 0 0 1000000 1000000
+box_renderer default bg1 54 78 62 255
 end
 
 scene new_entity Cube
-transform 0 0 1 1 0 0 50 50
-box_renderer 0 0 1 1 character1 38 58 132 255
-box_renderer -0.2 0.2 0.1 0.2 character1_2 18 20 26 255
-box_renderer 0.2 0.2 0.1 0.2 character1_2 18 20 26 255
+transform default 0 0 50 50
+box_renderer default character1 38 58 132 255
+box_renderer custom -0.2 0.2 0.1 0.2 character1_2 18 20 26 255
+box_renderer custom 0.2 0.2 0.1 0.2 character1_2 18 20 26 255
 end
 
 scene new_entity CameraRig
-transform 0 0 1 1 0 0 1 1
-camera 0 0 1 1
-controller 0 0 1 1 250
-keyboard_controller 0 0 1 1
+transform default 0 0 1 1
+camera default
+controller default 250
+keyboard_controller default
 end
 
 scene new_entity Box
-transform 0 0 1 1 200 0 100 100
-box_renderer 0 0 1 1 prop1 0 0 0 255
+transform default 200 0 100 100
+box_renderer default prop1 0 0 0 255
 end
 
 scene new_entity Torch
-transform 0 0 1 1 0 200 10 10
-box_renderer 0 0 1 1 prop1 175 175 255 255
-box_light 0 0 10 10
+transform default 0 200 10 10
+box_renderer default prop1 175 175 255 255
+box_light custom 0 0 10 10
 end
 
 scene new_entity Settings
-transform 0 0 1 1 0 0 1 1
-renderer_settings 0 0 1 1 1 20 20 20 100
+transform default 0 0 1 1
+renderer_settings default 1 20 20 20 100
 end
