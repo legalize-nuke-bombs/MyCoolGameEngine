@@ -5,16 +5,16 @@ renderer_layer_manager new_layer prop1 10
 renderer_layer_manager new_layer character1 20
 renderer_layer_manager new_layer character1_2 21
 
+texture_manager new_texture cube ../textures/demo/cube.png lazy 10
+
 scene new_entity Terrain
 transform default 0 0 1000000 1000000
-box_renderer default bg1 54 78 62 255
+box_renderer default bg1 color 54 78 62 255
 end
 
 scene new_entity Cube
 transform default 0 0 50 50
-box_renderer default character1 38 58 132 255
-box_renderer custom -0.2 0.2 0.1 0.2 character1_2 18 20 26 255
-box_renderer custom 0.2 0.2 0.1 0.2 character1_2 18 20 26 255
+box_renderer default character1 texture cube
 end
 
 scene new_entity CameraRig
@@ -26,12 +26,12 @@ end
 
 scene new_entity Box
 transform default 200 0 100 100
-box_renderer default prop1 0 0 0 255
+box_renderer default prop1 color 0 0 0 255
 end
 
 scene new_entity Torch
 transform default 0 200 10 10
-box_renderer default prop1 175 175 255 255
+box_renderer default prop1 color 175 175 255 255
 box_light custom 0 0 10 10
 end
 

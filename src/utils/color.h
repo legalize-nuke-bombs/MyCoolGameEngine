@@ -14,4 +14,6 @@ struct color {
     uint8_t a;
 };
 
+extern const struct color color_black;
+
 #endif //MYCOOLGAMEENGINE_COLOR_H

@@ -9,8 +9,9 @@
 
 struct renderer_square;
 struct SDL_Texture;
+struct texture;
 
 struct renderer_primitive* renderer_square_create_from_color(struct color color);
-struct renderer_primitive* renderer_square_create_from_texture(struct SDL_Texture* texture);
+struct renderer_primitive* renderer_square_create_from_texture(struct texture* texture);
 
 #endif //MYCOOLGAMEENGINE_RENDERER_SQUARE_H

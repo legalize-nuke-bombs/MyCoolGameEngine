@@ -47,6 +47,10 @@ void texture_manager_capture(const struct texture_manager* this, struct texture*
     }
 }
 
+struct texture* texture_manager_try_get_texture(const struct texture_manager* this, const char* texture_id) {
+    return dictionary_get(this->dict, (void*)texture_id);
+}
+
 void texture_manager_clear(const struct texture_manager* this) {
     logger_info("Texture manager is clearing...");
     for (int i = 0; i < list_count(this->list); i++) {

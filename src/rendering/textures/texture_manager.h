@@ -13,6 +13,8 @@ void texture_manager_destroy(struct texture_manager* this);
 
 void texture_manager_capture(const struct texture_manager* this, struct texture* texture);
 
+struct texture* texture_manager_try_get_texture(const struct texture_manager* this, const char* texture_id);
+
 void texture_manager_clear(const struct texture_manager* this);
 
 void texture_manager_update(struct texture_manager* this, double dt);
