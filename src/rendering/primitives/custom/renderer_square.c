@@ -12,8 +12,11 @@
 
 struct renderer_square {
     struct renderer_primitive base;
+
     struct color color;
+
     struct texture* texture;
+    int texture_frame;
 };
 
 static void renderer_square_draw(struct renderer_primitive* base, const struct rect rect, const struct rect viewport, SDL_Renderer* renderer) {
@@ -32,7 +35,9 @@ static void renderer_square_draw(struct renderer_primitive* base, const struct r
     };
 
     if (this->texture) {
-        SDL_RenderTexture(renderer, texture_get_native_texture(this->texture), NULL, &sdl_target_rect);
+        const SDL_FRect src_rect;
+        texture_get_tile_rect(this->texture, this->texture_frame, &src_rect.x, &src_rect.y, &src_rect.w, &src_rect.h);
+        SDL_RenderTexture(renderer, texture_get_native_texture(this->texture), &src_rect, &sdl_target_rect);
     }
     else {
         SDL_SetRenderDrawColor(renderer, this->color.r, this->color.g, this->color.b, this->color.a);
@@ -51,9 +56,10 @@ struct renderer_primitive* renderer_square_create_from_color(const struct color 
     this->color = color;
     return (struct renderer_primitive*)this;
 }
-struct renderer_primitive* renderer_square_create_from_texture(struct texture* texture) {
+struct renderer_primitive* renderer_square_create_from_texture(struct texture* texture, int frame) {
     struct renderer_square* this = calloc(1, sizeof(struct renderer_square));
     this->base.vtable = &renderer_square_vtable;
     this->texture = texture;
+    this->texture_frame = frame;
     return (struct renderer_primitive*)this;
 }

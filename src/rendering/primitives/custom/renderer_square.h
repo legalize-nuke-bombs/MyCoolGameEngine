@@ -12,6 +12,6 @@ struct SDL_Texture;
 struct texture;
 
 struct renderer_primitive* renderer_square_create_from_color(struct color color);
-struct renderer_primitive* renderer_square_create_from_texture(struct texture* texture);
+struct renderer_primitive* renderer_square_create_from_texture(struct texture* texture, int frame);
 
 #endif //MYCOOLGAMEENGINE_RENDERER_SQUARE_H

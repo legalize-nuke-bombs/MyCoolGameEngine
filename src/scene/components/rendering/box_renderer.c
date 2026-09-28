@@ -69,12 +69,14 @@ struct component* box_renderer_create(struct parser *parser, struct entity *pare
         const char* texture_name = parser_next(parser);
         struct renderer* renderer = (struct renderer*)subsystem_collection_get(scene_get_subsystems(entity_get_parent(component_get_parent(base))), "renderer");
         struct texture* texture = texture_manager_try_get_texture(renderer_get_texture_manager(renderer), texture_name);
+        int texture_frame;
+        parser_next_int(parser, &texture_frame);
         if (texture == NULL) {
             logger_warn("Box renderer failed to find specified texture `%s`", texture_name);
             this->square = renderer_square_create_from_color(color_black);
         }
         else {
-            this->square = renderer_square_create_from_texture(texture);
+            this->square = renderer_square_create_from_texture(texture, texture_frame);
         }
     }
     else {

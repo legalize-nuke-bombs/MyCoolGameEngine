@@ -29,6 +29,9 @@ static void interpreter_texture_manager_new_texture_execute(const struct interpr
     const struct texture_manager *manager = renderer_get_texture_manager(renderer);
 
     char* texture_id = parser_next_dup(parser);
+    int texture_tile_w, texture_tile_h;
+    parser_next_int(parser, &texture_tile_w);
+    parser_next_int(parser, &texture_tile_h);
     char* texture_path = parser_next_dup(parser);
     char* texture_loading_mode = parser_next_dup(parser);
     double texture_unload_interval;
@@ -50,7 +53,7 @@ static void interpreter_texture_manager_new_texture_execute(const struct interpr
     free(texture_loading_mode);
 
     texture_manager_capture(manager,
-            texture_create(texture_id, texture_path, texture_loading_mode_enum, texture_unload_interval, native_renderer)
+            texture_create(texture_id, texture_path, texture_tile_w, texture_tile_h, texture_loading_mode_enum, texture_unload_interval, native_renderer)
     );
 }
 
