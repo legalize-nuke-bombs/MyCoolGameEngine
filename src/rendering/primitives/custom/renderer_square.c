@@ -22,10 +22,6 @@ struct renderer_square {
 static void renderer_square_draw(struct renderer_primitive* base, const struct rect rect, const struct rect viewport, SDL_Renderer* renderer) {
     const struct renderer_square* this = (struct renderer_square*)base;
 
-    if (!rects_intersection(rect, viewport)) {
-        return;
-    }
-
     const struct rect target_rect = rect_sdl(&rect, &viewport);
     const SDL_FRect sdl_target_rect = {
         .x = target_rect.position.x,
@@ -50,9 +46,16 @@ static void renderer_square_draw(struct renderer_primitive* base, const struct r
     }
 }
 
+static bool renderer_square_is_visible(struct renderer_primitive* base, const struct rect rect, const struct rect viewport) {
+    const struct renderer_square* this = (struct renderer_square*)base;
+
+    return rects_intersection(rect, viewport);
+}
+
 static const struct rendering_primitive_vtable renderer_square_vtable = {
-    .on_destroy = NULL,
-    .draw = renderer_square_draw
+    .draw = renderer_square_draw,
+    .is_visible = renderer_square_is_visible,
+    .on_destroy = NULL
 };
 
 struct renderer_primitive* renderer_square_create_from_color(const struct color color) {

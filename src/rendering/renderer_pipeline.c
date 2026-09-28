@@ -59,6 +59,9 @@ void renderer_pipeline_draw_primitive(struct renderer_pipeline *this, struct ren
         logger_warn("Rendering pipeline draw calls buffer is full. The frame will be incomplete.");
         return;
     }
+    if (!renderer_primitive_is_visible(draw_call.primitive, draw_call.rect, this->viewport)) {
+        return;
+    }
     this->draw_calls[this->draw_calls_count++] = draw_call;
 }
 

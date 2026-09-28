@@ -26,12 +26,14 @@ struct light_map {
     int draw_calls_count;
 };
 
-static void light_map_on_destroy(struct renderer_primitive* base);
 static void light_map_draw(struct renderer_primitive* base, struct rect rect, struct rect viewport, SDL_Renderer* renderer);
+static bool light_map_is_visible(struct renderer_primitive* base, struct rect rect, struct rect viewport);
+static void light_map_on_destroy(struct renderer_primitive* base);
 
 static const struct rendering_primitive_vtable light_map_vtable = {
-    .on_destroy = light_map_on_destroy,
-    .draw = light_map_draw
+    .draw = light_map_draw,
+    .is_visible = light_map_is_visible,
+    .on_destroy = light_map_on_destroy
 };
 
 struct renderer_primitive* light_map_create() {
@@ -118,6 +120,10 @@ static void light_map_draw(struct renderer_primitive* base, const struct rect re
 
     SDL_SetTextureBlendMode(this->darkness_mask, SDL_BLENDMODE_MOD);
     SDL_RenderTexture(native_renderer, this->darkness_mask, NULL, NULL);
+}
+
+static bool light_map_is_visible(struct renderer_primitive* base, struct rect rect, struct rect viewport) {
+    return true;
 }
 
 void light_map_reset(struct light_map* this) {

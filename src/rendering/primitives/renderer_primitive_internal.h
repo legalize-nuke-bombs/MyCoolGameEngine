@@ -9,6 +9,7 @@
 
 struct rendering_primitive_vtable {
     void (*draw)(struct renderer_primitive* base, struct rect rect, struct rect viewport, struct SDL_Renderer* renderer);
+    bool (*is_visible)(struct renderer_primitive *base, struct rect rect, struct rect viewport);
     void (*on_destroy)(struct renderer_primitive* base);
 };
 
