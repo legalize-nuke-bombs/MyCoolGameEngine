@@ -15,6 +15,10 @@ struct texture {
     char* id;
     char* path;
 
+    float texture_w;
+    float texture_h;
+    int tiles_count;
+
     int tile_w;
     int tile_h;
 
@@ -34,15 +38,25 @@ static void texture_load(struct texture* this);
 struct texture* texture_create(char* id, char* path, int tile_w, int tile_h, const enum texture_loading_mode loading_mode, const double unload_interval, SDL_Renderer* native_renderer) {
     logger_debug("Texture %s is creating...", id);
     struct texture* this = calloc(1, sizeof(struct texture));
+
     this->id = id;
     this->path = path;
+
+    this->texture_w = -1;
+    this->texture_h = -1;
+    this->tiles_count = -1;
+
     this->tile_w = tile_w;
     this->tile_h = tile_h;
+
     this->unload_interval = unload_interval;
+
     this->native_renderer = native_renderer;
+
     if (loading_mode == texture_loading_mode_eager) {
         texture_load(this);
     }
+
     return this;
 }
 void texture_destroy(struct texture* this) {
@@ -66,17 +80,22 @@ SDL_Texture* texture_get_native_texture(struct texture* this) {
     texture_load(this);
     return this->native_texture;
 }
-void texture_get_tile_rect(const struct texture* this, const int frame, float* target_x, float* target_y, float *target_w, float *target_h) {
-    *target_x = (float)frame * (float)this->tile_w;
+
+static int texture_get_tiles_count(struct texture* this) {
+    if (this->tiles_count < 0) {
+        if (this->texture_w < 0 || this->texture_h < 0) {
+            SDL_Texture* texture = texture_get_native_texture(this);
+            SDL_GetTextureSize(texture, &this->texture_w, &this->texture_h);
+        }
+        this->tiles_count = (int)this->texture_w / this->tile_w * (int)this->texture_h / this->tile_h;
+    }
+    return this->tiles_count;
+}
+void texture_get_tile_rect(struct texture* this, const unsigned long long frame, float* target_x, float* target_y, float *target_w, float *target_h) {
+    *target_x = (float)(frame % texture_get_tiles_count(this)) * (float)this->tile_w;
     *target_y = 0;
     *target_w = (float)this->tile_w;
     *target_h = (float)this->tile_h;
-}
-int texture_get_tiles_count(struct texture* this) {
-    SDL_Texture* texture = texture_get_native_texture(this);
-    float texture_w, texture_h;
-    SDL_GetTextureSize(texture, &texture_w, &texture_h);
-    return (int)texture_w / this->tile_w * (int)texture_h / this->tile_h;
 }
 
 static void texture_load(struct texture* this) {
