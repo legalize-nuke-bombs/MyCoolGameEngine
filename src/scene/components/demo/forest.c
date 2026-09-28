@@ -106,11 +106,14 @@ static void forest_awake(struct component *base) {
         const int tree_spec = random_next_int(random, 0, list_count(prefabs));
         struct prefab* prefab = list_get(prefabs, tree_spec);
         struct entity* tree = prefab_instantiate(prefab);
+        struct transform* tree_transform = entity_get_transform(tree);
+
+        struct vector2 tree_size = transform_get_scale(tree_transform);
+        struct vector2 tree_half_size = vector_multiply_scalar(tree_size, 0.5);
 
         struct vector2 tree_position;
-        tree_position.x = (float)random_next_double(random, position.x - half_size.x, position.x + half_size.x);
-        tree_position.y = (float)random_next_double(random, position.y - half_size.y, position.y + half_size.y);
-        struct transform* tree_transform = entity_get_transform(tree);
+        tree_position.x = (float)random_next_double(random, position.x - half_size.x + tree_half_size.x, position.x + half_size.x - tree_half_size.x);
+        tree_position.y = (float)random_next_double(random, position.y - half_size.y + tree_half_size.y, position.y + half_size.y - tree_half_size.y);
         transform_set_position(tree_transform, tree_position);
 
         scene_capture_entity(scene, tree);
