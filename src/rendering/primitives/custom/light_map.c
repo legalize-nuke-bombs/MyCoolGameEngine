@@ -110,6 +110,10 @@ static void light_map_draw(struct renderer_primitive* base, const struct rect re
     for (int i = 0; i < this->draw_calls_count; i++) {
         const struct light_map_draw_call draw_call = this->draw_calls[i];
 
+        if (!renderer_primitive_is_visible(draw_call.primitive, draw_call.rect, viewport)) {
+            continue;
+        }
+
         SDL_SetRenderDrawBlendMode(native_renderer, this->light_source_blend_mode);
         renderer_primitive_draw(draw_call.primitive, draw_call.rect, viewport, native_renderer);
     }
