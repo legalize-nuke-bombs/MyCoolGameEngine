@@ -99,7 +99,7 @@ box_renderer default bg1 color 54 78 62 255
 end
 
 scene add entity Cube
-transform default 0 0 32 32
+transform default 0 0 26 26
 box_renderer default character1 texture cube 0
 camera default
 controller default 250
