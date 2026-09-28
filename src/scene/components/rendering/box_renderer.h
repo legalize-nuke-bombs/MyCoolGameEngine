@@ -14,4 +14,6 @@ const char* box_renderer_component_key(void);
 
 struct component* box_renderer_create(struct parser *parser, struct entity *parent);
 
+void box_renderer_bump_texture_frame(struct box_renderer *this);
+
 #endif //MYCOOLGAMEENGINE_BOX_RENDERER_H

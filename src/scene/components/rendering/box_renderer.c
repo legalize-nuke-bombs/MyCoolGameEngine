@@ -115,3 +115,7 @@ static void box_renderer_update(struct component *base, const struct update_cont
     };
     renderer_pipeline_draw_primitive(this->renderer, draw_call);
 }
+
+void box_renderer_bump_texture_frame(struct box_renderer *this) {
+    renderer_square_bump_texture_frame((struct renderer_square*)this->square);
+}

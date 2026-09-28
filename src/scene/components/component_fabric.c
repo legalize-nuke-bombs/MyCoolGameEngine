@@ -19,6 +19,7 @@
 #include "demo/printer.h"
 #include "demo/suicidal.h"
 #include "rendering/box_light.h"
+#include "rendering/box_renderer_animated.h"
 #include "rendering/renderer_settings.h"
 
 struct component_fabric {
@@ -40,6 +41,7 @@ static void component_fabric_register_all(const struct component_fabric *this) {
     component_fabric_register_component(this, camera_component_key(), camera_create);
     component_fabric_register_component(this, renderer_settings_component_key(), renderer_settings_create);
     component_fabric_register_component(this, box_renderer_component_key(), box_renderer_create);
+    component_fabric_register_component(this, box_renderer_animated_component_key(), box_renderer_animated_create);
     component_fabric_register_component(this, box_light_component_key(), box_light_create);
     component_fabric_register_component(this, controller_component_key(), controller_create);
     component_fabric_register_component(this, keyboard_controller_component_key(), keyboard_controller_create);

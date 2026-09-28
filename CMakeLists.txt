@@ -192,6 +192,8 @@ add_executable(MyCoolGameEngine main.c
         src/interpreter/texture_manager/interpreter_texture_manager_new_texture.h
         src/interpreter/texture_manager/interpreter_texture_manager_new_texture.c
         src/utils/color.c
+        src/scene/components/rendering/box_renderer_animated.h
+        src/scene/components/rendering/box_renderer_animated.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)
