@@ -90,6 +90,12 @@ struct vector2 component_get_local_position(const struct component *this) {
 struct vector2 component_get_local_scale(const struct component *this) {
     return this->local_scale;
 }
+void component_set_local_position(struct component *this, const struct vector2 position) {
+    this->local_position = position;
+}
+void component_set_local_scale(struct component *this, const struct vector2 scale) {
+    this->local_scale = scale;
+}
 
 struct vector2 component_get_position(const struct component *this) {
     if (this->parent == NULL) {

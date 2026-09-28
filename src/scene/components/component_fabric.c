@@ -17,6 +17,7 @@
 #include "rendering/box_renderer.h"
 #include "rendering/camera.h"
 #include "rendering/box_light.h"
+#include "rendering/box_light_animated.h"
 #include "rendering/box_renderer_animated.h"
 #include "rendering/renderer_settings.h"
 
@@ -41,6 +42,7 @@ static void component_fabric_register_all(const struct component_fabric *this) {
     component_fabric_register_component(this, box_renderer_component_key(), box_renderer_create);
     component_fabric_register_component(this, box_renderer_animated_component_key(), box_renderer_animated_create);
     component_fabric_register_component(this, box_light_component_key(), box_light_create);
+    component_fabric_register_component(this, box_light_animated_component_key(), box_light_animated_create);
     component_fabric_register_component(this, controller_component_key(), controller_create);
     component_fabric_register_component(this, keyboard_controller_component_key(), keyboard_controller_create);
     component_fabric_register_component(this, forest_component_key(), forest_create);
