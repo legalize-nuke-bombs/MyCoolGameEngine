@@ -23,13 +23,13 @@ end
 scene new_entity Cube
 transform default 0 0 32 32
 box_renderer default character1 texture cube 0
+camera default
+controller default 250
+keyboard_controller default
 end
 
 scene new_entity CameraRig
 transform default 0 0 1 1
-camera default
-controller default 250
-keyboard_controller default
 end
 
 scene new_entity Tree1
@@ -88,5 +88,5 @@ end
 
 scene new_entity Settings
 transform default 0 0 1 1
-renderer_settings default 1 20 20 20 100
+renderer_settings default 1 0 0 20 100
 end
