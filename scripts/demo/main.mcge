@@ -6,6 +6,14 @@ renderer_layer_manager new_layer character1 20
 renderer_layer_manager new_layer character1_2 21
 
 texture_manager new_texture cube 64 64 ../textures/demo/cube.png lazy 1
+texture_manager new_texture tree1 72 65 ../textures/demo/tree1_tileset.png lazy 1
+texture_manager new_texture tree2 72 65 ../textures/demo/tree2_tileset.png lazy 1
+texture_manager new_texture tree3 72 65 ../textures/demo/tree3_tileset.png lazy 1
+texture_manager new_texture tree4 72 65 ../textures/demo/tree4_tileset.png lazy 1
+texture_manager new_texture tree5 72 65 ../textures/demo/tree5_tileset.png lazy 1
+texture_manager new_texture tree6 72 65 ../textures/demo/tree6_tileset.png lazy 1
+texture_manager new_texture tree7 72 65 ../textures/demo/tree7_tileset.png lazy 1
+texture_manager new_texture tree8 72 65 ../textures/demo/tree8_tileset.png lazy 1
 
 scene new_entity Terrain
 transform default 0 0 1000000 1000000
@@ -24,9 +32,9 @@ controller default 250
 keyboard_controller default
 end
 
-scene new_entity Box
-transform default 200 0 100 100
-box_renderer default prop1 color 0 0 0 255
+scene new_entity Tree1
+transform default 200 0 72 65
+box_renderer default prop1 texture tree1 0
 end
 
 scene new_entity Torch
