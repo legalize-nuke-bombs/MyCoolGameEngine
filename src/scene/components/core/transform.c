@@ -11,8 +11,11 @@ struct transform {
     struct vector2 scale;
 };
 
+static struct component* transform_clone(struct component base, const struct component *component);
+
 static const struct component_vtable transform_vtable = {
     .component_key = transform_component_key,
+    .on_clone = transform_clone,
     .on_awake = NULL,
     .on_update = NULL,
     .on_destroy = NULL
@@ -32,6 +35,16 @@ struct component* transform_create(struct parser *parser, struct entity *parent)
     parser_next_double(parser, &this->scale.y);
 
     return (struct component *)this;
+}
+
+struct component* transform_clone(struct component base, const struct component *component) {
+    const struct transform* transform = (const struct transform*)component;
+
+    struct transform *this = calloc(1, sizeof(struct transform));
+    this->base = base;
+    this->position = transform->position;
+    this->scale = transform->scale;
+    return (struct component*)this;
 }
 
 struct vector2 transform_get_position(const struct transform *this) {

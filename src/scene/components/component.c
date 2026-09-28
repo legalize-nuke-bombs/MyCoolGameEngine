@@ -32,14 +32,13 @@ void component_base_create(struct component *this, const struct component_vtable
     this->parent = parent;
 }
 struct component* component_clone(const struct component *component) {
-    logger_debug("Component %s is cloning...", component_get_key(component));
     struct component this;
     this.vtable = component->vtable;
+    logger_debug("Component %s is cloning...", component_get_key(component));
     this.awake = false;
     this.alive = true;
     this.local_position = component->local_position;
     this.local_scale = component->local_scale;
-    this.parent = component->parent;
     return component->vtable->on_clone(this, component);
 }
 void component_awake(struct component *this) {
@@ -75,6 +74,9 @@ bool component_is_alive(const struct component *this) {
     return this->alive;
 }
 
+void component_set_parent(struct component *this, struct entity *parent) {
+    this->parent = parent;
+}
 struct entity* component_get_parent(const struct component *this) {
     return this->parent;
 }

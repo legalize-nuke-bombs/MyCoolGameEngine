@@ -16,9 +16,8 @@ texture_manager new_texture tree7 72 65 ../textures/demo/tree7_tileset.png lazy 
 texture_manager new_texture tree8 72 65 ../textures/demo/tree8_tileset.png lazy 1
 texture_manager new_texture gradient_circular 512 512 ../textures/core/gradient_circular.png lazy 1
 
-scene add prefab Tree1
+scene add prefab Tree1Prefab
 transform default 0 0 72 65
-camera default
 end
 
 scene add entity Terrain
@@ -95,5 +94,5 @@ end
 scene add entity GameState
 transform default 0 0 1 1
 renderer_settings default 1 50 50 80 255
-forest default
+forest default Tree1Prefab end
 end

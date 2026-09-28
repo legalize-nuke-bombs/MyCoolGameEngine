@@ -41,9 +41,8 @@ struct entity* entity_clone(const struct entity* entity) {
     this->components = list_create(list_count(entity->components));
     this->components_updateable = list_create(list_count(entity->components_updateable));
     this->on_component_captured = action_create();
-    this->parent = entity->parent;
     for (int i = 0; i < list_count(entity->components); i++) {
-        struct component *component = list_get(this->components, i);
+        struct component *component = list_get(entity->components, i);
         entity_capture_component(this, component_clone(component));
     }
     return this;
@@ -114,10 +113,7 @@ int entity_get_components_count(const struct entity *this) {
     return list_count(this->components);
 }
 void entity_capture_component(struct entity *this, struct component *component) {
-    if (component_get_parent(component) != this) {
-        logger_error("Entity %s cannot capture component %s owned by entity %s", this->name, component_get_key(component), component_get_parent_name(component));
-        return;
-    }
+    component_set_parent(component, this);
     logger_debug("Entity %s is capturing component %s", this->name, component_get_key(component));
     list_add(this->components, component);
     if (component_is_updateable(component)) {
