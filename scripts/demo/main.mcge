@@ -83,7 +83,7 @@ end
 scene new_entity Torch
 transform default 100 300 10 10
 box_renderer default prop1 color 175 175 255 255
-box_light custom 0 0 10 10
+box_light custom 0 0 10 10 color 255 255 255 255
 end
 
 scene new_entity Settings

@@ -15,5 +15,6 @@ struct color {
 };
 
 extern const struct color color_black;
+extern const struct color color_white;
 
 #endif //MYCOOLGAMEENGINE_COLOR_H

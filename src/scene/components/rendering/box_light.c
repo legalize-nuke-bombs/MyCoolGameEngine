@@ -5,15 +5,19 @@
 #include "box_light.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 #include "../component_internal.h"
 #include "../../../rendering/renderer_pipeline.h"
 #include "../../../rendering/primitives/custom/renderer_square.h"
 #include "../../entity.h"
 #include "../../scene.h"
+#include "../../../logging/logger.h"
 #include "../../../rendering/renderer.h"
 #include "../../../subsystems/subsystem_collection.h"
 #include "../../../rendering/primitives/custom/light_map.h"
+#include "../../../utils/parser.h"
+#include "../../../rendering/textures/texture_manager.h"
 
 struct box_light {
     struct component base;
@@ -46,13 +50,33 @@ struct component* box_light_create(struct parser *parser, struct entity *parent)
 
     this->light_map = NULL;
 
-    const struct color color = {
-        .r = 255,
-        .g = 255,
-        .b = 255,
-        .a = 255
-    };
-    this->square = renderer_square_create_from_color(color);
+    const char* type = parser_next(parser);
+    if (strcmp(type, "color") == 0) {
+        struct color color;
+        parser_next_uint8(parser, &color.r);
+        parser_next_uint8(parser, &color.g);
+        parser_next_uint8(parser, &color.b);
+        parser_next_uint8(parser, &color.a);
+        this->square = renderer_square_create_from_color(color);
+    }
+    else if (strcmp(type, "texture") == 0) {
+        const char* texture_name = parser_next(parser);
+        const struct renderer* renderer = (struct renderer*)subsystem_collection_get(scene_get_subsystems(entity_get_parent(component_get_parent(base))), "renderer");
+        struct texture* texture = texture_manager_try_get_texture(renderer_get_texture_manager(renderer), texture_name);
+        int texture_frame;
+        parser_next_int(parser, &texture_frame);
+        if (texture == NULL) {
+            logger_warn("Box renderer failed to find specified texture `%s`", texture_name);
+            this->square = renderer_square_create_from_color(color_white);
+        }
+        else {
+            this->square = renderer_square_create_from_texture(texture, texture_frame);
+        }
+    }
+    else {
+        logger_warn("Box light unexpected type `%s`", type);
+        this->square = renderer_square_create_from_color(color_white);
+    }
 
     return base;
 }

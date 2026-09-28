@@ -11,3 +11,9 @@ const struct color color_black = {
     .b = 0,
     .a = 255
 };
+const struct color color_white = {
+    .r = 255,
+    .g = 255,
+    .b = 255,
+    .a = 255
+};
