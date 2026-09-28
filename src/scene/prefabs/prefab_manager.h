@@ -13,7 +13,7 @@ struct prefab_manager* prefab_manager_create();
 void prefab_manager_destroy(struct prefab_manager* this);
 
 void prefab_manager_capture_prefab(const struct prefab_manager* this, struct prefab* prefab);
-struct entity* prefab_manager_instantiate(const struct prefab_manager* this, const char* key);
+struct prefab* prefab_manager_try_get(const struct prefab_manager* this, const char* key);
 
 void prefab_manager_clear(const struct prefab_manager* this);
 

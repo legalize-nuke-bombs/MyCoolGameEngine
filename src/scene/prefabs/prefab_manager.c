@@ -37,13 +37,12 @@ void prefab_manager_capture_prefab(const struct prefab_manager* this, struct pre
         prefab_destroy(prefab);
     }
 }
-struct entity* prefab_manager_instantiate(const struct prefab_manager* this, const char* key) {
+struct prefab* prefab_manager_try_get(const struct prefab_manager* this, const char* key) {
     struct prefab* prefab = dictionary_get(this->dict, (void*)key);
     if (prefab == NULL) {
         logger_error("Prefab manager failed to find prefab %s", key);
-        return NULL;
     }
-    return prefab_instantiate(prefab);
+    return prefab;
 }
 
 void prefab_manager_clear(const struct prefab_manager* this) {

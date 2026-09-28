@@ -6,10 +6,12 @@
 #include "../component_internal.h"
 #include "../../entity.h"
 #include "../../scene.h"
+#include "../../../logging/logger.h"
 #include "../../../rendering/renderer_pipeline.h"
 #include "../../../utils/list.h"
 #include "../../../utils/parser.h"
 #include "../../prefabs/prefab_manager.h"
+#include "../../../subsystems/subsystem_collection.h"
 
 
 struct forest {
@@ -62,14 +64,27 @@ static struct component* forest_clone(struct component base, const struct compon
 static void forest_awake(struct component *base) {
     const struct forest *this = (struct forest *) base;
 
-    struct scene *scene = entity_get_parent(component_get_parent(base));
-    const struct prefab_manager* prefabs = scene_get_prefab_manager(scene);
+    const struct scene *scene = entity_get_parent(component_get_parent(base));
+    const struct prefab_manager* prefab_manager = scene_get_prefab_manager(scene);
+    struct random* random = (struct random*)subsystem_collection_get(scene_get_subsystems(scene), "random");
 
+    struct list* prefabs = list_create(list_count(this->prefabIds));
     for (int i = 0; i < list_count(this->prefabIds); i++) {
         const char* prefab_id = list_get(this->prefabIds, i);
-        struct entity* entity = prefab_manager_instantiate(prefabs, prefab_id);
-        scene_capture_entity(scene, entity);
+        struct prefab *prefab = prefab_manager_try_get(prefab_manager, prefab_id);
+        if (prefab == NULL) {
+            continue;
+        }
+        list_add(prefabs, prefab);
     }
+
+    if (list_count(prefabs) == 0) {
+        logger_warn("Forest found no valid prefabs. Nothing will be spawned!");
+        list_destroy(prefabs);
+        return;
+    }
+
+    list_destroy(prefabs);
 }
 
 static void forest_on_destroy(struct component *base) {
