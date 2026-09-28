@@ -188,6 +188,8 @@ add_executable(MyCoolGameEngine main.c
         src/utils/color.c
         src/scene/components/rendering/box_renderer_animated.h
         src/scene/components/rendering/box_renderer_animated.c
+        src/scene/prefabs/prefab.h
+        src/scene/prefabs/prefab.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)
