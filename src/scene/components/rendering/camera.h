@@ -5,10 +5,9 @@
 #ifndef MYCOOLGAMEENGINE_CAMERA_H
 #define MYCOOLGAMEENGINE_CAMERA_H
 
-#include "../component.h"
 
-struct camera;
 struct parser;
+struct entity;
 
 const char* camera_component_key(void);
 

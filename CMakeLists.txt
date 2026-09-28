@@ -192,6 +192,8 @@ add_executable(MyCoolGameEngine main.c
         src/scene/prefabs/prefab.c
         src/scene/prefabs/prefab_manager.h
         src/scene/prefabs/prefab_manager.c
+        src/scene/components/demo/forest.h
+        src/scene/components/demo/forest.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)
