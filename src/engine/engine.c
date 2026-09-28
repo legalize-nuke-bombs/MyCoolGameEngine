@@ -16,6 +16,8 @@
 #include "../subsystems/subsystem_collection.h"
 #include "lifecycle/engine_lifecycle.h"
 
+#define FRAME_DT_EXPLOSION_THRESHOLD 0.1f
+
 struct engine {
     struct subsystem_collection *subsystems;
 };
@@ -58,6 +60,10 @@ static bool engine_execute_step(const struct engine *this, const struct engine_a
         const Uint64 now = SDL_GetTicksNS();
         update_context.dt = (double)(now - previous) / 1e9;
         previous = now;
+        if (update_context.dt > FRAME_DT_EXPLOSION_THRESHOLD) {
+            logger_debug("Frame dt explosion resolved (%f -> %f)", update_context.dt, FRAME_DT_EXPLOSION_THRESHOLD);
+            update_context.dt = FRAME_DT_EXPLOSION_THRESHOLD;
+        }
 
         action_invoke(engine_events_pre_frame(events), &update_context);
 
