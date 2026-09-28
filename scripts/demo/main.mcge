@@ -1,9 +1,27 @@
 print DemoSceneLaunched!
 
+
+
+
+
+
+
+
+
+
+
 renderer_layer_manager new_layer bg1 1
 renderer_layer_manager new_layer prop1 10
 renderer_layer_manager new_layer character1 20
 renderer_layer_manager new_layer character1_2 21
+
+
+
+
+
+
+
+
 
 texture_manager new_texture cube 64 64 ../textures/demo/cube.png lazy 1
 texture_manager new_texture tree1 72 65 ../textures/demo/tree1_tileset.png lazy 1
@@ -16,10 +34,56 @@ texture_manager new_texture tree7 72 65 ../textures/demo/tree7_tileset.png lazy 
 texture_manager new_texture tree8 72 65 ../textures/demo/tree8_tileset.png lazy 1
 texture_manager new_texture gradient_circular 512 512 ../textures/core/gradient_circular.png lazy 1
 
+
+
+
+
 scene add prefab Tree1
 transform default 0 0 72 65
 box_renderer default prop1 texture tree1 0
 end
+
+scene add prefab Tree2
+transform default 0 0 72 65
+box_renderer default prop1 texture tree2 0
+end
+
+scene add prefab Tree3
+transform default 0 0 72 65
+box_renderer default prop1 texture tree3 0
+end
+
+scene add prefab Tree4
+transform default 0 0 72 65
+box_renderer default prop1 texture tree4 0
+end
+
+scene add prefab Tree5
+transform default 0 0 72 65
+box_renderer default prop1 texture tree5 0
+end
+
+scene add prefab Tree6
+transform default 0 0 72 65
+box_renderer default prop1 texture tree6 0
+end
+
+scene add prefab Tree7
+transform default 0 0 72 65
+box_renderer default prop1 texture tree7 0
+end
+
+scene add prefab Tree8
+transform default 0 0 72 65
+box_renderer default prop1 texture tree8 0
+end
+
+
+
+
+
+
+
 
 scene add entity Terrain
 transform default 0 0 1000000 1000000
@@ -47,5 +111,5 @@ end
 scene add entity GameState
 transform default 0 0 1 1
 renderer_settings default 1 50 50 80 255
-forest default Tree1 end
+forest default Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
 end
