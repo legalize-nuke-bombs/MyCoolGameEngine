@@ -14,6 +14,7 @@ texture_manager new_texture tree5 72 65 ../textures/demo/tree5_tileset.png lazy 
 texture_manager new_texture tree6 72 65 ../textures/demo/tree6_tileset.png lazy 1
 texture_manager new_texture tree7 72 65 ../textures/demo/tree7_tileset.png lazy 1
 texture_manager new_texture tree8 72 65 ../textures/demo/tree8_tileset.png lazy 1
+texture_manager new_texture gradient_circular 512 512 ../textures/core/gradient_circular.png lazy 1
 
 scene new_entity Terrain
 transform default 0 0 1000000 1000000
@@ -83,10 +84,10 @@ end
 scene new_entity Torch
 transform default 100 300 10 10
 box_renderer default prop1 color 175 175 255 255
-box_light custom 0 0 10 10 color 255 255 255 255
+box_light custom 0 0 50 50 texture gradient_circular 0
 end
 
 scene new_entity Settings
 transform default 0 0 1 1
-renderer_settings default 1 0 0 20 100
+renderer_settings default 1 50 50 80 255
 end

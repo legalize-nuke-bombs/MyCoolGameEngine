@@ -41,14 +41,7 @@ struct renderer_primitive* light_map_create() {
 
     light_map_reset(this);
 
-    this->light_source_blend_mode = SDL_ComposeCustomBlendMode(
-       SDL_BLENDFACTOR_ZERO,
-       SDL_BLENDFACTOR_ONE,
-       SDL_BLENDOPERATION_ADD,
-       SDL_BLENDFACTOR_ZERO,
-       SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA,
-       SDL_BLENDOPERATION_ADD
-   );
+    this->light_source_blend_mode = SDL_BLENDMODE_ADD;
 
     return (struct renderer_primitive*)this;
 }
@@ -80,7 +73,6 @@ static void light_map_sync_darkness_size(struct light_map* this, SDL_Renderer *n
         SDL_DestroyTexture(this->darkness_mask);
     }
     this->darkness_mask = SDL_CreateTexture(native_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, new_w, new_h);
-    SDL_SetTextureBlendMode(this->darkness_mask, SDL_BLENDMODE_BLEND);
 }
 
 void light_map_draw_primitive(struct light_map* this, const struct light_map_draw_call draw_call) {
@@ -103,26 +95,28 @@ static void light_map_draw(struct renderer_primitive* base, const struct rect re
     light_map_sync_darkness_size(this, native_renderer);
 
     SDL_Texture* original_target = SDL_GetRenderTarget(native_renderer);
+
+    SDL_SetTextureBlendMode(this->darkness_mask, SDL_BLENDMODE_NONE);
     SDL_SetRenderTarget(native_renderer, this->darkness_mask);
 
-    SDL_SetRenderDrawColor(native_renderer, this->darkness_color.r, this->darkness_color.g, this->darkness_color.b, this->darkness_color.a);
+    SDL_SetRenderDrawColor(native_renderer, this->darkness_color.r, this->darkness_color.g, this->darkness_color.b, 255);
     SDL_RenderClear(native_renderer);
 
     SDL_BlendMode original_blend_mode;
     SDL_GetRenderDrawBlendMode(native_renderer, &original_blend_mode);
-    SDL_SetRenderDrawBlendMode(native_renderer, this->light_source_blend_mode);
 
     for (int i = 0; i < this->draw_calls_count; i++) {
         const struct light_map_draw_call draw_call = this->draw_calls[i];
+
+        SDL_SetRenderDrawBlendMode(native_renderer, this->light_source_blend_mode);
         renderer_primitive_draw(draw_call.primitive, draw_call.rect, viewport, native_renderer);
     }
     this->draw_calls_count = 0;
 
     SDL_SetRenderDrawBlendMode(native_renderer, original_blend_mode);
-
     SDL_SetRenderTarget(native_renderer, original_target);
 
-    SDL_SetTextureBlendMode(this->darkness_mask, SDL_BLENDMODE_BLEND);
+    SDL_SetTextureBlendMode(this->darkness_mask, SDL_BLENDMODE_MOD);
     SDL_RenderTexture(native_renderer, this->darkness_mask, NULL, NULL);
 }
 
@@ -136,10 +130,10 @@ void light_map_set_darkness_color(struct light_map* this, const struct color col
 }
 void light_map_reset_darkness_color(struct light_map* this) {
     this->darkness_color = (struct color){
-        .r = 20,
-        .g = 20,
-        .b = 20,
-        .a = 100
+        .r = 50,
+        .g = 50,
+        .b = 80,
+        .a = 255
     };
 }
 

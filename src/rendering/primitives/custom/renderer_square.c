@@ -37,6 +37,11 @@ static void renderer_square_draw(struct renderer_primitive* base, const struct r
     if (this->texture) {
         SDL_FRect src_rect;
         texture_get_tile_rect(this->texture, this->texture_frame, &src_rect.x, &src_rect.y, &src_rect.w, &src_rect.h);
+
+        SDL_BlendMode current_blend_mode;
+        SDL_GetRenderDrawBlendMode(renderer, &current_blend_mode);
+        SDL_SetTextureBlendMode(texture_get_native_texture(this->texture), current_blend_mode);
+
         SDL_RenderTexture(renderer, texture_get_native_texture(this->texture), &src_rect, &sdl_target_rect);
     }
     else {
