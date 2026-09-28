@@ -89,7 +89,7 @@ static void profiler_handle_hotkey_pressed(void *listener, void *context) {
 
     const double fps = 1000 / frame_ms;
 
-    logger_info("Profiler output. FPS: %f. Frame: %f ms (update %f%%, render %f%%, unknown %f%%)", fps, frame_ms, update_ms_percent, render_ms_percent, unknown_ms_percent);
+    logger_info("Profiler output. FPS: %f. Frame: %f ms (update %f ms %f%%, render %f ms %f%%, unknown %f ms %f%%)", fps, frame_ms, update_ms, update_ms_percent, render_ms, render_ms_percent, unknown_ms, unknown_ms_percent);
 }
 
 static void profiler_update(const struct profiler *this) {
