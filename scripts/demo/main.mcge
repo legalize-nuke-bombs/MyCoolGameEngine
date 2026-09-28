@@ -92,9 +92,18 @@ end
 
 
 scene add entity Terrain
-transform default 0 0 10000 10000
+transform default 0 0 1000 1000
 box_renderer default bg1 color 54 78 62 255
 end
+
+scene add entity GameState
+transform default 0 0 1 1
+renderer_settings default 1 50 50 80 255
+forest custom 0 0 900 900 100 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
+end
+
+
+
 
 scene add entity Cube
 transform default 0 0 26 26
@@ -112,10 +121,4 @@ scene add entity Torch
 transform default 100 300 10 10
 box_renderer default prop1 color 175 175 255 255
 box_light custom 0 0 50 50 texture gradient_circular 0
-end
-
-scene add entity GameState
-transform default 0 0 1 1
-renderer_settings default 1 50 50 80 255
-forest custom 0 0 10000 10000 10000 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
 end
