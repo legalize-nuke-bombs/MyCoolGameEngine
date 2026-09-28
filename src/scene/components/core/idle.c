@@ -11,8 +11,11 @@ struct idle {
     struct component base;
 };
 
+static struct component* idle_clone(struct component base, const struct component *component);
+
 static const struct component_vtable idle_vtable = {
     .component_key = idle_component_key,
+    .on_clone = idle_clone,
     .on_awake = NULL,
     .on_update = NULL,
     .on_disable = NULL
@@ -27,4 +30,12 @@ struct component* idle_create(struct parser *parser, struct entity *parent) {
     struct component *base = (struct component *) this;
     component_base_create(base, &idle_vtable, parser, parent);
     return base;
+}
+
+static struct component* idle_clone(struct component base, const struct component *component) {
+    const struct idle *idle = (struct idle *) component;
+
+    struct idle* this = calloc(1, sizeof(struct idle));
+    this->base = base;
+    return (struct component*)this;
 }

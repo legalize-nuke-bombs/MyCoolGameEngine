@@ -26,11 +26,13 @@ struct renderer_settings {
     struct light_map *light_map;
 };
 
+static struct component* renderer_settings_clone(struct component base, const struct component *component);
 static void renderer_settings_awake(struct component *base);
 static void renderer_settings_on_disable(struct component *base);
 
 static const struct component_vtable renderer_settings_vtable = {
     .component_key = renderer_settings_component_key,
+    .on_clone = renderer_settings_clone,
     .on_awake = renderer_settings_awake,
     .on_update = NULL,
     .on_disable = renderer_settings_on_disable
@@ -54,6 +56,16 @@ struct component* renderer_settings_create(struct parser *parser, struct entity 
     }
 
     return base;
+}
+
+static struct component* renderer_settings_clone(struct component base, const struct component *component) {
+    const struct renderer_settings *renderer_settings = (struct renderer_settings *) component;
+
+    struct renderer_settings* this = calloc(1, sizeof(struct renderer_settings));
+    this->base = base;
+    this->light_map_enabled = renderer_settings->light_map_enabled;
+    this->light_map_darkness_color = renderer_settings->light_map_darkness_color;
+    return (struct component*)this;
 }
 
 static void renderer_settings_awake(struct component *base) {

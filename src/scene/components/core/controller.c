@@ -19,11 +19,13 @@ struct controller {
     struct transform* transform;
 };
 
+static struct component* controller_clone(struct component base, const struct component *component);
 static void controller_on_awake(struct component* base);
 static void controller_on_disable(struct component* base);
 
 static const struct component_vtable controller_vtable = {
     .component_key = controller_component_key,
+    .on_clone = controller_clone,
     .on_awake = controller_on_awake,
     .on_update = NULL,
     .on_disable = controller_on_disable
@@ -51,6 +53,15 @@ struct component* controller_create(struct parser *parser, struct entity *parent
     parser_next_double(parser, &this->v);
 
     return base;
+}
+
+static struct component* controller_clone(struct component base, const struct component *component) {
+    const struct controller *controller = (struct controller *) component;
+
+    struct controller* this = calloc(1, sizeof(struct controller));
+    this->base = base;
+    this->v = controller->v;
+    return (struct component*)this;
 }
 
 void controller_move(const struct controller* this, struct vector2 direction, const double dt) {

@@ -18,11 +18,13 @@ struct box_renderer_animated {
     struct box_renderer *box_renderer;
 };
 
+static struct component* box_renderer_animated_clone(struct component base, const struct component *component);
 static void box_renderer_animated_awake(struct component *base);
 static void box_renderer_animated_update(struct component *base, const struct update_context *context);
 
 static const struct component_vtable box_renderer_animated_vtable = {
     .component_key = box_renderer_animated_component_key,
+    .on_clone = box_renderer_animated_clone,
     .on_awake = box_renderer_animated_awake,
     .on_update = box_renderer_animated_update,
     .on_disable = NULL
@@ -40,6 +42,15 @@ struct component* box_renderer_animated_create(struct parser *parser, struct ent
     parser_next_double(parser, &this->frame_interval);
 
     return base;
+}
+
+static struct component* box_renderer_animated_clone(struct component base, const struct component *component) {
+    struct box_renderer_animated *box_renderer_animated = (struct box_renderer_animated *) component;
+
+    struct box_renderer_animated* this = calloc(1, sizeof(struct box_renderer_animated));
+    this->base = base;
+    this->frame_interval = box_renderer_animated->frame_interval;
+    return (struct component*)this;
 }
 
 static void box_renderer_animated_awake(struct component *base) {

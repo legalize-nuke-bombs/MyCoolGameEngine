@@ -21,12 +21,14 @@ struct keyboard_controller {
     struct keyboard* keyboard;
 };
 
+static struct component* keyboard_controller_clone(struct component base, const struct component *component);
 static void keyboard_controller_on_awake(struct component* base);
 static void keyboard_controller_on_update(struct component* base, const struct update_context *context);
 static void keyboard_controller_on_disable(struct component* base);
 
 static const struct component_vtable keyboard_controller_vtable = {
     .component_key = keyboard_controller_component_key,
+    .on_clone = keyboard_controller_clone,
     .on_awake = keyboard_controller_on_awake,
     .on_update = keyboard_controller_on_update,
     .on_disable = keyboard_controller_on_disable
@@ -78,4 +80,12 @@ struct component* keyboard_controller_create(struct parser *parser, struct entit
     component_base_create(base, &keyboard_controller_vtable, parser, parent);
 
     return base;
+}
+
+static struct component* keyboard_controller_clone(struct component base, const struct component *component) {
+    const struct keyboard_controller *keyboard_controller = (struct keyboard_controller *) component;
+
+    struct keyboard_controller* this = calloc(1, sizeof(struct keyboard_controller));
+    this->base = base;
+    return (struct component*)this;
 }

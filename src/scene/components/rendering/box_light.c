@@ -27,12 +27,14 @@ struct box_light {
     struct renderer_primitive* square;
 };
 
+static struct component* box_light_clone(struct component base, const struct component *component);
 static void box_light_awake(struct component *base);
 static void box_light_update(struct component *base, const struct update_context *context);
 static void box_light_on_destroy(struct component *base);
 
 static const struct component_vtable box_light_vtable = {
     .component_key = box_light_component_key,
+    .on_clone = box_light_clone,
     .on_awake = box_light_awake,
     .on_update = box_light_update,
     .on_disable = NULL,
@@ -79,6 +81,15 @@ struct component* box_light_create(struct parser *parser, struct entity *parent)
     }
 
     return base;
+}
+
+static struct component* box_light_clone(struct component base, const struct component *component) {
+    const struct box_light *box_light = (struct box_light*)component;
+
+    struct box_light *this = calloc(1, sizeof(struct box_light));
+    this->base = base;
+    this->square = renderer_square_clone((struct renderer_square*)box_light->square);
+    return (struct component*)this;
 }
 
 static void box_light_on_destroy(struct component *base) {
