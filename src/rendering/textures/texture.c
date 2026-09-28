@@ -85,17 +85,31 @@ static int texture_get_tiles_count(struct texture* this) {
     if (this->tiles_count < 0) {
         if (this->texture_w < 0 || this->texture_h < 0) {
             SDL_Texture* texture = texture_get_native_texture(this);
-            SDL_GetTextureSize(texture, &this->texture_w, &this->texture_h);
+            if (texture == NULL) {
+                this->texture_w = this->texture_h = 0;
+            }
+            else {
+                SDL_GetTextureSize(texture, &this->texture_w, &this->texture_h);
+            }
         }
         this->tiles_count = (int)this->texture_w / this->tile_w * (int)this->texture_h / this->tile_h;
     }
     return this->tiles_count;
 }
 void texture_get_tile_rect(struct texture* this, const unsigned long long frame, float* target_x, float* target_y, float *target_w, float *target_h) {
-    *target_x = (float)(frame % texture_get_tiles_count(this)) * (float)this->tile_w;
-    *target_y = 0;
-    *target_w = (float)this->tile_w;
-    *target_h = (float)this->tile_h;
+    int tiles_count = texture_get_tiles_count(this);
+    if (tiles_count <= 0) {
+        *target_x = 0;
+        *target_y = 0;
+        *target_w = 0;
+        *target_h = 0;
+    }
+    else {
+        *target_x = (float)(frame % texture_get_tiles_count(this)) * (float)this->tile_w;
+        *target_y = 0;
+        *target_w = (float)this->tile_w;
+        *target_h = (float)this->tile_h;
+    }
 }
 
 static void texture_load(struct texture* this) {
