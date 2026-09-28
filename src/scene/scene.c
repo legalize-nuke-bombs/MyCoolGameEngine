@@ -13,6 +13,7 @@
 #include "../utils/action.h"
 #include "../subsystems/subsystem_internal.h"
 #include "components/component_fabric.h"
+#include "prefabs/prefab_manager.h"
 
 
 #define GC_INTERVAL 5
@@ -30,6 +31,7 @@ struct scene {
     unsigned int on_physics_subscription_token;
 
     struct component_fabric* component_fabric;
+    struct prefab_manager* prefab_manager;
 };
 
 static const char* scene_get_subsystem_key() {
@@ -57,6 +59,7 @@ struct subsystem* scene_create(char *name, const struct subsystem_collection *su
     this->tmap = tmap_create();
 
     this->component_fabric = component_fabric_create();
+    this->prefab_manager = prefab_manager_create();
 
     return base;
 }
@@ -65,6 +68,7 @@ void scene_on_destroy(struct subsystem *base) {
     const struct scene *this = (struct scene*)base;
     logger_info("Scene %s is destroying...", this->name);
 
+    prefab_manager_destroy(this->prefab_manager);
     component_fabric_destroy(this->component_fabric);
     entity_collection_destroy(this->entities);
     tmap_destroy(this->tmap);
@@ -127,6 +131,9 @@ const struct tmap* scene_get_tmap(const struct scene *this) {
 }
 const struct component_fabric* scene_get_component_fabric(const struct scene* this) {
     return this->component_fabric;
+}
+const struct prefab_manager* scene_get_prefab_manager(const struct scene *this) {
+    return this->prefab_manager;
 }
 const struct subsystem_collection* scene_get_subsystems(const struct scene* this) {
     return subsystem_get_subsystems((const struct subsystem*)this);
