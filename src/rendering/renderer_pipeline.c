@@ -22,7 +22,6 @@ struct renderer_pipeline {
     bool viewport_enabled;
 
     struct renderer_pipeline_draw_call draw_calls[DRAW_CALLS_BUFFER_SIZE];
-    struct renderer_pipeline_draw_call sorted_draw_calls[DRAW_CALLS_BUFFER_SIZE];
     int draw_calls_count;
 
     struct renderer_primitive *light_map;
@@ -65,27 +64,39 @@ void renderer_pipeline_draw_primitive(struct renderer_pipeline *this, struct ren
     this->draw_calls[this->draw_calls_count++] = draw_call;
 }
 
-static void renderer_pipeline_sort_draw_calls(struct renderer_pipeline *this) {
-    int offsets[LAYER_PRIORITIES_COUNT] = {0};
-    for (int i = 0; i < this->draw_calls_count; i++) {
-        offsets[renderer_layer_get_priority(this->draw_calls[i].layer)]++;
-    }
-    int offset = 0;
-    for (int priority = 0; priority < LAYER_PRIORITIES_COUNT; priority++) {
-        const int count = offsets[priority];
-        offsets[priority] = offset;
-        offset += count;
-    }
-    for (int i = 0; i < this->draw_calls_count; i++) {
-        this->sorted_draw_calls[offsets[renderer_layer_get_priority(this->draw_calls[i].layer)]++] = this->draw_calls[i];
-    }
-}
-
 static void renderer_pipeline_update_viewport_resolution(struct renderer_pipeline *this) {
     int native_renderer_w, native_renderer_h;
     SDL_GetRenderOutputSize(this->native_renderer, &native_renderer_w, &native_renderer_h);
     this->viewport.size.x = native_renderer_w;
     this->viewport.size.y = native_renderer_h;
+}
+
+static int draw_calls_compare(const void *a, const void *b) {
+    const struct renderer_pipeline_draw_call *dc_a = a;
+    const struct renderer_pipeline_draw_call *dc_b = b;
+
+    const int dc_a_layer = renderer_layer_get_priority(dc_a->layer);
+    const int dc_b_layer = renderer_layer_get_priority(dc_b->layer);
+
+    if (dc_a_layer != dc_b_layer) {
+        return (dc_a_layer > dc_b_layer) - (dc_a_layer < dc_b_layer);
+    }
+
+    const double dc_a_y = dc_a->rect.position.y;
+    const double dc_b_y = dc_b->rect.position.y;
+
+    if (dc_a_y != dc_b_y) {
+        return (dc_a_y < dc_b_y) - (dc_a_y > dc_b_y);
+    }
+
+    const void *dc_a_ptr = dc_a->primitive;
+    const void *dc_b_ptr = dc_b->primitive;
+
+    if (dc_a_ptr != dc_b_ptr) {
+        return (dc_a_ptr > dc_b_ptr) - (dc_a_ptr < dc_b_ptr);
+    }
+
+    return 0;
 }
 
 void renderer_pipeline_flush(struct renderer_pipeline *this) {
@@ -102,9 +113,15 @@ void renderer_pipeline_flush(struct renderer_pipeline *this) {
 
     renderer_pipeline_update_viewport_resolution(this);
 
-    renderer_pipeline_sort_draw_calls(this);
+    qsort(
+           this->draw_calls,
+           this->draw_calls_count,
+           sizeof(struct renderer_pipeline_draw_call),
+           draw_calls_compare
+       );
+
     for (int i = 0; i < this->draw_calls_count; i++) {
-        const struct renderer_pipeline_draw_call draw_call = this->sorted_draw_calls[i];
+        const struct renderer_pipeline_draw_call draw_call = this->draw_calls[i];
         renderer_primitive_draw(draw_call.primitive, draw_call.rect, this->viewport, this->native_renderer);
     }
 
