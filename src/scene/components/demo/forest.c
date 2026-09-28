@@ -7,16 +7,21 @@
 #include "../../entity.h"
 #include "../../scene.h"
 #include "../../../logging/logger.h"
+#include "../../../random/random.h"
 #include "../../../rendering/renderer_pipeline.h"
 #include "../../../utils/list.h"
 #include "../../../utils/parser.h"
 #include "../../prefabs/prefab_manager.h"
 #include "../../../subsystems/subsystem_collection.h"
+#include "../../../utils/vector2_math.h"
+#include "../../prefabs/prefab.h"
+#include "../core/transform.h"
 
 
 struct forest {
     struct component base;
 
+    int trees_number;
     struct list* prefabIds;
 };
 
@@ -41,6 +46,8 @@ struct component* forest_create(struct parser *parser, struct entity *parent) {
     struct component *base = (struct component *) this;
     component_base_create(base, &forest_vtable, parser, parent);
 
+    parser_next_int(parser, &this->trees_number);
+
     this->prefabIds = list_create(1);
     for (; ;) {
         const char *word = parser_next(parser);
@@ -64,7 +71,7 @@ static struct component* forest_clone(struct component base, const struct compon
 static void forest_awake(struct component *base) {
     const struct forest *this = (struct forest *) base;
 
-    const struct scene *scene = entity_get_parent(component_get_parent(base));
+    struct scene *scene = entity_get_parent(component_get_parent(base));
     const struct prefab_manager* prefab_manager = scene_get_prefab_manager(scene);
     struct random* random = (struct random*)subsystem_collection_get(scene_get_subsystems(scene), "random");
 
@@ -82,6 +89,26 @@ static void forest_awake(struct component *base) {
         logger_warn("Forest found no valid prefabs. Nothing will be spawned!");
         list_destroy(prefabs);
         return;
+    }
+
+    logger_debug("Forest is spawning %d trees (%d different tree specs)...", this->trees_number, list_count(prefabs));
+
+    struct vector2 position = component_get_position(base);
+    struct vector2 size = component_get_scale(base);
+    struct vector2 half_size = vector_multiply_scalar(size, 0.5);
+
+    for (int i = 0; i < this->trees_number; i++) {
+        const int tree_spec = random_next_int(random, 0, list_count(prefabs));
+        struct prefab* prefab = list_get(prefabs, tree_spec);
+        struct entity* tree = prefab_instantiate(prefab);
+
+        scene_capture_entity(scene, tree);
+
+        struct vector2 tree_position;
+        tree_position.x = (float)random_next_double(random, position.x - half_size.x, position.x + half_size.x);
+        tree_position.y = (float)random_next_double(random, position.y - half_size.y, position.y + half_size.y);
+        struct transform* tree_transform = entity_get_transform(tree);
+        transform_set_position(tree_transform, tree_position);
     }
 
     list_destroy(prefabs);

@@ -41,7 +41,7 @@ int random_next_int(struct random* random, const int l, const int r) {
     if (l >= r) {
         return l;
     }
-    return l + rand() % (r - l + 1);
+    return l + rand() % (r - l);
 }
 
 double random_next_double(struct random* random, const double l, const double r) {
