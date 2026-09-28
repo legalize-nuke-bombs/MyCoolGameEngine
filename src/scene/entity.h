@@ -12,6 +12,7 @@ struct engine;
 struct transform;
 
 struct entity* entity_create(char *name, struct scene *parent);
+struct entity* entity_clone(const struct entity* entity);
 void entity_awake(struct entity *this);
 void entity_destroy(struct entity *this);
 void entity_mark_destroyed(struct entity *this);

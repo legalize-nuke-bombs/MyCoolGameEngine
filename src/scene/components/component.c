@@ -9,7 +9,7 @@
 #include "core/transform.h"
 #include "../../utils/parser.h"
 
-void component_create(struct component *this, const struct component_vtable *vtable, struct parser *parser, struct entity *parent) {
+void component_base_create(struct component *this, const struct component_vtable *vtable, struct parser *parser, struct entity *parent) {
     this->vtable = vtable;
     logger_debug("Component %s is creating...", component_get_key(this));
     this->awake = false;
@@ -30,6 +30,17 @@ void component_create(struct component *this, const struct component_vtable *vta
         logger_warn("Unexpected component local transform start token `%s`", word);
     }
     this->parent = parent;
+}
+struct component* component_clone(const struct component *component) {
+    logger_debug("Component %s is cloning...", component_get_key(component));
+    struct component this;
+    this.vtable = component->vtable;
+    this.awake = false;
+    this.alive = true;
+    this.local_position = component->local_position;
+    this.local_scale = component->local_scale;
+    this.parent = component->parent;
+    return component->vtable->on_clone(this, component);
 }
 void component_awake(struct component *this) {
     logger_debug("Entity %s is awaking component %s...", component_get_parent_name(this), component_get_key(this));

@@ -13,11 +13,8 @@
 #include "core/controller.h"
 #include "core/idle.h"
 #include "core/keyboard_controller.h"
-#include "demo/armageddon.h"
 #include "rendering/box_renderer.h"
 #include "rendering/camera.h"
-#include "demo/printer.h"
-#include "demo/suicidal.h"
 #include "rendering/box_light.h"
 #include "rendering/box_renderer_animated.h"
 #include "rendering/renderer_settings.h"
@@ -45,9 +42,6 @@ static void component_fabric_register_all(const struct component_fabric *this) {
     component_fabric_register_component(this, box_light_component_key(), box_light_create);
     component_fabric_register_component(this, controller_component_key(), controller_create);
     component_fabric_register_component(this, keyboard_controller_component_key(), keyboard_controller_create);
-    component_fabric_register_component(this, printer_component_key(), printer_create);
-    component_fabric_register_component(this, suicidal_component_key(), suicidal_create);
-    component_fabric_register_component(this, armageddon_component_key(), armageddon_create);
 }
 
 struct component_fabric* component_fabric_create() {

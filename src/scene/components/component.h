@@ -8,6 +8,7 @@
 struct component;
 struct entity;
 
+struct component* component_clone(const struct component *component);
 void component_awake(struct component *this);
 void component_destroy(struct component *this);
 void component_mark_destroyed(struct component *this);

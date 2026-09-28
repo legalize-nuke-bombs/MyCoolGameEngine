@@ -75,7 +75,7 @@ static void keyboard_controller_on_disable(struct component* base) {
 struct component* keyboard_controller_create(struct parser *parser, struct entity *parent) {
     struct keyboard_controller *this = calloc(1, sizeof(struct keyboard_controller));
     struct component *base = (struct component *) this;
-    component_create(base, &keyboard_controller_vtable, parser, parent);
+    component_base_create(base, &keyboard_controller_vtable, parser, parent);
 
     return base;
 }

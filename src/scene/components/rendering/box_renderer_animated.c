@@ -35,7 +35,7 @@ const char* box_renderer_animated_component_key(void) {
 struct component* box_renderer_animated_create(struct parser *parser, struct entity *parent) {
     struct box_renderer_animated *this = calloc(1, sizeof(struct box_renderer_animated));
     struct component *base = (struct component *) this;
-    component_create(base, &box_renderer_animated_vtable, parser, parent);
+    component_base_create(base, &box_renderer_animated_vtable, parser, parent);
 
     parser_next_double(parser, &this->frame_interval);
 

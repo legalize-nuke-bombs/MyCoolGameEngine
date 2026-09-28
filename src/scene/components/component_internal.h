@@ -10,6 +10,7 @@ struct parser;
 
 struct component_vtable {
     const char* (*component_key)(void);
+    struct component* (*on_clone)(struct component base, const struct component *component);
     void (*on_awake)(struct component *this);
     void (*on_update)(struct component *this, const struct update_context *context);
     void (*on_disable)(struct component *this);
@@ -25,6 +26,6 @@ struct component {
     struct entity *parent;
 };
 
-void component_create(struct component *this, const struct component_vtable *vtable, struct parser *parser, struct entity *parent);
+void component_base_create(struct component *this, const struct component_vtable *vtable, struct parser *parser, struct entity *parent);
 
 #endif //MYCOOLGAMEENGINE_COMPONENT_INTERNAL_H

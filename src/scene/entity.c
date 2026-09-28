@@ -21,7 +21,7 @@ struct entity {
 };
 
 struct entity* entity_create(char *name, struct scene *parent) {
-    struct entity *this = malloc(sizeof(struct entity));
+    struct entity *this = calloc(1, sizeof(struct entity));
     this->name = name;
     logger_debug("Entity %s is initializing...", this->name);
     this->awake = false;
@@ -29,8 +29,23 @@ struct entity* entity_create(char *name, struct scene *parent) {
     this->components = list_create(1);
     this->components_updateable = list_create(1);
     this->on_component_captured = action_create();
-    this->transform = NULL;
     this->parent = parent;
+    return this;
+}
+struct entity* entity_clone(const struct entity* entity) {
+    logger_debug("Entity %s is cloning...", entity->name);
+    struct entity* this = malloc(sizeof(struct entity));
+    this->name = strdup(entity->name);
+    this->awake = false;
+    this->alive = true;
+    this->components = list_create(list_count(entity->components));
+    this->components_updateable = list_create(list_count(entity->components_updateable));
+    this->on_component_captured = action_create();
+    this->parent = entity->parent;
+    for (int i = 0; i < list_count(entity->components); i++) {
+        struct component *component = list_get(this->components, i);
+        entity_capture_component(this, component_clone(component));
+    }
     return this;
 }
 void entity_awake(struct entity *this) {

@@ -17,12 +17,14 @@ struct camera {
     struct renderer_pipeline *renderer;
 };
 
+static struct component* camera_clone(struct component base, const struct component *component);
 static void camera_awake(struct component *base);
 static void camera_update(struct component *base, const struct update_context *context);
 static void camera_on_disable(struct component *base);
 
 static const struct component_vtable camera_vtable = {
     .component_key = camera_component_key,
+    .on_clone = camera_clone,
     .on_awake = camera_awake,
     .on_update = camera_update,
     .on_disable = camera_on_disable
@@ -33,13 +35,19 @@ const char* camera_component_key(void) {
 }
 
 struct component* camera_create(struct parser *parser, struct entity *parent) {
-    struct camera *this = malloc(sizeof(struct camera));
+    struct camera *this = calloc(1, sizeof(struct camera));
     struct component *base = (struct component *) this;
-    component_create(base, &camera_vtable, parser, parent);
-
-    this->renderer = NULL;
+    component_base_create(base, &camera_vtable, parser, parent);
 
     return base;
+}
+
+static struct component* camera_clone(struct component base, const struct component *component) {
+    struct camera *camera = (struct camera *) component;
+
+    struct camera* this = calloc(1, sizeof(struct camera));
+    this->base = base;
+    return (struct component*)this;
 }
 
 static void camera_awake(struct component *base) {

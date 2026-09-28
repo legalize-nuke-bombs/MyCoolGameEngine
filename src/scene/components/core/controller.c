@@ -46,7 +46,7 @@ static void controller_on_disable(struct component* base) {
 struct component* controller_create(struct parser *parser, struct entity *parent) {
     struct controller *this = calloc(1, sizeof(struct controller));
     struct component *base = (struct component *) this;
-    component_create(base, &controller_vtable, parser, parent);
+    component_base_create(base, &controller_vtable, parser, parent);
 
     parser_next_double(parser, &this->v);
 
