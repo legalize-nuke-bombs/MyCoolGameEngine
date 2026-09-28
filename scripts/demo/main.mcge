@@ -21,7 +21,7 @@ box_renderer default bg1 color 54 78 62 255
 end
 
 scene new_entity Cube
-transform default 0 0 50 50
+transform default 0 0 32 32
 box_renderer default character1 texture cube 0
 end
 
@@ -37,8 +37,43 @@ transform default 200 0 72 65
 box_renderer default prop1 texture tree1 0
 end
 
+scene new_entity Tree2
+transform default 300 0 72 65
+box_renderer default prop1 texture tree2 0
+end
+
+scene new_entity Tree3
+transform default 0 200 72 65
+box_renderer default prop1 texture tree3 0
+end
+
+scene new_entity Tree4
+transform default 0 300 72 65
+box_renderer default prop1 texture tree4 0
+end
+
+scene new_entity Tree5
+transform default -200 0 72 65
+box_renderer default prop1 texture tree5 0
+end
+
+scene new_entity Tree6
+transform default -100 0 72 65
+box_renderer default prop1 texture tree6 0
+end
+
+scene new_entity Tree7
+transform default 50 0 72 65
+box_renderer default prop1 texture tree7 0
+end
+
+scene new_entity Tree8
+transform default 0 50 72 65
+box_renderer default prop1 texture tree8 0
+end
+
 scene new_entity Torch
-transform default 0 200 10 10
+transform default 100 300 10 10
 box_renderer default prop1 color 175 175 255 255
 box_light custom 0 0 10 10
 end
