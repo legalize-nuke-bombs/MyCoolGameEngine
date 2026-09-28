@@ -135,8 +135,8 @@ add_executable(MyCoolGameEngine main.c
         src/interpreter/scene/interpreter_scene.c
         src/scene/components/component_fabric.h
         src/scene/components/component_fabric.c
-        src/interpreter/scene/interpreter_scene_new_entity.h
-        src/interpreter/scene/interpreter_scene_new_entity.c
+        src/interpreter/scene/interpreter_scene_add.h
+        src/interpreter/scene/interpreter_scene_add.c
         src/devices/keyboard.h
         src/devices/keyboard.c
         src/profiler/profiler.h
