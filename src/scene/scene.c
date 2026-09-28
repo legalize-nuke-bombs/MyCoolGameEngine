@@ -23,6 +23,8 @@ struct scene {
     struct subsystem base;
 
     char* name;
+    bool awoken;
+
     struct entity_collection* entities;
     struct tmap *tmap;
     double gcTimer;
@@ -103,6 +105,7 @@ static void scene_update(void *listener, void *context) {
 
 void scene_on_enable(struct subsystem *base, struct engine_arguments args) {
     struct scene *this = (struct scene*)base;
+    this->awoken = true;
     entity_collection_awake_everyone(this->entities);
     this->gcTimer = 0;
     this->on_physics = engine_events_on_physics((struct engine_events*)subsystem_get_subsystem(base, "engine_events"));
@@ -111,6 +114,7 @@ void scene_on_enable(struct subsystem *base, struct engine_arguments args) {
 
 void scene_on_disable(struct subsystem *base) {
     struct scene *this = (struct scene*)base;
+    this->awoken = false;
     action_unsubscribe(this->on_physics, this->on_physics_subscription_token);
     this->on_physics = NULL;
     entity_collection_clear(this->entities);
@@ -144,7 +148,9 @@ void scene_capture_entity(struct scene *this, struct entity *entity) {
     entity_set_parent(entity, this);
     logger_debug("Scene %s is capturing entity %s", this->name, entity_get_name(entity));
 
-    entity_awake(entity);
+    if (this->awoken) {
+        entity_awake(entity);
+    }
 
     entity_collection_add(this->entities, entity);
 

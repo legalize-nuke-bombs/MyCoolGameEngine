@@ -53,10 +53,6 @@ void entity_awake(struct entity *this) {
     }
     logger_debug("Entity %s is awaking...", this->name);
     this->awake = true;
-    this->transform = (struct transform*)entity_get_component(this, "transform");
-    if (this->transform == NULL) {
-        entity_mark_destroyed(this);
-    }
     for (int i = 0; i < list_count(this->components); i++) {
         struct component *component = list_get(this->components, i);
         component_awake(component);
@@ -121,6 +117,9 @@ void entity_capture_component(struct entity *this, struct component *component) 
     list_add(this->components, component);
     if (component_is_updateable(component)) {
         list_add(this->components_updateable, component);
+    }
+    if (strcmp(component_get_key(component), "transform") == 0) {
+        this->transform = (struct transform*)component;
     }
     action_invoke(this->on_component_captured, component);
 }

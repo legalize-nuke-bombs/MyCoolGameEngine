@@ -65,6 +65,11 @@ static struct component* forest_clone(struct component base, const struct compon
 
     struct forest* this = calloc(1, sizeof(struct forest));
     this->base = base;
+    this->trees_number = forest->trees_number;
+    this->prefabIds = list_create(list_count(forest->prefabIds));
+    for (int i = 0; i < list_count(forest->prefabIds); i++) {
+        list_add(this->prefabIds, strdup(list_get(forest->prefabIds, i)));
+    }
     return (struct component*)this;
 }
 
@@ -102,13 +107,13 @@ static void forest_awake(struct component *base) {
         struct prefab* prefab = list_get(prefabs, tree_spec);
         struct entity* tree = prefab_instantiate(prefab);
 
-        scene_capture_entity(scene, tree);
-
         struct vector2 tree_position;
         tree_position.x = (float)random_next_double(random, position.x - half_size.x, position.x + half_size.x);
         tree_position.y = (float)random_next_double(random, position.y - half_size.y, position.y + half_size.y);
         struct transform* tree_transform = entity_get_transform(tree);
         transform_set_position(tree_transform, tree_position);
+
+        scene_capture_entity(scene, tree);
     }
 
     list_destroy(prefabs);
