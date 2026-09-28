@@ -69,6 +69,15 @@ struct renderer_primitive* renderer_square_create_from_texture(struct texture* t
     return (struct renderer_primitive*)this;
 }
 
+struct renderer_primitive* renderer_square_clone(const struct renderer_square* square) {
+    struct renderer_square* this = calloc(1, sizeof(struct renderer_square));
+    this->base.vtable = &renderer_square_vtable;
+    this->color = square->color;
+    this->texture = square->texture;
+    this->texture_frame = square->texture_frame;
+    return (struct renderer_primitive*)this;
+}
+
 void renderer_square_bump_texture_frame(struct renderer_square* this) {
     this->texture_frame++;
 }

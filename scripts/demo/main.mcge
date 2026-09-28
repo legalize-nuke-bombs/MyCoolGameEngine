@@ -16,8 +16,9 @@ texture_manager new_texture tree7 72 65 ../textures/demo/tree7_tileset.png lazy 
 texture_manager new_texture tree8 72 65 ../textures/demo/tree8_tileset.png lazy 1
 texture_manager new_texture gradient_circular 512 512 ../textures/core/gradient_circular.png lazy 1
 
-scene add prefab Tree1Prefab
+scene add prefab Tree1
 transform default 0 0 72 65
+box_renderer default prop1 texture tree1 0
 end
 
 scene add entity Terrain
@@ -37,54 +38,6 @@ scene add entity CameraRig
 transform default 0 0 1 1
 end
 
-scene add entity Tree1
-transform default 200 0 72 65
-box_renderer default prop1 texture tree1 0
-box_renderer_animated default 0.1
-end
-
-scene add entity Tree2
-transform default 300 0 72 65
-box_renderer default prop1 texture tree2 0
-box_renderer_animated default 0.1
-end
-
-scene add entity Tree3
-transform default 0 200 72 65
-box_renderer default prop1 texture tree3 0
-box_renderer_animated default 0.1
-end
-
-scene add entity Tree4
-transform default 0 300 72 65
-box_renderer default prop1 texture tree4 0
-box_renderer_animated default 0.1
-end
-
-scene add entity Tree5
-transform default -200 0 72 65
-box_renderer default prop1 texture tree5 0
-box_renderer_animated default 0.1
-end
-
-scene add entity Tree6
-transform default -100 0 72 65
-box_renderer default prop1 texture tree6 0
-box_renderer_animated default 0.1
-end
-
-scene add entity Tree7
-transform default 50 0 72 65
-box_renderer default prop1 texture tree7 0
-box_renderer_animated default 0.1
-end
-
-scene add entity Tree8
-transform default 0 50 72 65
-box_renderer default prop1 texture tree8 0
-box_renderer_animated default 0.1
-end
-
 scene add entity Torch
 transform default 100 300 10 10
 box_renderer default prop1 color 175 175 255 255
@@ -94,5 +47,5 @@ end
 scene add entity GameState
 transform default 0 0 1 1
 renderer_settings default 1 50 50 80 255
-forest default Tree1Prefab end
+forest default Tree1 end
 end

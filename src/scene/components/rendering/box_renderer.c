@@ -30,12 +30,14 @@ struct box_renderer {
     struct renderer_primitive* square;
 };
 
+static struct component* box_renderer_clone(struct component base, const struct component *component);
 static void box_renderer_awake(struct component *base);
 static void box_renderer_update(struct component *base, const struct update_context *context);
 static void box_renderer_on_destroy(struct component *base);
 
 static const struct component_vtable box_renderer_vtable = {
     .component_key = box_renderer_component_key,
+    .on_clone = box_renderer_clone,
     .on_awake = box_renderer_awake,
     .on_update = box_renderer_update,
     .on_disable = NULL,
@@ -86,6 +88,15 @@ struct component* box_renderer_create(struct parser *parser, struct entity *pare
 
 
     return base;
+}
+static struct component* box_renderer_clone(struct component base, const struct component *component) {
+    const struct box_renderer *box_renderer = (struct box_renderer*)component;
+
+    struct box_renderer *this = calloc(1, sizeof(struct box_renderer));
+    this->base = base;
+    this->renderer_layer_name = strdup(box_renderer->renderer_layer_name);
+    this->square = renderer_square_clone((struct renderer_square*)box_renderer->square);
+    return (struct component*)this;
 }
 
 static void box_renderer_on_destroy(struct component *base) {

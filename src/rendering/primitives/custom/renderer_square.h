@@ -14,6 +14,8 @@ struct texture;
 struct renderer_primitive* renderer_square_create_from_color(struct color color);
 struct renderer_primitive* renderer_square_create_from_texture(struct texture* texture, int frame);
 
+struct renderer_primitive* renderer_square_clone(const struct renderer_square* square);
+
 void renderer_square_bump_texture_frame(struct renderer_square* this);
 
 #endif //MYCOOLGAMEENGINE_RENDERER_SQUARE_H

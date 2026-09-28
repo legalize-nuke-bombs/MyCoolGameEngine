@@ -97,6 +97,9 @@ bool entity_is_alive(const struct entity *this) {
     return this->alive;
 }
 
+void entity_set_parent(struct entity *this, struct scene *parent) {
+    this->parent = parent;
+}
 struct scene* entity_get_parent(const struct entity *this) {
     return this->parent;
 }

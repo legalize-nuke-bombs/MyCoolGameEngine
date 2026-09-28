@@ -15,4 +15,6 @@ void prefab_manager_destroy(struct prefab_manager* this);
 void prefab_manager_capture_prefab(const struct prefab_manager* this, struct prefab* prefab);
 struct entity* prefab_manager_instantiate(const struct prefab_manager* this, const char* key);
 
+void prefab_manager_clear(const struct prefab_manager* this);
+
 #endif //MYCOOLGAMEENGINE_PREFAB_MANAGER_H

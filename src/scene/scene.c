@@ -115,6 +115,7 @@ void scene_on_disable(struct subsystem *base) {
     this->on_physics = NULL;
     entity_collection_clear(this->entities);
     tmap_clear(this->tmap);
+    prefab_manager_clear(this->prefab_manager);
 }
 
 const char* scene_get_name(const struct scene *this) {
@@ -140,11 +141,7 @@ const struct subsystem_collection* scene_get_subsystems(const struct scene* this
 }
 
 void scene_capture_entity(struct scene *this, struct entity *entity) {
-    const struct scene *owner = entity_get_parent(entity);
-    if (owner != this) {
-        logger_error("Scene %s cannot capture entity %s owned by scene %s", this->name, entity_get_name(entity), owner != NULL ? owner->name : "<none>");
-        return;
-    }
+    entity_set_parent(entity, this);
     logger_debug("Scene %s is capturing entity %s", this->name, entity_get_name(entity));
 
     entity_awake(entity);
