@@ -21,6 +21,7 @@
 #include "../rendering/renderer.h"
 #include "../engine/utils/engine_closer.h"
 #include "../engine/lifecycle/engine_lifecycle.h"
+#include "../random/random.h"
 
 
 struct subsystem_collection {
@@ -55,6 +56,7 @@ static void subsystem_collection_capture_all(const struct subsystem_collection *
     subsystem_collection_capture(this, profiler_create(this));
     subsystem_collection_capture(this, engine_closer_create(this));
     subsystem_collection_capture(this, engine_restarter_create(this));
+    subsystem_collection_capture(this, random_create(this));
 }
 
 
