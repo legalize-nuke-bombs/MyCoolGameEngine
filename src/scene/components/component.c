@@ -39,7 +39,7 @@ void component_base_create(struct component *this, const struct component_vtable
     this->parent = parent;
 }
 struct component* component_clone(const struct component *component) {
-    struct component this;
+    struct component this = {0};
     this.vtable = component->vtable;
     logger_debug("Component %s is cloning...", component_get_key(component));
     this.awake = false;
