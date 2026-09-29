@@ -98,7 +98,7 @@ end
 
 
 scene add entity Terrain
-transform default 0 0 1000 1000
+transform default 0 0 100000 100000
 box_renderer default bg1 color 54 78 62 255
 end
 
@@ -110,8 +110,8 @@ end
 
 
 scene add entity Forest
-transform default 0 0 1000 1000
-forest default 200 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
+transform default 0 0 100000 100000
+forest default 1000000 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
 end
 
 
