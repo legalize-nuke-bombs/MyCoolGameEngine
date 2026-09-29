@@ -11,15 +11,20 @@ struct dictionary_node {
     void *value;
 };
 
+struct dictionary_iterator {
+    int bucket;
+    void *node;
+};
+
 struct dictionary;
 
 struct dictionary* dictionary_create(int dim, int (*hash)(const void*), bool (*equals)(const void*, const void*));
 void dictionary_destroy(struct dictionary *dictionary);
 
-int dictionary_capacity(const struct dictionary *dictionary);
 int dictionary_count(const struct dictionary *dictionary);
 
-struct dictionary_node dictionary_get_node(const struct dictionary *dictionary, int index);
+struct dictionary_iterator dictionary_begin(const struct dictionary *dictionary);
+bool dictionary_next(const struct dictionary *dictionary, struct dictionary_iterator *iterator, struct dictionary_node *node);
 
 bool dictionary_try_add(struct dictionary *dictionary, void *key, void *value);
 void *dictionary_get(const struct dictionary *dictionary, void *key);

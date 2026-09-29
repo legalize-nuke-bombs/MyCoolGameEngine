@@ -47,11 +47,10 @@ struct prefab* prefab_manager_try_get(const struct prefab_manager* this, const c
 
 void prefab_manager_clear(const struct prefab_manager* this) {
     logger_info("Prefab manager is clearing...");
-    for (int i = 0; i < dictionary_capacity(this->dict); i++) {
-        const struct dictionary_node node = dictionary_get_node(this->dict, i);
-        if (node.value != NULL) {
-            prefab_destroy(node.value);
-        }
+    struct dictionary_iterator iterator = dictionary_begin(this->dict);
+    struct dictionary_node node;
+    while (dictionary_next(this->dict, &iterator, &node)) {
+        prefab_destroy(node.value);
     }
     dictionary_clear(this->dict);
 }

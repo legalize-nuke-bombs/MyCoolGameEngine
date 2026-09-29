@@ -12,6 +12,8 @@ struct dictionary {
     bool (*equals)(const void *key1, const void *key2);
 };
 
+static int dictionary_capacity(const struct dictionary *dictionary);
+
 struct dictionary* dictionary_create(int dim, int (*hash)(const void*), bool (*equals)(const void*, const void*)) {
     if (dim < 0) {
         logger_warn("Dictionary bad dim passed (%d)", dim);
@@ -35,7 +37,7 @@ void dictionary_destroy(struct dictionary *dictionary) {
     free(dictionary);
 }
 
-int dictionary_capacity(const struct dictionary *dictionary) {
+static int dictionary_capacity(const struct dictionary *dictionary) {
     return 1 << dictionary->dim;
 }
 int dictionary_count(const struct dictionary *dictionary) {
@@ -45,8 +47,23 @@ int dictionary_count(const struct dictionary *dictionary) {
 static int dictionary_node_index(const struct dictionary *dictionary, void *key) {
     return dictionary->hash(key) & (dictionary_capacity(dictionary) - 1);
 }
-struct dictionary_node dictionary_get_node(const struct dictionary *dictionary, int index) {
-    return dictionary->nodes[index];
+
+struct dictionary_iterator dictionary_begin(const struct dictionary *dictionary) {
+    const struct dictionary_iterator iterator = {
+        .bucket = 0,
+        .node = NULL
+    };
+    return iterator;
+}
+bool dictionary_next(const struct dictionary *dictionary, struct dictionary_iterator *iterator, struct dictionary_node *node) {
+    while (iterator->bucket < dictionary_capacity(dictionary)) {
+        const struct dictionary_node current = dictionary->nodes[iterator->bucket++];
+        if (current.key != NULL) {
+            *node = current;
+            return true;
+        }
+    }
+    return false;
 }
 
 bool dictionary_try_add(struct dictionary *dictionary, void *key, void *value) {

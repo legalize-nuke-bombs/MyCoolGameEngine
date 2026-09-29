@@ -24,11 +24,9 @@ struct renderer_layer_manager* renderer_layer_manager_create() {
 }
 void renderer_layer_manager_destroy(struct renderer_layer_manager *this) {
     logger_info("Renderer layer manager is destroying...");
-    for (int i = 0; i < dictionary_capacity(this->dictionary); i++) {
-        const struct dictionary_node node = dictionary_get_node(this->dictionary, i);
-        if (node.value == NULL) {
-            continue;
-        }
+    struct dictionary_iterator iterator = dictionary_begin(this->dictionary);
+    struct dictionary_node node;
+    while (dictionary_next(this->dictionary, &iterator, &node)) {
         renderer_layer_destroy(node.value);
     }
     dictionary_destroy(this->dictionary);
@@ -50,11 +48,9 @@ struct renderer_layer* renderer_layer_manager_try_get(const struct renderer_laye
 }
 
 void renderer_layer_manager_clear(const struct renderer_layer_manager *this) {
-    for (int i = 0; i < dictionary_capacity(this->dictionary); i++) {
-        const struct dictionary_node node = dictionary_get_node(this->dictionary, i);
-        if (node.value == NULL) {
-            continue;
-        }
+    struct dictionary_iterator iterator = dictionary_begin(this->dictionary);
+    struct dictionary_node node;
+    while (dictionary_next(this->dictionary, &iterator, &node)) {
         renderer_layer_destroy(node.value);
     }
     dictionary_clear(this->dictionary);

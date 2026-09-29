@@ -24,11 +24,9 @@ struct interpreter_command_register* interpreter_command_register_create(const c
     return this;
 }
 void interpreter_command_register_destroy(struct interpreter_command_register* this) {
-    for (int i = 0; i < dictionary_capacity(this->dictionary); i++) {
-        const struct dictionary_node node = dictionary_get_node(this->dictionary, i);
-        if (node.value == NULL) {
-            continue;
-        }
+    struct dictionary_iterator iterator = dictionary_begin(this->dictionary);
+    struct dictionary_node node;
+    while (dictionary_next(this->dictionary, &iterator, &node)) {
         interpreter_command_destroy(node.value);
     }
     dictionary_destroy(this->dictionary);
@@ -58,24 +56,19 @@ struct interpreter_command* interpreter_command_register_try_get_command(const s
 
 char* interpreter_command_register_alloc_command_list(const struct interpreter_command_register *this) {
     size_t len = 0;
-    for (int i = 0; i < dictionary_capacity(this->dictionary); i++) {
-        const struct dictionary_node node = dictionary_get_node(this->dictionary, i);
+    struct dictionary_iterator iterator = dictionary_begin(this->dictionary);
+    struct dictionary_node node;
+    while (dictionary_next(this->dictionary, &iterator, &node)) {
         const char* command_key = node.key;
-        if (command_key == NULL) {
-            continue;
-        }
         len += strlen(command_key);
         len++;
     }
 
     char* result = malloc(len * sizeof(char) + 1);
     result[0] = '\0';
-    for (int i = 0; i < dictionary_capacity(this->dictionary); i++) {
-        const struct dictionary_node node = dictionary_get_node(this->dictionary, i);
+    iterator = dictionary_begin(this->dictionary);
+    while (dictionary_next(this->dictionary, &iterator, &node)) {
         const char* command_key = node.key;
-        if (command_key == NULL) {
-            continue;
-        }
         strcat(result, command_key);
         strcat(result, " ");
     }
