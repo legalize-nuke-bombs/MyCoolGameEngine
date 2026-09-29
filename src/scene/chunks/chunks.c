@@ -12,7 +12,7 @@
 #include "../../utils/list.h"
 #include "../components/component.h"
 
-#define CHUNKS_SIZE 1024
+#define CHUNKS_SIZE 256
 #define CHUNKS_START_CHUNK_SIZE 1.f // TODO This is test value. Should be probably 256-1024
 
 struct chunks {
