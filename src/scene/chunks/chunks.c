@@ -4,6 +4,7 @@
 
 #include "chunks.h"
 
+#include <math.h>
 #include <stdlib.h>
 
 #include "../../logging/logger.h"
@@ -11,27 +12,30 @@
 #include "../../utils/list.h"
 #include "../components/component.h"
 
-#define CHUNKS_WIDTH 1024
-#define CHUNKS_HEIGHT 1024
+#define CHUNKS_SIZE 1024
+#define CHUNKS_START_CHUNK_SIZE 1.f // TODO This is test value. Should be probably 256-1024
 
 struct chunks {
-    struct list* components[CHUNKS_WIDTH][CHUNKS_WIDTH];
+    struct list* components[CHUNKS_SIZE][CHUNKS_SIZE];
+    float chunk_size;
 };
 
+
 struct chunks *chunks_create() {
-    logger_info("Chunks (%d x %d) are creating...", CHUNKS_WIDTH, CHUNKS_HEIGHT);
+    logger_info("Chunks (%d x %d, chunk size %f) are creating...", CHUNKS_SIZE, CHUNKS_SIZE, CHUNKS_START_CHUNK_SIZE);
     struct chunks *this = calloc(1, sizeof(struct chunks));
-    for (int i = 0; i < CHUNKS_WIDTH; i++) {
-        for (int j = 0; j < CHUNKS_HEIGHT; j++) {
+    for (int i = 0; i < CHUNKS_SIZE; i++) {
+        for (int j = 0; j < CHUNKS_SIZE; j++) {
             this->components[i][j] = list_create(1);
         }
     }
+    this->chunk_size = CHUNKS_START_CHUNK_SIZE;
     return this;
 }
 void chunks_destroy(struct chunks *this) {
     logger_info("Chunks are destroying...");
-    for (int i = 0; i < CHUNKS_WIDTH; i++) {
-        for (int j = 0; j < CHUNKS_HEIGHT; j++) {
+    for (int i = 0; i < CHUNKS_SIZE; i++) {
+        for (int j = 0; j < CHUNKS_SIZE; j++) {
             list_destroy(this->components[i][j]);
         }
     }
@@ -40,11 +44,55 @@ void chunks_destroy(struct chunks *this) {
 
 void chunks_clear(const struct chunks *this) {
     logger_info("Chunks are clearing...");
-    for (int i = 0; i < CHUNKS_WIDTH; i++) {
-        for (int j = 0; j < CHUNKS_HEIGHT; j++) {
+    for (int i = 0; i < CHUNKS_SIZE; i++) {
+        for (int j = 0; j < CHUNKS_SIZE; j++) {
             list_clear(this->components[i][j]);
         }
     }
+}
+
+static int chunks_index(const struct chunks* this, double position) {
+    const int offset = floor(position / this->chunk_size);
+    return (CHUNKS_SIZE / 2) + offset;
+}
+
+static void chunks_resize(struct chunks *this);
+
+
+static void chunks_add_component(struct chunks* this, struct component* component) {
+    const struct rect rect = component_get_rect(component);
+
+    double min_x = rect.position.x - rect.size.x / 2;
+    double max_x = rect.position.x + rect.size.x / 2;
+    double min_y = rect.position.y - rect.size.y / 2;
+    double max_y = rect.position.y + rect.size.y / 2;
+
+    int start_x, end_x, start_y, end_y;
+    while (1) {
+        start_x = chunks_index(this, min_x);
+        end_x = chunks_index(this, max_x);
+        start_y = chunks_index(this, min_y);
+        end_y = chunks_index(this, max_y);
+
+        if (start_x >= 0 && end_x < CHUNKS_SIZE && start_y >= 0 && end_y < CHUNKS_SIZE) {
+            break;
+        }
+
+        chunks_resize(this);
+    }
+
+    for (int x = start_x; x <= end_x; x++) {
+        for (int y = start_y; y <= end_y; y++) {
+            list_add(this->components[y][x], component);
+        }
+    }
+}
+
+static void chunks_resize(struct chunks *this) {
+    const float target_chunk_size = this->chunk_size * 2;
+    logger_info("Chunks are updating chunk size from %f to %f...", this->chunk_size, target_chunk_size);
+
+
 }
 
 static void handle_component_rect_changed(void *listener, void *context);
