@@ -5,7 +5,6 @@
 #include "box_renderer.h"
 #include "../component_internal.h"
 #include "../../entity.h"
-#include "../../../rendering/renderer_pipeline.h"
 #include "../../../utils/parser.h"
 
 
@@ -21,12 +20,16 @@ struct box_renderer_animated {
 static struct component* box_renderer_animated_clone(struct component base, const struct component *component);
 static void box_renderer_animated_awake(struct component *base);
 static void box_renderer_animated_update(struct component *base, const struct update_context *context);
+static bool box_renderer_animated_is_chunkable() {
+    return true;
+}
 
 static const struct component_vtable box_renderer_animated_vtable = {
     .component_key = box_renderer_animated_component_key,
     .on_clone = box_renderer_animated_clone,
     .on_awake = box_renderer_animated_awake,
     .on_update = box_renderer_animated_update,
+    .is_chunkable = box_renderer_animated_is_chunkable,
     .on_disable = NULL
 };
 

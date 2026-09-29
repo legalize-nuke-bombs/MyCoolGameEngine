@@ -98,6 +98,9 @@ static void chunks_resize(struct chunks *this) {
 static void handle_component_rect_changed(void *listener, void *context);
 
 void chunks_register_component(struct chunks *this, const struct component *component) {
+    if (!component_is_chunkable(component)) {
+        return;
+    }
     const struct action* on_rect_changed = component_get_on_rect_changed(component);
     unsigned int on_rect_changed_subscription_token; // We do not unsubscribe because scene infrastructure live longer than components
     action_subscribe(on_rect_changed, this, handle_component_rect_changed, &on_rect_changed_subscription_token);

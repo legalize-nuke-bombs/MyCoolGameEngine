@@ -33,6 +33,9 @@ struct box_renderer {
 static struct component* box_renderer_clone(struct component base, const struct component *component);
 static void box_renderer_awake(struct component *base);
 static void box_renderer_update(struct component *base, const struct update_context *context);
+static bool box_renderer_is_chunkable() {
+    return true;
+}
 static void box_renderer_on_destroy(struct component *base);
 
 static const struct component_vtable box_renderer_vtable = {
@@ -40,6 +43,7 @@ static const struct component_vtable box_renderer_vtable = {
     .on_clone = box_renderer_clone,
     .on_awake = box_renderer_awake,
     .on_update = box_renderer_update,
+    .is_chunkable = box_renderer_is_chunkable,
     .on_disable = NULL,
     .on_destroy = box_renderer_on_destroy
 };

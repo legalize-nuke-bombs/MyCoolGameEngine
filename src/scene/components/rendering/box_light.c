@@ -30,6 +30,9 @@ struct box_light {
 static struct component* box_light_clone(struct component base, const struct component *component);
 static void box_light_awake(struct component *base);
 static void box_light_update(struct component *base, const struct update_context *context);
+static bool box_light_is_chunkable() {
+    return true;
+}
 static void box_light_on_destroy(struct component *base);
 
 static const struct component_vtable box_light_vtable = {
@@ -37,6 +40,7 @@ static const struct component_vtable box_light_vtable = {
     .on_clone = box_light_clone,
     .on_awake = box_light_awake,
     .on_update = box_light_update,
+    .is_chunkable = box_light_is_chunkable,
     .on_disable = NULL,
     .on_destroy = box_light_on_destroy
 };

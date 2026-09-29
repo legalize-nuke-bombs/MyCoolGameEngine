@@ -167,3 +167,10 @@ void component_update(struct component *this, const struct update_context *conte
 bool component_is_updateable(const struct component *this) {
     return this->vtable->on_update;
 }
+
+bool component_is_chunkable(const struct component *this) {
+    if (this->vtable->is_chunkable) {
+        return this->vtable->is_chunkable();
+    }
+    return false;
+}

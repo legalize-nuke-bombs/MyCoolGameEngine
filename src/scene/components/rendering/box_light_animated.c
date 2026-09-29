@@ -29,12 +29,16 @@ struct box_light_animated {
 static struct component* box_light_animated_clone(struct component base, const struct component *component);
 static void box_light_animated_awake(struct component *base);
 static void box_light_animated_update(struct component *base, const struct update_context *context);
+static bool box_light_animated_is_chunkable() {
+    return true;
+}
 
 static const struct component_vtable box_light_animated_vtable = {
     .component_key = box_light_animated_component_key,
     .on_clone = box_light_animated_clone,
     .on_awake = box_light_animated_awake,
     .on_update = box_light_animated_update,
+    .is_chunkable = box_light_animated_is_chunkable,
     .on_disable = NULL
 };
 
