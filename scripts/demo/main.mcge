@@ -111,7 +111,7 @@ end
 
 scene add entity Forest
 transform default 0 0 1000 1000
-forest default 5 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
+forest default 200 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
 end
 
 
