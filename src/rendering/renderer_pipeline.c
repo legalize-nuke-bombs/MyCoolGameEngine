@@ -70,6 +70,10 @@ static void renderer_pipeline_update_viewport_resolution(struct renderer_pipelin
     this->viewport.size.x = native_renderer_w;
     this->viewport.size.y = native_renderer_h;
 }
+struct rect renderer_pipeline_get_viewport(struct renderer_pipeline *this) {
+    renderer_pipeline_update_viewport_resolution(this);
+    return this->viewport;
+}
 
 static int draw_calls_compare(const void *a, const void *b) {
     const struct renderer_pipeline_draw_call *dc_a = a;

@@ -80,6 +80,9 @@ static void chunks_chunk_remove_component(const struct chunks *this, const struc
 }
 
 struct dictionary* chunks_chunk_get_components(const struct chunks *this, const int index_x, const int index_y) {
+    if (index_x < 0 || index_y < 0 || index_x >= CHUNKS_SIZE || index_y >= CHUNKS_SIZE) {
+        return NULL;
+    }
     return this->components[index_x][index_y];
 }
 

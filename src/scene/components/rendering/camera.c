@@ -67,11 +67,13 @@ static void camera_update_renderer_pipeline_viewport(const struct camera *this) 
 
 static void camera_update_near_chunks(const struct camera *this, const struct update_context *context) {
     int x_start, x_end, y_start, y_end;
-    chunks_get_rect_indexes(this->chunks, component_get_rect((struct component*)this), &x_start, &x_end, &y_start, &y_end);
-    // TODO
-    for (int x = x_start - 1; x <= x_end + 1; x++) {
-        for (int y = y_start - 1; y <= y_end + 1; y++) {
+    chunks_get_rect_indexes(this->chunks, renderer_pipeline_get_viewport(this->renderer), &x_start, &x_end, &y_start, &y_end);
+    for (int x = x_start; x <= x_end; x++) {
+        for (int y = y_start; y <= y_end; y++) {
             const struct dictionary *dict = chunks_chunk_get_components(this->chunks, x, y);
+            if (dict == NULL) {
+                continue;
+            }
             struct dictionary_iterator dict_iterator = dictionary_begin(dict);
             struct dictionary_node dict_node;
             while (dictionary_next(dict, &dict_iterator, &dict_node)) {

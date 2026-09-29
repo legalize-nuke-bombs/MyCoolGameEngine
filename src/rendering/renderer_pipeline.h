@@ -18,6 +18,7 @@ void renderer_pipeline_destroy(struct renderer_pipeline *this);
 
 void renderer_pipeline_set_viewpoint(struct renderer_pipeline *this, struct vector2 viewpoint);
 void renderer_pipeline_remove_viewport(struct renderer_pipeline *this);
+struct rect renderer_pipeline_get_viewport(struct renderer_pipeline *this);
 
 struct renderer_pipeline_draw_call {
     struct rect rect;
