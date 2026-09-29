@@ -17,6 +17,8 @@ void* list_get(const struct list *this, int index);
 void list_add(struct list *this, void *data);
 void list_set(const struct list *this, int index, void *data);
 
+void list_swap(const struct list *this, int index1, int index2);
+
 void list_remove_nulls(struct list *this);
 
 void list_clear(struct list *this);

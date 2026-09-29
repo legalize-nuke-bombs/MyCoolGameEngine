@@ -61,6 +61,9 @@ struct rect transform_get_rect(const struct transform *this) {
     return this->rect;
 }
 void transform_set_rect(struct transform *this, const struct rect rect) {
+    if (rects_equal(this->rect, rect)) {
+        return;
+    }
     struct rect_pair rect_pair = {
         .rect1 = this->rect,
         .rect2 = rect

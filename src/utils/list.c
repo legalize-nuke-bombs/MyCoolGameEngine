@@ -55,6 +55,12 @@ void list_set(const struct list *this, int index, void *data) {
     this->data[index] = data;
 }
 
+void list_swap(const struct list *this, const int index1, const int index2) {
+    void* tmp = this->data[index1];
+    this->data[index1] = this->data[index2];
+    this->data[index2] = tmp;
+}
+
 void list_remove_nulls(struct list *this) {
     int kept_count = 0;
     for (int i = 0; i < this->count; i++) {

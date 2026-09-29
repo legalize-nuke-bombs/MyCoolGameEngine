@@ -22,6 +22,11 @@ struct component {
     bool awake;
     bool alive;
     struct rect local_rect;
+
+    struct action* on_rect_changed;
+    struct action* transform_on_rect_changed;
+    unsigned int transform_on_rect_changed_subscription_token;
+
     struct entity *parent;
 };
 

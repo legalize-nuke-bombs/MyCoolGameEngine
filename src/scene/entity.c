@@ -32,7 +32,7 @@ struct entity* entity_create(char *name, struct scene *parent) {
 }
 struct entity* entity_clone(const struct entity* entity) {
     logger_debug("Entity %s is cloning...", entity->name);
-    struct entity* this = malloc(sizeof(struct entity));
+    struct entity* this = calloc(1, sizeof(struct entity));
     this->name = strdup(entity->name);
     this->awake = false;
     this->alive = true;
@@ -57,7 +57,7 @@ void entity_awake(struct entity *this) {
 }
 void entity_destroy(struct entity *this) {
     logger_debug("Entity %s is destroying..", this->name);
-    for (int i = 0; i < list_count(this->components); i++) {
+    for (int i = list_count(this->components) - 1; i >= 0; i--) {
         struct component *component = list_get(this->components, i);
         component_destroy(component);
     }
@@ -72,7 +72,7 @@ void entity_mark_destroyed(struct entity *this) {
     }
     logger_debug("Entity %s is marking destroyed..", this->name);
     this->alive = false;
-    for (int i = 0; i < list_count(this->components); i++) {
+    for (int i = list_count(this->components) - 1; i >= 0; i--) {
         struct component *component = list_get(this->components, i);
         component_mark_destroyed(component);
     }
@@ -108,11 +108,26 @@ int entity_get_components_count(const struct entity *this) {
     return list_count(this->components);
 }
 void entity_capture_component(struct entity *this, struct component *component) {
-    component_set_parent(component, this);
-    logger_debug("Entity %s is capturing component %s", this->name, component_get_key(component));
-    list_add(this->components, component);
+    logger_debug("Entity %s is capturing component %s...", this->name, component_get_key(component));
+    bool set_first = false;
     if (strcmp(component_get_key(component), "transform") == 0) {
-        this->transform = (struct transform*)component;
+        if (this->transform == NULL) {
+            this->transform = (struct transform*)component;
+            set_first = true;
+        }
+        else {
+            logger_error("Entity %s has duplicate transform components, duplicate will not be captured and will be destroyed", this->name);
+            component_destroy(component);
+            component = NULL;
+        }
+    }
+    if (component == NULL) {
+        return;
+    }
+    component_set_parent(component, this);
+    list_add(this->components, component);
+    if (set_first) {
+        list_swap(this->components, 0, list_count(this->components) - 1);
     }
     action_invoke(this->on_component_captured, component);
 }

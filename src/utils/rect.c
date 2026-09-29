@@ -14,6 +14,10 @@ const struct rect rect_0 = {
     .size.y = 0
 };
 
+bool rects_equal(const struct rect rect1, const struct rect rect2) {
+    return vectors_equal(rect1.position, rect2.position) && vectors_equal(rect1.size, rect2.size);
+}
+
 bool rects_intersection(const struct rect rect1, const struct rect rect2) {
     const double delta_x = fabs(rect1.position.x - rect2.position.x);
     const double delta_y = fabs(rect1.position.y - rect2.position.y);

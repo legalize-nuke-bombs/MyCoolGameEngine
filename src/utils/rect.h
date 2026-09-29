@@ -15,6 +15,8 @@ struct rect {
     struct vector2 size;
 };
 
+bool rects_equal(struct rect rect1, struct rect rect2);
+
 bool rects_intersection(struct rect rect1, struct rect rect2);
 
 extern const struct rect rect_0;
