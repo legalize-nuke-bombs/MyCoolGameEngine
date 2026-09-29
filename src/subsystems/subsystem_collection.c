@@ -64,7 +64,7 @@ struct subsystem_collection* subsystem_collection_create() {
     logger_info("Subsystem collection is creating...");
     struct subsystem_collection* this = malloc(sizeof(struct subsystem_collection));
     this->list = list_create(1024);
-    this->dict = string_dictionary_build(10);
+    this->dict = string_dictionary_build(4);
     subsystem_collection_capture_all(this);
     logger_info("Subsystem collection knows %d subsystems", list_count(this->list));
     return this;

@@ -27,7 +27,7 @@ struct texture_manager* texture_manager_create() {
     logger_info("Texture manager is creating...");
     struct texture_manager* this = calloc(1, sizeof(struct texture_manager));
     this->list = list_create(1024);
-    this->dict = string_dictionary_build(10);
+    this->dict = string_dictionary_build(4);
     return this;
 }
 void texture_manager_destroy(struct texture_manager* this) {

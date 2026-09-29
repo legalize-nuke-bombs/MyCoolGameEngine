@@ -20,7 +20,7 @@ struct prefab_manager {
 struct prefab_manager* prefab_manager_create() {
     logger_info("Prefab manager is creating...");
     struct prefab_manager* this = calloc(1, sizeof(struct prefab_manager));
-    this->dict = string_dictionary_build(10);
+    this->dict = string_dictionary_build(4);
     return this;
 }
 void prefab_manager_destroy(struct prefab_manager* this) {

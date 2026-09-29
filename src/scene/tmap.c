@@ -20,7 +20,7 @@ struct tmap {
 struct tmap* tmap_create(void) {
     logger_info("TMap is creating...");
     struct tmap *this = malloc(sizeof(struct tmap));
-    this->dictionary = string_dictionary_build(10);
+    this->dictionary = string_dictionary_build(4);
     this->lists = list_create(16);
     return this;
 }

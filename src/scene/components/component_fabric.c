@@ -51,7 +51,7 @@ static void component_fabric_register_all(const struct component_fabric *this) {
 struct component_fabric* component_fabric_create() {
     logger_info("Component fabric is creating...");
     struct component_fabric* this = malloc(sizeof(struct component_fabric));
-    this->types = string_dictionary_build(10);
+    this->types = string_dictionary_build(4);
     component_fabric_register_all(this);
     logger_info("Component fabric knows %d components", dictionary_count(this->types));
     return this;

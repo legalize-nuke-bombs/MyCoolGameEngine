@@ -23,6 +23,7 @@ void dictionary_destroy(struct dictionary *dictionary);
 
 int dictionary_count(const struct dictionary *dictionary);
 
+// Removing the entry just returned is safe while iterating, adding is not: it may rehash.
 struct dictionary_iterator dictionary_begin(const struct dictionary *dictionary);
 bool dictionary_next(const struct dictionary *dictionary, struct dictionary_iterator *iterator, struct dictionary_node *node);
 
@@ -30,6 +31,8 @@ bool dictionary_try_add(struct dictionary *dictionary, void *key, void *value);
 void *dictionary_get(const struct dictionary *dictionary, void *key);
 bool dictionary_present(const struct dictionary *dictionary, void *key);
 bool dictionary_absent(const struct dictionary *dictionary, void *key);
+
+bool dictionary_remove(struct dictionary *dictionary, void *key);
 
 void dictionary_clear(struct dictionary *this);
 
