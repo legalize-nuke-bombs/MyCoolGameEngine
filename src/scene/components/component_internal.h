@@ -25,6 +25,7 @@ struct component {
     struct rect local_rect;
 
     struct action* on_rect_changed;
+    struct action* on_marked_destroyed;
     struct action* transform_on_rect_changed;
     unsigned int transform_on_rect_changed_subscription_token;
 

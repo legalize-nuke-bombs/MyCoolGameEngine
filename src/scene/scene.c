@@ -17,9 +17,6 @@
 #include "prefabs/prefab_manager.h"
 
 
-#define GC_INTERVAL 5
-
-
 struct scene {
     struct subsystem base;
 
@@ -28,7 +25,6 @@ struct scene {
 
     struct entity_collection* entities;
     struct tmap *tmap;
-    double gcTimer;
 
     struct action* on_physics;
     unsigned int on_physics_subscription_token;
@@ -83,17 +79,10 @@ void scene_on_destroy(struct subsystem *base) {
 
 
 
-static void scene_run_gc(struct scene *this, double dt) {
-    this->gcTimer += dt;
-    if (this->gcTimer < GC_INTERVAL) {
-        return;
-    }
-    this->gcTimer -= GC_INTERVAL;
-    logger_debug("Scene %s launched gc", this->name);
-    const int tmap_gc_num = tmap_remove_dead(this->tmap);
-    const int entity_collection_gc_num = entity_collection_destroy_dead(this->entities);
-    if (tmap_gc_num + entity_collection_gc_num > 0) {
-        logger_info("Scene %s gc report: tmap cleared %d components, entity collection cleared %d entities", this->name, tmap_gc_num, entity_collection_gc_num);
+static void scene_run_gc(const struct scene *this) {
+    const int destroyed = entity_collection_destroy_dead(this->entities);
+    if (destroyed > 0) {
+        logger_debug("Scene %s gc destroyed %d entities", this->name, destroyed);
     }
 }
 
@@ -101,7 +90,7 @@ static void scene_update(void *listener, void *context) {
     struct scene* this = listener;
     const struct update_context* update_context = context;
     tmap_update(this->tmap, update_context);
-    scene_run_gc(this, update_context->dt);
+    scene_run_gc(this);
 }
 
 
@@ -110,7 +99,6 @@ void scene_on_enable(struct subsystem *base, struct engine_arguments args) {
     struct scene *this = (struct scene*)base;
     this->awoken = true;
     entity_collection_awake_everyone(this->entities);
-    this->gcTimer = 0;
     this->on_physics = engine_events_on_physics((struct engine_events*)subsystem_get_subsystem(base, "engine_events"));
     action_subscribe(this->on_physics, this, scene_update, &this->on_physics_subscription_token);
 }

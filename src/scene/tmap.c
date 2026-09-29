@@ -6,44 +6,45 @@
 
 #include <stdlib.h>
 
+#include "../utils/action.h"
 #include "../utils/dictionary.h"
+#include "../utils/pointer_dictionary.h"
 #include "../utils/string_dictionary.h"
-#include "../utils/list.h"
 #include "../logging/logger.h"
 
 
 struct tmap {
-    struct dictionary *dictionary;
-    struct list *lists;
+    struct dictionary *types;
 };
 
 struct tmap* tmap_create(void) {
     logger_info("TMap is creating...");
     struct tmap *this = malloc(sizeof(struct tmap));
-    this->dictionary = string_dictionary_build(4);
-    this->lists = list_create(16);
+    this->types = string_dictionary_build(4);
     return this;
 }
 void tmap_destroy(struct tmap *this) {
     logger_info("TMap is destroying...");
-    for (int i = 0; i < list_count(this->lists); i++) {
-        list_destroy(list_get(this->lists, i));
+    struct dictionary_iterator iterator = dictionary_begin(this->types);
+    struct dictionary_node node;
+    while (dictionary_next(this->types, &iterator, &node)) {
+        dictionary_destroy(node.value);
     }
-    list_destroy(this->lists);
-    dictionary_destroy(this->dictionary);
+    dictionary_destroy(this->types);
     free(this);
 }
 
 void tmap_update(const struct tmap *this, const struct update_context *context) {
-    for (int i = 0; i < list_count(this->lists); i++) {
-        const struct list* list = list_get(this->lists, i);
-        for (int j = 0; j < list_count(list); j++) {
-            struct component *component = list_get(list, j);
+    struct dictionary_iterator types_iterator = dictionary_begin(this->types);
+    struct dictionary_node type_node;
+    while (dictionary_next(this->types, &types_iterator, &type_node)) {
+        const struct dictionary *components = type_node.value;
+        struct dictionary_iterator iterator = dictionary_begin(components);
+        struct dictionary_node node;
+        while (dictionary_next(components, &iterator, &node)) {
+            struct component *component = node.value;
             if (!component_is_updateable(component)) {
                 break;
-            }
-            if (!component_is_alive(component)) {
-                continue;
             }
             component_update(component, context);
         }
@@ -51,53 +52,46 @@ void tmap_update(const struct tmap *this, const struct update_context *context) 
 }
 
 void tmap_clear(const struct tmap *this) {
-    for (int i = 0; i < list_count(this->lists); i++) {
-        list_clear(list_get(this->lists, i));
+    struct dictionary_iterator iterator = dictionary_begin(this->types);
+    struct dictionary_node node;
+    while (dictionary_next(this->types, &iterator, &node)) {
+        dictionary_clear(node.value);
+    }
+}
+
+static void handle_component_marked_destroyed(void *listener, void *context) {
+    const struct tmap *this = listener;
+    struct component *component = context;
+    struct dictionary *components = dictionary_get(this->types, (void*) component_get_key(component));
+    if (components != NULL) {
+        dictionary_remove(components, component);
     }
 }
 
 void tmap_register_component(const struct tmap *this, struct component *component) {
+    if (!component_is_alive(component)) {
+        return;
+    }
     const char* component_key = component_get_key(component);
 
-    if (dictionary_absent(this->dictionary, (void*) component_key)) {
-        struct list* list = list_create(1);
-        if (dictionary_try_add(this->dictionary, (void*) component_key, list)) {
-            list_add(this->lists, list);
-            logger_debug("TMap now knows component key %s", component_key);
+    struct dictionary *components = dictionary_get(this->types, (void*) component_key);
+    if (components == NULL) {
+        components = pointer_dictionary_build(0);
+        if (!dictionary_try_add(this->types, (void*) component_key, components)) {
+            dictionary_destroy(components);
+            logger_error("Failed to populate tmap for component key %s", component_key);
+            return;
         }
-        else {
-            list_destroy(list);
-            logger_error("Failed to populate tmap, tmap count %d", dictionary_count(this->dictionary));
-        }
+        logger_debug("TMap now knows component key %s", component_key);
     }
 
-    struct list* list = dictionary_get(this->dictionary, (void*) component_key);
-    if (list != NULL) {
-        list_add(list, component);
+    if (dictionary_try_add(components, component, component)) {
+        unsigned int subscription_token; // We do not unsubscribe because tmap always lives longer than components
+        action_subscribe(component_get_on_marked_destroyed(component), (void*) this, handle_component_marked_destroyed, &subscription_token);
         logger_debug("TMap registered sample of %s", component_key);
     }
-    else {
-        logger_error("Failed to populate tmap list for component key %s", component_key);
-    }
 }
 
-const struct list* tmap_try_get_components(const struct tmap *this, const char *component_key) {
-    return dictionary_get(this->dictionary, (void*) component_key);
-}
-
-int tmap_remove_dead(const struct tmap *this) {
-    int ctr = 0;
-    for (int i = 0; i < list_count(this->lists); i++) {
-        struct list* list = list_get(this->lists, i);
-        for (int j = 0; j < list_count(list); j++) {
-            const struct component *component = list_get(list, j);
-            if (!component_is_alive(component)) {
-                list_set(list, j, NULL);
-                ctr++;
-            }
-        }
-        list_remove_nulls(list);
-    }
-    logger_debug("TMap removed %d dead components", ctr);
-    return ctr;
+const struct dictionary* tmap_try_get_components(const struct tmap *this, const char *component_key) {
+    return dictionary_get(this->types, (void*) component_key);
 }

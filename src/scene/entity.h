@@ -28,6 +28,7 @@ struct scene* entity_get_parent(const struct entity *this);
 struct transform* entity_get_transform(const struct entity *this);
 
 struct action* entity_get_action_on_component_captured(const struct entity *this);
+struct action* entity_get_action_on_marked_destroyed(const struct entity *this);
 
 int entity_get_components_count(const struct entity *this);
 void entity_capture_component(struct entity *this, struct component *component);

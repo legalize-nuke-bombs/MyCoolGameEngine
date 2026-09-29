@@ -33,6 +33,7 @@ void component_base_create(struct component *this, const struct component_vtable
     }
 
     this->on_rect_changed = action_create();
+    this->on_marked_destroyed = action_create();
     this->transform_on_rect_changed = NULL;
     this->transform_on_rect_changed_subscription_token = 0;
 
@@ -46,6 +47,7 @@ struct component* component_clone(const struct component *component) {
     this.alive = true;
     this.local_rect = component->local_rect;
     this.on_rect_changed = action_create();
+    this.on_marked_destroyed = action_create();
     return component->vtable->on_clone(this, component);
 }
 
@@ -64,12 +66,19 @@ void component_awake(struct component *this) {
     }
 }
 
+static void component_unsubscribe_from_transform(struct component *this) {
+    if (this->transform_on_rect_changed == NULL) {
+        return;
+    }
+    action_unsubscribe(this->transform_on_rect_changed, this->transform_on_rect_changed_subscription_token);
+    this->transform_on_rect_changed = NULL;
+}
+
 void component_destroy(struct component *this) {
     component_mark_destroyed(this);
     logger_debug("Entity %s is destroying component %s...", component_get_parent_name(this), component_get_key(this));
-    if (this->transform_on_rect_changed != NULL) {
-        action_unsubscribe(this->transform_on_rect_changed, this->transform_on_rect_changed_subscription_token);
-    }
+    component_unsubscribe_from_transform(this);
+    action_destroy(this->on_marked_destroyed);
     action_destroy(this->on_rect_changed);
     if (this->vtable->on_destroy) {
         this->vtable->on_destroy(this);
@@ -82,9 +91,11 @@ void component_mark_destroyed(struct component *this) {
     }
     logger_debug("Entity %s is marking destroyed component %s...", component_get_parent_name(this), component_get_key(this));
     this->alive = false;
+    component_unsubscribe_from_transform(this);
     if (this->awake && this->vtable->on_disable) {
         this->vtable->on_disable(this);
     }
+    action_invoke(this->on_marked_destroyed, this);
 }
 
 bool component_is_awake(const struct component *this) {
@@ -150,6 +161,9 @@ struct rect component_get_rect(const struct component *this) {
 }
 struct action* component_get_on_rect_changed(const struct component *this) {
     return this->on_rect_changed;
+}
+struct action* component_get_on_marked_destroyed(const struct component *this) {
+    return this->on_marked_destroyed;
 }
 
 const char* component_get_key(const struct component *this) {

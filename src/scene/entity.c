@@ -15,6 +15,7 @@ struct entity {
     bool alive;
     struct list *components;
     struct action *on_component_captured;
+    struct action *on_marked_destroyed;
     struct transform *transform;
     struct scene *parent;
 };
@@ -27,6 +28,7 @@ struct entity* entity_create(char *name, struct scene *parent) {
     this->alive = true;
     this->components = list_create(1);
     this->on_component_captured = action_create();
+    this->on_marked_destroyed = action_create();
     this->parent = parent;
     return this;
 }
@@ -38,6 +40,7 @@ struct entity* entity_clone(const struct entity* entity) {
     this->alive = true;
     this->components = list_create(list_count(entity->components));
     this->on_component_captured = action_create();
+    this->on_marked_destroyed = action_create();
     for (int i = 0; i < list_count(entity->components); i++) {
         struct component *component = list_get(entity->components, i);
         entity_capture_component(this, component_clone(component));
@@ -63,6 +66,7 @@ void entity_destroy(struct entity *this) {
     }
     list_destroy(this->components);
     action_destroy(this->on_component_captured);
+    action_destroy(this->on_marked_destroyed);
     free(this->name);
     free(this);
 }
@@ -76,6 +80,7 @@ void entity_mark_destroyed(struct entity *this) {
         struct component *component = list_get(this->components, i);
         component_mark_destroyed(component);
     }
+    action_invoke(this->on_marked_destroyed, this);
 }
 
 const char* entity_get_name(const struct entity *this) {
@@ -102,6 +107,9 @@ struct transform* entity_get_transform(const struct entity *this) {
 
 struct action* entity_get_action_on_component_captured(const struct entity *this) {
     return this->on_component_captured;
+}
+struct action* entity_get_action_on_marked_destroyed(const struct entity *this) {
+    return this->on_marked_destroyed;
 }
 
 int entity_get_components_count(const struct entity *this) {

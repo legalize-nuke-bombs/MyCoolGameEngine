@@ -158,14 +158,17 @@ static void chunks_resize(struct chunks *this) {
 }
 
 static void handle_component_rect_changed(void *listener, void *context);
+static void handle_component_marked_destroyed(void *listener, void *context);
 
 void chunks_register_component(struct chunks *this, struct component *component) {
-    if (!component_is_chunkable(component)) {
+    if (!component_is_chunkable(component) || !component_is_alive(component)) {
         return;
     }
-    const struct action* on_rect_changed = component_get_on_rect_changed(component);
-    unsigned int on_rect_changed_subscription_token; // We do not unsubscribe because scene infrastructure live longer than components
-    action_subscribe(on_rect_changed, this, handle_component_rect_changed, &on_rect_changed_subscription_token);
+    // We do not unsubscribe because scene infrastructure live longer than components
+    unsigned int on_rect_changed_subscription_token;
+    action_subscribe(component_get_on_rect_changed(component), this, handle_component_rect_changed, &on_rect_changed_subscription_token);
+    unsigned int on_marked_destroyed_subscription_token;
+    action_subscribe(component_get_on_marked_destroyed(component), this, handle_component_marked_destroyed, &on_marked_destroyed_subscription_token);
     chunks_add_component_with_resize(this, component);
 }
 
@@ -173,6 +176,24 @@ static void handle_component_rect_changed(void *listener, void *context) {
     struct chunks *this = listener;
     const struct component_on_rect_changed_callback_data *data = context;
     struct component *component = data->component;
+    if (!component_is_alive(component)) {
+        return;
+    }
+
+    int old_x_start, old_x_end, old_y_start, old_y_end;
+    chunks_get_rect_indexes(this, data->rect_pair.rect1, &old_x_start, &old_x_end, &old_y_start, &old_y_end);
+    int new_x_start, new_x_end, new_y_start, new_y_end;
+    chunks_get_rect_indexes(this, data->rect_pair.rect2, &new_x_start, &new_x_end, &new_y_start, &new_y_end);
+    if (old_x_start == new_x_start && old_x_end == new_x_end && old_y_start == new_y_start && old_y_end == new_y_end) {
+        return;
+    }
+
     chunks_remove_component(this, data->rect_pair.rect1, component);
     chunks_add_component_with_resize(this, component);
+}
+
+static void handle_component_marked_destroyed(void *listener, void *context) {
+    const struct chunks *this = listener;
+    const struct component *component = context;
+    chunks_remove_component(this, component_get_rect(component), component);
 }

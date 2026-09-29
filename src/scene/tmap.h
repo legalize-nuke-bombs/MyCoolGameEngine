@@ -6,10 +6,10 @@
 #define MYCOOLGAMEENGINE_TMAP_H
 
 #include "components/component.h"
-#include "../utils/list.h"
 
 
 struct tmap;
+struct dictionary;
 
 struct tmap* tmap_create(void);
 void tmap_destroy(struct tmap *this);
@@ -20,8 +20,6 @@ void tmap_clear(const struct tmap *this);
 
 void tmap_register_component(const struct tmap *this, struct component *component);
 
-const struct list* tmap_try_get_components(const struct tmap *this, const char *component_key);
-
-int tmap_remove_dead(const struct tmap *this);
+const struct dictionary* tmap_try_get_components(const struct tmap *this, const char *component_key);
 
 #endif //MYCOOLGAMEENGINE_TMAP_H
