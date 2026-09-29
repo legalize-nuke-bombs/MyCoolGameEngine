@@ -23,6 +23,7 @@ struct renderer_pipeline {
 
     struct renderer_pipeline_draw_call draw_calls[DRAW_CALLS_BUFFER_SIZE];
     int draw_calls_count;
+    int dropped_draw_calls_count;
 
     struct renderer_primitive *light_map;
     struct renderer_layer *light_map_layer;
@@ -54,11 +55,12 @@ void renderer_pipeline_remove_viewport(struct renderer_pipeline *this) {
 
 
 void renderer_pipeline_draw_primitive(struct renderer_pipeline *this, struct renderer_pipeline_draw_call draw_call) {
-    if (this->draw_calls_count >= DRAW_CALLS_BUFFER_SIZE) {
-        logger_warn("Rendering pipeline draw calls buffer is full. The frame will be incomplete.");
+    if (!renderer_primitive_is_visible(draw_call.primitive, draw_call.rect, this->viewport)) {
         return;
     }
-    if (!renderer_primitive_is_visible(draw_call.primitive, draw_call.rect, this->viewport)) {
+    // The last slot is reserved for the light map
+    if (this->draw_calls_count >= DRAW_CALLS_BUFFER_SIZE - 1) {
+        this->dropped_draw_calls_count++;
         return;
     }
     this->draw_calls[this->draw_calls_count++] = draw_call;
@@ -104,16 +106,22 @@ static int draw_calls_compare(const void *a, const void *b) {
 }
 
 void renderer_pipeline_flush(struct renderer_pipeline *this) {
-    renderer_pipeline_draw_primitive(this, (struct renderer_pipeline_draw_call) {
-        .primitive = this->light_map,
-        .rect = rect_0,
-        .layer = this->light_map_layer
-    });
+    if (this->dropped_draw_calls_count > 0) {
+        logger_warn("Rendering pipeline draw calls buffer is full, %d draw calls dropped", this->dropped_draw_calls_count);
+        this->dropped_draw_calls_count = 0;
+    }
 
     if (!this->viewport_enabled) {
+        light_map_clear_draw_calls((struct light_map*)this->light_map);
         this->draw_calls_count = 0;
         return;
     }
+
+    this->draw_calls[this->draw_calls_count++] = (struct renderer_pipeline_draw_call) {
+        .primitive = this->light_map,
+        .rect = rect_0,
+        .layer = this->light_map_layer
+    };
 
     renderer_pipeline_update_viewport_resolution(this);
 

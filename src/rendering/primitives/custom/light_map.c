@@ -24,6 +24,7 @@ struct light_map {
 
     struct light_map_draw_call draw_calls[DRAW_CALLS_BUFFER_SIZE];
     int draw_calls_count;
+    int dropped_draw_calls_count;
 };
 
 static void light_map_draw(struct renderer_primitive* base, struct rect rect, struct rect viewport, SDL_Renderer* renderer);
@@ -82,16 +83,24 @@ void light_map_draw_primitive(struct light_map* this, const struct light_map_dra
         return;
     }
     if (this->draw_calls_count >= DRAW_CALLS_BUFFER_SIZE) {
-        logger_warn("Light map buffer size overflow");
+        this->dropped_draw_calls_count++;
         return;
     }
     this->draw_calls[this->draw_calls_count++] = draw_call;
+}
+
+void light_map_clear_draw_calls(struct light_map* this) {
+    this->draw_calls_count = 0;
+    this->dropped_draw_calls_count = 0;
 }
 
 static void light_map_draw(struct renderer_primitive* base, const struct rect rect, const struct rect viewport, SDL_Renderer* native_renderer) {
     struct light_map* this = (struct light_map*)base;
     if (!this->enabled) {
         return;
+    }
+    if (this->dropped_draw_calls_count > 0) {
+        logger_warn("Light map buffer is full, %d draw calls dropped", this->dropped_draw_calls_count);
     }
 
     light_map_sync_darkness_size(this, native_renderer);
@@ -117,7 +126,7 @@ static void light_map_draw(struct renderer_primitive* base, const struct rect re
         SDL_SetRenderDrawBlendMode(native_renderer, this->light_source_blend_mode);
         renderer_primitive_draw(draw_call.primitive, draw_call.rect, viewport, native_renderer);
     }
-    this->draw_calls_count = 0;
+    light_map_clear_draw_calls(this);
 
     SDL_SetRenderDrawBlendMode(native_renderer, original_blend_mode);
     SDL_SetRenderTarget(native_renderer, original_target);

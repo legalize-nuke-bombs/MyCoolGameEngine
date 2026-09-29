@@ -22,6 +22,7 @@ struct light_map_draw_call {
 };
 
 void light_map_draw_primitive(struct light_map* this, struct light_map_draw_call draw_call);
+void light_map_clear_draw_calls(struct light_map* this);
 
 void light_map_reset(struct light_map* this);
 
