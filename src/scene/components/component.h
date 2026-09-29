@@ -24,6 +24,7 @@ struct rect component_get_local_rect(const struct component *this);
 void component_set_local_rect(struct component *this, struct rect rect);
 
 struct rect component_get_rect(const struct component *this);
+struct action* component_get_on_rect_changed(const struct component *this);
 
 const char* component_get_key(const struct component *this);
 

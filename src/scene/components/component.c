@@ -9,6 +9,7 @@
 #include "../../utils/vector2_math.h"
 #include "core/transform.h"
 #include "../../utils/parser.h"
+#include "../../utils/rect_pair.h"
 
 void component_base_create(struct component *this, const struct component_vtable *vtable, struct parser *parser, struct entity *parent) {
     this->vtable = vtable;
@@ -107,12 +108,35 @@ struct rect component_get_local_rect(const struct component *this) {
     return this->local_rect;
 }
 
+
+void component_set_local_rect(struct component *this, struct rect rect) {
+    if (rects_equal(this->local_rect, rect)) {
+        return;
+    }
+    struct rect_pair rect_pair = {
+        .rect1 = component_get_rect(this)
+    };
+    this->local_rect = rect;
+    rect_pair.rect2 = component_get_rect(this);
+    action_invoke(this->on_rect_changed, &rect_pair);
+}
+
+static struct rect component_compute_rect(const struct rect parent_rect, const struct rect local_rect) {
+    const struct rect result = {
+        .position = vector_sum(parent_rect.position, vector_multiply_vector(local_rect.position, parent_rect.size)),
+        .size = vector_multiply_vector(parent_rect.size, local_rect.size)
+    };
+    return result;
+}
+
 static void handle_transform_rect_changed(void *listener, void *context) {
     const struct component *this = (struct component *) listener;
-    logger_debug("Entity %s Component rect changed!", component_get_parent_name(this));
-}
-void component_set_local_rect(struct component *this, struct rect rect) {
-    this->local_rect = rect;
+    const struct rect_pair *transform_rect_pair = context;
+    struct rect_pair rect_pair = {
+        .rect1 = component_compute_rect(transform_rect_pair->rect1, this->local_rect),
+        .rect2 = component_compute_rect(transform_rect_pair->rect2, this->local_rect)
+    };
+    action_invoke(this->on_rect_changed, &rect_pair);
 }
 
 struct rect component_get_rect(const struct component *this) {
@@ -120,11 +144,10 @@ struct rect component_get_rect(const struct component *this) {
         return this->local_rect;
     }
     const struct rect parent_rect = transform_get_rect(entity_get_transform(this->parent));
-    const struct rect result = {
-        .position = vector_sum(parent_rect.position, vector_multiply_vector(this->local_rect.position, parent_rect.size)),
-        .size = vector_multiply_vector(parent_rect.size, this->local_rect.size)
-    };
-    return result;
+    return component_compute_rect(parent_rect, this->local_rect);
+}
+struct action* component_get_on_rect_changed(const struct component *this) {
+    return this->on_rect_changed;
 }
 
 const char* component_get_key(const struct component *this) {
