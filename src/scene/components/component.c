@@ -194,7 +194,7 @@ void component_chunked_update(struct component *this, const struct update_contex
     if (this->last_chunked_update_frame_number == context->frame_number) {
         return;
     }
-    this->last_chunked_update_frame_number++;
+    this->last_chunked_update_frame_number = context->frame_number;
     this->vtable->on_chunked_update(this, context);
 }
 bool component_is_chunkable(const struct component *this) {
