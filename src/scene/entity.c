@@ -14,7 +14,6 @@ struct entity {
     bool awake;
     bool alive;
     struct list *components;
-    struct list *components_updateable;
     struct action *on_component_captured;
     struct transform *transform;
     struct scene *parent;
@@ -27,7 +26,6 @@ struct entity* entity_create(char *name, struct scene *parent) {
     this->awake = false;
     this->alive = true;
     this->components = list_create(1);
-    this->components_updateable = list_create(1);
     this->on_component_captured = action_create();
     this->parent = parent;
     return this;
@@ -39,7 +37,6 @@ struct entity* entity_clone(const struct entity* entity) {
     this->awake = false;
     this->alive = true;
     this->components = list_create(list_count(entity->components));
-    this->components_updateable = list_create(list_count(entity->components_updateable));
     this->on_component_captured = action_create();
     for (int i = 0; i < list_count(entity->components); i++) {
         struct component *component = list_get(entity->components, i);
@@ -65,7 +62,6 @@ void entity_destroy(struct entity *this) {
         component_destroy(component);
     }
     list_destroy(this->components);
-    list_destroy(this->components_updateable);
     action_destroy(this->on_component_captured);
     free(this->name);
     free(this);
@@ -115,9 +111,6 @@ void entity_capture_component(struct entity *this, struct component *component) 
     component_set_parent(component, this);
     logger_debug("Entity %s is capturing component %s", this->name, component_get_key(component));
     list_add(this->components, component);
-    if (component_is_updateable(component)) {
-        list_add(this->components_updateable, component);
-    }
     if (strcmp(component_get_key(component), "transform") == 0) {
         this->transform = (struct transform*)component;
     }
@@ -142,14 +135,4 @@ struct component* entity_get_component(const struct entity *this, const char *na
         logger_error("Entity %s does not contain required component %s", this->name, name);
     }
     return component;
-}
-
-void entity_update(const struct entity *this, const struct update_context *context) {
-    for (int i = 0; i < list_count(this->components_updateable); i++) {
-        if (!entity_is_alive(this)) {
-            break;
-        }
-        struct component *component = list_get(this->components_updateable, i);
-        component_update(component, context);
-    }
 }

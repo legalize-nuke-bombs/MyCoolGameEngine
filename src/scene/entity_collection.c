@@ -49,13 +49,6 @@ void entity_collection_add(const struct entity_collection *this, struct entity *
     list_add(this->list, entity);
 }
 
-void entity_collection_update(const struct entity_collection *this, const struct update_context *context) {
-    for (int i = 0; i < list_count(this->list); i++) {
-        const struct entity *entity = list_get(this->list, i);
-        entity_update(entity, context);
-    }
-}
-
 int entity_collection_destroy_dead(const struct entity_collection *this) {
     int ctr = 0;
     for (int i = 0; i < list_count(this->list); i++) {

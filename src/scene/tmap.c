@@ -34,6 +34,26 @@ void tmap_destroy(struct tmap *this) {
     free(this);
 }
 
+void tmap_update(const struct tmap *this, const struct update_context *context) {
+    for (int i = 0; i < dictionary_capacity(this->dictionary); i++) {
+        const struct dictionary_node dictionary_node = dictionary_get_node(this->dictionary, i);
+        const struct list* list = dictionary_node.value;
+        if (list == NULL) {
+            continue;
+        }
+        for (int j = 0; j < list_count(list); j++) {
+            struct component *component = list_get(list, j);
+            if (!component_is_updateable(component)) {
+                break;
+            }
+            if (!component_is_alive(component)) {
+                continue;
+            }
+            component_update(component, context);
+        }
+    }
+}
+
 void tmap_clear(const struct tmap *this) {
     for (int i = 0; i < dictionary_capacity(this->dictionary); i++) {
         const struct dictionary_node dictionary_node = dictionary_get_node(this->dictionary, i);

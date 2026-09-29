@@ -97,7 +97,7 @@ static void scene_run_gc(struct scene *this, double dt) {
 static void scene_update(void *listener, void *context) {
     struct scene* this = listener;
     const struct update_context* update_context = context;
-    entity_collection_update(this->entities, update_context);
+    tmap_update(this->tmap, update_context);
     scene_run_gc(this, update_context->dt);
 }
 

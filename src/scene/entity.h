@@ -36,6 +36,4 @@ struct component* entity_get_component_by_index(const struct entity *this, int i
 struct component* entity_try_get_component(const struct entity *this, const char *name);
 struct component* entity_get_component(const struct entity *this, const char *name);
 
-void entity_update(const struct entity *this, const struct update_context *context);
-
 #endif
