@@ -7,6 +7,7 @@
 
 struct update_context {
     double dt;
+    unsigned int frame_number;
 };
 
 #endif //MYCOOLGAMEENGINE_UPDATE_CONTEXT_H

@@ -37,6 +37,8 @@ void component_base_create(struct component *this, const struct component_vtable
     this->transform_on_rect_changed = NULL;
     this->transform_on_rect_changed_subscription_token = 0;
 
+    this->last_chunked_update_frame_number = 0;
+
     this->parent = parent;
 }
 struct component* component_clone(const struct component *component) {
@@ -186,9 +188,14 @@ void component_chunked_update(struct component *this, const struct update_contex
     if (!component_is_alive(this)) {
         return;
     }
-    if (this->vtable->on_chunked_update != NULL) {
-        this->vtable->on_chunked_update(this, context);
+    if (this->vtable->on_chunked_update == NULL) {
+        return;
     }
+    if (this->last_chunked_update_frame_number == context->frame_number) {
+        return;
+    }
+    this->last_chunked_update_frame_number++;
+    this->vtable->on_chunked_update(this, context);
 }
 bool component_is_chunkable(const struct component *this) {
     return this->vtable->on_chunked_update || this->vtable->is_chunkable;

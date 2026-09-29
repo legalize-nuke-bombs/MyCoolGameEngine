@@ -52,7 +52,8 @@ static bool engine_execute_step(const struct engine *this, const struct engine_a
     }
 
     struct update_context update_context = {
-        .dt = 0
+        .dt = 0,
+        .frame_number = 0
     };
     Uint64 previous = SDL_GetTicksNS();
 
@@ -64,6 +65,7 @@ static bool engine_execute_step(const struct engine *this, const struct engine_a
             logger_debug("Frame dt explosion resolved (%f -> %f)", update_context.dt, FRAME_DT_EXPLOSION_THRESHOLD);
             update_context.dt = FRAME_DT_EXPLOSION_THRESHOLD;
         }
+        update_context.frame_number++;
 
         action_invoke(engine_events_pre_frame(events), &update_context);
 

@@ -2,7 +2,6 @@
 #define MYCOOLGAMEENGINE_COMPONENT_INTERNAL_H
 
 #include <stdbool.h>
-#include "../../utils/vector2.h"
 #include "component.h"
 
 
@@ -29,6 +28,8 @@ struct component {
     struct action* on_marked_destroyed;
     struct action* transform_on_rect_changed;
     unsigned int transform_on_rect_changed_subscription_token;
+
+    unsigned int last_chunked_update_frame_number;
 
     struct entity *parent;
 };
