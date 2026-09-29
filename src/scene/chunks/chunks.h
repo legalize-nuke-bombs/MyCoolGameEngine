@@ -5,6 +5,8 @@
 #ifndef MYCOOLGAMEENGINE_CHUNKS_H
 #define MYCOOLGAMEENGINE_CHUNKS_H
 
+#include "../../utils/rect.h"
+
 struct chunks;
 struct component;
 
@@ -13,6 +15,10 @@ void chunks_destroy(struct chunks *this);
 
 void chunks_clear(const struct chunks *this);
 
+void chunks_get_rect_indexes(const struct chunks *this, struct rect rect, int *x_start, int *x_end, int *y_start, int *y_end);
+
 void chunks_register_component(struct chunks *this, struct component *component);
+
+struct list* chunks_chunk_get_components(const struct chunks *this, int index_x, int index_y);
 
 #endif //MYCOOLGAMEENGINE_CHUNKS_H

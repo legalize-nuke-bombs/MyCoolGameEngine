@@ -58,7 +58,7 @@ static int chunks_get_position_index(const struct chunks* this, const double pos
     return (CHUNKS_SIZE / 2) + offset;
 }
 
-static void chunks_get_component_indexes(const struct chunks *this, const struct rect rect, int *x_start, int *x_end, int *y_start, int *y_end) {
+void chunks_get_rect_indexes(const struct chunks *this, const struct rect rect, int *x_start, int *x_end, int *y_start, int *y_end) {
     const double min_x = rect.position.x - rect.size.x / 2;
     const double max_x = rect.position.x + rect.size.x / 2;
     const double min_y = rect.position.y - rect.size.y / 2;
@@ -95,9 +95,13 @@ static void chunks_chunk_remove_component(const struct chunks *this, const struc
     }
 }
 
+struct list* chunks_chunk_get_components(const struct chunks *this, const int index_x, const int index_y) {
+    return this->components[index_x][index_y];
+}
+
 static void chunks_remove_component(const struct chunks *this, const struct rect rect, const struct component *component) {
     int start_x, end_x, start_y, end_y;
-    chunks_get_component_indexes(this, rect, &start_x, &end_x, &start_y, &end_y);
+    chunks_get_rect_indexes(this, rect, &start_x, &end_x, &start_y, &end_y);
     for (int x = start_x; x <= end_x; x++) {
         for (int y = start_y; y <= end_y; y++) {
             chunks_chunk_remove_component(this, component, x, y);
@@ -107,7 +111,7 @@ static void chunks_remove_component(const struct chunks *this, const struct rect
 
 static void chunks_add_component_without_resize(struct chunks *this, struct component *component) {
     int start_x, end_x, start_y, end_y;
-    chunks_get_component_indexes(this, component_get_rect(component), &start_x, &end_x, &start_y, &end_y);
+    chunks_get_rect_indexes(this, component_get_rect(component), &start_x, &end_x, &start_y, &end_y);
     for (int x = start_x; x <= end_x; x++) {
         for (int y = start_y; y <= end_y; y++) {
             chunks_chunk_add_component_if_absent(this, component, x, y);
@@ -118,7 +122,7 @@ static void chunks_add_component_without_resize(struct chunks *this, struct comp
 static void chunks_add_component_with_resize(struct chunks* this, struct component* component) {
     int start_x, end_x, start_y, end_y;
     while (1) {
-        chunks_get_component_indexes(this, component_get_rect(component), &start_x, &end_x, &start_y, &end_y);
+        chunks_get_rect_indexes(this, component_get_rect(component), &start_x, &end_x, &start_y, &end_y);
         if (start_x >= 0 && end_x < CHUNKS_SIZE && start_y >= 0 && end_y < CHUNKS_SIZE) {
             break;
         }
