@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include "../../engine/update_context.h"
 #include "../../utils/rect.h"
+#include "../../utils/rect_pair.h"
 
 struct component;
 struct entity;
@@ -21,8 +22,12 @@ struct entity* component_get_parent(const struct component *this);
 const char* component_get_parent_name(const struct component *this);
 
 struct rect component_get_local_rect(const struct component *this);
-void component_set_local_rect(struct component *this, struct rect rect);
+void component_set_local_rect(struct component *this, struct rect new_local_rect);
 
+struct component_on_rect_changed_callback_data {
+    struct component *component;
+    struct rect_pair rect_pair;
+};
 struct rect component_get_rect(const struct component *this);
 struct action* component_get_on_rect_changed(const struct component *this);
 

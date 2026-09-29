@@ -109,16 +109,17 @@ struct rect component_get_local_rect(const struct component *this) {
 }
 
 
-void component_set_local_rect(struct component *this, struct rect rect) {
-    if (rects_equal(this->local_rect, rect)) {
+void component_set_local_rect(struct component *this, const struct rect new_local_rect) {
+    if (rects_equal(this->local_rect, new_local_rect)) {
         return;
     }
-    struct rect_pair rect_pair = {
-        .rect1 = component_get_rect(this)
+    struct component_on_rect_changed_callback_data data = {
+        .component = this,
+        .rect_pair.rect1 = component_get_rect(this)
     };
-    this->local_rect = rect;
-    rect_pair.rect2 = component_get_rect(this);
-    action_invoke(this->on_rect_changed, &rect_pair);
+    this->local_rect = new_local_rect;
+    data.rect_pair.rect2 = component_get_rect(this);
+    action_invoke(this->on_rect_changed, &data);
 }
 
 static struct rect component_compute_rect(const struct rect parent_rect, const struct rect local_rect) {
@@ -130,13 +131,14 @@ static struct rect component_compute_rect(const struct rect parent_rect, const s
 }
 
 static void handle_transform_rect_changed(void *listener, void *context) {
-    const struct component *this = (struct component *) listener;
-    const struct rect_pair *transform_rect_pair = context;
-    struct rect_pair rect_pair = {
-        .rect1 = component_compute_rect(transform_rect_pair->rect1, this->local_rect),
-        .rect2 = component_compute_rect(transform_rect_pair->rect2, this->local_rect)
+    struct component *this = listener;
+    const struct component_on_rect_changed_callback_data *transform_callback_data = context;
+    struct component_on_rect_changed_callback_data data = {
+        .component = this,
+        .rect_pair.rect1 = component_compute_rect(transform_callback_data->rect_pair.rect1, this->local_rect),
+        .rect_pair.rect2 = component_compute_rect(transform_callback_data->rect_pair.rect2, this->local_rect),
     };
-    action_invoke(this->on_rect_changed, &rect_pair);
+    action_invoke(this->on_rect_changed, &data);
 }
 
 struct rect component_get_rect(const struct component *this) {

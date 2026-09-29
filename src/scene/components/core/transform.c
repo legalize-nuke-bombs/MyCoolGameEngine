@@ -60,16 +60,17 @@ struct component* transform_clone(struct component base, const struct component 
 struct rect transform_get_rect(const struct transform *this) {
     return this->rect;
 }
-void transform_set_rect(struct transform *this, const struct rect rect) {
-    if (rects_equal(this->rect, rect)) {
+void transform_set_rect(struct transform *this, const struct rect new_rect) {
+    if (rects_equal(this->rect, new_rect)) {
         return;
     }
-    struct rect_pair rect_pair = {
-        .rect1 = this->rect,
-        .rect2 = rect
+    struct component_on_rect_changed_callback_data data = {
+        .component = (struct component*)this,
+        .rect_pair.rect1 = this->rect,
+        .rect_pair.rect2 = new_rect
     };
-    this->rect = rect;
-    action_invoke(this->on_rect_changed, &rect_pair);
+    this->rect = new_rect;
+    action_invoke(this->on_rect_changed, &data);
 }
 
 struct action* transform_get_on_rect_changed(const struct transform *this) {

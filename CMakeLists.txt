@@ -199,6 +199,8 @@ add_executable(MyCoolGameEngine main.c
         src/scene/components/rendering/box_light_animated.h
         src/scene/components/rendering/box_light_animated.c
         src/utils/rect_pair.h
+        src/scene/chunks/chunks.h
+        src/scene/chunks/chunks.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)

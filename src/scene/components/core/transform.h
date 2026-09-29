@@ -16,7 +16,7 @@ const char* transform_component_key(void);
 struct component* transform_create(struct parser *parser, struct entity *parent);
 
 struct rect transform_get_rect(const struct transform *this);
-void transform_set_rect(struct transform *this, struct rect rect);
+void transform_set_rect(struct transform *this, struct rect new_rect);
 
 struct action* transform_get_on_rect_changed(const struct transform *this);
 

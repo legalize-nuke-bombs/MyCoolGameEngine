@@ -12,6 +12,7 @@
 #include "../engine/events/engine_events.h"
 #include "../utils/action.h"
 #include "../subsystems/subsystem_internal.h"
+#include "chunks/chunks.h"
 #include "components/component_fabric.h"
 #include "prefabs/prefab_manager.h"
 
@@ -33,6 +34,7 @@ struct scene {
     unsigned int on_physics_subscription_token;
 
     struct component_fabric* component_fabric;
+    struct chunks* chunks;
     struct prefab_manager* prefab_manager;
 };
 
@@ -59,8 +61,8 @@ struct subsystem* scene_create(char *name, const struct subsystem_collection *su
     this->name = name;
     this->entities = entity_collection_create();
     this->tmap = tmap_create();
-
     this->component_fabric = component_fabric_create();
+    this->chunks = chunks_create();
     this->prefab_manager = prefab_manager_create();
 
     return base;
@@ -72,6 +74,7 @@ void scene_on_destroy(struct subsystem *base) {
 
     prefab_manager_destroy(this->prefab_manager);
     component_fabric_destroy(this->component_fabric);
+    chunks_destroy(this->chunks);
     entity_collection_destroy(this->entities);
     tmap_destroy(this->tmap);
     free(this->name);
@@ -129,6 +132,7 @@ const char* scene_get_name(const struct scene *this) {
 static void handle_new_component(void *base, void *component) {
     const struct scene *this = base;
     tmap_register_component(this->tmap, component);
+    chunks_register_component(this->chunks, component);
 }
 
 const struct tmap* scene_get_tmap(const struct scene *this) {
@@ -136,6 +140,9 @@ const struct tmap* scene_get_tmap(const struct scene *this) {
 }
 const struct component_fabric* scene_get_component_fabric(const struct scene* this) {
     return this->component_fabric;
+}
+const struct chunks* scene_get_chunks(const struct scene *this) {
+    return this->chunks;
 }
 const struct prefab_manager* scene_get_prefab_manager(const struct scene *this) {
     return this->prefab_manager;
