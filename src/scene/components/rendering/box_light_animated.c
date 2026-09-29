@@ -76,6 +76,7 @@ static void box_light_animated_awake(struct component *base) {
     this->box_light = (struct box_light*)entity_get_component(parent, "box_light");
     if (this->box_light == NULL) {
         entity_mark_destroyed(parent);
+        return;
     }
     this->box_light_origin_scale = component_get_local_rect((const struct component*)this->box_light).size;
 }
