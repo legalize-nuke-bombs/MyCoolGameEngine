@@ -25,31 +25,30 @@ struct chunks {
 struct chunks *chunks_create() {
     logger_info("Chunks (%d x %d, chunk size %f) are creating...", CHUNKS_SIZE, CHUNKS_SIZE, CHUNKS_START_CHUNK_SIZE);
     struct chunks *this = calloc(1, sizeof(struct chunks));
-    for (int i = 0; i < CHUNKS_SIZE; i++) {
-        for (int j = 0; j < CHUNKS_SIZE; j++) {
-            this->components[i][j] = pointer_dictionary_build(0);
-        }
-    }
     this->chunk_size = CHUNKS_START_CHUNK_SIZE;
     return this;
 }
-void chunks_destroy(struct chunks *this) {
-    logger_info("Chunks are destroying...");
+
+static void chunks_destroy_chunks(struct chunks *this) {
     for (int i = 0; i < CHUNKS_SIZE; i++) {
         for (int j = 0; j < CHUNKS_SIZE; j++) {
-            dictionary_destroy(this->components[i][j]);
+            if (this->components[i][j] != NULL) {
+                dictionary_destroy(this->components[i][j]);
+                this->components[i][j] = NULL;
+            }
         }
     }
+}
+
+void chunks_destroy(struct chunks *this) {
+    logger_info("Chunks are destroying...");
+    chunks_destroy_chunks(this);
     free(this);
 }
 
-void chunks_clear(const struct chunks *this) {
+void chunks_clear(struct chunks *this) {
     logger_info("Chunks are clearing...");
-    for (int i = 0; i < CHUNKS_SIZE; i++) {
-        for (int j = 0; j < CHUNKS_SIZE; j++) {
-            dictionary_clear(this->components[i][j]);
-        }
-    }
+    chunks_destroy_chunks(this);
 }
 
 static void chunks_resize(struct chunks *this);
@@ -71,12 +70,19 @@ void chunks_get_rect_indexes(const struct chunks *this, const struct rect rect, 
     *y_end = chunks_get_position_index(this, max_y);
 }
 
-static void chunks_chunk_add_component_if_absent(const struct chunks *this, struct component* component, const int index_x, const int index_y) {
+static void chunks_chunk_add_component_if_absent(struct chunks *this, struct component* component, const int index_x, const int index_y) {
+    if (this->components[index_x][index_y] == NULL) {
+        this->components[index_x][index_y] = pointer_dictionary_build(0);
+    }
     dictionary_try_add(this->components[index_x][index_y], component, component);
 }
 
 static void chunks_chunk_remove_component(const struct chunks *this, const struct component* component, const int index_x, const int index_y) {
-    dictionary_remove(this->components[index_x][index_y], (void*)component);
+    struct dictionary *chunk = this->components[index_x][index_y];
+    if (chunk == NULL) {
+        return;
+    }
+    dictionary_remove(chunk, (void*)component);
 }
 
 struct dictionary* chunks_chunk_get_components(const struct chunks *this, const int index_x, const int index_y) {
@@ -127,6 +133,9 @@ static void chunks_resize(struct chunks *this) {
     for (int i = 0; i < CHUNKS_SIZE; i++) {
         for (int j = 0; j < CHUNKS_SIZE; j++) {
             struct dictionary *chunk = this->components[i][j];
+            if (chunk == NULL) {
+                continue;
+            }
             struct dictionary_iterator iterator = dictionary_begin(chunk);
             struct dictionary_node node;
             while (dictionary_next(chunk, &iterator, &node)) {

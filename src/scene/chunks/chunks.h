@@ -14,7 +14,7 @@ struct dictionary;
 struct chunks *chunks_create();
 void chunks_destroy(struct chunks *this);
 
-void chunks_clear(const struct chunks *this);
+void chunks_clear(struct chunks *this);
 
 void chunks_get_rect_indexes(const struct chunks *this, struct rect rect, int *x_start, int *x_end, int *y_start, int *y_end);
 
