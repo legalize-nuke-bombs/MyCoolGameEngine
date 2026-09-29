@@ -182,9 +182,14 @@ bool component_is_updateable(const struct component *this) {
     return this->vtable->on_update;
 }
 
-bool component_is_chunkable(const struct component *this) {
-    if (this->vtable->is_chunkable) {
-        return this->vtable->is_chunkable();
+void component_chunked_update(struct component *this, const struct update_context *context) {
+    if (!component_is_alive(this)) {
+        return;
     }
-    return false;
+    if (this->vtable->on_chunked_update != NULL) {
+        this->vtable->on_chunked_update(this, context);
+    }
+}
+bool component_is_chunkable(const struct component *this) {
+    return this->vtable->on_chunked_update || this->vtable->is_chunkable;
 }

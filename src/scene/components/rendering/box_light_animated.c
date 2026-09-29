@@ -28,18 +28,13 @@ struct box_light_animated {
 
 static struct component* box_light_animated_clone(struct component base, const struct component *component);
 static void box_light_animated_awake(struct component *base);
-static void box_light_animated_update(struct component *base, const struct update_context *context);
-static bool box_light_animated_is_chunkable() {
-    return true;
-}
+static void box_light_animated_chunked_update(struct component *base, const struct update_context *context);
 
 static const struct component_vtable box_light_animated_vtable = {
     .component_key = box_light_animated_component_key,
     .on_clone = box_light_animated_clone,
     .on_awake = box_light_animated_awake,
-    .on_update = box_light_animated_update,
-    .is_chunkable = box_light_animated_is_chunkable,
-    .on_disable = NULL
+    .on_chunked_update = box_light_animated_chunked_update,
 };
 
 const char* box_light_animated_component_key(void) {
@@ -81,7 +76,7 @@ static void box_light_animated_awake(struct component *base) {
     this->box_light_origin_scale = component_get_local_rect((const struct component*)this->box_light).size;
 }
 
-static void box_light_animated_update(struct component *base, const struct update_context *context) {
+static void box_light_animated_chunked_update(struct component *base, const struct update_context *context) {
     struct box_light_animated *this = (struct box_light_animated *) base;
 
     this->timer += context->dt;
