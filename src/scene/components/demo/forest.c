@@ -34,7 +34,7 @@ static const struct component_vtable forest_vtable = {
     .on_clone = forest_clone,
     .on_awake = forest_awake,
     .on_update = NULL,
-    .on_disable = forest_on_destroy
+    .on_destroy = forest_on_destroy
 };
 
 const char* forest_component_key(void) {
