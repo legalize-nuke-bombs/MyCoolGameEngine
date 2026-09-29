@@ -51,41 +51,58 @@ void chunks_clear(const struct chunks *this) {
     }
 }
 
-static int chunks_index(const struct chunks* this, double position) {
+static void chunks_resize(struct chunks *this);
+
+static int chunks_get_position_index(const struct chunks* this, const double position) {
     const int offset = floor(position / this->chunk_size);
     return (CHUNKS_SIZE / 2) + offset;
 }
 
-static void chunks_resize(struct chunks *this);
-
-
-static void chunks_add_component(struct chunks* this, struct component* component) {
+static void chunks_get_component_indexes(const struct chunks *this, const struct component* component, int *x_start, int *x_end, int *y_start, int *y_end) {
     const struct rect rect = component_get_rect(component);
 
-    double min_x = rect.position.x - rect.size.x / 2;
-    double max_x = rect.position.x + rect.size.x / 2;
-    double min_y = rect.position.y - rect.size.y / 2;
-    double max_y = rect.position.y + rect.size.y / 2;
+    const double min_x = rect.position.x - rect.size.x / 2;
+    const double max_x = rect.position.x + rect.size.x / 2;
+    const double min_y = rect.position.y - rect.size.y / 2;
+    const double max_y = rect.position.y + rect.size.y / 2;
 
+    *x_start = chunks_get_position_index(this, min_x);
+    *x_end = chunks_get_position_index(this, max_x);
+    *y_start = chunks_get_position_index(this, min_y);
+    *y_end = chunks_get_position_index(this, max_y);
+}
+
+static void chunks_add_component_if_absent(const struct chunks *this, struct component* component, const int index_x, const int index_y) {
+    struct list* list = this->components[index_x][index_y];
+    for (int i = 0; i < list_count(list); i++) {
+        const struct component* c = list_get(list, i);
+        if (c == component) {
+            return;
+        }
+    }
+    list_add(list, component);
+}
+
+static void chunks_add_component_without_resize(struct chunks *this, struct component *component) {
+    int start_x, end_x, start_y, end_y;
+    chunks_get_component_indexes(this, component, &start_x, &end_x, &start_y, &end_y);
+    for (int x = start_x; x <= end_x; x++) {
+        for (int y = start_y; y <= end_y; y++) {
+            chunks_add_component_if_absent(this, component, x, y);
+        }
+    }
+}
+
+static void chunks_add_component_with_resize(struct chunks* this, struct component* component) {
     int start_x, end_x, start_y, end_y;
     while (1) {
-        start_x = chunks_index(this, min_x);
-        end_x = chunks_index(this, max_x);
-        start_y = chunks_index(this, min_y);
-        end_y = chunks_index(this, max_y);
-
+        chunks_get_component_indexes(this, component, &start_x, &end_x, &start_y, &end_y);
         if (start_x >= 0 && end_x < CHUNKS_SIZE && start_y >= 0 && end_y < CHUNKS_SIZE) {
             break;
         }
-
         chunks_resize(this);
     }
-
-    for (int x = start_x; x <= end_x; x++) {
-        for (int y = start_y; y <= end_y; y++) {
-            list_add(this->components[y][x], component);
-        }
-    }
+    chunks_add_component_without_resize(this, component);
 }
 
 static void chunks_resize(struct chunks *this) {
