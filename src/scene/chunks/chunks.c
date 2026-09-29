@@ -109,7 +109,28 @@ static void chunks_resize(struct chunks *this) {
     const float target_chunk_size = this->chunk_size * 2;
     logger_info("Chunks are updating chunk size from %f to %f...", this->chunk_size, target_chunk_size);
 
+    struct list *all_components = list_create(1024);
 
+    for (int i = 0; i < CHUNKS_SIZE; i++) {
+        for (int j = 0; j < CHUNKS_SIZE; j++) {
+            struct list *list = this->components[i][j];
+            for (int k = 0; k < list_count(list); k++) {
+                struct component *component = list_get(list, k);
+                list_add(all_components, component);
+            }
+            list_clear(list);
+        }
+    }
+
+    this->chunk_size = target_chunk_size;
+
+    const int total_unique = list_count(all_components);
+    for (int i = 0; i < total_unique; i++) {
+        struct component *comp = list_get(all_components, i);
+        chunks_add_component_without_resize(this, comp);
+    }
+
+    list_destroy(all_components);
 }
 
 static void handle_component_rect_changed(void *listener, void *context);
