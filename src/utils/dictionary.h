@@ -12,8 +12,7 @@ struct dictionary_node {
 };
 
 struct dictionary_iterator {
-    int bucket;
-    void *node;
+    int position;
 };
 
 struct dictionary;
@@ -23,7 +22,7 @@ void dictionary_destroy(struct dictionary *dictionary);
 
 int dictionary_count(const struct dictionary *dictionary);
 
-// Do not add or remove while iterating: both may move entries.
+// Adding and removing while iterating is allowed: removed entries are skipped, entries added during a pass may or may not be visited in it.
 struct dictionary_iterator dictionary_begin(const struct dictionary *dictionary);
 bool dictionary_next(const struct dictionary *dictionary, struct dictionary_iterator *iterator, struct dictionary_node *node);
 
