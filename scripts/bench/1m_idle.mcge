@@ -1,0 +1,8 @@
+scene add prefab IdleEntity
+transform default 0 0 1 1
+idle default
+end
+
+scene add entity Forest
+transform default 0 0 1000000 1000000
+forest default 1000000 IdleEntity end
