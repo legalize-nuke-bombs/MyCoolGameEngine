@@ -122,6 +122,7 @@ void scene_on_disable(struct subsystem *base) {
     this->on_physics = NULL;
     entity_collection_clear(this->entities);
     tmap_clear(this->tmap);
+    chunks_clear(this->chunks);
     prefab_manager_clear(this->prefab_manager);
 }
 

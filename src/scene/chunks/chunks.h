@@ -11,6 +11,8 @@ struct component;
 struct chunks *chunks_create();
 void chunks_destroy(struct chunks *this);
 
+void chunks_clear(const struct chunks *this);
+
 void chunks_register_component(struct chunks *this, const struct component *component);
 
 #endif //MYCOOLGAMEENGINE_CHUNKS_H
