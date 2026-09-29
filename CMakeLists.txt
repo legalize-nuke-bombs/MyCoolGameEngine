@@ -198,6 +198,7 @@ add_executable(MyCoolGameEngine main.c
         src/random/random.c
         src/scene/components/rendering/box_light_animated.h
         src/scene/components/rendering/box_light_animated.c
+        src/utils/rect_pair.h
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)

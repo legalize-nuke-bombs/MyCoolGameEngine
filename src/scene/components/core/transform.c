@@ -3,21 +3,25 @@
 #include <stdlib.h>
 
 #include "../component_internal.h"
+#include "../../../utils/action.h"
 #include "../../../utils/parser.h"
+#include "../../../utils/rect_pair.h"
 
 struct transform {
     struct component base;
     struct rect rect;
+    struct action* on_rect_changed;
 };
 
 static struct component* transform_clone(struct component base, const struct component *component);
+static void transform_on_destroy(struct component* base);
 
 static const struct component_vtable transform_vtable = {
     .component_key = transform_component_key,
     .on_clone = transform_clone,
     .on_awake = NULL,
     .on_update = NULL,
-    .on_destroy = NULL
+    .on_destroy = transform_on_destroy
 };
 
 const char* transform_component_key(void) {
@@ -32,8 +36,15 @@ struct component* transform_create(struct parser *parser, struct entity *parent)
     parser_next_double(parser, &this->rect.position.y);
     parser_next_double(parser, &this->rect.size.x);
     parser_next_double(parser, &this->rect.size.y);
+    this->on_rect_changed = action_create();
 
     return (struct component *)this;
+}
+
+static void transform_on_destroy(struct component* base) {
+    const struct transform *this = (struct transform *)base;
+
+    action_destroy(this->on_rect_changed);
 }
 
 struct component* transform_clone(struct component base, const struct component *component) {
@@ -42,6 +53,7 @@ struct component* transform_clone(struct component base, const struct component 
     struct transform *this = calloc(1, sizeof(struct transform));
     this->base = base;
     this->rect = transform->rect;
+    this->on_rect_changed = action_create();
     return (struct component*)this;
 }
 
@@ -49,5 +61,14 @@ struct rect transform_get_rect(const struct transform *this) {
     return this->rect;
 }
 void transform_set_rect(struct transform *this, const struct rect rect) {
+    struct rect_pair rect_pair = {
+        .rect1 = this->rect,
+        .rect2 = rect
+    };
     this->rect = rect;
+    action_invoke(this->on_rect_changed, &rect_pair);
+}
+
+struct action* transform_get_on_rect_changed(const struct transform *this) {
+    return this->on_rect_changed;
 }
