@@ -40,8 +40,8 @@ static void interpreter_scene_add_execute(const struct interpreter_command *this
         entity_name = strdup(prefab_name);
     }
     else {
-        logger_warn("Scene add unexpected type `%s`", type);
-        entity_name = strdup(prefab_name);
+        logger_warn("Scene add unexpected type `%s`, parsing it as entity", type);
+        entity_name = parser_next_dup(parser);
     }
 
     struct entity *entity = entity_create(entity_name, scene);
