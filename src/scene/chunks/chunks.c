@@ -13,7 +13,7 @@
 #include "../components/component.h"
 
 #define CHUNKS_SIZE 256
-#define CHUNKS_START_CHUNK_SIZE 1.f // TODO This is test value. Should be probably 256-1024
+#define CHUNKS_START_CHUNK_SIZE 1.f
 
 struct chunks {
     struct list* components[CHUNKS_SIZE][CHUNKS_SIZE];
@@ -131,7 +131,7 @@ static void chunks_resize(struct chunks *this) {
     const float target_chunk_size = this->chunk_size * 2;
     logger_info("Chunks are updating chunk size from %f to %f...", this->chunk_size, target_chunk_size);
 
-    struct list *all_components = list_create(1024);
+    struct list *all_components = list_create(10240);
 
     for (int i = 0; i < CHUNKS_SIZE; i++) {
         for (int j = 0; j < CHUNKS_SIZE; j++) {
@@ -146,8 +146,7 @@ static void chunks_resize(struct chunks *this) {
 
     this->chunk_size = target_chunk_size;
 
-    const int total_unique = list_count(all_components);
-    for (int i = 0; i < total_unique; i++) {
+    for (int i = 0; i < list_count(all_components); i++) {
         struct component *comp = list_get(all_components, i);
         chunks_add_component_without_resize(this, comp);
     }
@@ -171,7 +170,6 @@ static void handle_component_rect_changed(void *listener, void *context) {
     struct chunks *this = listener;
     const struct component_on_rect_changed_callback_data *data = context;
     struct component *component = data->component;
-    logger_debug("Entity %s component %s rect update", component_get_parent_name(component), component_get_key(component));
     chunks_remove_component(this, data->rect_pair.rect1, component);
     chunks_add_component_with_resize(this, component);
 }

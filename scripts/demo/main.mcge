@@ -90,11 +90,6 @@ box_renderer default prop1 texture tree8 0
 box_renderer_animated default 0.1
 end
 
-scene add prefab SmallForest
-transform default 0 0 500 500
-forest custom 0 0 1 1 100 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
-end
-
 
 
 
@@ -103,7 +98,7 @@ end
 
 
 scene add entity Terrain
-transform default 0 0 10000 10000
+transform default 0 0 1000 1000
 box_renderer default bg1 color 54 78 62 255
 end
 
@@ -114,10 +109,9 @@ renderer_settings default 1 50 50 80 255
 end
 
 
-/* Recursive forest! */
 scene add entity Forest
-transform default 0 0 10000 10000
-forest default 500 SmallForest end
+transform default 0 0 1000 1000
+forest default 5 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
 end
 
 
