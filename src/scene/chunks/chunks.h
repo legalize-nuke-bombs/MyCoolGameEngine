@@ -9,6 +9,7 @@
 
 struct chunks;
 struct component;
+struct dictionary;
 
 struct chunks *chunks_create();
 void chunks_destroy(struct chunks *this);
@@ -19,6 +20,6 @@ void chunks_get_rect_indexes(const struct chunks *this, struct rect rect, int *x
 
 void chunks_register_component(struct chunks *this, struct component *component);
 
-struct list* chunks_chunk_get_components(const struct chunks *this, int index_x, int index_y);
+struct dictionary* chunks_chunk_get_components(const struct chunks *this, int index_x, int index_y);
 
 #endif //MYCOOLGAMEENGINE_CHUNKS_H
