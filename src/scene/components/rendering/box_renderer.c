@@ -117,10 +117,7 @@ static void box_renderer_update(struct component *base, const struct update_cont
     const struct box_renderer *this = (struct box_renderer *) base;
 
     const struct renderer_pipeline_draw_call draw_call = {
-        .rect = {
-            .position = component_get_position(base),
-            .size = component_get_scale(base)
-        },
+        .rect = component_get_rect(base),
         .primitive = this->square,
         .layer = this->renderer_layer
     };

@@ -7,8 +7,7 @@
 
 struct transform {
     struct component base;
-    struct vector2 position;
-    struct vector2 scale;
+    struct rect rect;
 };
 
 static struct component* transform_clone(struct component base, const struct component *component);
@@ -29,10 +28,10 @@ struct component* transform_create(struct parser *parser, struct entity *parent)
     struct transform *this = malloc(sizeof(struct transform));
     component_base_create((struct component*)(this), &transform_vtable, parser, parent);
 
-    parser_next_double(parser, &this->position.x);
-    parser_next_double(parser, &this->position.y);
-    parser_next_double(parser, &this->scale.x);
-    parser_next_double(parser, &this->scale.y);
+    parser_next_double(parser, &this->rect.position.x);
+    parser_next_double(parser, &this->rect.position.y);
+    parser_next_double(parser, &this->rect.position.x);
+    parser_next_double(parser, &this->rect.position.y);
 
     return (struct component *)this;
 }
@@ -42,20 +41,13 @@ struct component* transform_clone(struct component base, const struct component 
 
     struct transform *this = calloc(1, sizeof(struct transform));
     this->base = base;
-    this->position = transform->position;
-    this->scale = transform->scale;
+    this->rect = transform->rect;
     return (struct component*)this;
 }
 
-struct vector2 transform_get_position(const struct transform *this) {
-    return this->position;
+struct rect transform_get_rect(const struct transform *this) {
+    return this->rect;
 }
-void transform_set_position(struct transform *this, struct vector2 position) {
-    this->position = position;
-}
-struct vector2 transform_get_scale(const struct transform *this) {
-    return this->scale;
-}
-void transform_set_scale(struct transform *this, const struct vector2 *scale) {
-    this->scale = *scale;
+void transform_set_rect(struct transform *this, const struct rect rect) {
+    this->rect = rect;
 }

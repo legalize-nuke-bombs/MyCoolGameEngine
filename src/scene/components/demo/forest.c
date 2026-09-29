@@ -98,9 +98,8 @@ static void forest_awake(struct component *base) {
 
     logger_debug("Forest is spawning %d trees (%d different tree specs)...", this->trees_number, list_count(prefabs));
 
-    struct vector2 position = component_get_position(base);
-    struct vector2 size = component_get_scale(base);
-    struct vector2 half_size = vector_multiply_scalar(size, 0.5);
+    const struct rect rect = component_get_rect(base);
+    const struct vector2 half_size = vector_multiply_scalar(rect.size, 0.5);
 
     for (int i = 0; i < this->trees_number; i++) {
         const int tree_spec = random_next_int(random, 0, list_count(prefabs));
@@ -108,13 +107,12 @@ static void forest_awake(struct component *base) {
         struct entity* tree = prefab_instantiate(prefab);
         struct transform* tree_transform = entity_get_transform(tree);
 
-        struct vector2 tree_size = transform_get_scale(tree_transform);
-        struct vector2 tree_half_size = vector_multiply_scalar(tree_size, 0.5);
+        struct rect tree_rect = transform_get_rect(tree_transform);
+        const struct vector2 tree_half_size = vector_multiply_scalar(tree_rect.size, 0.5);
 
-        struct vector2 tree_position;
-        tree_position.x = (float)random_next_double(random, position.x - half_size.x + tree_half_size.x, position.x + half_size.x - tree_half_size.x);
-        tree_position.y = (float)random_next_double(random, position.y - half_size.y + tree_half_size.y, position.y + half_size.y - tree_half_size.y);
-        transform_set_position(tree_transform, tree_position);
+        tree_rect.position.x = (float)random_next_double(random, rect.position.x - half_size.x + tree_half_size.x, rect.position.x + half_size.x - tree_half_size.x);
+        tree_rect.position.y = (float)random_next_double(random, rect.position.y - half_size.y + tree_half_size.y, rect.position.y + half_size.y - tree_half_size.y);
+        transform_set_rect(tree_transform, tree_rect);
 
         scene_capture_entity(scene, tree);
     }

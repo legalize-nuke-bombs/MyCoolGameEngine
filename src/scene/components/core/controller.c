@@ -69,8 +69,8 @@ void controller_move(const struct controller* this, struct vector2 direction, co
 
     const struct vector2 offset = vector_multiply_scalar(direction, this->v * dt);
 
-    const struct vector2 current_position = transform_get_position(this->transform);
-    const struct vector2 new_position = vector_sum(current_position, offset);
+    struct rect rect = transform_get_rect(this->transform);
+    rect.position = vector_sum(rect.position, offset);
 
-    transform_set_position(this->transform, new_position);
+    transform_set_rect(this->transform, rect);
 }

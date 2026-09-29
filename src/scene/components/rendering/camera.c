@@ -59,7 +59,7 @@ static void camera_awake(struct component *base) {
 static void camera_update(struct component *base, const struct update_context *context) {
     const struct camera *this = (struct camera *) base;
 
-    renderer_pipeline_set_viewpoint(this->renderer, component_get_position(base));
+    renderer_pipeline_set_viewpoint(this->renderer, component_get_rect(base).position);
 }
 
 static void camera_on_disable(struct component *base) {

@@ -17,14 +17,14 @@ void component_base_create(struct component *this, const struct component_vtable
 
     const char* word = parser_next(parser);
     if (strcmp(word, "default") == 0) {
-        this->local_position = vector2_zero;
-        this->local_scale = vector2_one;
+        this->local_rect.position = vector2_zero;
+        this->local_rect.size = vector2_one;
     }
     else if (strcmp(word, "custom") == 0) {
-        parser_next_double(parser, &this->local_position.x);
-        parser_next_double(parser, &this->local_position.y);
-        parser_next_double(parser, &this->local_scale.x);
-        parser_next_double(parser, &this->local_scale.y);
+        parser_next_double(parser, &this->local_rect.position.x);
+        parser_next_double(parser, &this->local_rect.position.y);
+        parser_next_double(parser, &this->local_rect.size.x);
+        parser_next_double(parser, &this->local_rect.size.y);
     }
     else {
         logger_warn("Unexpected component local transform start token `%s`", word);
@@ -37,8 +37,7 @@ struct component* component_clone(const struct component *component) {
     logger_debug("Component %s is cloning...", component_get_key(component));
     this.awake = false;
     this.alive = true;
-    this.local_position = component->local_position;
-    this.local_scale = component->local_scale;
+    this.local_rect = component->local_rect;
     return component->vtable->on_clone(this, component);
 }
 void component_awake(struct component *this) {
@@ -84,33 +83,23 @@ const char* component_get_parent_name(const struct component *this) {
     return this->parent != NULL ? entity_get_name(this->parent) : "<none>";
 }
 
-struct vector2 component_get_local_position(const struct component *this) {
-    return this->local_position;
+struct rect component_get_local_rect(const struct component *this) {
+    return this->local_rect;
 }
-struct vector2 component_get_local_scale(const struct component *this) {
-    return this->local_scale;
-}
-void component_set_local_position(struct component *this, const struct vector2 position) {
-    this->local_position = position;
-}
-void component_set_local_scale(struct component *this, const struct vector2 scale) {
-    this->local_scale = scale;
+void component_set_local_rect(struct component *this, struct rect rect) {
+    this->local_rect = rect;
 }
 
-struct vector2 component_get_position(const struct component *this) {
+struct rect component_get_rect(const struct component *this) {
     if (this->parent == NULL) {
-        return this->local_position;
+        return this->local_rect;
     }
-    const struct vector2 parent_position = transform_get_position(entity_get_transform(this->parent));
-    const struct vector2 parent_scale = transform_get_scale(entity_get_transform(this->parent));
-    return vector_sum(parent_position, vector_multiply_vector(this->local_position, parent_scale));
-}
-struct vector2 component_get_scale(const struct component *this) {
-    if (this->parent == NULL) {
-        return this->local_scale;
-    }
-    const struct vector2 parent_scale = transform_get_scale(entity_get_transform(this->parent));
-    return vector_multiply_vector(parent_scale, this->local_scale);
+    const struct rect parent_rect = transform_get_rect(entity_get_transform(this->parent));
+    const struct rect result = {
+        .position = vector_sum(parent_rect.position, vector_multiply_vector(this->local_rect.position, parent_rect.size)),
+        .size = vector_multiply_vector(parent_rect.size, this->local_rect.size)
+    };
+    return result;
 }
 
 const char* component_get_key(const struct component *this) {

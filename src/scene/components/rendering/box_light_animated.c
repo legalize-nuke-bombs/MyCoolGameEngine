@@ -73,7 +73,7 @@ static void box_light_animated_awake(struct component *base) {
     if (this->box_light == NULL) {
         entity_mark_destroyed(parent);
     }
-    this->box_light_origin_scale = component_get_local_scale((const struct component*)this->box_light);
+    this->box_light_origin_scale = component_get_local_rect((const struct component*)this->box_light).size;
 }
 
 static void box_light_animated_update(struct component *base, const struct update_context *context) {
@@ -82,5 +82,8 @@ static void box_light_animated_update(struct component *base, const struct updat
     this->timer += context->dt;
     const double normalized_sin = (sin(this->timer * this->speed) + 1.0) / 2.0;
     const double k = this->lower_coefficient + normalized_sin * (this->upper_coefficient - this->lower_coefficient);
-    component_set_local_scale((struct component*)this->box_light, vector_multiply_scalar(this->box_light_origin_scale, k));
+
+    struct rect rect = component_get_local_rect((struct component*)this->box_light);
+    rect.position = vector_multiply_scalar(this->box_light_origin_scale, k);
+    component_set_local_rect((struct component*)this->box_light, rect);
 }

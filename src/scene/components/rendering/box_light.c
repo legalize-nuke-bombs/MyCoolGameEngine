@@ -108,10 +108,7 @@ static void box_light_update(struct component *base, const struct update_context
     const struct box_light *this = (struct box_light *) base;
 
     const struct light_map_draw_call draw_call = {
-        .rect = {
-            .position = component_get_position(base),
-            .size = component_get_scale(base)
-        },
+        .rect = component_get_rect(base),
         .primitive = this->square,
     };
     light_map_draw_primitive(this->light_map, draw_call);

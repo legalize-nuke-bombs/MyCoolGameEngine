@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 #include "../../engine/update_context.h"
-#include "../../utils/vector2.h"
+#include "../../utils/rect.h"
 
 struct component;
 struct entity;
@@ -20,13 +20,10 @@ void component_set_parent(struct component *this, struct entity *parent);
 struct entity* component_get_parent(const struct component *this);
 const char* component_get_parent_name(const struct component *this);
 
-struct vector2 component_get_local_position(const struct component *this);
-struct vector2 component_get_local_scale(const struct component *this);
-void component_set_local_position(struct component *this, struct vector2 position);
-void component_set_local_scale(struct component *this, struct vector2 scale);
+struct rect component_get_local_rect(const struct component *this);
+void component_set_local_rect(struct component *this, struct rect rect);
 
-struct vector2 component_get_position(const struct component *this);
-struct vector2 component_get_scale(const struct component *this);
+struct rect component_get_rect(const struct component *this);
 
 const char* component_get_key(const struct component *this);
 

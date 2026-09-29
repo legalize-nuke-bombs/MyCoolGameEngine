@@ -21,8 +21,7 @@ struct component {
     const struct component_vtable *vtable;
     bool awake;
     bool alive;
-    struct vector2 local_position;
-    struct vector2 local_scale;
+    struct rect local_rect;
     struct entity *parent;
 };
 
