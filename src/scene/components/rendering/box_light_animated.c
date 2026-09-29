@@ -84,6 +84,6 @@ static void box_light_animated_update(struct component *base, const struct updat
     const double k = this->lower_coefficient + normalized_sin * (this->upper_coefficient - this->lower_coefficient);
 
     struct rect rect = component_get_local_rect((struct component*)this->box_light);
-    rect.position = vector_multiply_scalar(this->box_light_origin_scale, k);
+    rect.size = vector_multiply_scalar(this->box_light_origin_scale, k);
     component_set_local_rect((struct component*)this->box_light, rect);
 }

@@ -30,8 +30,8 @@ struct component* transform_create(struct parser *parser, struct entity *parent)
 
     parser_next_double(parser, &this->rect.position.x);
     parser_next_double(parser, &this->rect.position.y);
-    parser_next_double(parser, &this->rect.position.x);
-    parser_next_double(parser, &this->rect.position.y);
+    parser_next_double(parser, &this->rect.size.x);
+    parser_next_double(parser, &this->rect.size.y);
 
     return (struct component *)this;
 }
