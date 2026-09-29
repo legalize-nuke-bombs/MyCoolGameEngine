@@ -23,4 +23,6 @@ void list_remove_nulls(struct list *this);
 
 void list_clear(struct list *this);
 
+void list_pop_back(struct list *this);
+
 #endif //MYCOOLGAMEENGINE_LIST_H

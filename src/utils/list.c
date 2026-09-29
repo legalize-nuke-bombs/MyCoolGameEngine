@@ -74,3 +74,7 @@ void list_remove_nulls(struct list *this) {
 void list_clear(struct list *this) {
     this->count = 0;
 }
+
+void list_pop_back(struct list *this) {
+    this->count--;
+}
