@@ -65,7 +65,7 @@ static void keyboard_controller_on_awake(struct component* base) {
     if (this->controller == NULL) {
         entity_mark_destroyed(component_get_parent(base));
     }
-    this->keyboard = (struct keyboard*)subsystem_collection_get(scene_get_subsystems(entity_get_parent(component_get_parent(base))), "keyboard");
+    this->keyboard = (struct keyboard*)subsystem_collection_get(scene_get_subsystems(entity_get_scene(component_get_parent(base))), "keyboard");
 }
 
 static void keyboard_controller_on_disable(struct component* base) {

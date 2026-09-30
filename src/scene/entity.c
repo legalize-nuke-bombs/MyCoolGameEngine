@@ -13,23 +13,34 @@ struct entity {
     char *name;
     bool awake;
     bool alive;
+
+    struct list *entities;
     struct list *components;
+
     struct action *on_component_captured;
     struct action *on_marked_destroyed;
     struct transform *transform;
-    struct scene *parent;
+
+    struct entity *parent;
+    struct scene *scene;
 };
 
-struct entity* entity_create(char *name, struct scene *parent) {
+struct entity* entity_create(char *name, struct entity *parent, struct scene *scene) {
     struct entity *this = calloc(1, sizeof(struct entity));
     this->name = name;
     logger_debug("Entity %s is initializing...", this->name);
     this->awake = false;
     this->alive = true;
+
+    this->entities = list_create(1);
     this->components = list_create(1);
+
     this->on_component_captured = action_create();
     this->on_marked_destroyed = action_create();
+
     this->parent = parent;
+    this->scene = scene;
+
     return this;
 }
 struct entity* entity_clone(const struct entity* entity) {
@@ -38,13 +49,21 @@ struct entity* entity_clone(const struct entity* entity) {
     this->name = strdup(entity->name);
     this->awake = false;
     this->alive = true;
+
+    this->entities = list_create(list_count(entity->entities));
     this->components = list_create(list_count(entity->components));
-    this->on_component_captured = action_create();
-    this->on_marked_destroyed = action_create();
+    for (int i = 0; i < list_count(entity->entities); i++) {
+        const struct entity *child_entity = list_get(entity->entities, i);
+        entity_capture_entity(this, entity_clone(child_entity));
+    }
     for (int i = 0; i < list_count(entity->components); i++) {
-        struct component *component = list_get(entity->components, i);
+        const struct component *component = list_get(entity->components, i);
         entity_capture_component(this, component_clone(component));
     }
+
+    this->on_component_captured = action_create();
+    this->on_marked_destroyed = action_create();
+
     return this;
 }
 void entity_awake(struct entity *this) {
@@ -57,14 +76,23 @@ void entity_awake(struct entity *this) {
         struct component *component = list_get(this->components, i);
         component_awake(component);
     }
+    for (int i = 0; i < list_count(this->entities); i++) {
+        struct entity *child_entity = list_get(this->entities, i);
+        entity_awake(child_entity);
+    }
 }
 void entity_destroy(struct entity *this) {
     logger_debug("Entity %s is destroying..", this->name);
+    for (int i = list_count(this->entities) - 1; i >= 0; i--) {
+        struct entity *child_entity = list_get(this->entities, i);
+        entity_destroy(child_entity);
+    }
     for (int i = list_count(this->components) - 1; i >= 0; i--) {
         struct component *component = list_get(this->components, i);
         component_destroy(component);
     }
     list_destroy(this->components);
+    list_destroy(this->entities);
     action_destroy(this->on_component_captured);
     action_destroy(this->on_marked_destroyed);
     free(this->name);
@@ -76,6 +104,10 @@ void entity_mark_destroyed(struct entity *this) {
     }
     logger_debug("Entity %s is marking destroyed..", this->name);
     this->alive = false;
+    for (int i = list_count(this->entities) - 1; i >= 0; i--) {
+        struct entity *child_entity = list_get(this->entities, i);
+        entity_mark_destroyed(child_entity);
+    }
     for (int i = list_count(this->components) - 1; i >= 0; i--) {
         struct component *component = list_get(this->components, i);
         component_mark_destroyed(component);
@@ -94,11 +126,18 @@ bool entity_is_alive(const struct entity *this) {
     return this->alive;
 }
 
-void entity_set_parent(struct entity *this, struct scene *parent) {
-    this->parent = parent;
+void entity_set_parent(struct entity *this, struct entity *new_parent) {
+    this->parent = new_parent;
 }
-struct scene* entity_get_parent(const struct entity *this) {
+struct entity* entity_get_parent(const struct entity *this) {
     return this->parent;
+}
+
+void entity_set_scene(struct entity *this, struct scene *new_scene) {
+    this->scene = new_scene;
+}
+struct scene* entity_get_scene(const struct entity *this) {
+    return this->scene;
 }
 
 struct transform* entity_get_transform(const struct entity *this) {
@@ -112,8 +151,11 @@ struct action* entity_get_action_on_marked_destroyed(const struct entity *this) 
     return this->on_marked_destroyed;
 }
 
-int entity_get_components_count(const struct entity *this) {
-    return list_count(this->components);
+void entity_capture_entity(struct entity *this, struct entity *entity) {
+    logger_debug("Entity %s is capturing entity %s...", this->name, entity->name);
+    entity_set_parent(entity, this);
+    list_add(this->entities, entity);
+    entity_recapture_components(entity);
 }
 void entity_capture_component(struct entity *this, struct component *component) {
     logger_debug("Entity %s is capturing component %s...", this->name, component_get_key(component));
@@ -139,8 +181,16 @@ void entity_capture_component(struct entity *this, struct component *component) 
     }
     action_invoke(this->on_component_captured, component);
 }
-struct component* entity_get_component_by_index(const struct entity *this, const int index) {
-    return list_get(this->components, index);
+void entity_recapture_components(const struct entity *this) {
+    logger_debug("Entity %s is recapturing all components...", this->name);
+    for (int i = 0; i < list_count(this->components); i++) {
+        struct component *component = list_get(this->components, i);
+        action_invoke(this->on_component_captured, component);
+    }
+    for (int i = 0; i < list_count(this->entities); i++) {
+        struct entity *child_entity = list_get(this->entities, i);
+        entity_recapture_components(child_entity);
+    }
 }
 
 struct component* entity_try_get_component(const struct entity *this, const char *name) {

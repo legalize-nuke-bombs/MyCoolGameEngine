@@ -20,6 +20,8 @@ bool component_is_alive(const struct component *this);
 void component_set_parent(struct component *this, struct entity *parent);
 struct entity* component_get_parent(const struct component *this);
 const char* component_get_parent_name(const struct component *this);
+struct entity* component_get_global_parent(const struct component *this);
+const char* component_get_global_parent_name(const struct component *this);
 
 struct rect component_get_local_rect(const struct component *this);
 void component_set_local_rect(struct component *this, struct rect new_local_rect);

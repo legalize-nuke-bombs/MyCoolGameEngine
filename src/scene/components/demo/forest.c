@@ -76,7 +76,7 @@ static struct component* forest_clone(struct component base, const struct compon
 static void forest_awake(struct component *base) {
     const struct forest *this = (struct forest *) base;
 
-    struct scene *scene = entity_get_parent(component_get_parent(base));
+    struct scene *scene = entity_get_scene(component_get_parent(base));
     const struct prefab_manager* prefab_manager = scene_get_prefab_manager(scene);
     struct random* random = (struct random*)subsystem_collection_get(scene_get_subsystems(scene), "random");
 

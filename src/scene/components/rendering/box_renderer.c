@@ -68,7 +68,7 @@ struct component* box_renderer_create(struct parser *parser, struct entity *pare
     }
     else if (strcmp(type, "texture") == 0) {
         const char* texture_name = parser_next(parser);
-        struct renderer* renderer = (struct renderer*)subsystem_collection_get(scene_get_subsystems(entity_get_parent(component_get_parent(base))), "renderer");
+        struct renderer* renderer = (struct renderer*)subsystem_collection_get(scene_get_subsystems(entity_get_scene(component_get_parent(base))), "renderer");
         struct texture* texture = texture_manager_try_get_texture(renderer_get_texture_manager(renderer), texture_name);
         int texture_frame;
         parser_next_int(parser, &texture_frame);
@@ -107,7 +107,7 @@ static void box_renderer_on_destroy(struct component *base) {
 static void box_renderer_awake(struct component *base) {
     struct box_renderer *this = (struct box_renderer *) base;
 
-    const struct renderer* renderer_subsystem = (struct renderer*)subsystem_collection_get(scene_get_subsystems(entity_get_parent(component_get_parent(base))), "renderer");
+    const struct renderer* renderer_subsystem = (struct renderer*)subsystem_collection_get(scene_get_subsystems(entity_get_scene(component_get_parent(base))), "renderer");
     this->renderer = renderer_get_pipeline(renderer_subsystem);
     this->renderer_layer = renderer_layer_manager_try_get(renderer_get_layer_manager(renderer_subsystem), this->renderer_layer_name);
 }

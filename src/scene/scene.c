@@ -141,7 +141,7 @@ const struct subsystem_collection* scene_get_subsystems(const struct scene* this
 }
 
 void scene_capture_entity(struct scene *this, struct entity *entity) {
-    entity_set_parent(entity, this);
+    entity_set_scene(entity, this);
     logger_debug("Scene %s is capturing entity %s", this->name, entity_get_name(entity));
 
     if (this->awoken) {
@@ -150,12 +150,9 @@ void scene_capture_entity(struct scene *this, struct entity *entity) {
 
     entity_collection_add(this->entities, entity);
 
-    for (int i = 0; i < entity_get_components_count(entity); i++) {
-        struct component *component = entity_get_component_by_index(entity, i);
-        handle_new_component(this, component);
-    }
-
     const struct action* entity_on_component_captured = entity_get_action_on_component_captured(entity);
     unsigned int subscription_token; // We do not unsubscribe because scene always lives longer than it's entities
     action_subscribe(entity_on_component_captured, this, handle_new_component, &subscription_token);
+
+    entity_recapture_components(entity);
 }

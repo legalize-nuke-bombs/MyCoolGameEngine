@@ -62,7 +62,7 @@ static struct component* camera_clone(struct component base, const struct compon
 static void camera_awake(struct component *base) {
     struct camera *this = (struct camera *) base;
 
-    const struct scene* scene = entity_get_parent(component_get_parent(base));
+    const struct scene* scene = entity_get_scene(component_get_parent(base));
     this->renderer = renderer_get_pipeline((struct renderer*)subsystem_collection_get(scene_get_subsystems(scene), "renderer"));
     this->chunks = scene_get_chunks(scene);
 }

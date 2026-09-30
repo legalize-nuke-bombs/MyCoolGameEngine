@@ -71,7 +71,7 @@ static struct component* renderer_settings_clone(struct component base, const st
 static void renderer_settings_awake(struct component *base) {
     struct renderer_settings *this = (struct renderer_settings *) base;
 
-    const struct renderer* renderer_subsystem = (struct renderer*)subsystem_collection_get(scene_get_subsystems(entity_get_parent(component_get_parent(base))), "renderer");
+    const struct renderer* renderer_subsystem = (struct renderer*)subsystem_collection_get(scene_get_subsystems(entity_get_scene(component_get_parent(base))), "renderer");
 
     this->light_map = renderer_pipeline_get_light_map(renderer_get_pipeline(renderer_subsystem));
     light_map_set_enable(this->light_map, this->light_map_enabled);

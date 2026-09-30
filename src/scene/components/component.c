@@ -115,7 +115,20 @@ struct entity* component_get_parent(const struct component *this) {
     return this->parent;
 }
 const char* component_get_parent_name(const struct component *this) {
-    return this->parent != NULL ? entity_get_name(this->parent) : "<none>";
+    return this->parent ? entity_get_name(this->parent) : "<null>";
+}
+struct entity* component_get_global_parent(const struct component *this) {
+    if (this->parent == NULL) return NULL;
+    struct entity* iterator = this->parent;
+    while (1) {
+        struct entity* prev = entity_get_parent(iterator);
+        if (prev == NULL) return iterator;
+        iterator = prev;
+    }
+}
+const char* component_get_global_parent_name(const struct component *this) {
+    const struct entity* global_parent = component_get_global_parent(this);
+    return global_parent ? entity_get_name(global_parent) : "<null>";
 }
 
 struct rect component_get_local_rect(const struct component *this) {

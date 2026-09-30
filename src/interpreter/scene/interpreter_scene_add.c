@@ -44,7 +44,7 @@ static void interpreter_scene_add_execute(const struct interpreter_command *this
         entity_name = parser_next_dup(parser);
     }
 
-    struct entity *entity = entity_create(entity_name, scene);
+    struct entity *entity = entity_create(entity_name, NULL, scene);
 
     const struct component_fabric *component_fabric = scene_get_component_fabric(scene);
     for (; ;) {

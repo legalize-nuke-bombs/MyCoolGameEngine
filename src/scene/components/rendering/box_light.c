@@ -62,7 +62,7 @@ struct component* box_light_create(struct parser *parser, struct entity *parent)
     }
     else if (strcmp(type, "texture") == 0) {
         const char* texture_name = parser_next(parser);
-        const struct renderer* renderer = (struct renderer*)subsystem_collection_get(scene_get_subsystems(entity_get_parent(component_get_parent(base))), "renderer");
+        const struct renderer* renderer = (struct renderer*)subsystem_collection_get(scene_get_subsystems(entity_get_scene(component_get_parent(base))), "renderer");
         struct texture* texture = texture_manager_try_get_texture(renderer_get_texture_manager(renderer), texture_name);
         int texture_frame;
         parser_next_int(parser, &texture_frame);
@@ -99,7 +99,7 @@ static void box_light_on_destroy(struct component *base) {
 static void box_light_awake(struct component *base) {
     struct box_light *this = (struct box_light *) base;
 
-    const struct renderer* renderer_subsystem = (struct renderer*)subsystem_collection_get(scene_get_subsystems(entity_get_parent(component_get_parent(base))), "renderer");
+    const struct renderer* renderer_subsystem = (struct renderer*)subsystem_collection_get(scene_get_subsystems(entity_get_scene(component_get_parent(base))), "renderer");
     this->light_map = renderer_pipeline_get_light_map(renderer_get_pipeline(renderer_subsystem));
 }
 
