@@ -6,6 +6,7 @@
 #include "../logging/logger.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 #include "entity.h"
 #include "entity_collection.h"
@@ -15,6 +16,8 @@
 #include "chunks/chunks.h"
 #include "components/component_fabric.h"
 #include "prefabs/prefab_manager.h"
+#include "../subsystems/subsystem_collection.h"
+#include "../interpreter/interpreter.h"
 
 
 struct scene {
@@ -22,6 +25,8 @@ struct scene {
 
     char* name;
     bool awoken;
+
+    char* switch_flag;
 
     struct entity_collection* entities;
     struct tmap *tmap;
@@ -73,13 +78,27 @@ void scene_on_destroy(struct subsystem *base) {
     chunks_destroy(this->chunks);
     entity_collection_destroy(this->entities);
     tmap_destroy(this->tmap);
+    if (this->switch_flag != NULL) free(this->switch_flag);
     free(this->name);
 }
 
-void scene_clear(const struct scene *this) {
+
+static void scene_handle_switch(struct scene *this) {
+    if (this->switch_flag == NULL) {
+        return;
+    }
+    logger_info("Scene is switching...");
     chunks_clear(this->chunks);
-    tmap_clear(this->tmap);
     entity_collection_clear(this->entities);
+    tmap_clear(this->tmap);
+    const struct interpreter* interpreter = (struct interpreter*)subsystem_collection_get(scene_get_subsystems(this), "interpreter");
+    interpreter_eval(interpreter, this->switch_flag);
+    if (this->switch_flag != NULL) free(this->switch_flag);
+    this->switch_flag = NULL;
+}
+
+void scene_mark_switch(struct scene *this, const char* script_path) {
+    this->switch_flag = strdup(script_path);
 }
 
 
@@ -95,6 +114,7 @@ static void scene_run_gc(const struct scene *this) {
 static void scene_update(void *listener, void *context) {
     struct scene* this = listener;
     const struct update_context* update_context = context;
+    scene_handle_switch(this);
     tmap_update(this->tmap, update_context);
     scene_run_gc(this);
 }

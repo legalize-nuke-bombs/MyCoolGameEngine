@@ -5,8 +5,6 @@
 #include "../../component_internal.h"
 #include "../../../entity.h"
 #include "../../../../devices/keyboard.h"
-#include "../../../../interpreter/interpreter.h"
-#include "../../../../logging/logger.h"
 #include "../../../../scene/scene.h"
 #include "../../../../subsystems/subsystem_collection.h"
 #include "../../../../utils/parser.h"
@@ -63,19 +61,8 @@ static struct component* menu_clone(struct component base, const struct componen
 static void menu_switch_scene(void* listener, void *context) {
     const struct menu* this = listener;
     const struct component* base = listener;
-    logger_info("Entity %s is switching scenes...", component_get_global_parent_name(base));
-
-    // This entity will no longer exist after scene_clear so we should save this shit
-    char* map_path = strdup(this->map_path);
-    // This is kinda bad
-    // TODO
-
-    const struct scene *scene = entity_get_scene(component_get_parent(base));
-    scene_clear(scene);
-    const struct interpreter* interpreter = (struct interpreter*)subsystem_collection_get(scene_get_subsystems(scene), "interpreter");
-    interpreter_eval(interpreter, map_path);
-
-    free(map_path);
+    struct scene *scene = entity_get_scene(component_get_parent(base));
+    scene_mark_switch(scene, this->map_path);
 }
 
 static void menu_awake(struct component *base) {
