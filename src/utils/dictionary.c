@@ -13,14 +13,15 @@ struct dictionary_entry {
     int next_free;
 };
 
+// Entries and index share one block: entries_capacity entries, then the index with 2 * entries_capacity slots
 struct dictionary {
     struct dictionary_entry *entries;
+    int *index;
     int entries_capacity;
     int used;
     int count;
     int free_head;
 
-    int *index;
     int dim;
 
     int (*hash)(const void *key);
@@ -46,13 +47,12 @@ struct dictionary* dictionary_create(int dim, int (*hash)(const void*), bool (*e
     }
     struct dictionary *dictionary = malloc(sizeof(struct dictionary));
     dictionary->entries = NULL;
+    dictionary->index = NULL;
     dictionary->entries_capacity = 0;
     dictionary->used = 0;
     dictionary->count = 0;
     dictionary->free_head = DICTIONARY_NONE;
-    dictionary->dim = dim;
-    dictionary->index = malloc(sizeof(int) * dictionary_index_capacity(dictionary));
-    dictionary_index_reset(dictionary);
+    dictionary->dim = dim > 0 ? dim : 1;
     dictionary->hash = hash;
     dictionary->equals = equals;
     return dictionary;
@@ -60,7 +60,6 @@ struct dictionary* dictionary_create(int dim, int (*hash)(const void*), bool (*e
 
 void dictionary_destroy(struct dictionary *dictionary) {
     free(dictionary->entries);
-    free(dictionary->index);
     free(dictionary);
 }
 
@@ -69,6 +68,9 @@ int dictionary_count(const struct dictionary *dictionary) {
 }
 
 static int dictionary_find_slot(const struct dictionary *dictionary, const void *key, const int hash) {
+    if (dictionary->index == NULL) {
+        return DICTIONARY_NONE;
+    }
     const int mask = dictionary_mask(dictionary);
     for (int i = hash & mask; dictionary->index[i] != DICTIONARY_NONE; i = (i + 1) & mask) {
         const struct dictionary_entry *entry = &dictionary->entries[dictionary->index[i]];
@@ -88,10 +90,17 @@ static void dictionary_index_place(const struct dictionary *dictionary, const in
     dictionary->index[i] = position;
 }
 
-static void dictionary_grow_index(struct dictionary *dictionary) {
-    dictionary->dim++;
-    free(dictionary->index);
-    dictionary->index = malloc(sizeof(int) * dictionary_index_capacity(dictionary));
+static void dictionary_allocate_block(struct dictionary *dictionary, const int dim) {
+    const int entries_capacity = (1 << dim) / 2;
+    struct dictionary_entry *entries = malloc(sizeof(struct dictionary_entry) * entries_capacity + sizeof(int) * (1 << dim));
+    for (int position = 0; position < dictionary->used; position++) {
+        entries[position] = dictionary->entries[position];
+    }
+    free(dictionary->entries);
+    dictionary->entries = entries;
+    dictionary->index = (int *)(entries + entries_capacity);
+    dictionary->entries_capacity = entries_capacity;
+    dictionary->dim = dim;
     dictionary_index_reset(dictionary);
     for (int position = 0; position < dictionary->used; position++) {
         if (dictionary->entries[position].key != NULL) {
@@ -106,9 +115,14 @@ static int dictionary_take_position(struct dictionary *dictionary) {
         dictionary->free_head = dictionary->entries[position].next_free;
         return position;
     }
-    if (dictionary->used == dictionary->entries_capacity) {
-        dictionary->entries_capacity = dictionary->entries_capacity == 0 ? 1 : dictionary->entries_capacity * 2;
-        dictionary->entries = realloc(dictionary->entries, sizeof(struct dictionary_entry) * dictionary->entries_capacity);
+    if (dictionary->entries == NULL) {
+        dictionary_allocate_block(dictionary, dictionary->dim);
+    }
+    else if (dictionary->used == dictionary->entries_capacity) {
+        if (dictionary->dim >= DICTIONARY_MAX_DIM) {
+            return DICTIONARY_NONE;
+        }
+        dictionary_allocate_block(dictionary, dictionary->dim + 1);
     }
     return dictionary->used++;
 }
@@ -137,15 +151,12 @@ bool dictionary_try_add(struct dictionary *dictionary, void *key, void *value) {
         return false;
     }
 
-    if (2 * (dictionary->count + 1) > dictionary_index_capacity(dictionary)) {
-        if (dictionary->dim >= DICTIONARY_MAX_DIM) {
-            logger_error("Dictionary is full (count %d)", dictionary->count);
-            return false;
-        }
-        dictionary_grow_index(dictionary);
+    const int position = dictionary_take_position(dictionary);
+    if (position == DICTIONARY_NONE) {
+        logger_error("Dictionary is full (count %d)", dictionary->count);
+        return false;
     }
 
-    const int position = dictionary_take_position(dictionary);
     struct dictionary_entry *entry = &dictionary->entries[position];
     entry->key = key;
     entry->value = value;
@@ -202,7 +213,9 @@ bool dictionary_remove(struct dictionary *dictionary, void *key) {
 }
 
 void dictionary_clear(struct dictionary *this) {
-    dictionary_index_reset(this);
+    if (this->index != NULL) {
+        dictionary_index_reset(this);
+    }
     this->used = 0;
     this->count = 0;
     this->free_head = DICTIONARY_NONE;
