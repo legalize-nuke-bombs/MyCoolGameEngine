@@ -3,7 +3,19 @@ renderer_layer_manager new_layer prop1 10
 
 
 texture_manager new_texture cube 64 64 ../textures/demo/cube.png lazy 1
+texture_manager new_texture tree1 72 65 ../textures/demo/tree1_tileset.png lazy 1
 
+
+scene add prefab Tree1
+transform default 0 0 72 65
+box_renderer default prop1 texture tree1 0
+box_renderer_animated default 0.1
+end
+
+scene add entity Forest
+transform default 0 0 10 10
+forest default 1 Tree1 end
+end
 
 scene add entity Cube
 transform default 0 0 26 26
