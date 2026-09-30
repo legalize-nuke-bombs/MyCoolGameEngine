@@ -11,10 +11,13 @@
 #include "../../../subsystems/subsystem_collection.h"
 #include "../../chunks/chunks.h"
 #include "../../../utils/dictionary.h"
+#include "../../../utils/parser.h"
 
 
 struct camera {
     struct component base;
+
+    double simulation_distance;
 
     struct renderer_pipeline *renderer;
     const struct chunks *chunks;
@@ -42,6 +45,8 @@ struct component* camera_create(struct parser *parser, struct entity *parent) {
     struct component *base = (struct component *) this;
     component_base_create(base, &camera_vtable, parser, parent);
 
+    parser_next_double(parser, &this->simulation_distance);
+
     return base;
 }
 
@@ -50,6 +55,7 @@ static struct component* camera_clone(struct component base, const struct compon
 
     struct camera* this = calloc(1, sizeof(struct camera));
     this->base = base;
+    this->simulation_distance = camera->simulation_distance;
     return (struct component*)this;
 }
 
@@ -65,9 +71,9 @@ static void camera_update_renderer_pipeline_viewport(const struct camera *this) 
     renderer_pipeline_set_viewpoint(this->renderer, component_get_rect((struct component*)this).position);
 }
 
-static void camera_update_visible_chunks(const struct camera *this, const struct update_context *context) {
+static void camera_update_chunks(const struct camera *this, const struct rect rect, bool (*validate)(const struct component* component), void (*execute)(struct component* component, const struct update_context* context), const struct update_context *context) {
     int x_start, x_end, y_start, y_end;
-    chunks_get_rect_indexes(this->chunks, renderer_pipeline_get_viewport(this->renderer), &x_start, &x_end, &y_start, &y_end);
+    chunks_get_rect_indexes(this->chunks, rect, &x_start, &x_end, &y_start, &y_end);
     for (int x = x_start; x <= x_end; x++) {
         for (int y = y_start; y <= y_end; y++) {
             const struct dictionary *types = chunks_chunk_get_types(this->chunks, x, y);
@@ -77,25 +83,39 @@ static void camera_update_visible_chunks(const struct camera *this, const struct
             struct dictionary_iterator types_iterator = dictionary_begin(types);
             struct dictionary_node node;
             while (dictionary_next(types, &types_iterator, &node)) {
-                struct dictionary* typed_components = node.value;
+                const struct dictionary* typed_components = node.value;
 
                 struct dictionary_iterator typed_components_iterator = dictionary_begin(typed_components);
                 while (dictionary_next(typed_components, &typed_components_iterator, &node)) {
                     struct component* component = node.value;
-                    if (!component_is_visible_chunkable(component)) {
+                    if (!validate(component)) {
                         break;
                     }
-                    component_visible_chunk_update(component, context);
+                    execute(component, context);
                 }
             }
         }
     }
 }
 
+static void camera_update_visibility_chunks(const struct camera *this, const struct update_context *context) {
+    camera_update_chunks(this, renderer_pipeline_get_viewport(this->renderer), component_is_visible_chunkable, component_visible_chunk_update, context);
+}
+
+static void camera_update_simulation_chunks(const struct camera *this, const struct update_context *context) {
+    const struct rect rect = {
+        .position = component_get_rect((const struct component*)this).position,
+        .size.x = this->simulation_distance,
+        .size.y = this->simulation_distance
+    };
+    camera_update_chunks(this, rect, component_is_simulation_chunkable, component_simulation_chunk_update, context);
+}
+
 static void camera_update(struct component *base, const struct update_context *context) {
     const struct camera *this = (struct camera *) base;
     camera_update_renderer_pipeline_viewport(this);
-    camera_update_visible_chunks(this, context);
+    camera_update_visibility_chunks(this, context);
+    camera_update_simulation_chunks(this, context);
 }
 
 static void camera_on_disable(struct component *base) {
