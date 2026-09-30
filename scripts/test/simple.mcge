@@ -8,8 +8,11 @@ texture_manager new_texture tree1 72 65 ../textures/demo/tree1_tileset.png lazy 
 
 scene add prefab Tree1
 transform default 0 0 72 65
+child Tree1Body
+transform default 0 0 1 1
 box_renderer default prop1 texture tree1 0
 box_renderer_animated default 0.1
+end
 end
 
 scene add entity Forest

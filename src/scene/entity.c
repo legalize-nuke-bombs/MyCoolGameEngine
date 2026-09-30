@@ -136,6 +136,10 @@ struct entity* entity_get_parent(const struct entity *this) {
 
 void entity_set_scene(struct entity *this, struct scene *new_scene) {
     this->scene = new_scene;
+    for (int i = 0; i < list_count(this->entities); i++) {
+        struct entity *child_entity = list_get(this->entities, i);
+        entity_set_scene(child_entity, new_scene);
+    }
 }
 struct scene* entity_get_scene(const struct entity *this) {
     return this->scene;
