@@ -1,0 +1,3 @@
+scene add entity Menu 0 0 1 1
+menu Return scripts/demo/map.mcge
+end

@@ -58,8 +58,4 @@ box_renderer prop1 texture tree8 0
 box_renderer_animated 0.1
 end
 
-
-
-scene add entity Menu 0 0 1 1
-menu Return scripts/demo/map.mcge
-end
+eval scripts/demo/menu.mcge
