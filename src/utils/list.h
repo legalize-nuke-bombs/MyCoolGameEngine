@@ -5,9 +5,13 @@
 #ifndef MYCOOLGAMEENGINE_LIST_H
 #define MYCOOLGAMEENGINE_LIST_H
 
-struct list;
+struct list {
+    void **data;
+    int capacity;
+    int count;
+};
 
-struct list* list_create(int capacity);
+struct list list_create(int capacity);
 void list_destroy(struct list *this);
 
 int list_count(const struct list *this);

@@ -6,25 +6,19 @@
 
 #include <stdlib.h>
 
-struct list {
-    void **data;
-    int capacity;
-    int count;
-};
-
-struct list* list_create(int capacity) {
+struct list list_create(int capacity) {
     if (capacity <= 0) {
         capacity = 1;
     }
-    struct list *list = malloc(sizeof(struct list));
-    list->data = malloc(sizeof(void *) * capacity);
-    list->capacity = capacity;
-    list->count = 0;
+    const struct list list = {
+        .data = NULL,
+        .capacity = capacity,
+        .count = 0
+    };
     return list;
 }
 void list_destroy(struct list *this) {
     free(this->data);
-    free(this);
 }
 
 int list_count(const struct list *this) {
@@ -46,7 +40,10 @@ static void list_realloc(struct list *list) {
     list->capacity = new_capacity;
 }
 void list_add(struct list *this, void *data) {
-    if (this->count >= this->capacity) {
+    if (this->data == NULL) {
+        this->data = malloc(sizeof(void *) * this->capacity);
+    }
+    else if (this->count >= this->capacity) {
         list_realloc(this);
     }
     this->data[this->count++] = data;

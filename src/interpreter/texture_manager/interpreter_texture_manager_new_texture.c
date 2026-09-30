@@ -26,7 +26,7 @@ static const char* interpreter_texture_manager_new_texture_get_key(const struct 
 static void interpreter_texture_manager_new_texture_execute(const struct interpreter_command *this, struct parser *parser, const struct subsystem_collection *subsystems) {
     const struct renderer* renderer = (struct renderer*)subsystem_collection_get(subsystems, "renderer");
     struct SDL_Renderer* native_renderer = renderer_get_native_renderer(renderer);
-    const struct texture_manager *manager = renderer_get_texture_manager(renderer);
+    struct texture_manager *manager = renderer_get_texture_manager(renderer);
 
     char* texture_id = parser_next_dup(parser);
     int texture_tile_w, texture_tile_h;

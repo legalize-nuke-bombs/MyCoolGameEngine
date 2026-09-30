@@ -150,7 +150,7 @@ void scene_capture_entity(struct scene *this, struct entity *entity) {
 
     entity_collection_add(this->entities, entity);
 
-    const struct action* entity_on_component_captured = entity_get_action_on_component_captured(entity);
+    struct action* entity_on_component_captured = entity_get_action_on_component_captured(entity);
     unsigned int subscription_token; // We do not unsubscribe because scene always lives longer than it's entities
     action_subscribe(entity_on_component_captured, this, handle_new_component, &subscription_token);
 

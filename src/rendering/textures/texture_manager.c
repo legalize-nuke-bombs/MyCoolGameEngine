@@ -17,7 +17,7 @@
 
 
 struct texture_manager {
-    struct list* list;
+    struct list list;
     struct dictionary* dict;
     double texture_update_timer;
 };
@@ -33,14 +33,14 @@ struct texture_manager* texture_manager_create() {
 void texture_manager_destroy(struct texture_manager* this) {
     logger_info("Texture manager is destroying...");
     texture_manager_clear(this);
-    list_destroy(this->list);
+    list_destroy(&this->list);
     dictionary_destroy(this->dict);
     free(this);
 }
 
-void texture_manager_capture(const struct texture_manager* this, struct texture* texture) {
+void texture_manager_capture(struct texture_manager* this, struct texture* texture) {
     if (dictionary_try_add(this->dict, (void*)texture_get_id(texture), texture)) {
-        list_add(this->list, texture);
+        list_add(&this->list, texture);
     }
     else {
         logger_warn("Texture manager failed to capture %s", texture_get_id(texture));
@@ -52,13 +52,13 @@ struct texture* texture_manager_try_get_texture(const struct texture_manager* th
     return dictionary_get(this->dict, (void*)texture_id);
 }
 
-void texture_manager_clear(const struct texture_manager* this) {
+void texture_manager_clear(struct texture_manager* this) {
     logger_info("Texture manager is clearing...");
-    for (int i = 0; i < list_count(this->list); i++) {
-        struct texture* texture = list_get(this->list, i);
+    for (int i = 0; i < list_count(&this->list); i++) {
+        struct texture* texture = list_get(&this->list, i);
         texture_destroy(texture);
     }
-    list_clear(this->list);
+    list_clear(&this->list);
     dictionary_clear(this->dict);
 }
 
@@ -67,8 +67,8 @@ void texture_manager_update(struct texture_manager* this, const double dt) {
     if (this->texture_update_timer < TEXTURE_UPDATE_INTERVAL) {
         return;
     }
-    for (int i = 0; i < list_count(this->list); i++) {
-        struct texture* texture = list_get(this->list, i);
+    for (int i = 0; i < list_count(&this->list); i++) {
+        struct texture* texture = list_get(&this->list, i);
         texture_update(texture, this->texture_update_timer);
     }
     this->texture_update_timer = 0;

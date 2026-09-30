@@ -14,7 +14,7 @@
 
 struct entity_collection {
     struct dictionary *entities;
-    struct list *dead;
+    struct list dead;
 };
 
 struct entity_collection *entity_collection_create(void) {
@@ -31,8 +31,8 @@ static void entity_collection_destroy_everyone(const struct entity_collection *t
     while (dictionary_next(this->entities, &iterator, &node)) {
         entity_destroy(node.value);
     }
-    for (int i = 0; i < list_count(this->dead); i++) {
-        entity_destroy(list_get(this->dead, i));
+    for (int i = 0; i < list_count(&this->dead); i++) {
+        entity_destroy(list_get(&this->dead, i));
     }
 }
 
@@ -40,7 +40,7 @@ void entity_collection_destroy(struct entity_collection *this) {
     logger_info("Entity_collection is destroying...");
     entity_collection_destroy_everyone(this);
     dictionary_destroy(this->entities);
-    list_destroy(this->dead);
+    list_destroy(&this->dead);
     free(this);
 }
 
@@ -51,23 +51,23 @@ void entity_collection_awake_everyone(const struct entity_collection *this) {
         entity_awake(node.value);
     }
 }
-void entity_collection_clear(const struct entity_collection *this) {
+void entity_collection_clear(struct entity_collection *this) {
     logger_info("Entity_collection is clearing...");
     entity_collection_destroy_everyone(this);
     dictionary_clear(this->entities);
-    list_clear(this->dead);
+    list_clear(&this->dead);
 }
 
 static void handle_entity_marked_destroyed(void *listener, void *context) {
-    const struct entity_collection *this = listener;
+    struct entity_collection *this = listener;
     struct entity *entity = context;
     dictionary_remove(this->entities, entity);
-    list_add(this->dead, entity);
+    list_add(&this->dead, entity);
 }
 
-void entity_collection_add(const struct entity_collection *this, struct entity *entity) {
+void entity_collection_add(struct entity_collection *this, struct entity *entity) {
     if (!entity_is_alive(entity)) {
-        list_add(this->dead, entity);
+        list_add(&this->dead, entity);
         return;
     }
     dictionary_try_add(this->entities, entity, entity);
@@ -75,11 +75,11 @@ void entity_collection_add(const struct entity_collection *this, struct entity *
     action_subscribe(entity_get_action_on_marked_destroyed(entity), (void*)this, handle_entity_marked_destroyed, &subscription_token);
 }
 
-int entity_collection_destroy_dead(const struct entity_collection *this) {
-    for (int i = 0; i < list_count(this->dead); i++) {
-        entity_destroy(list_get(this->dead, i));
+int entity_collection_destroy_dead(struct entity_collection *this) {
+    for (int i = 0; i < list_count(&this->dead); i++) {
+        entity_destroy(list_get(&this->dead, i));
     }
-    const int destroyed = list_count(this->dead);
-    list_clear(this->dead);
+    const int destroyed = list_count(&this->dead);
+    list_clear(&this->dead);
     return destroyed;
 }

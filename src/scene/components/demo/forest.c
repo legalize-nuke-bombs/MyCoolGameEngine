@@ -21,7 +21,7 @@ struct forest {
     struct component base;
 
     int trees_number;
-    struct list* prefabIds;
+    struct list prefabIds;
 };
 
 static struct component* forest_clone(struct component base, const struct component *component);
@@ -53,7 +53,7 @@ struct component* forest_create(struct parser *parser, struct entity *parent) {
         if (word == NULL || strcmp(word, "end") == 0) {
             break;
         }
-        list_add(this->prefabIds, strdup(word));
+        list_add(&this->prefabIds, strdup(word));
     }
 
     return base;
@@ -65,9 +65,9 @@ static struct component* forest_clone(struct component base, const struct compon
     struct forest* this = calloc(1, sizeof(struct forest));
     this->base = base;
     this->trees_number = forest->trees_number;
-    this->prefabIds = list_create(list_count(forest->prefabIds));
-    for (int i = 0; i < list_count(forest->prefabIds); i++) {
-        list_add(this->prefabIds, strdup(list_get(forest->prefabIds, i)));
+    this->prefabIds = list_create(list_count(&forest->prefabIds));
+    for (int i = 0; i < list_count(&forest->prefabIds); i++) {
+        list_add(&this->prefabIds, strdup(list_get(&forest->prefabIds, i)));
     }
     return (struct component*)this;
 }
@@ -79,30 +79,30 @@ static void forest_awake(struct component *base) {
     const struct prefab_manager* prefab_manager = scene_get_prefab_manager(scene);
     struct random* random = (struct random*)subsystem_collection_get(scene_get_subsystems(scene), "random");
 
-    struct list* prefabs = list_create(list_count(this->prefabIds));
-    for (int i = 0; i < list_count(this->prefabIds); i++) {
-        const char* prefab_id = list_get(this->prefabIds, i);
+    struct list prefabs = list_create(list_count(&this->prefabIds));
+    for (int i = 0; i < list_count(&this->prefabIds); i++) {
+        const char* prefab_id = list_get(&this->prefabIds, i);
         struct prefab *prefab = prefab_manager_try_get(prefab_manager, prefab_id);
         if (prefab == NULL) {
             continue;
         }
-        list_add(prefabs, prefab);
+        list_add(&prefabs, prefab);
     }
 
-    if (list_count(prefabs) == 0) {
+    if (list_count(&prefabs) == 0) {
         logger_warn("Forest found no valid prefabs. Nothing will be spawned!");
-        list_destroy(prefabs);
+        list_destroy(&prefabs);
         return;
     }
 
-    logger_debug("Forest is spawning %d trees (%d different tree specs)...", this->trees_number, list_count(prefabs));
+    logger_debug("Forest is spawning %d trees (%d different tree specs)...", this->trees_number, list_count(&prefabs));
 
     const struct rect rect = component_get_rect(base);
     const struct vector2 half_size = vector_multiply_scalar(rect.size, 0.5);
 
     for (int i = 0; i < this->trees_number; i++) {
-        const int tree_spec = random_next_int(random, 0, list_count(prefabs));
-        struct prefab* prefab = list_get(prefabs, tree_spec);
+        const int tree_spec = random_next_int(random, 0, list_count(&prefabs));
+        struct prefab* prefab = list_get(&prefabs, tree_spec);
         struct entity* tree = prefab_instantiate(prefab);
 
         struct rect tree_rect = entity_get_local_rect(tree);
@@ -115,13 +115,13 @@ static void forest_awake(struct component *base) {
         scene_capture_entity(scene, tree);
     }
 
-    list_destroy(prefabs);
+    list_destroy(&prefabs);
 }
 
 static void forest_on_destroy(struct component *base) {
-    const struct forest *this = (struct forest *) base;
-    for (int i = 0; i < list_count(this->prefabIds); i++) {
-        free(list_get(this->prefabIds, i));
+    struct forest *this = (struct forest *) base;
+    for (int i = 0; i < list_count(&this->prefabIds); i++) {
+        free(list_get(&this->prefabIds, i));
     }
-    list_destroy(this->prefabIds);
+    list_destroy(&this->prefabIds);
 }

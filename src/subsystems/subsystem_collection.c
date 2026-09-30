@@ -25,19 +25,19 @@
 
 
 struct subsystem_collection {
-    struct list* list;
+    struct list list;
     struct dictionary* dict;
 };
 
 
-static void subsystem_collection_capture(const struct subsystem_collection* this, struct subsystem* subsystem) {
+static void subsystem_collection_capture(struct subsystem_collection* this, struct subsystem* subsystem) {
     if (subsystem == NULL) {
         logger_error("Subsystem collection received nullptr instead of subsystem");
         return;
     }
     const char* subsystem_name = subsystem_get_name(subsystem);
     if (dictionary_try_add(this->dict, (void*)subsystem_name, subsystem)) {
-        list_add(this->list, subsystem);
+        list_add(&this->list, subsystem);
         logger_debug("Subsystem collection captured subsystem `%s`", subsystem_name);
     }
     else {
@@ -46,7 +46,7 @@ static void subsystem_collection_capture(const struct subsystem_collection* this
     }
 }
 
-static void subsystem_collection_capture_all(const struct subsystem_collection *this) {
+static void subsystem_collection_capture_all(struct subsystem_collection *this) {
     subsystem_collection_capture(this, engine_lifecycle_create(this));
     subsystem_collection_capture(this, engine_events_create(this));
     subsystem_collection_capture(this, keyboard_create(this));
@@ -66,29 +66,29 @@ struct subsystem_collection* subsystem_collection_create() {
     this->list = list_create(1024);
     this->dict = string_dictionary_build(4);
     subsystem_collection_capture_all(this);
-    logger_info("Subsystem collection knows %d subsystems", list_count(this->list));
+    logger_info("Subsystem collection knows %d subsystems", list_count(&this->list));
     return this;
 }
 void subsystem_collection_destroy(struct subsystem_collection* this) {
     logger_info("Subsystem collection is destroying...");
-    for (int i = list_count(this->list) - 1; i >= 0; i--) {
-        subsystem_destroy(list_get(this->list, i));
+    for (int i = list_count(&this->list) - 1; i >= 0; i--) {
+        subsystem_destroy(list_get(&this->list, i));
     }
-    list_destroy(this->list);
+    list_destroy(&this->list);
     dictionary_destroy(this->dict);
     free(this);
 }
 
 void subsystem_collection_enable_all(const struct subsystem_collection* this, struct engine_arguments args) {
     logger_info("Subsystem collection is enabling all subsystems....");
-    for (int i = 0; i < list_count(this->list); i++) {
-        subsystem_enable(list_get(this->list, i), args);
+    for (int i = 0; i < list_count(&this->list); i++) {
+        subsystem_enable(list_get(&this->list, i), args);
     }
 }
 void subsystem_collection_disable_all(const struct subsystem_collection* this) {
     logger_info("Subsystem collection is disabling all subsystems...");
-    for (int i = list_count(this->list) - 1; i >= 0; i--) {
-        subsystem_disable(list_get(this->list, i));
+    for (int i = list_count(&this->list) - 1; i >= 0; i--) {
+        subsystem_disable(list_get(&this->list, i));
     }
 }
 
