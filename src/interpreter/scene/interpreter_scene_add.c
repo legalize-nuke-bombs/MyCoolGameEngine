@@ -26,48 +26,59 @@ static const char* interpreter_scene_add_get_key(const struct interpreter_comman
     return "add";
 }
 
-static void interpreter_scene_add_execute(const struct interpreter_command *this, struct parser *parser, const struct subsystem_collection *subsystems) {
-    struct scene *scene = (struct scene*)subsystem_collection_get(subsystems, "scene");
-
-    const char* type = parser_next(parser);
-    char* prefab_name = NULL;
-    char* entity_name;
-    if (strcmp(type, "entity") == 0) {
-        entity_name = parser_next_dup(parser);
-    }
-    else if (strcmp(type, "prefab") == 0) {
-        prefab_name = parser_next_dup(parser);
-        entity_name = strdup(prefab_name);
-    }
-    else {
-        logger_warn("Scene add unexpected type `%s`, parsing it as entity", type);
-        entity_name = parser_next_dup(parser);
-    }
-
+static struct entity* interpreter_scene_parse_entity(struct parser *parser, struct scene *scene, const struct component_fabric *component_fabric, char* entity_name) {
     struct entity *entity = entity_create(entity_name, NULL, scene);
 
-    const struct component_fabric *component_fabric = scene_get_component_fabric(scene);
-    for (; ;) {
+    for (;;) {
         const char* word = parser_next(parser);
         if (word == NULL || strcmp(word, "end") == 0) {
             break;
         }
-        struct component* component = component_fabric_try_produce_component(component_fabric, word, parser, entity);
-        if (component == NULL) {
+
+        if (strcmp(word, "child") == 0 || strcmp(word, "entity") == 0) {
+            struct entity *child = interpreter_scene_parse_entity(parser, scene, component_fabric, parser_next_dup(parser));
+            if (child != NULL) {
+                entity_capture_entity(entity, child);
+            }
             continue;
         }
-        entity_capture_component(entity, component);
+
+        struct component* component = component_fabric_try_produce_component(component_fabric, word, parser, entity);
+        if (component != NULL) {
+            entity_capture_component(entity, component);
+        }
     }
 
-    if (prefab_name == NULL) {
-        scene_capture_entity(scene, entity);
-    }
-    else {
+    return entity;
+}
+
+static void interpreter_scene_add_execute(const struct interpreter_command *this, struct parser *parser, const struct subsystem_collection *subsystems) {
+    struct scene *scene = (struct scene*)subsystem_collection_get(subsystems, "scene");
+    const struct component_fabric *component_fabric = scene_get_component_fabric(scene);
+
+    const char* type = parser_next(parser);
+    if (type == NULL) return;
+
+    if (strcmp(type, "prefab") == 0) {
+        char* prefab_name = parser_next_dup(parser);
+        struct entity *root_entity = interpreter_scene_parse_entity(parser, scene, component_fabric, strdup(prefab_name));
+
         prefab_manager_capture_prefab(
             scene_get_prefab_manager(scene),
-            prefab_create(prefab_name, entity));
+            prefab_create(prefab_name, root_entity)
+        );
+    }
+    else {
+        if (strcmp(type, "entity") != 0) {
+            logger_warn("Interpreter scene add unexpected type `%s`, parsing it as entity", type);
+        }
+        struct entity *root_entity = interpreter_scene_parse_entity(parser, scene, component_fabric, parser_next_dup(parser));
+        if (root_entity != NULL) {
+            scene_capture_entity(scene, root_entity);
+        }
     }
 }
+
 
 static const struct interpreter_command_vtable scene_add_vtable = {
     .key = interpreter_scene_add_get_key,
