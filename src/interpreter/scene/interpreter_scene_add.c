@@ -29,20 +29,17 @@ static const char* interpreter_scene_add_get_key(const struct interpreter_comman
 static struct entity* interpreter_scene_parse_entity(struct parser *parser, struct scene *scene, const struct component_fabric *component_fabric, char* entity_name) {
     struct entity *entity = entity_create(entity_name, NULL, scene);
 
+    struct rect rect;
+    parser_next_double(parser, &rect.position.x);
+    parser_next_double(parser, &rect.position.y);
+    parser_next_double(parser, &rect.size.x);
+    parser_next_double(parser, &rect.size.y);
+    entity_set_local_rect(entity, rect);
+
     for (;;) {
         const char* word = parser_next(parser);
         if (word == NULL || strcmp(word, "end") == 0) {
             break;
-        }
-
-        if (strcmp(word, "transform") == 0) {
-            struct rect rect;
-            parser_next_double(parser, &rect.position.x);
-            parser_next_double(parser, &rect.position.y);
-            parser_next_double(parser, &rect.size.x);
-            parser_next_double(parser, &rect.size.y);
-            entity_set_local_rect(entity, rect);
-            continue;
         }
 
         if (strcmp(word, "child") == 0 || strcmp(word, "entity") == 0) {
