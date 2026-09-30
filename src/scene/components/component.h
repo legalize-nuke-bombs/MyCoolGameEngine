@@ -38,7 +38,9 @@ void component_update(struct component *this, const struct update_context *conte
 bool component_is_updateable(const struct component *this);
 
 void component_visible_chunk_update(struct component *this, const struct update_context *context);
+bool component_is_visible_chunkable(const struct component *this);
 void component_simulation_chunk_update(struct component *this, const struct update_context *context);
+bool component_is_simulation_chunkable(const struct component *this);
 bool component_is_chunkable(const struct component *this);
 
 #endif

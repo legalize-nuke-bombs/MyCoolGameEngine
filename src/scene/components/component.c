@@ -197,6 +197,9 @@ void component_visible_chunk_update(struct component *this, const struct update_
     this->last_chunked_update_frame_number = context->frame_number;
     this->vtable->on_visible_chunk_update(this, context);
 }
+bool component_is_visible_chunkable(const struct component *this) {
+    return this->vtable->on_visible_chunk_update;
+}
 void component_simulation_chunk_update(struct component *this, const struct update_context *context) {
     if (!component_is_alive(this)) {
         return;
@@ -209,6 +212,9 @@ void component_simulation_chunk_update(struct component *this, const struct upda
     }
     this->last_chunked_update_frame_number = context->frame_number;
     this->vtable->on_simulation_chunk_update(this, context);
+}
+bool component_is_simulation_chunkable(const struct component* this) {
+    return this->vtable->on_simulation_chunk_update;
 }
 bool component_is_chunkable(const struct component *this) {
     return this->vtable->on_visible_chunk_update || this->vtable->on_simulation_chunk_update || this->vtable->is_chunkable;

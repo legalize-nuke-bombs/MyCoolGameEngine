@@ -68,11 +68,11 @@ void chunks_get_rect_indexes(const struct chunks *this, const struct rect rect, 
     *y_end = chunks_get_position_index(this, max_y);
 }
 
-struct dictionary* chunks_chunk_get_components(const struct chunks *this, const int index_x, const int index_y) {
+struct dictionary* chunks_chunk_get_types(const struct chunks *this, const int index_x, const int index_y) {
     if (index_x < 0 || index_y < 0 || index_x >= CHUNKS_SIZE || index_y >= CHUNKS_SIZE) {
         return NULL;
     }
-    return chunk_get_components(&this->chunks[index_x][index_y]);
+    return chunk_get_types(&this->chunks[index_x][index_y]);
 }
 
 struct dictionary* chunks_chunk_get_components_by_type(const struct chunks *this, const int index_x, const int index_y, const char *component_type) {
@@ -122,16 +122,22 @@ static void chunks_resize(struct chunks *this) {
 
     for (int i = 0; i < CHUNKS_SIZE; i++) {
         for (int j = 0; j < CHUNKS_SIZE; j++) {
-            struct dictionary *chunk_components = chunk_get_components(&this->chunks[i][j]);
-            if (chunk_components == NULL) {
+            const struct dictionary *chunk_types = chunk_get_types(&this->chunks[i][j]);
+            if (chunk_types == NULL) {
                 continue;
             }
-            struct dictionary_iterator iterator = dictionary_begin(chunk_components);
+            struct dictionary_iterator chunk_types_iterator = dictionary_begin(chunk_types);
             struct dictionary_node node;
-            while (dictionary_next(chunk_components, &iterator, &node)) {
-                dictionary_try_add(all_components, node.key, node.value);
+            while (dictionary_next(chunk_types, &chunk_types_iterator, &node)) {
+                const struct dictionary* chunk_typed_components = node.value;
+
+                struct dictionary_iterator chunk_typed_components_iterator = dictionary_begin(chunk_typed_components);
+                while (dictionary_next(chunk_typed_components, &chunk_typed_components_iterator, &node)) {
+                    dictionary_try_add(all_components, node.key, node.value);
+                }
             }
-            dictionary_clear(chunk_components);
+
+            chunk_clear(&this->chunks[i][j]);
         }
     }
 

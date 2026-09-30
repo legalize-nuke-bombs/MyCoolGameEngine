@@ -70,18 +70,23 @@ static void camera_update_visible_chunks(const struct camera *this, const struct
     chunks_get_rect_indexes(this->chunks, renderer_pipeline_get_viewport(this->renderer), &x_start, &x_end, &y_start, &y_end);
     for (int x = x_start; x <= x_end; x++) {
         for (int y = y_start; y <= y_end; y++) {
-            const struct dictionary *dict = chunks_chunk_get_components(this->chunks, x, y);
-            if (dict == NULL) {
+            const struct dictionary *types = chunks_chunk_get_types(this->chunks, x, y);
+            if (types == NULL) {
                 continue;
             }
-            struct dictionary_iterator dict_iterator = dictionary_begin(dict);
-            struct dictionary_node dict_node;
-            while (dictionary_next(dict, &dict_iterator, &dict_node)) {
-                struct component* component = dict_node.value;
-                if (component == NULL) {
-                    continue;
+            struct dictionary_iterator types_iterator = dictionary_begin(types);
+            struct dictionary_node node;
+            while (dictionary_next(types, &types_iterator, &node)) {
+                struct dictionary* typed_components = node.value;
+
+                struct dictionary_iterator typed_components_iterator = dictionary_begin(typed_components);
+                while (dictionary_next(typed_components, &typed_components_iterator, &node)) {
+                    struct component* component = node.value;
+                    if (!component_is_visible_chunkable(component)) {
+                        break;
+                    }
+                    component_visible_chunk_update(component, context);
                 }
-                component_visible_chunk_update(component, context);
             }
         }
     }
