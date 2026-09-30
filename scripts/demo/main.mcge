@@ -1,15 +1,3 @@
-print DemoSceneLaunched!
-
-
-
-
-
-
-
-
-
-
-
 renderer_layer_manager new_layer bg1 1
 renderer_layer_manager new_layer prop1 10
 
