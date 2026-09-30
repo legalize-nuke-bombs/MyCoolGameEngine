@@ -75,6 +75,7 @@ add_executable(MyCoolGameEngine main.c
         src/engine/version.h
         src/utils/list.h
         src/utils/list.c
+        src/utils/typed_list.h
         src/utils/dictionary.h
         src/utils/dictionary.c
         src/utils/string_dictionary.h
