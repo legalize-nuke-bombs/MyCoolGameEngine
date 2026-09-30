@@ -45,7 +45,7 @@ const char* renderer_settings_component_key(void) {
 struct component* renderer_settings_create(struct parser *parser, struct entity *parent) {
     struct renderer_settings *this = calloc(1, sizeof(struct renderer_settings));
     struct component *base = (struct component *) this;
-    component_base_create(base, &renderer_settings_vtable, parser, parent);
+    component_base_create(base, &renderer_settings_vtable, parent);
 
     parser_next_uint8(parser, &this->light_map_enabled);
     if (this->light_map_enabled) {

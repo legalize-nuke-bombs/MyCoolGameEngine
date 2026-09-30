@@ -2,7 +2,6 @@
 
 #include <stdlib.h>
 
-#include "../core/transform.h"
 #include "../component_internal.h"
 #include "../../entity.h"
 #include "../../scene.h"
@@ -43,7 +42,7 @@ const char* camera_component_key(void) {
 struct component* camera_create(struct parser *parser, struct entity *parent) {
     struct camera *this = calloc(1, sizeof(struct camera));
     struct component *base = (struct component *) this;
-    component_base_create(base, &camera_vtable, parser, parent);
+    component_base_create(base, &camera_vtable, parent);
 
     parser_next_double(parser, &this->simulation_distance);
 

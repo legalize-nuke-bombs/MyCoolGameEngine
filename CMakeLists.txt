@@ -73,8 +73,6 @@ add_executable(MyCoolGameEngine main.c
         src/scene/scene.h
         src/scene/scene.c
         src/engine/version.h
-        src/scene/components/core/transform.h
-        src/scene/components/core/transform.c
         src/utils/list.h
         src/utils/list.c
         src/utils/dictionary.h
@@ -198,8 +196,8 @@ add_executable(MyCoolGameEngine main.c
         src/scene/components/demo/forest.c
         src/random/random.h
         src/random/random.c
-        src/scene/components/rendering/box_light_animated.h
-        src/scene/components/rendering/box_light_animated.c
+        src/scene/components/core/pulsator.h
+        src/scene/components/core/pulsator.c
         src/utils/rect_pair.h
         src/scene/chunks/chunks.h
         src/scene/chunks/chunks.c

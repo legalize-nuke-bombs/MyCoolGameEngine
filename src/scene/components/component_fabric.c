@@ -6,18 +6,17 @@
 
 #include <stdlib.h>
 
-#include "core/transform.h"
 #include "../../utils/dictionary.h"
 #include "../../utils/string_dictionary.h"
 #include "../../logging/logger.h"
 #include "core/controller.h"
 #include "core/idle.h"
 #include "core/keyboard_controller.h"
+#include "core/pulsator.h"
 #include "demo/forest.h"
 #include "rendering/box_renderer.h"
 #include "rendering/camera.h"
 #include "rendering/box_light.h"
-#include "rendering/box_light_animated.h"
 #include "rendering/box_renderer_animated.h"
 #include "rendering/renderer_settings.h"
 
@@ -35,14 +34,13 @@ static void component_fabric_register_component(const struct component_fabric *t
 }
 
 static void component_fabric_register_all(const struct component_fabric *this) {
-    component_fabric_register_component(this, transform_component_key(), transform_create);
     component_fabric_register_component(this, idle_component_key(), idle_create);
     component_fabric_register_component(this, camera_component_key(), camera_create);
     component_fabric_register_component(this, renderer_settings_component_key(), renderer_settings_create);
     component_fabric_register_component(this, box_renderer_component_key(), box_renderer_create);
     component_fabric_register_component(this, box_renderer_animated_component_key(), box_renderer_animated_create);
     component_fabric_register_component(this, box_light_component_key(), box_light_create);
-    component_fabric_register_component(this, box_light_animated_component_key(), box_light_animated_create);
+    component_fabric_register_component(this, pulsator_component_key(), pulsator_create);
     component_fabric_register_component(this, controller_component_key(), controller_create);
     component_fabric_register_component(this, keyboard_controller_component_key(), keyboard_controller_create);
     component_fabric_register_component(this, forest_component_key(), forest_create);

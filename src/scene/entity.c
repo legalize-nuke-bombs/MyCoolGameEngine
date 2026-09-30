@@ -7,6 +7,8 @@
 #include "scene.h"
 #include "../utils/list.h"
 #include "../utils/action.h"
+#include "../utils/rect_pair.h"
+#include "../utils/vector2_math.h"
 #include "../logging/logger.h"
 
 struct entity {
@@ -20,11 +22,44 @@ struct entity {
     struct list *entities;
     struct list *components;
 
-    struct transform *transform;
+    struct rect local_rect;
+    struct rect rect;
 
     struct entity *parent;
     struct scene *scene;
 };
+
+static struct rect entity_compute_rect(const struct entity *this) {
+    if (this->parent == NULL) {
+        return this->local_rect;
+    }
+    const struct rect parent_rect = this->parent->rect;
+    const struct rect result = {
+        .position = vector_sum(parent_rect.position, vector_multiply_vector(this->local_rect.position, parent_rect.size)),
+        .size = vector_multiply_vector(parent_rect.size, this->local_rect.size)
+    };
+    return result;
+}
+
+static void entity_update_rect(struct entity *this) {
+    const struct rect new_rect = entity_compute_rect(this);
+    if (rects_equal(this->rect, new_rect)) {
+        return;
+    }
+    const struct rect_pair rect_pair = {
+        .rect1 = this->rect,
+        .rect2 = new_rect
+    };
+    this->rect = new_rect;
+    for (int i = 0; i < list_count(this->components); i++) {
+        struct component *component = list_get(this->components, i);
+        component_notify_rect_changed(component, rect_pair);
+    }
+    for (int i = 0; i < list_count(this->entities); i++) {
+        struct entity *child_entity = list_get(this->entities, i);
+        entity_update_rect(child_entity);
+    }
+}
 
 struct entity* entity_create(char *name, struct entity *parent, struct scene *scene) {
     struct entity *this = calloc(1, sizeof(struct entity));
@@ -42,6 +77,10 @@ struct entity* entity_create(char *name, struct entity *parent, struct scene *sc
     this->parent = parent;
     this->scene = scene;
 
+    this->local_rect.position = vector2_zero;
+    this->local_rect.size = vector2_one;
+    this->rect = entity_compute_rect(this);
+
     return this;
 }
 struct entity* entity_clone(const struct entity* entity) {
@@ -50,6 +89,9 @@ struct entity* entity_clone(const struct entity* entity) {
     this->name = strdup(entity->name);
     this->awake = false;
     this->alive = true;
+
+    this->local_rect = entity->local_rect;
+    this->rect = entity->local_rect;
 
     this->on_component_captured = action_create();
     this->on_marked_destroyed = action_create();
@@ -145,8 +187,18 @@ struct scene* entity_get_scene(const struct entity *this) {
     return this->scene;
 }
 
-struct transform* entity_get_transform(const struct entity *this) {
-    return this->transform;
+struct rect entity_get_local_rect(const struct entity *this) {
+    return this->local_rect;
+}
+void entity_set_local_rect(struct entity *this, const struct rect new_local_rect) {
+    if (rects_equal(this->local_rect, new_local_rect)) {
+        return;
+    }
+    this->local_rect = new_local_rect;
+    entity_update_rect(this);
+}
+struct rect entity_get_rect(const struct entity *this) {
+    return this->rect;
 }
 
 struct action* entity_get_action_on_component_captured(const struct entity *this) {
@@ -165,32 +217,15 @@ static void entity_on_component_captured_proxy(void *listener, void *context) {
 void entity_capture_entity(struct entity *this, struct entity *entity) {
     logger_debug("Entity %s is capturing entity %s...", this->name, entity->name);
     entity_set_parent(entity, this);
+    entity_update_rect(entity);
     list_add(this->entities, entity);
     action_subscribe_no_token(entity->on_component_captured, this, entity_on_component_captured_proxy); // We do not have to unsubscribe because parent entity lives longer then children
     entity_recapture_components(entity);
 }
 void entity_capture_component(struct entity *this, struct component *component) {
     logger_debug("Entity %s is capturing component %s...", this->name, component_get_key(component));
-    bool set_first = false;
-    if (strcmp(component_get_key(component), "transform") == 0) {
-        if (this->transform == NULL) {
-            this->transform = (struct transform*)component;
-            set_first = true;
-        }
-        else {
-            logger_error("Entity %s has duplicate transform components, duplicate will not be captured and will be destroyed", this->name);
-            component_destroy(component);
-            component = NULL;
-        }
-    }
-    if (component == NULL) {
-        return;
-    }
     component_set_parent(component, this);
     list_add(this->components, component);
-    if (set_first) {
-        list_swap(this->components, 0, list_count(this->components) - 1);
-    }
     action_invoke(this->on_component_captured, component);
 }
 void entity_recapture_components(const struct entity *this) {

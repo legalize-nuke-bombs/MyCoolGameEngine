@@ -47,7 +47,7 @@ const char* box_light_component_key(void) {
 struct component* box_light_create(struct parser *parser, struct entity *parent) {
     struct box_light *this = malloc(sizeof(struct box_light));
     struct component *base = (struct component*) this;
-    component_base_create(base, &box_light_vtable, parser, parent);
+    component_base_create(base, &box_light_vtable, parent);
 
     this->light_map = NULL;
 

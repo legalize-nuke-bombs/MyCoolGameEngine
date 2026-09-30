@@ -23,15 +23,13 @@ const char* component_get_parent_name(const struct component *this);
 struct entity* component_get_global_parent(const struct component *this);
 const char* component_get_global_parent_name(const struct component *this);
 
-struct rect component_get_local_rect(const struct component *this);
-void component_set_local_rect(struct component *this, struct rect new_local_rect);
-
 struct component_on_rect_changed_callback_data {
     struct component *component;
     struct rect_pair rect_pair;
 };
 struct rect component_get_rect(const struct component *this);
-struct action* component_get_on_rect_changed(const struct component *this);
+struct action* component_get_on_rect_changed(struct component *this);
+void component_notify_rect_changed(struct component *this, struct rect_pair rect_pair);
 struct action* component_get_on_marked_destroyed(const struct component *this);
 
 const char* component_get_key(const struct component *this);

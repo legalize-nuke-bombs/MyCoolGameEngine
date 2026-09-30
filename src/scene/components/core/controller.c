@@ -6,7 +6,6 @@
 
 #include <stdlib.h>
 
-#include "transform.h"
 #include "../component_internal.h"
 #include "../../entity.h"
 #include "../../../utils/parser.h"
@@ -16,39 +15,24 @@
 struct controller {
     struct component base;
     double v;
-    struct transform* transform;
 };
 
 static struct component* controller_clone(struct component base, const struct component *component);
-static void controller_on_awake(struct component* base);
-static void controller_on_disable(struct component* base);
 
 static const struct component_vtable controller_vtable = {
     .component_key = controller_component_key,
     .on_clone = controller_clone,
-    .on_awake = controller_on_awake,
-    .on_update = NULL,
-    .on_disable = controller_on_disable
+    .on_update = NULL
 };
 
 const char* controller_component_key(void) {
     return "controller";
 }
 
-static void controller_on_awake(struct component* base) {
-    struct controller* this = (struct controller*)base;
-    this->transform = entity_get_transform(component_get_parent(base));
-}
-
-static void controller_on_disable(struct component* base) {
-    struct controller* this = (struct controller*)base;
-    this->transform = NULL;
-}
-
 struct component* controller_create(struct parser *parser, struct entity *parent) {
     struct controller *this = calloc(1, sizeof(struct controller));
     struct component *base = (struct component *) this;
-    component_base_create(base, &controller_vtable, parser, parent);
+    component_base_create(base, &controller_vtable, parent);
 
     parser_next_double(parser, &this->v);
 
@@ -69,8 +53,9 @@ void controller_move(const struct controller* this, struct vector2 direction, co
 
     const struct vector2 offset = vector_multiply_scalar(direction, this->v * dt);
 
-    struct rect rect = transform_get_rect(this->transform);
+    struct entity* parent = component_get_parent((const struct component*)this);
+    struct rect rect = entity_get_local_rect(parent);
     rect.position = vector_sum(rect.position, offset);
 
-    transform_set_rect(this->transform, rect);
+    entity_set_local_rect(parent, rect);
 }

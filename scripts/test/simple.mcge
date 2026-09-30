@@ -7,23 +7,23 @@ texture_manager new_texture tree1 72 65 ../textures/demo/tree1_tileset.png lazy 
 
 
 scene add prefab Tree1
-transform default 0 0 72 65
+transform 0 0 72 65
 child Tree1Body
-transform default 0 0 1 1
-box_renderer default prop1 texture tree1 0
-box_renderer_animated default 0.1
+transform 0 0 1 1
+box_renderer prop1 texture tree1 0
+box_renderer_animated 0.1
 end
 end
 
 scene add entity Forest
-transform default 0 0 10 10
-forest default 1 Tree1 end
+transform 0 0 10 10
+forest 1 Tree1 end
 end
 
 scene add entity Cube
-transform default 0 0 26 26
-box_renderer default prop1 texture cube 0
-camera default 100
-controller default 250
-keyboard_controller default
+transform 0 0 26 26
+box_renderer prop1 texture cube 0
+camera 100
+controller 250
+keyboard_controller
 end

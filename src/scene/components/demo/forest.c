@@ -15,7 +15,6 @@
 #include "../../../subsystems/subsystem_collection.h"
 #include "../../../utils/vector2_math.h"
 #include "../../prefabs/prefab.h"
-#include "../core/transform.h"
 
 
 struct forest {
@@ -44,7 +43,7 @@ const char* forest_component_key(void) {
 struct component* forest_create(struct parser *parser, struct entity *parent) {
     struct forest *this = calloc(1, sizeof(struct forest));
     struct component *base = (struct component *) this;
-    component_base_create(base, &forest_vtable, parser, parent);
+    component_base_create(base, &forest_vtable, parent);
 
     parser_next_int(parser, &this->trees_number);
 
@@ -105,14 +104,13 @@ static void forest_awake(struct component *base) {
         const int tree_spec = random_next_int(random, 0, list_count(prefabs));
         struct prefab* prefab = list_get(prefabs, tree_spec);
         struct entity* tree = prefab_instantiate(prefab);
-        struct transform* tree_transform = entity_get_transform(tree);
 
-        struct rect tree_rect = transform_get_rect(tree_transform);
+        struct rect tree_rect = entity_get_local_rect(tree);
         const struct vector2 tree_half_size = vector_multiply_scalar(tree_rect.size, 0.5);
 
         tree_rect.position.x = (float)random_next_double(random, rect.position.x - half_size.x + tree_half_size.x, rect.position.x + half_size.x - tree_half_size.x);
         tree_rect.position.y = (float)random_next_double(random, rect.position.y - half_size.y + tree_half_size.y, rect.position.y + half_size.y - tree_half_size.y);
-        transform_set_rect(tree_transform, tree_rect);
+        entity_set_local_rect(tree, tree_rect);
 
         scene_capture_entity(scene, tree);
     }

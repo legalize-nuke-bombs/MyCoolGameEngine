@@ -5,8 +5,6 @@
 #include "component.h"
 
 
-struct parser;
-
 struct component_vtable {
     const char* (*component_key)(void);
     struct component* (*on_clone)(struct component base, const struct component *component);
@@ -23,12 +21,9 @@ struct component {
     const struct component_vtable *vtable;
     bool awake;
     bool alive;
-    struct rect local_rect;
 
     struct action* on_rect_changed;
     struct action* on_marked_destroyed;
-    struct action* transform_on_rect_changed;
-    unsigned int transform_on_rect_changed_subscription_token;
 
     unsigned int last_visible_chunk_update_frame_number;
     unsigned int last_simulation_chunk_update_frame_number;
@@ -36,6 +31,6 @@ struct component {
     struct entity *parent;
 };
 
-void component_base_create(struct component *this, const struct component_vtable *vtable, struct parser *parser, struct entity *parent);
+void component_base_create(struct component *this, const struct component_vtable *vtable, struct entity *parent);
 
 #endif //MYCOOLGAMEENGINE_COMPONENT_INTERNAL_H

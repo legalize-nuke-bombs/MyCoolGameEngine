@@ -5,11 +5,11 @@
 
 #include "../engine/update_context.h"
 #include "components/component.h"
+#include "../utils/rect.h"
 
 struct entity;
 struct scene;
 struct engine;
-struct transform;
 
 struct entity* entity_create(char *name, struct entity *parent, struct scene *scene);
 struct entity* entity_clone(const struct entity* entity);
@@ -28,7 +28,9 @@ struct entity* entity_get_parent(const struct entity *this);
 void entity_set_scene(struct entity *this, struct scene *new_scene);
 struct scene* entity_get_scene(const struct entity *this);
 
-struct transform* entity_get_transform(const struct entity *this);
+struct rect entity_get_local_rect(const struct entity *this);
+void entity_set_local_rect(struct entity *this, struct rect new_local_rect);
+struct rect entity_get_rect(const struct entity *this);
 
 struct action* entity_get_action_on_component_captured(const struct entity *this);
 struct action* entity_get_action_on_marked_destroyed(const struct entity *this);

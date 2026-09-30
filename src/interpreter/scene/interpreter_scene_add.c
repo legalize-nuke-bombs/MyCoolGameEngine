@@ -35,6 +35,16 @@ static struct entity* interpreter_scene_parse_entity(struct parser *parser, stru
             break;
         }
 
+        if (strcmp(word, "transform") == 0) {
+            struct rect rect;
+            parser_next_double(parser, &rect.position.x);
+            parser_next_double(parser, &rect.position.y);
+            parser_next_double(parser, &rect.size.x);
+            parser_next_double(parser, &rect.size.y);
+            entity_set_local_rect(entity, rect);
+            continue;
+        }
+
         if (strcmp(word, "child") == 0 || strcmp(word, "entity") == 0) {
             struct entity *child = interpreter_scene_parse_entity(parser, scene, component_fabric, parser_next_dup(parser));
             if (child != NULL) {
