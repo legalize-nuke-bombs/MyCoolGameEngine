@@ -52,7 +52,6 @@ void entity_collection_awake_everyone(const struct entity_collection *this) {
     }
 }
 void entity_collection_clear(struct entity_collection *this) {
-    logger_info("Entity_collection is clearing...");
     entity_collection_destroy_everyone(this);
     dictionary_clear(this->entities);
     list_clear(&this->dead);

@@ -1,0 +1,27 @@
+scene add entity Terrain 0 0 10000 10000
+box_renderer bg1 color 54 78 62 255
+end
+
+scene add entity GameState 0 0 1 1
+renderer_settings 1 50 50 80 255
+end
+
+scene add entity Forest 0 0 10000 10000
+forest 10000 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
+end
+
+scene add entity Cube 0 0 26 26
+box_renderer prop1 texture cube 0
+camera 100
+controller 250
+keyboard_controller
+end
+
+scene add entity Torch 100 300 64 64
+box_renderer prop1 texture campfire 0
+box_renderer_animated 0.1
+child Light 0 0 5 5
+box_light texture gcirc1 0
+pulsator 0.99 1.01 10
+end
+end

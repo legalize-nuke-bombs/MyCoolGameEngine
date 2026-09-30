@@ -76,6 +76,12 @@ void scene_on_destroy(struct subsystem *base) {
     free(this->name);
 }
 
+void scene_clear(const struct scene *this) {
+    chunks_clear(this->chunks);
+    tmap_clear(this->tmap);
+    entity_collection_clear(this->entities);
+}
+
 
 
 

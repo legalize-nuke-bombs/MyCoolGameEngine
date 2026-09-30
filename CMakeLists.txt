@@ -204,6 +204,8 @@ add_executable(MyCoolGameEngine main.c
         src/scene/chunks/chunks.c
         src/scene/chunks/chunk.h
         src/scene/chunks/chunk.c
+        src/scene/components/demo/menu/menu.h
+        src/scene/components/demo/menu/menu.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)

@@ -13,6 +13,7 @@ struct subsystem;
 struct subsystem_collection;
 
 struct subsystem* scene_create(char* name, const struct subsystem_collection *subsystems);
+void scene_clear(const struct scene *this);
 
 const char* scene_get_name(const struct scene *this);
 

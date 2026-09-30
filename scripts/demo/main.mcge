@@ -1,14 +1,6 @@
 renderer_layer_manager new_layer bg1 1
 renderer_layer_manager new_layer prop1 10
 
-
-
-
-
-
-
-
-
 texture_manager new_texture cube 64 64 ../textures/demo/cube.png lazy 1
 texture_manager new_texture tree1 72 65 ../textures/demo/tree1_tileset.png lazy 1
 texture_manager new_texture tree2 72 65 ../textures/demo/tree2_tileset.png lazy 1
@@ -25,10 +17,6 @@ texture_manager new_texture gcirc3 512 512 ../textures/core/gcirc3.png lazy 1
 texture_manager new_texture gcirc4 512 512 ../textures/core/gcirc4.png lazy 1
 texture_manager new_texture gcirc5 512 512 ../textures/core/gcirc5.png lazy 1
 texture_manager new_texture gcirc6 512 512 ../textures/core/gcirc6.png lazy 1
-
-
-
-
 
 scene add prefab Tree1 0 0 72 65
 box_renderer prop1 texture tree1 0
@@ -72,39 +60,6 @@ end
 
 
 
-
-
-
-
-
-scene add entity Terrain 0 0 10000 10000
-box_renderer bg1 color 54 78 62 255
-end
-
-
-scene add entity GameState 0 0 1 1
-renderer_settings 1 50 50 80 255
-end
-
-
-scene add entity Forest 0 0 10000 10000
-forest 10000 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
-end
-
-
-
-scene add entity Cube 0 0 26 26
-box_renderer prop1 texture cube 0
-camera 100
-controller 250
-keyboard_controller
-end
-
-scene add entity Torch 100 300 64 64
-box_renderer prop1 texture campfire 0
-box_renderer_animated 0.1
-child Light 0 0 5 5
-box_light texture gcirc1 0
-pulsator 0.99 1.01 10
-end
+scene add entity Menu 0 0 1 1
+menu Return ../scripts/demo/map.mcge
 end

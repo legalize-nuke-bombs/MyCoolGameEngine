@@ -45,7 +45,6 @@ void chunks_destroy(struct chunks *this) {
 }
 
 void chunks_clear(struct chunks *this) {
-    logger_info("Chunks are clearing...");
     chunks_destroy_chunks(this);
 }
 
