@@ -65,7 +65,7 @@ static void camera_update_renderer_pipeline_viewport(const struct camera *this) 
     renderer_pipeline_set_viewpoint(this->renderer, component_get_rect((struct component*)this).position);
 }
 
-static void camera_update_near_chunks(const struct camera *this, const struct update_context *context) {
+static void camera_update_visible_chunks(const struct camera *this, const struct update_context *context) {
     int x_start, x_end, y_start, y_end;
     chunks_get_rect_indexes(this->chunks, renderer_pipeline_get_viewport(this->renderer), &x_start, &x_end, &y_start, &y_end);
     for (int x = x_start; x <= x_end; x++) {
@@ -81,7 +81,7 @@ static void camera_update_near_chunks(const struct camera *this, const struct up
                 if (component == NULL) {
                     continue;
                 }
-                component_chunked_update(component, context);
+                component_visible_chunk_update(component, context);
             }
         }
     }
@@ -90,7 +90,7 @@ static void camera_update_near_chunks(const struct camera *this, const struct up
 static void camera_update(struct component *base, const struct update_context *context) {
     const struct camera *this = (struct camera *) base;
     camera_update_renderer_pipeline_viewport(this);
-    camera_update_near_chunks(this, context);
+    camera_update_visible_chunks(this, context);
 }
 
 static void camera_on_disable(struct component *base) {

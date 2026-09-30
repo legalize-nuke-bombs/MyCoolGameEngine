@@ -184,19 +184,32 @@ bool component_is_updateable(const struct component *this) {
     return this->vtable->on_update;
 }
 
-void component_chunked_update(struct component *this, const struct update_context *context) {
+void component_visible_chunk_update(struct component *this, const struct update_context *context) {
     if (!component_is_alive(this)) {
         return;
     }
-    if (this->vtable->on_chunked_update == NULL) {
+    if (this->vtable->on_visible_chunk_update == NULL) {
         return;
     }
     if (this->last_chunked_update_frame_number == context->frame_number) {
         return;
     }
     this->last_chunked_update_frame_number = context->frame_number;
-    this->vtable->on_chunked_update(this, context);
+    this->vtable->on_visible_chunk_update(this, context);
+}
+void component_simulation_chunk_update(struct component *this, const struct update_context *context) {
+    if (!component_is_alive(this)) {
+        return;
+    }
+    if (this->vtable->on_simulation_chunk_update == NULL) {
+        return;
+    }
+    if (this->last_chunked_update_frame_number == context->frame_number) {
+        return;
+    }
+    this->last_chunked_update_frame_number = context->frame_number;
+    this->vtable->on_simulation_chunk_update(this, context);
 }
 bool component_is_chunkable(const struct component *this) {
-    return this->vtable->on_chunked_update || this->vtable->is_chunkable;
+    return this->vtable->on_visible_chunk_update || this->vtable->on_simulation_chunk_update || this->vtable->is_chunkable;
 }

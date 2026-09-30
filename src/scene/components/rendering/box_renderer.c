@@ -32,14 +32,14 @@ struct box_renderer {
 
 static struct component* box_renderer_clone(struct component base, const struct component *component);
 static void box_renderer_awake(struct component *base);
-static void box_renderer_chunked_update(struct component *base, const struct update_context *context);
+static void box_renderer_visible_chunk_update(struct component *base, const struct update_context *context);
 static void box_renderer_on_destroy(struct component *base);
 
 static const struct component_vtable box_renderer_vtable = {
     .component_key = box_renderer_component_key,
     .on_clone = box_renderer_clone,
     .on_awake = box_renderer_awake,
-    .on_chunked_update = box_renderer_chunked_update,
+    .on_visible_chunk_update = box_renderer_visible_chunk_update,
     .on_destroy = box_renderer_on_destroy
 };
 
@@ -112,7 +112,7 @@ static void box_renderer_awake(struct component *base) {
     this->renderer_layer = renderer_layer_manager_try_get(renderer_get_layer_manager(renderer_subsystem), this->renderer_layer_name);
 }
 
-static void box_renderer_chunked_update(struct component *base, const struct update_context *context) {
+static void box_renderer_visible_chunk_update(struct component *base, const struct update_context *context) {
     const struct box_renderer *this = (struct box_renderer *) base;
 
     const struct renderer_pipeline_draw_call draw_call = {

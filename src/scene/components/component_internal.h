@@ -12,7 +12,8 @@ struct component_vtable {
     struct component* (*on_clone)(struct component base, const struct component *component);
     void (*on_awake)(struct component *this);
     void (*on_update)(struct component *this, const struct update_context *context);
-    void (*on_chunked_update)(struct component *this, const struct update_context *context);
+    void (*on_visible_chunk_update)(struct component *this, const struct update_context *context);
+    void (*on_simulation_chunk_update)(struct component *this, const struct update_context *context);
     bool (*is_chunkable)();
     void (*on_disable)(struct component *this);
     void (*on_destroy)(struct component *this);

@@ -37,7 +37,8 @@ const char* component_get_key(const struct component *this);
 void component_update(struct component *this, const struct update_context *context);
 bool component_is_updateable(const struct component *this);
 
-void component_chunked_update(struct component *this, const struct update_context *context);
+void component_visible_chunk_update(struct component *this, const struct update_context *context);
+void component_simulation_chunk_update(struct component *this, const struct update_context *context);
 bool component_is_chunkable(const struct component *this);
 
 #endif

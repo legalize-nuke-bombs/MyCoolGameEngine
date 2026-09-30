@@ -29,14 +29,14 @@ struct box_light {
 
 static struct component* box_light_clone(struct component base, const struct component *component);
 static void box_light_awake(struct component *base);
-static void box_light_chunked_update(struct component *base, const struct update_context *context);
+static void box_light_visible_chunk_update(struct component *base, const struct update_context *context);
 static void box_light_on_destroy(struct component *base);
 
 static const struct component_vtable box_light_vtable = {
     .component_key = box_light_component_key,
     .on_clone = box_light_clone,
     .on_awake = box_light_awake,
-    .on_chunked_update = box_light_chunked_update,
+    .on_visible_chunk_update = box_light_visible_chunk_update,
     .on_destroy = box_light_on_destroy
 };
 
@@ -103,7 +103,7 @@ static void box_light_awake(struct component *base) {
     this->light_map = renderer_pipeline_get_light_map(renderer_get_pipeline(renderer_subsystem));
 }
 
-static void box_light_chunked_update(struct component *base, const struct update_context *context) {
+static void box_light_visible_chunk_update(struct component *base, const struct update_context *context) {
     const struct box_light *this = (struct box_light *) base;
 
     const struct light_map_draw_call draw_call = {
