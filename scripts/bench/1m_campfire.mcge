@@ -1,0 +1,64 @@
+renderer_layer_manager new_layer bg1 1
+renderer_layer_manager new_layer prop1 10
+
+
+
+
+
+
+
+
+
+texture_manager new_texture cube 64 64 ../textures/demo/cube.png lazy 1
+texture_manager new_texture campfire 64 64 ../textures/demo/campfire.png lazy 1
+texture_manager new_texture gcirc1 512 512 ../textures/core/gcirc1.png lazy 1
+texture_manager new_texture gcirc2 512 512 ../textures/core/gcirc2.png lazy 1
+texture_manager new_texture gcirc3 512 512 ../textures/core/gcirc3.png lazy 1
+texture_manager new_texture gcirc4 512 512 ../textures/core/gcirc4.png lazy 1
+texture_manager new_texture gcirc5 512 512 ../textures/core/gcirc5.png lazy 1
+texture_manager new_texture gcirc6 512 512 ../textures/core/gcirc6.png lazy 1
+
+
+
+
+
+
+scene add prefab Campfire
+transform default 100 300 64 64
+box_renderer default prop1 texture campfire 0
+box_renderer_animated default 0.1
+box_light custom 0 0 2.5 2.5 texture gcirc1 0
+box_light_animated default 0.99 1.01 10
+end
+
+
+
+
+
+scene add entity Terrain
+transform default 0 0 100000 100000
+box_renderer default bg1 color 54 78 62 255
+end
+
+
+scene add entity GameState
+transform default 0 0 1 1
+renderer_settings default 1 50 50 80 255
+end
+
+
+scene add entity Forest
+transform default 0 0 100000 100000
+forest default 1000000 Campfire end
+end
+
+
+
+scene add entity Cube
+transform default 0 0 26 26
+box_renderer default prop1 texture cube 0
+camera default 100
+controller default 250
+keyboard_controller default
+end
+
