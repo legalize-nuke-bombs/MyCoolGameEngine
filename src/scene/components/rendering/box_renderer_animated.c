@@ -19,13 +19,13 @@ struct box_renderer_animated {
 
 static struct component* box_renderer_animated_clone(struct component base, const struct component *component);
 static void box_renderer_animated_awake(struct component *base);
-static void box_renderer_animated_simulation_chunk_update(struct component *base, const struct update_context *context);
+static void box_renderer_animated_visible_chunk_update(struct component *base, const struct update_context *context);
 
 static const struct component_vtable box_renderer_animated_vtable = {
     .component_key = box_renderer_animated_component_key,
     .on_clone = box_renderer_animated_clone,
     .on_awake = box_renderer_animated_awake,
-    .on_simulation_chunk_update = box_renderer_animated_simulation_chunk_update
+    .on_visible_chunk_update = box_renderer_animated_visible_chunk_update
 };
 
 const char* box_renderer_animated_component_key(void) {
@@ -61,7 +61,7 @@ static void box_renderer_animated_awake(struct component *base) {
     }
 }
 
-static void box_renderer_animated_simulation_chunk_update(struct component *base, const struct update_context *context) {
+static void box_renderer_animated_visible_chunk_update(struct component *base, const struct update_context *context) {
     struct box_renderer_animated *this = (struct box_renderer_animated *) base;
 
     this->frame_timer += context->dt;
