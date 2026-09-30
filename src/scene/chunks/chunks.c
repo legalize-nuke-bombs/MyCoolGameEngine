@@ -3,6 +3,7 @@
 //
 
 #include "chunks.h"
+#include "chunk.h"
 
 #include <math.h>
 #include <stdlib.h>
@@ -17,7 +18,7 @@
 
 
 struct chunks {
-    struct dictionary* components[CHUNKS_SIZE][CHUNKS_SIZE];
+    struct chunk chunks[CHUNKS_SIZE][CHUNKS_SIZE];
     float chunk_size;
 };
 
@@ -32,10 +33,7 @@ struct chunks *chunks_create() {
 static void chunks_destroy_chunks(struct chunks *this) {
     for (int i = 0; i < CHUNKS_SIZE; i++) {
         for (int j = 0; j < CHUNKS_SIZE; j++) {
-            if (this->components[i][j] != NULL) {
-                dictionary_destroy(this->components[i][j]);
-                this->components[i][j] = NULL;
-            }
+            chunk_destroy(&this->chunks[i][j]);
         }
     }
 }
@@ -70,26 +68,18 @@ void chunks_get_rect_indexes(const struct chunks *this, const struct rect rect, 
     *y_end = chunks_get_position_index(this, max_y);
 }
 
-static void chunks_chunk_add_component_if_absent(struct chunks *this, struct component* component, const int index_x, const int index_y) {
-    if (this->components[index_x][index_y] == NULL) {
-        this->components[index_x][index_y] = pointer_dictionary_build(0);
-    }
-    dictionary_try_add(this->components[index_x][index_y], component, component);
-}
-
-static void chunks_chunk_remove_component(const struct chunks *this, const struct component* component, const int index_x, const int index_y) {
-    struct dictionary *chunk = this->components[index_x][index_y];
-    if (chunk == NULL) {
-        return;
-    }
-    dictionary_remove(chunk, (void*)component);
-}
-
 struct dictionary* chunks_chunk_get_components(const struct chunks *this, const int index_x, const int index_y) {
     if (index_x < 0 || index_y < 0 || index_x >= CHUNKS_SIZE || index_y >= CHUNKS_SIZE) {
         return NULL;
     }
-    return this->components[index_x][index_y];
+    return chunk_get_components(&this->chunks[index_x][index_y]);
+}
+
+struct dictionary* chunks_chunk_get_components_by_type(const struct chunks *this, const int index_x, const int index_y, const char *component_type) {
+    if (index_x < 0 || index_y < 0 || index_x >= CHUNKS_SIZE || index_y >= CHUNKS_SIZE) {
+        return NULL;
+    }
+    return chunk_get_components_by_type(&this->chunks[index_x][index_y], component_type);
 }
 
 static void chunks_remove_component(const struct chunks *this, const struct rect rect, const struct component *component) {
@@ -97,7 +87,7 @@ static void chunks_remove_component(const struct chunks *this, const struct rect
     chunks_get_rect_indexes(this, rect, &start_x, &end_x, &start_y, &end_y);
     for (int x = start_x; x <= end_x; x++) {
         for (int y = start_y; y <= end_y; y++) {
-            chunks_chunk_remove_component(this, component, x, y);
+            chunk_try_remove_component(&this->chunks[x][y], component);
         }
     }
 }
@@ -107,7 +97,7 @@ static void chunks_add_component_without_resize(struct chunks *this, struct comp
     chunks_get_rect_indexes(this, component_get_rect(component), &start_x, &end_x, &start_y, &end_y);
     for (int x = start_x; x <= end_x; x++) {
         for (int y = start_y; y <= end_y; y++) {
-            chunks_chunk_add_component_if_absent(this, component, x, y);
+            chunk_try_add_component(&this->chunks[x][y], component);
         }
     }
 }
@@ -132,16 +122,16 @@ static void chunks_resize(struct chunks *this) {
 
     for (int i = 0; i < CHUNKS_SIZE; i++) {
         for (int j = 0; j < CHUNKS_SIZE; j++) {
-            struct dictionary *chunk = this->components[i][j];
-            if (chunk == NULL) {
+            struct dictionary *chunk_components = chunk_get_components(&this->chunks[i][j]);
+            if (chunk_components == NULL) {
                 continue;
             }
-            struct dictionary_iterator iterator = dictionary_begin(chunk);
+            struct dictionary_iterator iterator = dictionary_begin(chunk_components);
             struct dictionary_node node;
-            while (dictionary_next(chunk, &iterator, &node)) {
+            while (dictionary_next(chunk_components, &iterator, &node)) {
                 dictionary_try_add(all_components, node.key, node.value);
             }
-            dictionary_clear(chunk);
+            dictionary_clear(chunk_components);
         }
     }
 

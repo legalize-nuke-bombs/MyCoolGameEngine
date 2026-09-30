@@ -46,9 +46,9 @@ void chunk_destroy(struct chunk *this) {
     }
 }
 
-void chunk_try_add_component(struct chunk *this, struct component* component) {
+void chunk_try_add_component(struct chunk *this, const struct component* component) {
     chunk_lazy_alloc(this);
-    if (dictionary_try_add(this->components, component, component)) {
+    if (dictionary_try_add(this->components, (void*)component, (void*)component)) {
         const char* component_type = component_get_key(component);
 
         if (dictionary_absent(this->types, (void*)component_type)) {
@@ -57,16 +57,16 @@ void chunk_try_add_component(struct chunk *this, struct component* component) {
         }
 
         struct dictionary* typed_components = dictionary_get(this->types, (void*)component_type);
-        if (!dictionary_try_add(typed_components, component, component)) {
+        if (!dictionary_try_add(typed_components, (void*)component, (void*)component)) {
             logger_error("Chunk invariant error. `components` accepted component but typed_components didn't");
         }
     }
 }
-void chunk_try_remove_component(const struct chunk *this, struct component* component) {
+void chunk_try_remove_component(const struct chunk *this, const struct component* component) {
     if (!chunk_is_allocated(this)) {
         return;
     }
-    if (dictionary_remove(this->components, component)) {
+    if (dictionary_remove(this->components, (void*)component)) {
         const char* component_type = component_get_key(component);
 
         struct dictionary* typed_components = dictionary_get(this->types, (void*)component_type);
@@ -74,7 +74,7 @@ void chunk_try_remove_component(const struct chunk *this, struct component* comp
             logger_error("Chunk invariant error. Chunk contains component but does not contains `typed_components` for this component");
         }
         else {
-            if (!dictionary_remove(typed_components, component)) {
+            if (!dictionary_remove(typed_components, (void*)component)) {
                 logger_error("Chunk invariant error. Chunk contains component but does not contains it in `typed_components`");
             }
         }
