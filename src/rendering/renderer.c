@@ -91,6 +91,7 @@ static void renderer_update(void *listener, void *context) {
 
 void renderer_on_enable(struct subsystem* base, struct engine_arguments args) {
     struct renderer* this = (struct renderer*)base;
+    texture_manager_set_data_root(this->texture_manager, args.data_root);
     this->on_rendering = engine_events_on_rendering((struct engine_events*)subsystem_get_subsystem(base, "engine_events"));
     action_subscribe(this->on_rendering, this, renderer_update, &this->on_rendering_subscription_token);
 }

@@ -10,8 +10,10 @@
 struct texture;
 struct SDL_Renderer;
 
-struct texture* texture_create(char* id, char* path, int tile_w, int tile_h, enum texture_loading_mode loading_mode, double unload_interval, struct SDL_Renderer* native_renderer);
+struct texture* texture_create(char* id, char* rpath, int tile_w, int tile_h, enum texture_loading_mode loading_mode, double unload_interval, struct SDL_Renderer* native_renderer);
 void texture_destroy(struct texture* this);
+
+void texture_set_data_root(struct texture* this, const char* data_root);
 
 const char* texture_get_id(const struct texture* this);
 void texture_get_tile_rect(struct texture* this, unsigned long long frame, float* target_x, float* target_y, float *target_w, float *target_h);

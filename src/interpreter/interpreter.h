@@ -14,6 +14,6 @@ struct subsystem_collection;
 
 struct subsystem* interpreter_create(const struct subsystem_collection *subsystems);
 
-int interpreter_eval(const struct interpreter *this, const char* script_path);
+int interpreter_eval(const struct interpreter *this, const char* rpath);
 
 #endif //MYCOOLGAMEENGINE_INTERPRETER_H

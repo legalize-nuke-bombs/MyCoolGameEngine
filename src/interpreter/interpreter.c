@@ -16,12 +16,15 @@
 #include "../logging/logger.h"
 #include "scene/interpreter_scene.h"
 #include "../subsystems/subsystem_internal.h"
+#include "../utils/path.h"
 #include "core/interpreter_ignore.h"
 #include "texture_manager/interpreter_texture_manager.h"
 
 
 struct interpreter {
     struct subsystem base;
+
+    const char* data_root;
 
     struct interpreter_command_register *command_register;
 };
@@ -30,17 +33,17 @@ static const char* interpreter_get_name() {
     return "interpreter";
 }
 static void interpreter_on_destroy(struct subsystem* base);
+void interpreter_on_enable(struct subsystem* base, struct engine_arguments args);
 
 static struct subsystem_vtable interpreter_vtable = {
     .name = interpreter_get_name,
     .on_destroy = interpreter_on_destroy,
-    .on_enable = NULL,
-    .on_disable = NULL
+    .on_enable = interpreter_on_enable
 };
 
 
 struct subsystem* interpreter_create(const struct subsystem_collection* subsystems) {
-    struct interpreter* interpreter = malloc(sizeof(struct interpreter));
+    struct interpreter* interpreter = calloc(1, sizeof(struct interpreter));
     struct subsystem* base = (struct subsystem*)interpreter;
     subsystem_create(base, &interpreter_vtable, subsystems);
 
@@ -57,6 +60,11 @@ struct subsystem* interpreter_create(const struct subsystem_collection* subsyste
 void interpreter_on_destroy(struct subsystem* base) {
     const struct interpreter *this = (struct interpreter*)base;
     interpreter_command_register_destroy(this->command_register);
+}
+
+void interpreter_on_enable(struct subsystem* base, struct engine_arguments args) {
+    struct interpreter *this = (struct interpreter*)base;
+    this->data_root = args.data_root;
 }
 
 static int interpreter_parse(const struct interpreter *this, struct parser *parser) {
@@ -87,16 +95,17 @@ static int interpreter_eval_quite(const struct interpreter *this, const char* sc
     return result;
 }
 
-int interpreter_eval(const struct interpreter *this, const char* script_path) {
-    logger_info("Interpreter is executing %s...", script_path);
-
-    const int code = interpreter_eval_quite(this, script_path);
+int interpreter_eval(const struct interpreter *this, const char* rpath) {
+    char* path = path_alloc_combined(this->data_root, rpath);
+    logger_debug("Interpreter is executing %s...", path);
+    const int code = interpreter_eval_quite(this, path);
+    free(path);
 
     if (code == INTERPRETER_OK) {
-        logger_info("Interpreter finished with exit code %d", code);
+        logger_debug("Interpreter finished with exit code %d", code);
     }
     else {
-        logger_error("Interpreter finished with exit code %d", code);
+        logger_debug("Interpreter finished with exit code %d", code);
     }
 
     return code;

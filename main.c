@@ -7,23 +7,30 @@
 #include "src/logging/logger.h"
 
 
-static char* script_path_extract(const int argc, char* argv[]) {
+static char* data_root_extract(const int argc, char* argv[]) {
     if (argc >= 2) {
         return argv[1];
     }
     return NULL;
 }
 
-int logger_level_extract(const int argc, char* argv[]) {
+static char* script_path_extract(const int argc, char* argv[]) {
     if (argc >= 3) {
-        return atoi(argv[2]);
+        return argv[2];
+    }
+    return NULL;
+}
+
+int logger_level_extract(const int argc, char* argv[]) {
+    if (argc >= 4) {
+        return atoi(argv[3]);
     }
     return LOGGER_LEVEL_INFO;
 }
 
 bool dev_mode_extract(const int argc, char* argv[]) {
-    if (argc >= 4) {
-        return atoi(argv[3]);
+    if (argc >= 5) {
+        return atoi(argv[4]);
     }
     return 0;
 }
@@ -32,6 +39,7 @@ bool dev_mode_extract(const int argc, char* argv[]) {
 int main(const int argc, char *argv[]) {
     logger_init(logger_level_extract(argc, argv));
     const struct engine_arguments engine_arguments = {
+        .data_root = data_root_extract(argc, argv),
         .script_path = script_path_extract(argc, argv),
         .dev_mode = dev_mode_extract(argc, argv)
     };
