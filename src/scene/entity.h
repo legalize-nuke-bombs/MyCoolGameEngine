@@ -32,8 +32,8 @@ struct rect entity_get_local_rect(const struct entity *this);
 void entity_set_local_rect(struct entity *this, struct rect new_local_rect);
 struct rect entity_get_rect(const struct entity *this);
 
-struct action* entity_get_action_on_component_captured(const struct entity *this);
-struct action* entity_get_action_on_marked_destroyed(const struct entity *this);
+struct action* entity_get_action_on_component_captured(struct entity *this);
+struct action* entity_get_action_on_marked_destroyed(struct entity *this);
 
 void entity_capture_entity(struct entity *this, struct entity *entity);
 void entity_capture_component(struct entity *this, struct component *component);

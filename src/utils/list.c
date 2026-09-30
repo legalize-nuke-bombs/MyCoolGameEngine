@@ -41,6 +41,9 @@ static void list_realloc(struct list *list) {
 }
 void list_add(struct list *this, void *data) {
     if (this->_data == NULL) {
+        if (this->_capacity < 1) {
+            this->_capacity = 1;
+        }
         this->_data = malloc(sizeof(void *) * this->_capacity);
     }
     else if (this->_count >= this->_capacity) {

@@ -12,17 +12,17 @@
 struct engine_events {
     struct subsystem base;
 
-    struct action* pre_frame;
+    struct action pre_frame;
 
-    struct action* pre_physics;
-    struct action* on_physics;
-    struct action* post_physics;
+    struct action pre_physics;
+    struct action on_physics;
+    struct action post_physics;
 
-    struct action* pre_rendering;
-    struct action* on_rendering;
-    struct action* post_rendering;
+    struct action pre_rendering;
+    struct action on_rendering;
+    struct action post_rendering;
 
-    struct action* on_native_event;
+    struct action on_native_event;
 };
 
 static const char* engine_events_get_name() {
@@ -59,53 +59,53 @@ struct subsystem* engine_events_create(const struct subsystem_collection *subsys
 }
 void engine_events_on_destroy(struct subsystem* base) {
     struct engine_events *this = (struct engine_events*)base;
-    action_destroy(this->pre_frame);
-    action_destroy(this->pre_physics);
-    action_destroy(this->on_physics);
-    action_destroy(this->post_physics);
-    action_destroy(this->pre_rendering);
-    action_destroy(this->on_rendering);
-    action_destroy(this->post_rendering);
-    action_destroy(this->on_native_event);
+    action_destroy(&this->pre_frame);
+    action_destroy(&this->pre_physics);
+    action_destroy(&this->on_physics);
+    action_destroy(&this->post_physics);
+    action_destroy(&this->pre_rendering);
+    action_destroy(&this->on_rendering);
+    action_destroy(&this->post_rendering);
+    action_destroy(&this->on_native_event);
 }
 
 void engine_events_on_enable(struct subsystem* base, struct engine_arguments args) {
     struct engine_events *this = (struct engine_events*)base;
 }
 void engine_events_on_disable(struct subsystem* base) {
-    const struct engine_events *this = (struct engine_events*)base;
-    action_clear(this->pre_frame);
-    action_clear(this->pre_physics);
-    action_clear(this->on_physics);
-    action_clear(this->post_physics);
-    action_clear(this->pre_rendering);
-    action_clear(this->on_rendering);
-    action_clear(this->post_rendering);
-    action_clear(this->on_native_event);
+    struct engine_events *this = (struct engine_events*)base;
+    action_clear(&this->pre_frame);
+    action_clear(&this->pre_physics);
+    action_clear(&this->on_physics);
+    action_clear(&this->post_physics);
+    action_clear(&this->pre_rendering);
+    action_clear(&this->on_rendering);
+    action_clear(&this->post_rendering);
+    action_clear(&this->on_native_event);
 }
 
-struct action* engine_events_pre_frame(const struct engine_events *this) {
-    return this->pre_frame;
+struct action* engine_events_pre_frame(struct engine_events *this) {
+    return &this->pre_frame;
 }
 
-struct action* engine_events_pre_physics(const struct engine_events *this) {
-    return this->pre_physics;
+struct action* engine_events_pre_physics(struct engine_events *this) {
+    return &this->pre_physics;
 }
-struct action* engine_events_on_physics(const struct engine_events *this) {
-    return this->on_physics;
+struct action* engine_events_on_physics(struct engine_events *this) {
+    return &this->on_physics;
 }
-struct action* engine_events_post_physics(const struct engine_events *this) {
-    return this->post_physics;
+struct action* engine_events_post_physics(struct engine_events *this) {
+    return &this->post_physics;
 }
-struct action* engine_events_pre_rendering(const struct engine_events *this) {
-    return this->pre_rendering;
+struct action* engine_events_pre_rendering(struct engine_events *this) {
+    return &this->pre_rendering;
 }
-struct action* engine_events_on_rendering(const struct engine_events *this) {
-    return this->on_rendering;
+struct action* engine_events_on_rendering(struct engine_events *this) {
+    return &this->on_rendering;
 }
-struct action* engine_events_post_rendering(const struct engine_events *this) {
-    return this->post_rendering;
+struct action* engine_events_post_rendering(struct engine_events *this) {
+    return &this->post_rendering;
 }
 struct action* engine_events_on_native_event(struct engine_events *this) {
-    return this->on_native_event;
+    return &this->on_native_event;
 }

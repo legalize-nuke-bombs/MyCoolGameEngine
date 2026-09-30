@@ -16,8 +16,8 @@ struct entity {
     bool awake;
     bool alive;
 
-    struct action *on_component_captured;
-    struct action *on_marked_destroyed;
+    struct action on_component_captured;
+    struct action on_marked_destroyed;
 
     struct list entities;
     struct list components;
@@ -136,8 +136,8 @@ void entity_destroy(struct entity *this) {
     }
     list_destroy(&this->components);
     list_destroy(&this->entities);
-    action_destroy(this->on_component_captured);
-    action_destroy(this->on_marked_destroyed);
+    action_destroy(&this->on_component_captured);
+    action_destroy(&this->on_marked_destroyed);
     free(this->name);
     free(this);
 }
@@ -155,7 +155,7 @@ void entity_mark_destroyed(struct entity *this) {
         struct component *component = list_get(&this->components, i);
         component_mark_destroyed(component);
     }
-    action_invoke(this->on_marked_destroyed, this);
+    action_invoke(&this->on_marked_destroyed, this);
 }
 
 const char* entity_get_name(const struct entity *this) {
@@ -201,17 +201,17 @@ struct rect entity_get_rect(const struct entity *this) {
     return this->rect;
 }
 
-struct action* entity_get_action_on_component_captured(const struct entity *this) {
-    return this->on_component_captured;
+struct action* entity_get_action_on_component_captured(struct entity *this) {
+    return &this->on_component_captured;
 }
-struct action* entity_get_action_on_marked_destroyed(const struct entity *this) {
-    return this->on_marked_destroyed;
+struct action* entity_get_action_on_marked_destroyed(struct entity *this) {
+    return &this->on_marked_destroyed;
 }
 
 static void entity_on_component_captured_proxy(void *listener, void *context) {
     const struct entity *this = listener;
     struct component *component = context;
-    action_invoke(this->on_component_captured, component);
+    action_invoke(&this->on_component_captured, component);
 }
 
 void entity_capture_entity(struct entity *this, struct entity *entity) {
@@ -219,20 +219,20 @@ void entity_capture_entity(struct entity *this, struct entity *entity) {
     entity_set_parent(entity, this);
     entity_update_rect(entity);
     list_add(&this->entities, entity);
-    action_subscribe_no_token(entity->on_component_captured, this, entity_on_component_captured_proxy); // We do not have to unsubscribe because parent entity lives longer then children
+    action_subscribe_no_token(&entity->on_component_captured, this, entity_on_component_captured_proxy); // We do not have to unsubscribe because parent entity lives longer then children
     entity_recapture_components(entity);
 }
 void entity_capture_component(struct entity *this, struct component *component) {
     logger_debug("Entity %s is capturing component %s...", this->name, component_get_key(component));
     component_set_parent(component, this);
     list_add(&this->components, component);
-    action_invoke(this->on_component_captured, component);
+    action_invoke(&this->on_component_captured, component);
 }
 void entity_recapture_components(const struct entity *this) {
     logger_debug("Entity %s is recapturing all components...", this->name);
     for (int i = 0; i < list_count(&this->components); i++) {
         struct component *component = list_get(&this->components, i);
-        action_invoke(this->on_component_captured, component);
+        action_invoke(&this->on_component_captured, component);
     }
     for (int i = 0; i < list_count(&this->entities); i++) {
         const struct entity *child_entity = list_get(&this->entities, i);

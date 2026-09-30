@@ -13,7 +13,7 @@ void component_base_create(struct component *this, const struct component_vtable
     this->awake = false;
     this->alive = true;
 
-    this->on_rect_changed = NULL;
+    this->on_rect_changed = action_create();
     this->on_marked_destroyed = action_create();
 
     this->last_visible_chunk_update_frame_number = 0;
@@ -27,6 +27,7 @@ struct component* component_clone(const struct component *component) {
     logger_debug("Component %s is cloning...", component_get_key(component));
     this.awake = false;
     this.alive = true;
+    this.on_rect_changed = action_create();
     this.on_marked_destroyed = action_create();
     return component->vtable->on_clone(this, component);
 }
@@ -43,10 +44,8 @@ void component_awake(struct component *this) {
 void component_destroy(struct component *this) {
     component_mark_destroyed(this);
     logger_debug("Entity %s is destroying component %s...", component_get_parent_name(this), component_get_key(this));
-    action_destroy(this->on_marked_destroyed);
-    if (this->on_rect_changed) {
-        action_destroy(this->on_rect_changed);
-    }
+    action_destroy(&this->on_marked_destroyed);
+    action_destroy(&this->on_rect_changed);
     if (this->vtable->on_destroy) {
         this->vtable->on_destroy(this);
     }
@@ -61,7 +60,7 @@ void component_mark_destroyed(struct component *this) {
     if (this->awake && this->vtable->on_disable) {
         this->vtable->on_disable(this);
     }
-    action_invoke(this->on_marked_destroyed, this);
+    action_invoke(&this->on_marked_destroyed, this);
 }
 
 bool component_is_awake(const struct component *this) {
@@ -101,23 +100,17 @@ struct rect component_get_rect(const struct component *this) {
     return entity_get_rect(this->parent);
 }
 struct action* component_get_on_rect_changed(struct component *this) {
-    if (this->on_rect_changed == NULL) {
-        this->on_rect_changed = action_create();
-    }
-    return this->on_rect_changed;
+    return &this->on_rect_changed;
 }
 void component_notify_rect_changed(struct component *this, const struct rect_pair rect_pair) {
-    if (this->on_rect_changed == NULL) {
-        return;
-    }
     struct component_on_rect_changed_callback_data data = {
         .component = this,
         .rect_pair = rect_pair
     };
-    action_invoke(this->on_rect_changed, &data);
+    action_invoke(&this->on_rect_changed, &data);
 }
-struct action* component_get_on_marked_destroyed(const struct component *this) {
-    return this->on_marked_destroyed;
+struct action* component_get_on_marked_destroyed(struct component *this) {
+    return &this->on_marked_destroyed;
 }
 
 const char* component_get_key(const struct component *this) {

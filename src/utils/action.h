@@ -5,9 +5,13 @@
 #ifndef MYCOOLGAMEENGINE_ACTION_H
 #define MYCOOLGAMEENGINE_ACTION_H
 
-struct action;
+#include "list.h"
 
-struct action* action_create(void);
+struct action {
+    struct list _list;
+};
+
+struct action action_create(void);
 void action_destroy(struct action *this);
 
 void action_subscribe(struct action *this, void *listener, void (*action)(void*, void*), unsigned int* subscription_token);

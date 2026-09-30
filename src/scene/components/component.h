@@ -30,7 +30,7 @@ struct component_on_rect_changed_callback_data {
 struct rect component_get_rect(const struct component *this);
 struct action* component_get_on_rect_changed(struct component *this);
 void component_notify_rect_changed(struct component *this, struct rect_pair rect_pair);
-struct action* component_get_on_marked_destroyed(const struct component *this);
+struct action* component_get_on_marked_destroyed(struct component *this);
 
 const char* component_get_key(const struct component *this);
 
