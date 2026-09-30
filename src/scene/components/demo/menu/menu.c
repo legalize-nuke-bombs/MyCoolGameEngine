@@ -1,6 +1,6 @@
 #include "menu.h"
 
-#include <_string.h>
+#include <string.h>
 
 #include "../../component_internal.h"
 #include "../../../entity.h"
