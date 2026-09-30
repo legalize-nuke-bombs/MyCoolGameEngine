@@ -103,7 +103,7 @@ void entity_mark_destroyed(struct entity *this) {
     if (!this->alive) {
         return;
     }
-    logger_debug("Entity %s is marking destroyed..", this->name);
+    logger_debug("Entity %s is marking destroyed...", this->name);
     this->alive = false;
     for (int i = list_count(this->entities) - 1; i >= 0; i--) {
         struct entity *child_entity = list_get(this->entities, i);
@@ -156,10 +156,17 @@ struct action* entity_get_action_on_marked_destroyed(const struct entity *this) 
     return this->on_marked_destroyed;
 }
 
+static void entity_on_component_captured_proxy(void *listener, void *context) {
+    const struct entity *this = listener;
+    struct component *component = context;
+    action_invoke(this->on_component_captured, component);
+}
+
 void entity_capture_entity(struct entity *this, struct entity *entity) {
     logger_debug("Entity %s is capturing entity %s...", this->name, entity->name);
     entity_set_parent(entity, this);
     list_add(this->entities, entity);
+    action_subscribe_no_token(entity->on_component_captured, this, entity_on_component_captured_proxy); // We do not have to unsubscribe because parent entity lives longer then children
     entity_recapture_components(entity);
 }
 void entity_capture_component(struct entity *this, struct component *component) {
@@ -193,7 +200,7 @@ void entity_recapture_components(const struct entity *this) {
         action_invoke(this->on_component_captured, component);
     }
     for (int i = 0; i < list_count(this->entities); i++) {
-        struct entity *child_entity = list_get(this->entities, i);
+        const struct entity *child_entity = list_get(this->entities, i);
         entity_recapture_components(child_entity);
     }
 }

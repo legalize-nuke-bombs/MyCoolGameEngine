@@ -36,6 +36,10 @@ void action_subscribe(const struct action *this, void *listener, void (*action)(
     *subscription_token = list_count(this->list);
     list_add(this->list, action_method);
 }
+void action_subscribe_no_token(const struct action *this, void *listener, void (*action)(void*, void*)) {
+    unsigned int recycle_bin;
+    action_subscribe(this, listener, action, &recycle_bin);
+}
 void action_unsubscribe(const struct action *this, unsigned int subscription_token) {
     struct action_method* action_method = list_get(this->list, subscription_token);
     free(action_method);
