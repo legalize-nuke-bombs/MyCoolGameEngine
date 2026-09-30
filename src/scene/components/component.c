@@ -37,7 +37,8 @@ void component_base_create(struct component *this, const struct component_vtable
     this->transform_on_rect_changed = NULL;
     this->transform_on_rect_changed_subscription_token = 0;
 
-    this->last_chunked_update_frame_number = 0;
+    this->last_visible_chunk_update_frame_number = 0;
+    this->last_simulation_chunk_update_frame_number = 0;
 
     this->parent = parent;
 }
@@ -191,10 +192,10 @@ void component_visible_chunk_update(struct component *this, const struct update_
     if (this->vtable->on_visible_chunk_update == NULL) {
         return;
     }
-    if (this->last_chunked_update_frame_number == context->frame_number) {
+    if (this->last_visible_chunk_update_frame_number == context->frame_number) {
         return;
     }
-    this->last_chunked_update_frame_number = context->frame_number;
+    this->last_visible_chunk_update_frame_number = context->frame_number;
     this->vtable->on_visible_chunk_update(this, context);
 }
 bool component_is_visible_chunkable(const struct component *this) {
@@ -207,10 +208,10 @@ void component_simulation_chunk_update(struct component *this, const struct upda
     if (this->vtable->on_simulation_chunk_update == NULL) {
         return;
     }
-    if (this->last_chunked_update_frame_number == context->frame_number) {
+    if (this->last_simulation_chunk_update_frame_number == context->frame_number) {
         return;
     }
-    this->last_chunked_update_frame_number = context->frame_number;
+    this->last_simulation_chunk_update_frame_number = context->frame_number;
     this->vtable->on_simulation_chunk_update(this, context);
 }
 bool component_is_simulation_chunkable(const struct component* this) {

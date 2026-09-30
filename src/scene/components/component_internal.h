@@ -30,7 +30,8 @@ struct component {
     struct action* transform_on_rect_changed;
     unsigned int transform_on_rect_changed_subscription_token;
 
-    unsigned int last_chunked_update_frame_number;
+    unsigned int last_visible_chunk_update_frame_number;
+    unsigned int last_simulation_chunk_update_frame_number;
 
     struct entity *parent;
 };

@@ -105,8 +105,8 @@ static void camera_update_visibility_chunks(const struct camera *this, const str
 static void camera_update_simulation_chunks(const struct camera *this, const struct update_context *context) {
     const struct rect rect = {
         .position = component_get_rect((const struct component*)this).position,
-        .size.x = this->simulation_distance,
-        .size.y = this->simulation_distance
+        .size.x = 2 * this->simulation_distance,
+        .size.y = 2 * this->simulation_distance
     };
     camera_update_chunks(this, rect, component_is_simulation_chunkable, component_simulation_chunk_update, context);
 }
@@ -114,8 +114,8 @@ static void camera_update_simulation_chunks(const struct camera *this, const str
 static void camera_update(struct component *base, const struct update_context *context) {
     const struct camera *this = (struct camera *) base;
     camera_update_renderer_pipeline_viewport(this);
-    camera_update_visibility_chunks(this, context);
     camera_update_simulation_chunks(this, context);
+    camera_update_visibility_chunks(this, context);
 }
 
 static void camera_on_disable(struct component *base) {
