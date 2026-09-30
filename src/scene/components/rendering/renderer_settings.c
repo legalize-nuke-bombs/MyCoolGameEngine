@@ -30,7 +30,7 @@ static struct component* renderer_settings_clone(struct component base, const st
 static void renderer_settings_awake(struct component *base);
 static void renderer_settings_on_disable(struct component *base);
 
-static const struct component_vtable renderer_settings_vtable = {
+static const struct component_vtable menu_vtable = {
     .component_key = renderer_settings_component_key,
     .on_clone = renderer_settings_clone,
     .on_awake = renderer_settings_awake,
@@ -45,7 +45,7 @@ const char* renderer_settings_component_key(void) {
 struct component* renderer_settings_create(struct parser *parser, struct entity *parent) {
     struct renderer_settings *this = calloc(1, sizeof(struct renderer_settings));
     struct component *base = (struct component *) this;
-    component_base_create(base, &renderer_settings_vtable, parent);
+    component_base_create(base, &menu_vtable, parent);
 
     parser_next_uint8(parser, &this->light_map_enabled);
     if (this->light_map_enabled) {

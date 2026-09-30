@@ -27,7 +27,7 @@ static void menu_awake(struct component *base);
 static void menu_on_disable(struct component *base);
 static void menu_on_destroy(struct component *base);
 
-static const struct component_vtable renderer_settings_vtable = {
+static const struct component_vtable menu_vtable = {
     .component_key = menu_component_key,
     .on_clone = menu_clone,
     .on_awake = menu_awake,
@@ -42,7 +42,7 @@ const char* menu_component_key(void) {
 struct component* menu_create(struct parser *parser, struct entity *parent) {
     struct menu *this = calloc(1, sizeof(struct menu));
     struct component *base = (struct component *) this;
-    component_base_create(base, &renderer_settings_vtable, parent);
+    component_base_create(base, &menu_vtable, parent);
 
     this->hotkey = parser_next_dup(parser);
     this->map_path = parser_next_dup(parser);
