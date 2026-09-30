@@ -4,6 +4,7 @@ end
 
 scene add entity GameState 0 0 1 1
 renderer_settings 1 50 50 80 255
+scene_switcher Escape scripts/demo/menu.mcge
 end
 
 scene add entity Forest 0 0 10000 10000

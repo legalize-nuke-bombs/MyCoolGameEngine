@@ -1,3 +1,3 @@
-scene add entity Menu 0 0 1 1
-menu Return scripts/demo/map.mcge
+scene add entity MenuState 0 0 1 1
+scene_switcher Return scripts/demo/map.mcge
 end
