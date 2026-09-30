@@ -6,9 +6,9 @@
 #define MYCOOLGAMEENGINE_LIST_H
 
 struct list {
-    void **data;
-    int capacity;
-    int count;
+    void **_data;
+    int _capacity;
+    int _count;
 };
 
 struct list list_create(int capacity);

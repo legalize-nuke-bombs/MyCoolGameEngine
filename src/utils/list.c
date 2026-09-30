@@ -11,67 +11,67 @@ struct list list_create(int capacity) {
         capacity = 1;
     }
     const struct list list = {
-        .data = NULL,
-        .capacity = capacity,
-        .count = 0
+        ._data = NULL,
+        ._capacity = capacity,
+        ._count = 0
     };
     return list;
 }
 void list_destroy(struct list *this) {
-    free(this->data);
+    free(this->_data);
 }
 
 int list_count(const struct list *this) {
-    return this->count;
+    return this->_count;
 }
 
 void* list_get(const struct list *this, const int index) {
-    return this->data[index];
+    return this->_data[index];
 }
 
 static void list_realloc(struct list *list) {
-    const int new_capacity = 2 * list->capacity;
+    const int new_capacity = 2 * list->_capacity;
     void **new_data = malloc(sizeof(void *) * new_capacity);
-    for (int i = 0; i < list->count; i++) {
-        new_data[i] = list->data[i];
+    for (int i = 0; i < list->_count; i++) {
+        new_data[i] = list->_data[i];
     }
-    free(list->data);
-    list->data = new_data;
-    list->capacity = new_capacity;
+    free(list->_data);
+    list->_data = new_data;
+    list->_capacity = new_capacity;
 }
 void list_add(struct list *this, void *data) {
-    if (this->data == NULL) {
-        this->data = malloc(sizeof(void *) * this->capacity);
+    if (this->_data == NULL) {
+        this->_data = malloc(sizeof(void *) * this->_capacity);
     }
-    else if (this->count >= this->capacity) {
+    else if (this->_count >= this->_capacity) {
         list_realloc(this);
     }
-    this->data[this->count++] = data;
+    this->_data[this->_count++] = data;
 }
 void list_set(const struct list *this, int index, void *data) {
-    this->data[index] = data;
+    this->_data[index] = data;
 }
 
 void list_swap(const struct list *this, const int index1, const int index2) {
-    void* tmp = this->data[index1];
-    this->data[index1] = this->data[index2];
-    this->data[index2] = tmp;
+    void* tmp = this->_data[index1];
+    this->_data[index1] = this->_data[index2];
+    this->_data[index2] = tmp;
 }
 
 void list_remove_nulls(struct list *this) {
     int kept_count = 0;
-    for (int i = 0; i < this->count; i++) {
-        if (this->data[i] != NULL) {
-            this->data[kept_count++] = this->data[i];
+    for (int i = 0; i < this->_count; i++) {
+        if (this->_data[i] != NULL) {
+            this->_data[kept_count++] = this->_data[i];
         }
     }
-    this->count = kept_count;
+    this->_count = kept_count;
 }
 
 void list_clear(struct list *this) {
-    this->count = 0;
+    this->_count = 0;
 }
 
 void list_pop_back(struct list *this) {
-    this->count--;
+    this->_count--;
 }
