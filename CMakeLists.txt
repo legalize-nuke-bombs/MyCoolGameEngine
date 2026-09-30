@@ -203,6 +203,8 @@ add_executable(MyCoolGameEngine main.c
         src/utils/rect_pair.h
         src/scene/chunks/chunks.h
         src/scene/chunks/chunks.c
+        src/scene/chunks/chunk.h
+        src/scene/chunks/chunk.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)
