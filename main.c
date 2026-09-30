@@ -1,48 +1,34 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
-
+#include <string.h>
 #include "src/engine/engine.h"
 #include "src/engine/engine_arguments.h"
 #include "src/logging/logger.h"
 
 
-static char* data_root_extract(const int argc, char* argv[]) {
-    if (argc >= 2) {
-        return argv[1];
+static void parse_arguments(const int argc, char* argv[], struct engine_arguments *out_args, int *out_logger_level) {
+    out_args->data_root = NULL;
+    out_args->script_path = NULL;
+    out_args->dev_mode = false;
+    *out_logger_level = LOGGER_LEVEL_INFO;
+
+    if (argc > 1) out_args->data_root = argv[1];
+    if (argc > 2) out_args->script_path = argv[2];
+    if (argc > 3) {
+        *out_logger_level = (int)strtol(argv[3], NULL, 10);
     }
-    return NULL;
-}
-
-static char* script_path_extract(const int argc, char* argv[]) {
-    if (argc >= 3) {
-        return argv[2];
+    if (argc > 4) {
+        out_args->dev_mode = (strcmp(argv[4], "1") == 0 || strcmp(argv[4], "true") == 0);
     }
-    return NULL;
 }
-
-int logger_level_extract(const int argc, char* argv[]) {
-    if (argc >= 4) {
-        return atoi(argv[3]);
-    }
-    return LOGGER_LEVEL_INFO;
-}
-
-bool dev_mode_extract(const int argc, char* argv[]) {
-    if (argc >= 5) {
-        return atoi(argv[4]);
-    }
-    return 0;
-}
-
-
 int main(const int argc, char *argv[]) {
-    logger_init(logger_level_extract(argc, argv));
-    const struct engine_arguments engine_arguments = {
-        .data_root = data_root_extract(argc, argv),
-        .script_path = script_path_extract(argc, argv),
-        .dev_mode = dev_mode_extract(argc, argv)
-    };
+    int logger_level;
+    struct engine_arguments engine_arguments;
+
+    parse_arguments(argc, argv, &engine_arguments, &logger_level);
+
+    logger_init(logger_level);
 
     struct engine *engine = engine_create();
     engine_execute(engine, engine_arguments);
