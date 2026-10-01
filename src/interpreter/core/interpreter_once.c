@@ -31,6 +31,10 @@ static void interpreter_once_execute(const struct interpreter_command *base, str
     }
 
     const char* command = parser_next(parser);
+    if (command == NULL) {
+        free(block_name);
+        return;
+    }
     if (strcmp(command, "start") == 0) {}
     else if (strcmp(command, "end") == 0) {
         free(block_name);
