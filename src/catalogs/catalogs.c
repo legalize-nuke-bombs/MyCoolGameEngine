@@ -4,11 +4,11 @@
 
 #include "catalog.h"
 #include "../logging/logger.h"
-#include "../rendering/layers/renderer_layer.h"
-#include "../rendering/textures/texture.h"
-#include "../scene/physics/rigid_layer.h"
-#include "../scene/physics/rigid_material.h"
-#include "../scene/prefabs/prefab.h"
+#include "custom/renderer_layer.h"
+#include "custom/texture.h"
+#include "custom/rigid_layer.h"
+#include "custom/rigid_material.h"
+#include "custom/prefab.h"
 #include "../subsystems/subsystem_internal.h"
 #include "../utils/dictionary.h"
 #include "../utils/list.h"
@@ -58,6 +58,7 @@ static void catalogs_register_all(struct catalogs *this) {
     catalogs_register(this, &rigid_layer_catalog_vtable);
     catalogs_register(this, &rigid_material_catalog_vtable);
     catalogs_register(this, &prefab_catalog_vtable);
+    logger_info("Catalogs know %d catalogs", list_count(&this->list));
 }
 
 struct subsystem* catalogs_create(const struct subsystem_collection *subsystems) {

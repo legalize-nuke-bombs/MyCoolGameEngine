@@ -10,8 +10,8 @@
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 
-#include "../renderer.h"
-#include "../../catalogs/catalog.h"
+#include "../../rendering/renderer.h"
+#include "../catalog.h"
 #include "../../logging/logger.h"
 #include "../../subsystems/subsystem_collection.h"
 #include "../../utils/parser.h"

@@ -14,7 +14,7 @@
 #include "../../../catalogs/catalogs.h"
 #include "../../../subsystems/subsystem_collection.h"
 #include "../../../utils/vector2_math.h"
-#include "../../prefabs/prefab.h"
+#include "../../../catalogs/custom/prefab.h"
 
 
 struct forest {

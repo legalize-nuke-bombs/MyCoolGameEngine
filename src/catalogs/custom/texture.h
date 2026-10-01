@@ -5,7 +5,10 @@
 #ifndef MYCOOLGAMEENGINE_TEXTURE_H
 #define MYCOOLGAMEENGINE_TEXTURE_H
 
-#include "texture_loading_mode.h"
+enum texture_loading_mode {
+    texture_loading_mode_eager,
+    texture_loading_mode_lazy
+};
 
 struct texture;
 struct SDL_Renderer;

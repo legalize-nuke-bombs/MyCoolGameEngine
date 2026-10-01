@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <SDL3/SDL.h>
 
-#include "../../textures/texture.h"
+#include "../../../catalogs/custom/texture.h"
 
 struct renderer_square {
     struct renderer_primitive base;

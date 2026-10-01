@@ -3,14 +3,14 @@
 //
 
 #include "prefab.h"
-#include "../entity.h"
+#include "../../scene/entity.h"
 
 #include <stdlib.h>
 #include <string.h>
 
-#include "../entity_parser.h"
-#include "../scene.h"
-#include "../../catalogs/catalog.h"
+#include "../../scene/entity_parser.h"
+#include "../../scene/scene.h"
+#include "../catalog.h"
 #include "../../logging/logger.h"
 #include "../../subsystems/subsystem_collection.h"
 

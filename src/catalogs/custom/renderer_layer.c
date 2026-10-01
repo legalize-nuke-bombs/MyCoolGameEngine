@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../../catalogs/catalog.h"
+#include "../catalog.h"
 #include "../../utils/parser.h"
 
 

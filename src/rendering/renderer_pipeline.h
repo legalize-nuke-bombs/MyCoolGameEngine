@@ -7,7 +7,7 @@
 
 #include "../utils/rect.h"
 #include "primitives/renderer_primitive.h"
-#include "layers/renderer_layer.h"
+#include "../catalogs/custom/renderer_layer.h"
 
 struct renderer_pipeline;
 struct SDL_Renderer;
