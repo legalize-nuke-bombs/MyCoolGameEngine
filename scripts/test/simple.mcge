@@ -3,8 +3,8 @@ once simple_deps start
     renderer_layer_manager new_layer bg1 1
     renderer_layer_manager new_layer prop1 10
 
-    texture_manager new_texture cube 64 64 textures/demo/cube.png lazy 1
-    texture_manager new_texture tree1 72 65 textures/demo/tree1_tileset.png lazy 1
+    texture_manager new_texture cube 64 64 textures/demo/cube.png lazy
+    texture_manager new_texture tree1 72 65 textures/demo/tree1_tileset.png lazy
 
 once simple_deps end
 

@@ -13,13 +13,9 @@
 #include "../../utils/string_dictionary.h"
 
 
-#define TEXTURE_UPDATE_INTERVAL 1
-
-
 struct texture_manager {
     struct list list;
     struct dictionary* dict;
-    double texture_update_timer;
 };
 
 
@@ -60,16 +56,4 @@ void texture_manager_clear(struct texture_manager* this) {
     }
     list_clear(&this->list);
     dictionary_clear(this->dict);
-}
-
-void texture_manager_update(struct texture_manager* this, const double dt) {
-    this->texture_update_timer += dt;
-    if (this->texture_update_timer < TEXTURE_UPDATE_INTERVAL) {
-        return;
-    }
-    for (int i = 0; i < list_count(&this->list); i++) {
-        struct texture* texture = list_get(&this->list, i);
-        texture_update(texture, this->texture_update_timer);
-    }
-    this->texture_update_timer = 0;
 }

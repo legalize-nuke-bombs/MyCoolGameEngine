@@ -34,8 +34,6 @@ static void interpreter_texture_manager_new_texture_execute(const struct interpr
     parser_next_int(parser, &texture_tile_h);
     char* texture_path = parser_next_dup(parser);
     char* texture_loading_mode = parser_next_dup(parser);
-    double texture_unload_interval;
-    parser_next_double(parser, &texture_unload_interval);
 
     enum texture_loading_mode texture_loading_mode_enum;
     if (strcmp(texture_loading_mode, "eager") == 0) {
@@ -53,7 +51,7 @@ static void interpreter_texture_manager_new_texture_execute(const struct interpr
     free(texture_loading_mode);
 
     texture_manager_capture(manager,
-            texture_create(texture_id, texture_path, texture_tile_w, texture_tile_h, texture_loading_mode_enum, texture_unload_interval, native_renderer)
+            texture_create(texture_id, texture_path, texture_tile_w, texture_tile_h, texture_loading_mode_enum, native_renderer)
     );
 }
 

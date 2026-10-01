@@ -22,12 +22,7 @@ struct texture {
     int tile_w;
     int tile_h;
 
-    enum texture_loading_mode mode;
     bool loading_failed;
-    bool used;
-
-    double unload_timer;
-    double unload_interval;
 
     SDL_Texture* native_texture;
 
@@ -36,7 +31,7 @@ struct texture {
 
 static void texture_load(struct texture* this);
 
-struct texture* texture_create(char* id, char* path, const int tile_w, const int tile_h, const enum texture_loading_mode loading_mode, const double unload_interval, SDL_Renderer* native_renderer) {
+struct texture* texture_create(char* id, char* path, const int tile_w, const int tile_h, const enum texture_loading_mode loading_mode, SDL_Renderer* native_renderer) {
     logger_debug("Texture %s is creating...", id);
     struct texture* this = calloc(1, sizeof(struct texture));
 
@@ -49,10 +44,6 @@ struct texture* texture_create(char* id, char* path, const int tile_w, const int
 
     this->tile_w = tile_w;
     this->tile_h = tile_h;
-
-    this->mode = loading_mode;
-
-    this->unload_interval = unload_interval;
 
     this->native_renderer = native_renderer;
 
@@ -76,7 +67,6 @@ const char* texture_get_id(const struct texture* this) {
     return this->id;
 }
 SDL_Texture* texture_get_native_texture(struct texture* this) {
-    this->used = true;
     if (this->native_texture != NULL) {
         return this->native_texture;
     }
@@ -128,26 +118,5 @@ static void texture_load(struct texture* this) {
     if (this->native_texture == NULL) {
         logger_warn("Texture %s failed to load from %s", this->id, this->path);
         this->loading_failed = true;
-    }
-}
-
-void texture_update(struct texture *this, const double elapsed) {
-    if (this->native_texture == NULL) {
-        return;
-    }
-    if (this->unload_interval < 0) {
-        return;
-    }
-    if (this->used) {
-        this->used = false;
-        this->unload_timer = 0;
-        return;
-    }
-    this->unload_timer += elapsed;
-    if (this->unload_timer >= this->unload_interval) {
-        logger_debug("Texture %s will be unloaded because it was not used in %f seconds", this->id, this->unload_interval);
-        this->unload_timer = 0;
-        SDL_DestroyTexture(this->native_texture);
-        this->native_texture = NULL;
     }
 }

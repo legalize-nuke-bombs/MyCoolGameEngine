@@ -3,14 +3,14 @@ once 1m_campfire_deps start
     renderer_layer_manager new_layer bg1 1
     renderer_layer_manager new_layer prop1 10
 
-    texture_manager new_texture cube 64 64 textures/demo/cube.png lazy 1
-    texture_manager new_texture campfire 64 64 textures/demo/campfire.png lazy 1
-    texture_manager new_texture gcirc1 512 512 textures/core/gcirc1.png lazy 1
-    texture_manager new_texture gcirc2 512 512 textures/core/gcirc2.png lazy 1
-    texture_manager new_texture gcirc3 512 512 textures/core/gcirc3.png lazy 1
-    texture_manager new_texture gcirc4 512 512 textures/core/gcirc4.png lazy 1
-    texture_manager new_texture gcirc5 512 512 textures/core/gcirc5.png lazy 1
-    texture_manager new_texture gcirc6 512 512 textures/core/gcirc6.png lazy 1
+    texture_manager new_texture cube 64 64 textures/demo/cube.png lazy
+    texture_manager new_texture campfire 64 64 textures/demo/campfire.png lazy
+    texture_manager new_texture gcirc1 512 512 textures/core/gcirc1.png lazy
+    texture_manager new_texture gcirc2 512 512 textures/core/gcirc2.png lazy
+    texture_manager new_texture gcirc3 512 512 textures/core/gcirc3.png lazy
+    texture_manager new_texture gcirc4 512 512 textures/core/gcirc4.png lazy
+    texture_manager new_texture gcirc5 512 512 textures/core/gcirc5.png lazy
+    texture_manager new_texture gcirc6 512 512 textures/core/gcirc6.png lazy
 
     scene add prefab Campfire 100 300 64 64
         box_renderer prop1 texture campfire 0

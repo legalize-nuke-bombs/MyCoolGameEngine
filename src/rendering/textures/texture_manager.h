@@ -17,6 +17,4 @@ struct texture* texture_manager_try_get_texture(const struct texture_manager* th
 
 void texture_manager_clear(struct texture_manager* this);
 
-void texture_manager_update(struct texture_manager* this, double dt);
-
 #endif //MYCOOLGAMEENGINE_TEXTURE_MANAGER_H
