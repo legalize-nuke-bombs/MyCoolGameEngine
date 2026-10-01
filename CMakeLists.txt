@@ -220,8 +220,8 @@ add_executable(MyCoolGameEngine main.c
         src/scene/components/core/sky.c
         src/scene/components/physics/rigid_body.h
         src/scene/components/physics/rigid_body.c
-        src/scene/physics/rigid_layer.h
-        src/scene/physics/rigid_layer.c
+        src/scene/physics/rigid_material.h
+        src/scene/physics/rigid_material.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)
