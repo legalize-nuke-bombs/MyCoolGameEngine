@@ -41,10 +41,9 @@ static void interpreter_command_parent_execute(const struct interpreter_command 
     interpreter_command_execute(command, parser, subsystems);
 }
 
-static void interpreter_command_parent_on_destroy(struct interpreter_command* base) {
-    const struct interpreter_command_parent* this = (struct interpreter_command_parent*)base;
-    interpreter_command_register_destroy(this->command_register);
-}
+static void interpreter_command_parent_on_destroy(struct interpreter_command* base);
+static void interpreter_command_parent_on_enable(struct interpreter_command* base, struct engine_arguments args);
+static void interpreter_command_parent_on_disable(struct interpreter_command* base, struct engine_arguments args);
 
 static const struct interpreter_command_vtable command_parent_vtable = {
     .key = interpreter_command_parent_get_key,
@@ -60,6 +59,19 @@ struct interpreter_command_parent* interpreter_command_parent_create(const char*
     this->command_register = interpreter_command_register_create(name, dim);
 
     return this;
+}
+static void interpreter_command_parent_on_destroy(struct interpreter_command* base) {
+    const struct interpreter_command_parent* this = (struct interpreter_command_parent*)base;
+    interpreter_command_register_destroy(this->command_register);
+}
+
+static void interpreter_command_parent_on_enable(struct interpreter_command* base, struct engine_arguments args) {
+    const struct interpreter_command_parent* this = (struct interpreter_command_parent*)base;
+    interpreter_command_register_enable(this->command_register, args);
+}
+static void interpreter_command_parent_on_disable(struct interpreter_command* base, struct engine_arguments args) {
+    const struct interpreter_command_parent* this = (struct interpreter_command_parent*)base;
+    interpreter_command_register_disable(this->command_register);
 }
 
 void interpreter_command_parent_capture_child(const struct interpreter_command_parent* this, struct interpreter_command* child) {

@@ -33,6 +33,21 @@ void interpreter_command_register_destroy(struct interpreter_command_register* t
     free(this);
 }
 
+void interpreter_command_register_enable(const struct interpreter_command_register* this, struct engine_arguments args) {
+    struct dictionary_iterator iterator = dictionary_begin(this->dictionary);
+    struct dictionary_node node;
+    while (dictionary_next(this->dictionary, &iterator, &node)) {
+        interpreter_command_enable(node.value, args);
+    }
+}
+void interpreter_command_register_disable(const struct interpreter_command_register* this) {
+    struct dictionary_iterator iterator = dictionary_begin(this->dictionary);
+    struct dictionary_node node;
+    while (dictionary_next(this->dictionary, &iterator, &node)) {
+        interpreter_command_disable(node.value);
+    }
+}
+
 void interpreter_command_register_capture_command(const struct interpreter_command_register* this, struct interpreter_command* command) {
     const char* command_key = interpreter_command_get_key(command);
     if (dictionary_try_add(this->dictionary, (void*)command_key, command)) {

@@ -14,6 +14,17 @@ void interpreter_command_execute(const struct interpreter_command *this, struct 
     this->vtable->execute(this, parser, subsystems);
 }
 
+void interpreter_command_enable(struct interpreter_command *this, struct engine_arguments args) {
+    if (this->vtable->on_enable) {
+        this->vtable->on_enable(this, args);
+    }
+}
+void interpreter_command_disable(struct interpreter_command *this) {
+    if (this->vtable->on_disable) {
+        this->vtable->on_disable(this);
+    }
+}
+
 void interpreter_command_destroy(struct interpreter_command *this) {
     if (this->vtable->on_destroy) {
         this->vtable->on_destroy(this);

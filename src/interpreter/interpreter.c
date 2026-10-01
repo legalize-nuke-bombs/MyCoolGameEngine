@@ -19,6 +19,7 @@
 #include "../utils/path.h"
 #include "core/interpreter_eval.h"
 #include "core/interpreter_ignore.h"
+#include "core/interpreter_once.h"
 #include "texture_manager/interpreter_texture_manager.h"
 
 
@@ -35,11 +36,13 @@ static const char* interpreter_get_name() {
 }
 static void interpreter_on_destroy(struct subsystem* base);
 void interpreter_on_enable(struct subsystem* base, struct engine_arguments args);
+void interpreter_on_disable(struct subsystem* base);
 
 static struct subsystem_vtable interpreter_vtable = {
     .name = interpreter_get_name,
     .on_destroy = interpreter_on_destroy,
-    .on_enable = interpreter_on_enable
+    .on_enable = interpreter_on_enable,
+    .on_disable = interpreter_on_disable
 };
 
 
@@ -52,6 +55,7 @@ struct subsystem* interpreter_create(const struct subsystem_collection* subsyste
     interpreter_command_register_capture_command(interpreter->command_register, interpreter_print_as_interpreter_command(interpreter_print_create()));
     interpreter_command_register_capture_command(interpreter->command_register, interpreter_ignore_as_interpreter_command(interpreter_ignore_create()));
     interpreter_command_register_capture_command(interpreter->command_register, interpreter_eval_as_interpreter_command(interpreter_eval_create()));
+    interpreter_command_register_capture_command(interpreter->command_register, interpreter_once_as_interpreter_command(interpreter_once_create()));
     interpreter_command_register_capture_command(interpreter->command_register, interpreter_renderer_layer_manager_create());
     interpreter_command_register_capture_command(interpreter->command_register, interpreter_texture_manager_create());
     interpreter_command_register_capture_command(interpreter->command_register, interpreter_window_create());
@@ -64,9 +68,14 @@ void interpreter_on_destroy(struct subsystem* base) {
     interpreter_command_register_destroy(this->command_register);
 }
 
-void interpreter_on_enable(struct subsystem* base, struct engine_arguments args) {
+void interpreter_on_enable(struct subsystem* base, const struct engine_arguments args) {
     struct interpreter *this = (struct interpreter*)base;
+    interpreter_command_register_enable(this->command_register, args);
     this->data_root = args.data_root;
+}
+void interpreter_on_disable(struct subsystem* base) {
+    const struct interpreter *this = (struct interpreter*)base;
+    interpreter_command_register_disable(this->command_register);
 }
 
 static int interpreter_parse(const struct interpreter *this, struct parser *parser) {

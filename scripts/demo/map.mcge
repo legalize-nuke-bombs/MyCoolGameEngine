@@ -1,7 +1,7 @@
 
 
 /* Deps */
-once map_deps
+once map_deps start
 
 renderer_layer_manager new_layer bg1 1
 renderer_layer_manager new_layer prop1 10
@@ -63,7 +63,7 @@ box_renderer prop1 texture tree8 0
 box_renderer_animated 0.1
 end
 
-once_end
+once map_deps end
 
 
 
