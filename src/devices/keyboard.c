@@ -64,6 +64,9 @@ static void keyboard_register_native_event(void* listener, void* context) {
     const SDL_Event *event = context;
     const int scancode = event->key.scancode;
     if (event->type == SDL_EVENT_KEY_DOWN) {
+        if (event->key.repeat) {
+            return;
+        }
         logger_debug("Keyboard registered key down");
         this->status[scancode] = true;
         action_invoke(&this->on_key_pressed[scancode], NULL);
