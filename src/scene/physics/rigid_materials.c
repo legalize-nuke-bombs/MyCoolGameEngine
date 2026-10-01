@@ -28,7 +28,7 @@ void rigid_materials_destroy(struct rigid_materials* this) {
 }
 
 void rigid_materials_clear(const struct rigid_materials* this) {
-    struct dictionary_iterator iterator;
+    struct dictionary_iterator iterator = dictionary_begin(this->dict);
     struct dictionary_node node;
     while (dictionary_next(this->dict, &iterator, &node)) {
         struct rigid_material* material = node.value;

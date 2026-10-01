@@ -28,7 +28,7 @@ void rigid_layers_destroy(struct rigid_layers* this) {
 }
 
 void rigid_layers_clear(const struct rigid_layers* this) {
-    struct dictionary_iterator iterator;
+    struct dictionary_iterator iterator = dictionary_begin(this->dict);
     struct dictionary_node node;
     while (dictionary_next(this->dict, &iterator, &node)) {
         struct rigid_layer* layer = node.value;
