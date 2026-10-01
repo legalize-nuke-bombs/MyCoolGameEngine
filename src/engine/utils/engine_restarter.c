@@ -10,6 +10,7 @@
 #include "../../devices/keyboard.h"
 #include "../../utils/action.h"
 #include "../../utils/file_listener.h"
+#include "../../utils/path.h"
 #include "../events/engine_events.h"
 #include "../update_context.h"
 #include "../../subsystems/subsystem_internal.h"
@@ -80,7 +81,9 @@ void engine_restarter_on_enable(struct subsystem *base, const struct engine_argu
         return;
     }
 
-    this->script_listener = file_listener_create(args.script_path);
+    char* script_path = path_alloc_combined(args.data_root, args.script_path);
+    this->script_listener = file_listener_create(script_path);
+    free(script_path);
 
     this->lifecycle = (struct engine_lifecycle*)subsystem_get_subsystem(base, "engine_lifecycle");
 
