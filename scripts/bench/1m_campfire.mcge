@@ -27,6 +27,11 @@ once 1m_campfire_deps end
 
 
 
+
+
+
+
+
 scene add entity Terrain 0 0 100000 100000
     box_renderer bg1 color 54 78 62 255
 end
