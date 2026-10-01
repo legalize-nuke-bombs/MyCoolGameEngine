@@ -14,7 +14,14 @@
 
 struct keyboard_rigid_controller {
     struct component base;
+
     double force;
+
+    char* up;
+    char* down;
+    char* left;
+    char* right;
+
     struct rigid_body* rigid_body;
     struct keyboard* keyboard;
 };
@@ -23,13 +30,15 @@ static struct component* keyboard_rigid_controller_clone(struct component base, 
 static void keyboard_rigid_controller_on_awake(struct component* base);
 static void keyboard_rigid_controller_on_update(struct component* base, const struct update_context *context);
 static void keyboard_rigid_controller_on_disable(struct component* base);
+static void keyboard_rigid_controller_on_destroy(struct component* base);
 
 static const struct component_vtable keyboard_rigid_controller_vtable = {
     .component_key = keyboard_rigid_controller_component_key,
     .on_clone = keyboard_rigid_controller_clone,
     .on_awake = keyboard_rigid_controller_on_awake,
     .on_update = keyboard_rigid_controller_on_update,
-    .on_disable = keyboard_rigid_controller_on_disable
+    .on_disable = keyboard_rigid_controller_on_disable,
+    .on_destroy = keyboard_rigid_controller_on_destroy
 };
 
 const char* keyboard_rigid_controller_component_key(void) {
@@ -41,16 +50,16 @@ static void keyboard_rigid_controller_on_update(struct component* base, const st
 
     struct vector2 direction = {0.0, 0.0};
 
-    if (keyboard_is_pressed(this->keyboard, "W") || keyboard_is_pressed(this->keyboard, "Up")) {
+    if (this->up && keyboard_is_pressed(this->keyboard, this->up)) {
         direction.y += 1.0;
     }
-    if (keyboard_is_pressed(this->keyboard, "S") || keyboard_is_pressed(this->keyboard, "Down")) {
+    if (this->down && keyboard_is_pressed(this->keyboard, this->down)) {
         direction.y -= 1.0;
     }
-    if (keyboard_is_pressed(this->keyboard, "A") || keyboard_is_pressed(this->keyboard, "Left")) {
+    if (this->left && keyboard_is_pressed(this->keyboard, this->left)) {
         direction.x -= 1.0;
     }
-    if (keyboard_is_pressed(this->keyboard, "D") || keyboard_is_pressed(this->keyboard, "Right")) {
+    if (this->right && keyboard_is_pressed(this->keyboard, this->right)) {
         direction.x += 1.0;
     }
 
@@ -78,8 +87,20 @@ struct component* keyboard_rigid_controller_create(struct parser *parser, struct
     component_base_create(base, &keyboard_rigid_controller_vtable, parent);
 
     parser_next_double(parser, &this->force);
+    this->up = parser_next_dup(parser);
+    this->down = parser_next_dup(parser);
+    this->left = parser_next_dup(parser);
+    this->right = parser_next_dup(parser);
 
     return base;
+}
+
+static void keyboard_rigid_controller_on_destroy(struct component* base) {
+    const struct keyboard_rigid_controller *this = (struct keyboard_rigid_controller*)base;
+    if (this->up) free(this->up);
+    if (this->down) free(this->down);
+    if (this->left) free(this->left);
+    if (this->right) free(this->right);
 }
 
 static struct component* keyboard_rigid_controller_clone(struct component base, const struct component *component) {
