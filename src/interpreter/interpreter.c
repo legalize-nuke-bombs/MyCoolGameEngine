@@ -17,7 +17,6 @@
 #include "scene/interpreter_scene.h"
 #include "../subsystems/subsystem_internal.h"
 #include "../utils/action.h"
-#include "../utils/path.h"
 #include "core/interpreter_eval.h"
 #include "core/interpreter_ignore.h"
 #include "core/interpreter_once.h"
@@ -26,8 +25,6 @@
 
 struct interpreter {
     struct subsystem base;
-
-    const char* data_root;
 
     struct action on_script_evaluated;
 
@@ -77,7 +74,6 @@ void interpreter_on_destroy(struct subsystem* base) {
 void interpreter_on_enable(struct subsystem* base, const struct engine_arguments args) {
     struct interpreter *this = (struct interpreter*)base;
     interpreter_command_register_enable(this->command_register, args);
-    this->data_root = args.data_root;
 }
 void interpreter_on_disable(struct subsystem* base) {
     struct interpreter *this = (struct interpreter*)base;
@@ -113,12 +109,14 @@ static int interpreter_eval_quite(const struct interpreter *this, const char* sc
     return result;
 }
 
-int interpreter_eval(const struct interpreter *this, const char* rpath) {
-    char* path = path_alloc_combined(this->data_root, rpath);
-    logger_debug("Interpreter is executing %s...", path);
-    action_invoke(&this->on_script_evaluated, path);
-    const int code = interpreter_eval_quite(this, path);
-    free(path);
+int interpreter_eval(const struct interpreter *this, const char* script_path) {
+    if (script_path == NULL) {
+        logger_warn("Interpreter expected script path, got nothing");
+        return INTERPRETER_FAILED_OPEN_SCRIPT;
+    }
+    logger_debug("Interpreter is executing %s...", script_path);
+    action_invoke(&this->on_script_evaluated, (void*)script_path);
+    const int code = interpreter_eval_quite(this, script_path);
 
     if (code == INTERPRETER_OK) {
         logger_debug("Interpreter finished with exit code %d", code);

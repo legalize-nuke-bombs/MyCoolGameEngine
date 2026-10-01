@@ -19,8 +19,8 @@ static const char* interpreter_eval_get_key(const struct interpreter_command *th
 
 static void interpreter_eval_execute(const struct interpreter_command *this, struct parser *parser, const struct subsystem_collection *subsystems) {
     const struct interpreter* interpreter = (struct interpreter*)subsystem_collection_get(subsystems, "interpreter");
-    const char* rpath = parser_next(parser);
-    interpreter_eval(interpreter, rpath);
+    const char* script_path = parser_next(parser);
+    interpreter_eval(interpreter, script_path);
 }
 
 static const struct interpreter_command_vtable eval_vtable = {

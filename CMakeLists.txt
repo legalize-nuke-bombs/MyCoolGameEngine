@@ -206,8 +206,6 @@ add_executable(MyCoolGameEngine main.c
         src/scene/chunks/chunk.c
         src/scene/components/demo/scene_switcher.h
         src/scene/components/demo/scene_switcher.c
-        src/utils/path.h
-        src/utils/path.c
         src/interpreter/core/interpreter_eval.h
         src/interpreter/core/interpreter_eval.c
         src/interpreter/core/interpreter_once.h

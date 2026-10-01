@@ -7,7 +7,6 @@
 #include <stdbool.h>
 
 struct engine_arguments {
-    const char* data_root;
     const char* script_path;
     bool dev_mode;
 };

@@ -11,8 +11,6 @@ struct texture;
 struct texture_manager* texture_manager_create();
 void texture_manager_destroy(struct texture_manager* this);
 
-void texture_manager_set_data_root(struct texture_manager* this, const char* data_root);
-
 void texture_manager_capture(struct texture_manager* this, struct texture* texture);
 
 struct texture* texture_manager_try_get_texture(const struct texture_manager* this, const char* texture_id);

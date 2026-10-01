@@ -17,7 +17,6 @@
 
 
 struct texture_manager {
-    const char* data_root;
     struct list list;
     struct dictionary* dict;
     double texture_update_timer;
@@ -39,18 +38,9 @@ void texture_manager_destroy(struct texture_manager* this) {
     free(this);
 }
 
-void texture_manager_set_data_root(struct texture_manager* this, const char* data_root) {
-    this->data_root = data_root;
-    for (int i = 0; i < list_count(&this->list); i++) {
-        struct texture* texture = list_get(&this->list, i);
-        texture_set_data_root(texture, data_root);
-    }
-}
-
 void texture_manager_capture(struct texture_manager* this, struct texture* texture) {
     if (dictionary_try_add(this->dict, (void*)texture_get_id(texture), texture)) {
         list_add(&this->list, texture);
-        texture_set_data_root(texture, this->data_root);
     }
     else {
         logger_warn("Texture manager failed to capture %s", texture_get_id(texture));
