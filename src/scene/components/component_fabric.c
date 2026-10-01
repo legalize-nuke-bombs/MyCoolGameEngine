@@ -19,6 +19,7 @@
 #include "demo/game_closer.h"
 #include "demo/scene_switcher.h"
 #include "physics/rigid_body.h"
+#include "physics/rigid_surface.h"
 #include "rendering/box_renderer.h"
 #include "rendering/camera.h"
 #include "rendering/box_light.h"
@@ -53,6 +54,7 @@ static void component_fabric_register_all(const struct component_fabric *this) {
     component_fabric_register_component(this, game_closer_component_key(), game_closer_create);
     component_fabric_register_component(this, clock_component_key(), clock_create);
     component_fabric_register_component(this, sky_component_key(), sky_create);
+    component_fabric_register_component(this, rigid_surface_component_key(), rigid_surface_create);
     component_fabric_register_component(this, rigid_body_component_key(), rigid_body_create);
 }
 

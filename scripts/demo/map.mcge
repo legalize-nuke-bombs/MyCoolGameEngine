@@ -84,10 +84,12 @@ once map_deps end
 
 scene add entity Terrain 0 0 10000 10000
     box_renderer bg1 color 54 78 62 255
+    rigid_surface
 end
 
 scene add entity Ice 0 0 500 500
     box_renderer bg2 color 100 100 255 255
+    rigid_surface
 end
 
 scene add entity GameState 0 0 1 1
