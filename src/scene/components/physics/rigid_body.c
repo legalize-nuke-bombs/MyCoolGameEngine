@@ -94,9 +94,10 @@ static void rigid_body_simulation_chunk_update(struct component* base, const str
     this->v = vector_sum(this->v, vector_multiply_scalar(a, dt));
 
     const struct vector2 d_pos = vector_multiply_scalar(this->v, dt);
-    struct rect current_rect = component_get_rect(base);
-    current_rect.position = vector_sum(current_rect.position, d_pos);
-    entity_set_local_rect(component_get_parent(base), current_rect);
+    struct entity* parent = component_get_parent(base);
+    struct rect local_rect = entity_get_local_rect(parent);
+    local_rect.position = vector_sum(local_rect.position, d_pos);
+    entity_set_local_rect(parent, local_rect);
 
     this->f_sum = vector2_zero;
 }
