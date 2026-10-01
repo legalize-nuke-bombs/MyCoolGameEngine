@@ -10,7 +10,6 @@
 #include "../utils/action.h"
 #include <SDL3/SDL.h>
 #include "../logging/logger.h"
-#include "layers/renderer_layer_manager.h"
 #include "../subsystems/subsystem_internal.h"
 #include "renderer_pipeline.h"
 #include "textures/texture_manager.h"
@@ -22,7 +21,6 @@ struct renderer {
 
     SDL_Window *window;
     SDL_Renderer *native;
-    struct renderer_layer_manager *layer_manager;
     struct texture_manager *texture_manager;
     struct renderer_pipeline *pipeline;
 
@@ -62,7 +60,6 @@ struct subsystem* renderer_create(const struct subsystem_collection* subsystems)
         logger_error("SDL Failed to create window and renderer: %s", SDL_GetError());
         return NULL;
     }
-    this->layer_manager = renderer_layer_manager_create();
     this->texture_manager = texture_manager_create();
     this->pipeline = renderer_pipeline_create(this->native);
 
@@ -73,7 +70,6 @@ void renderer_on_destroy(struct subsystem* base) {
 
     renderer_pipeline_destroy(this->pipeline);
     texture_manager_destroy(this->texture_manager);
-    renderer_layer_manager_destroy(this->layer_manager);
     SDL_DestroyRenderer(this->native);
     SDL_DestroyWindow(this->window);
     SDL_Quit();
@@ -96,7 +92,6 @@ void renderer_on_disable(struct subsystem* base) {
     struct renderer* this = (struct renderer*)base;
     action_unsubscribe(this->on_rendering, this->on_rendering_subscription_token);
     this->on_rendering = NULL;
-    renderer_layer_manager_clear(this->layer_manager);
     texture_manager_clear(this->texture_manager);
 }
 
@@ -105,9 +100,6 @@ SDL_Renderer* renderer_get_native_renderer(const struct renderer* this) {
 }
 struct renderer_pipeline* renderer_get_pipeline(const struct renderer* this) {
     return this->pipeline;
-}
-struct renderer_layer_manager* renderer_get_layer_manager(const struct renderer* this) {
-    return this->layer_manager;
 }
 struct texture_manager* renderer_get_texture_manager(const struct renderer* this) {
     return this->texture_manager;

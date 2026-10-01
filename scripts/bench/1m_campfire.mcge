@@ -1,7 +1,7 @@
 once 1m_campfire_deps start
 
-    renderer_layer_manager new_layer bg1 1
-    renderer_layer_manager new_layer prop1 10
+    catalog add renderer_layer bg1 1
+    catalog add renderer_layer prop1 10
 
     texture_manager new_texture cube 64 64 textures/demo/cube.png lazy
     texture_manager new_texture campfire 64 64 textures/demo/campfire.png lazy

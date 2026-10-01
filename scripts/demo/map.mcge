@@ -3,9 +3,9 @@
 /* Deps */
 once map_deps start
 
-    renderer_layer_manager new_layer bg1 1
-    renderer_layer_manager new_layer bg2 2
-    renderer_layer_manager new_layer prop1 10
+    catalog add renderer_layer bg1 1
+    catalog add renderer_layer bg2 2
+    catalog add renderer_layer prop1 10
 
     catalog add rigid_layer bg1 1
     catalog add rigid_layer bg2 2

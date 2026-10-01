@@ -4,6 +4,7 @@
 
 #include "catalog.h"
 #include "../logging/logger.h"
+#include "../rendering/layers/renderer_layer.h"
 #include "../scene/physics/rigid_layer.h"
 #include "../scene/physics/rigid_material.h"
 #include "../subsystems/subsystem_internal.h"
@@ -50,6 +51,7 @@ static void catalogs_register(struct catalogs *this, const struct catalog_vtable
 
 // Catalogs are cleared from the last one to the first one: register a catalog after the catalogs its items point to
 static void catalogs_register_all(struct catalogs *this) {
+    catalogs_register(this, &renderer_layer_catalog_vtable);
     catalogs_register(this, &rigid_layer_catalog_vtable);
     catalogs_register(this, &rigid_material_catalog_vtable);
 }
@@ -88,12 +90,15 @@ struct catalog* catalogs_get(const struct catalogs *this, const char *key) {
     }
     return catalog;
 }
-void* catalogs_get_item(const struct catalogs *this, const char *key, const char *name) {
+void* catalogs_try_get_item(const struct catalogs *this, const char *key, const char *name) {
     const struct catalog *catalog = catalogs_get(this, key);
     if (catalog == NULL) {
         return NULL;
     }
-    void *item = catalog_get(catalog, name);
+    return catalog_get(catalog, name);
+}
+void* catalogs_get_item(const struct catalogs *this, const char *key, const char *name) {
+    void *item = catalogs_try_get_item(this, key, name);
     if (item == NULL) {
         logger_warn("Catalog %s failed to find `%s`", key, name ? name : "<null>");
     }

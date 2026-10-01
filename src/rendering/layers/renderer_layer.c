@@ -5,11 +5,35 @@
 #include "renderer_layer.h"
 
 #include <stdlib.h>
+#include <string.h>
+
+#include "../../catalogs/catalog.h"
+#include "../../utils/parser.h"
 
 
 struct renderer_layer {
     char *name;
     int priority;
+};
+
+
+static const char* renderer_layer_catalog_key(void) {
+    return "renderer_layer";
+}
+
+static void* renderer_layer_on_create_item(const char *name, struct parser *parser, const struct subsystem_collection *subsystems) {
+    uint8_t priority;
+    parser_next_uint8(parser, &priority);
+    return renderer_layer_create(strdup(name), priority);
+}
+static void renderer_layer_on_destroy_item(void *item) {
+    renderer_layer_destroy(item);
+}
+
+const struct catalog_vtable renderer_layer_catalog_vtable = {
+    .key = renderer_layer_catalog_key,
+    .on_create_item = renderer_layer_on_create_item,
+    .on_destroy_item = renderer_layer_on_destroy_item
 };
 
 

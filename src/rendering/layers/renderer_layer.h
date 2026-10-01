@@ -7,6 +7,9 @@
 #include <stdint.h>
 
 struct renderer_layer;
+struct catalog_vtable;
+
+extern const struct catalog_vtable renderer_layer_catalog_vtable;
 
 struct renderer_layer* renderer_layer_create(char *name, uint8_t priority);
 void renderer_layer_destroy(struct renderer_layer *layer);

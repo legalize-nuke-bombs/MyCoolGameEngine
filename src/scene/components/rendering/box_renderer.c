@@ -14,7 +14,7 @@
 #include "../../scene.h"
 #include "../../../logging/logger.h"
 #include "../../../rendering/renderer.h"
-#include "../../../rendering/layers/renderer_layer_manager.h"
+#include "../../../catalogs/catalogs.h"
 #include "../../../rendering/textures/texture_manager.h"
 #include "../../../utils/parser.h"
 #include "../../../subsystems/subsystem_collection.h"
@@ -107,9 +107,10 @@ static void box_renderer_on_destroy(struct component *base) {
 static void box_renderer_awake(struct component *base) {
     struct box_renderer *this = (struct box_renderer *) base;
 
-    const struct renderer* renderer_subsystem = (struct renderer*)subsystem_collection_get(scene_get_subsystems(entity_get_scene(component_get_parent(base))), "renderer");
+    const struct subsystem_collection* subsystems = scene_get_subsystems(entity_get_scene(component_get_parent(base)));
+    const struct renderer* renderer_subsystem = (struct renderer*)subsystem_collection_get(subsystems, "renderer");
     this->renderer = renderer_get_pipeline(renderer_subsystem);
-    this->renderer_layer = renderer_layer_manager_try_get(renderer_get_layer_manager(renderer_subsystem), this->renderer_layer_name);
+    this->renderer_layer = catalogs_try_get_item((struct catalogs*)subsystem_collection_get(subsystems, "catalogs"), "renderer_layer", this->renderer_layer_name);
 }
 
 static void box_renderer_visible_chunk_update(struct component *base, const struct update_context *context) {

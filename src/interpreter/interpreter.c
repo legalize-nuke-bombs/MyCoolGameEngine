@@ -11,7 +11,6 @@
 #include "interpreter_command_register.h"
 #include "../utils/parser.h"
 #include "core/interpreter_print.h"
-#include "renderer_layer_manager/interpreter_renderer_layer_manager.h"
 #include "window/interpreter_window.h"
 #include "../logging/logger.h"
 #include "scene/interpreter_scene.h"
@@ -60,7 +59,6 @@ struct subsystem* interpreter_create(const struct subsystem_collection* subsyste
     interpreter_command_register_capture_command(interpreter->command_register, interpreter_eval_as_interpreter_command(interpreter_eval_create()));
     interpreter_command_register_capture_command(interpreter->command_register, interpreter_once_as_interpreter_command(interpreter_once_create()));
     interpreter_command_register_capture_command(interpreter->command_register, interpreter_catalog_create());
-    interpreter_command_register_capture_command(interpreter->command_register, interpreter_renderer_layer_manager_create());
     interpreter_command_register_capture_command(interpreter->command_register, interpreter_texture_manager_create());
     interpreter_command_register_capture_command(interpreter->command_register, interpreter_window_create());
     interpreter_command_register_capture_command(interpreter->command_register, interpreter_scene_create());

@@ -125,13 +125,7 @@ add_executable(MyCoolGameEngine main.c
         src/interpreter/window/interpreter_window.h
         src/interpreter/window/interpreter_window.c
         src/logging/ansi.h
-        src/rendering/layers/renderer_layer_manager.h
-        src/rendering/layers/renderer_layer_manager.c
         src/rendering/layers/renderer_layer.c
-        src/interpreter/renderer_layer_manager/interpreter_renderer_layer_manager.h
-        src/interpreter/renderer_layer_manager/interpreter_renderer_layer_manager.c
-        src/interpreter/renderer_layer_manager/interpreter_renderer_layer_manager_new_layer.h
-        src/interpreter/renderer_layer_manager/interpreter_renderer_layer_manager_new_layer.c
         src/interpreter/scene/interpreter_scene.h
         src/interpreter/scene/interpreter_scene.c
         src/scene/components/component_fabric.h
