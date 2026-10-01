@@ -88,8 +88,8 @@ add_executable(MyCoolGameEngine main.c
         src/scene/tmap/tmap.c
         src/utils/action.h
         src/utils/action.c
-        src/scene/components/rendering/camera.h
-        src/scene/components/rendering/camera.c
+        src/scene/components/core/camera.h
+        src/scene/components/core/camera.c
         src/scene/entity_collection.h
         src/scene/entity_collection.c
         example.c
@@ -138,8 +138,8 @@ add_executable(MyCoolGameEngine main.c
         src/profiler/profiler.c
         src/profiler/time_estimator.h
         src/profiler/time_estimator.c
-        src/scene/components/core/idle.h
-        src/scene/components/core/idle.c
+        src/scene/components/demo/idle.h
+        src/scene/components/demo/idle.c
         src/utils/file_listener.h
         src/utils/file_listener.c
         src/engine/events/engine_events.h
@@ -158,10 +158,10 @@ add_executable(MyCoolGameEngine main.c
         src/engine/lifecycle/engine_lifecycle.h
         src/engine/lifecycle/engine_lifecycle.c
         src/engine/engine_arguments.h
-        src/scene/components/core/controller.h
-        src/scene/components/core/controller.c
-        src/scene/components/core/keyboard_controller.h
-        src/scene/components/core/keyboard_controller.c
+        src/scene/components/movement/controller.h
+        src/scene/components/movement/controller.c
+        src/scene/components/movement/keyboard_controller.h
+        src/scene/components/movement/keyboard_controller.c
         src/scene/components/rendering/box_light.h
         src/scene/components/rendering/box_light.c
         src/scene/components/rendering/renderer_settings.h
@@ -184,8 +184,8 @@ add_executable(MyCoolGameEngine main.c
         src/scene/components/demo/forest.c
         src/random/random.h
         src/random/random.c
-        src/scene/components/core/pulsator.h
-        src/scene/components/core/pulsator.c
+        src/scene/components/demo/pulsator.h
+        src/scene/components/demo/pulsator.c
         src/utils/rect_pair.h
         src/scene/chunks/chunks.h
         src/scene/chunks/chunks.c
@@ -199,10 +199,10 @@ add_executable(MyCoolGameEngine main.c
         src/interpreter/core/interpreter_once.c
         src/scene/components/demo/game_closer.h
         src/scene/components/demo/game_closer.c
-        src/scene/components/core/clock.h
-        src/scene/components/core/clock.c
-        src/scene/components/core/sky.h
-        src/scene/components/core/sky.c
+        src/scene/components/demo/clock.h
+        src/scene/components/demo/clock.c
+        src/scene/components/demo/sky.h
+        src/scene/components/demo/sky.c
         src/scene/components/physics/rigid_body.h
         src/scene/components/physics/rigid_body.c
         src/catalogs/core/rigid_material.h
