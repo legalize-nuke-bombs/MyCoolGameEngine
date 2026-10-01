@@ -96,7 +96,7 @@ end
 scene add entity CameraRig 0 0 1 1
     controller 250
     keyboard_controller
-    camera 100
+    camera 1000
 end
 
 scene add entity Campfire 100 300 64 64
