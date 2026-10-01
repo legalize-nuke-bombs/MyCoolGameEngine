@@ -98,6 +98,7 @@ static void scene_handle_switch(struct scene *this) {
 }
 
 void scene_mark_switch(struct scene *this, const char* script_path) {
+    free(this->switch_flag);
     this->switch_flag = strdup(script_path);
 }
 
