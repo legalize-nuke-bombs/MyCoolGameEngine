@@ -33,6 +33,9 @@ struct component* component_clone(const struct component *component) {
 }
 
 void component_awake(struct component *this) {
+    if (!this->alive) {
+        return;
+    }
     logger_debug("Entity %s is awaking component %s...", component_get_parent_name(this), component_get_key(this));
     this->awake = true;
 
