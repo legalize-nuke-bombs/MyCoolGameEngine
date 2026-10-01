@@ -5,7 +5,7 @@
 #ifndef MYCOOLGAMEENGINE_SCENE_H
 #define MYCOOLGAMEENGINE_SCENE_H
 
-#include "tmap.h"
+#include "tmap/tmap.h"
 
 struct scene;
 struct entity;

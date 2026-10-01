@@ -6,11 +6,11 @@
 
 #include <stdlib.h>
 
-#include "../utils/action.h"
-#include "../utils/dictionary.h"
-#include "../utils/pointer_dictionary.h"
-#include "../utils/string_dictionary.h"
-#include "../logging/logger.h"
+#include "../../utils/action.h"
+#include "../../utils/dictionary.h"
+#include "../../utils/pointer_dictionary.h"
+#include "../../utils/string_dictionary.h"
+#include "../../logging/logger.h"
 
 
 struct tmap {

@@ -5,7 +5,7 @@
 #ifndef MYCOOLGAMEENGINE_TMAP_H
 #define MYCOOLGAMEENGINE_TMAP_H
 
-#include "components/component.h"
+#include "../components/component.h"
 
 
 struct tmap;
