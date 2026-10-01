@@ -97,7 +97,7 @@ add_executable(MyCoolGameEngine main.c
         src/rendering/renderer_pipeline.c
         src/utils/rect.h
         src/rendering/primitives/renderer_primitive.h
-        src/catalogs/custom/renderer_layer.h
+        src/catalogs/core/renderer_layer.h
         src/rendering/primitives/renderer_primitive_internal.h
         src/rendering/primitives/renderer_primitive.c
         src/rendering/primitives/custom/renderer_square.h
@@ -125,7 +125,7 @@ add_executable(MyCoolGameEngine main.c
         src/interpreter/window/interpreter_window.h
         src/interpreter/window/interpreter_window.c
         src/logging/ansi.h
-        src/catalogs/custom/renderer_layer.c
+        src/catalogs/core/renderer_layer.c
         src/interpreter/scene/interpreter_scene.h
         src/interpreter/scene/interpreter_scene.c
         src/scene/components/component_fabric.h
@@ -171,13 +171,13 @@ add_executable(MyCoolGameEngine main.c
         src/rendering/primitives/custom/light_map.h
         src/rendering/primitives/custom/light_map.c
         src/utils/rect.c
-        src/catalogs/custom/texture.h
-        src/catalogs/custom/texture.c
+        src/catalogs/core/texture.h
+        src/catalogs/core/texture.c
         src/utils/color.c
         src/scene/components/rendering/box_renderer_animated.h
         src/scene/components/rendering/box_renderer_animated.c
-        src/catalogs/custom/prefab.h
-        src/catalogs/custom/prefab.c
+        src/catalogs/core/prefab.h
+        src/catalogs/core/prefab.c
         src/scene/entity_parser.h
         src/scene/entity_parser.c
         src/scene/components/demo/forest.h
@@ -205,10 +205,10 @@ add_executable(MyCoolGameEngine main.c
         src/scene/components/core/sky.c
         src/scene/components/physics/rigid_body.h
         src/scene/components/physics/rigid_body.c
-        src/catalogs/custom/rigid_material.h
-        src/catalogs/custom/rigid_material.c
-        src/catalogs/custom/rigid_layer.h
-        src/catalogs/custom/rigid_layer.c
+        src/catalogs/core/rigid_material.h
+        src/catalogs/core/rigid_material.c
+        src/catalogs/core/rigid_layer.h
+        src/catalogs/core/rigid_layer.c
         src/scene/components/physics/rigid_surface.h
         src/scene/components/physics/rigid_surface.c
         src/scene/components/physics/keyboard_rigid_controller.h
