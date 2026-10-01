@@ -18,6 +18,9 @@
 #include "prefabs/prefab_manager.h"
 #include "../subsystems/subsystem_collection.h"
 #include "../interpreter/interpreter.h"
+#include "physics/rigid_layer.h"
+#include "physics/rigid_layers.h"
+#include "physics/rigid_materials.h"
 
 
 struct scene {
@@ -37,6 +40,8 @@ struct scene {
     struct component_fabric* component_fabric;
     struct chunks* chunks;
     struct prefab_manager* prefab_manager;
+    struct rigid_layers *rigid_layers;
+    struct rigid_materials *rigid_materials;
 };
 
 static const char* scene_get_subsystem_key() {
@@ -65,6 +70,8 @@ struct subsystem* scene_create(char *name, const struct subsystem_collection *su
     this->component_fabric = component_fabric_create();
     this->chunks = chunks_create();
     this->prefab_manager = prefab_manager_create();
+    this->rigid_layers = rigid_layers_create();
+    this->rigid_materials = rigid_materials_create();
 
     return base;
 }
@@ -73,6 +80,8 @@ void scene_on_destroy(struct subsystem *base) {
     const struct scene *this = (struct scene*)base;
     logger_info("Scene %s is destroying...", this->name);
 
+    rigid_materials_destroy(this->rigid_materials);
+    rigid_layers_destroy(this->rigid_layers);
     prefab_manager_destroy(this->prefab_manager);
     component_fabric_destroy(this->component_fabric);
     chunks_destroy(this->chunks);
@@ -81,6 +90,32 @@ void scene_on_destroy(struct subsystem *base) {
     if (this->switch_flag != NULL) free(this->switch_flag);
     free(this->name);
 }
+
+
+
+static void scene_update(void *listener, void *context);
+
+void scene_on_enable(struct subsystem *base, struct engine_arguments args) {
+    struct scene *this = (struct scene*)base;
+    this->awoken = true;
+    entity_collection_awake_everyone(this->entities);
+    this->on_physics = engine_events_on_physics((struct engine_events*)subsystem_get_subsystem(base, "engine_events"));
+    action_subscribe(this->on_physics, this, scene_update, &this->on_physics_subscription_token);
+}
+
+void scene_on_disable(struct subsystem *base) {
+    struct scene *this = (struct scene*)base;
+    this->awoken = false;
+    action_unsubscribe(this->on_physics, this->on_physics_subscription_token);
+    this->on_physics = NULL;
+    entity_collection_clear(this->entities);
+    tmap_clear(this->tmap);
+    chunks_clear(this->chunks);
+    prefab_manager_clear(this->prefab_manager);
+    rigid_materials_clear(this->rigid_materials);
+    rigid_layers_clear(this->rigid_layers);
+}
+
 
 
 static void scene_handle_switch(struct scene *this) {
@@ -122,24 +157,6 @@ static void scene_update(void *listener, void *context) {
 
 
 
-void scene_on_enable(struct subsystem *base, struct engine_arguments args) {
-    struct scene *this = (struct scene*)base;
-    this->awoken = true;
-    entity_collection_awake_everyone(this->entities);
-    this->on_physics = engine_events_on_physics((struct engine_events*)subsystem_get_subsystem(base, "engine_events"));
-    action_subscribe(this->on_physics, this, scene_update, &this->on_physics_subscription_token);
-}
-
-void scene_on_disable(struct subsystem *base) {
-    struct scene *this = (struct scene*)base;
-    this->awoken = false;
-    action_unsubscribe(this->on_physics, this->on_physics_subscription_token);
-    this->on_physics = NULL;
-    entity_collection_clear(this->entities);
-    tmap_clear(this->tmap);
-    chunks_clear(this->chunks);
-    prefab_manager_clear(this->prefab_manager);
-}
 
 const char* scene_get_name(const struct scene *this) {
     return this->name;
