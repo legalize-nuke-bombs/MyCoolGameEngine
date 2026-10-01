@@ -7,11 +7,11 @@ once map_deps start
     renderer_layer_manager new_layer bg2 2
     renderer_layer_manager new_layer prop1 10
 
-    scene physics new_layer bg1 1
-    scene physics new_layer bg2 2
+    catalog add rigid_layer bg1 1
+    catalog add rigid_layer bg2 2
 
-    scene physics new_material ground 0.5
-    scene physics new_material ice 0.05
+    catalog add rigid_material ground 0.5
+    catalog add rigid_material ice 0.05
 
     texture_manager new_texture cube 64 64 textures/demo/cube.png lazy
     texture_manager new_texture tree1 72 65 textures/demo/tree1_tileset.png lazy

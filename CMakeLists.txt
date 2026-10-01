@@ -222,18 +222,6 @@ add_executable(MyCoolGameEngine main.c
         src/scene/physics/rigid_material.c
         src/scene/physics/rigid_layer.h
         src/scene/physics/rigid_layer.c
-        src/scene/physics/rigid_layers.h
-        src/scene/physics/rigid_layers.c
-        src/scene/physics/rigid_materials.h
-        src/scene/physics/rigid_materials.c
-        src/scene/physics/physics.h
-        src/scene/physics/physics.c
-        src/interpreter/scene/physics/interpreter_scene_physics.h
-        src/interpreter/scene/physics/interpreter_scene_physics.c
-        src/interpreter/scene/physics/interpreter_scene_physics_new_material.h
-        src/interpreter/scene/physics/interpreter_scene_physics_new_layer.h
-        src/interpreter/scene/physics/interpreter_scene_physics_new_material.c
-        src/interpreter/scene/physics/interpreter_scene_physics_new_layer.c
         src/scene/components/physics/rigid_surface.h
         src/scene/components/physics/rigid_surface.c
         src/catalogs/catalog.h

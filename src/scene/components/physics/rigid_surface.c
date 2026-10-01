@@ -7,10 +7,8 @@
 #include "../../entity.h"
 #include "../../scene.h"
 #include "../../../utils/parser.h"
-#include "../../../logging/logger.h"
-#include "../../physics/physics.h"
-#include "../../physics/rigid_layers.h"
-#include "../../physics/rigid_materials.h"
+#include "../../../catalogs/catalogs.h"
+#include "../../../subsystems/subsystem_collection.h"
 #include "../../../utils/dictionary.h"
 #include "../../chunks/chunks.h"
 #include "../../physics/rigid_layer.h"
@@ -44,25 +42,9 @@ struct component* rigid_surface_create(struct parser *parser, struct entity *par
     struct component *base = (struct component *) this;
     component_base_create(base, &rigid_surface_vtable, parent);
 
-    const struct physics* physics = scene_get_physics(entity_get_scene(component_get_parent(base)));
-    const struct rigid_layers* layers = physics_get_layers(physics);
-    const struct rigid_materials* materials = physics_get_materials(physics);
-
-    const char* layer_name = parser_next(parser);
-    if (layer_name != NULL) {
-        this->layer = rigid_layers_get(layers, layer_name);
-    }
-    if (this->layer == NULL) {
-        logger_warn("Rigid surface failed to find specified layer `%s`", layer_name ? layer_name : "<null>");
-    }
-
-    const char* material_name = parser_next(parser);
-    if (material_name != NULL) {
-        this->material = rigid_materials_get(materials, material_name);
-    }
-    if (this->material == NULL) {
-        logger_warn("Rigid surface failed to find specified material `%s`", material_name ? material_name : "<null>");
-    }
+    const struct catalogs* catalogs = (struct catalogs*)subsystem_collection_get(scene_get_subsystems(entity_get_scene(component_get_parent(base))), "catalogs");
+    this->layer = catalogs_get_item(catalogs, "rigid_layer", parser_next(parser));
+    this->material = catalogs_get_item(catalogs, "rigid_material", parser_next(parser));
 
     return base;
 }

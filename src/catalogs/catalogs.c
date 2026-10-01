@@ -4,6 +4,8 @@
 
 #include "catalog.h"
 #include "../logging/logger.h"
+#include "../scene/physics/rigid_layer.h"
+#include "../scene/physics/rigid_material.h"
 #include "../subsystems/subsystem_internal.h"
 #include "../utils/dictionary.h"
 #include "../utils/list.h"
@@ -48,6 +50,8 @@ static void catalogs_register(struct catalogs *this, const struct catalog_vtable
 
 // Catalogs are cleared from the last one to the first one: register a catalog after the catalogs its items point to
 static void catalogs_register_all(struct catalogs *this) {
+    catalogs_register(this, &rigid_layer_catalog_vtable);
+    catalogs_register(this, &rigid_material_catalog_vtable);
 }
 
 struct subsystem* catalogs_create(const struct subsystem_collection *subsystems) {

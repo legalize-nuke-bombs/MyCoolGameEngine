@@ -7,11 +7,10 @@
 #include <stdint.h>
 
 struct rigid_layer;
+struct catalog_vtable;
 
-struct rigid_layer* rigid_layer_create(char *name, uint8_t priority);
-void rigid_layer_destroy(struct rigid_layer* this);
+extern const struct catalog_vtable rigid_layer_catalog_vtable;
 
-const char* rigid_layer_get_name(const struct rigid_layer* this);
 uint8_t rigid_layer_get_priority(const struct rigid_layer* this);
 
 #endif //MYCOOLGAMEENGINE_RIGID_LAYER_H
