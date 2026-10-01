@@ -16,6 +16,7 @@
 #include "../logging/logger.h"
 #include "scene/interpreter_scene.h"
 #include "../subsystems/subsystem_internal.h"
+#include "../utils/action.h"
 #include "../utils/path.h"
 #include "core/interpreter_eval.h"
 #include "core/interpreter_ignore.h"
@@ -27,6 +28,8 @@ struct interpreter {
     struct subsystem base;
 
     const char* data_root;
+
+    struct action on_script_evaluated;
 
     struct interpreter_command_register *command_register;
 };
@@ -51,6 +54,8 @@ struct subsystem* interpreter_create(const struct subsystem_collection* subsyste
     struct subsystem* base = (struct subsystem*)interpreter;
     subsystem_create(base, &interpreter_vtable, subsystems);
 
+    interpreter->on_script_evaluated = action_create();
+
     interpreter->command_register = interpreter_command_register_create("Main", 3);
     interpreter_command_register_capture_command(interpreter->command_register, interpreter_print_as_interpreter_command(interpreter_print_create()));
     interpreter_command_register_capture_command(interpreter->command_register, interpreter_ignore_as_interpreter_command(interpreter_ignore_create()));
@@ -64,8 +69,9 @@ struct subsystem* interpreter_create(const struct subsystem_collection* subsyste
     return base;
 }
 void interpreter_on_destroy(struct subsystem* base) {
-    const struct interpreter *this = (struct interpreter*)base;
+    struct interpreter *this = (struct interpreter*)base;
     interpreter_command_register_destroy(this->command_register);
+    action_destroy(&this->on_script_evaluated);
 }
 
 void interpreter_on_enable(struct subsystem* base, const struct engine_arguments args) {
@@ -74,8 +80,9 @@ void interpreter_on_enable(struct subsystem* base, const struct engine_arguments
     this->data_root = args.data_root;
 }
 void interpreter_on_disable(struct subsystem* base) {
-    const struct interpreter *this = (struct interpreter*)base;
+    struct interpreter *this = (struct interpreter*)base;
     interpreter_command_register_disable(this->command_register);
+    action_clear(&this->on_script_evaluated);
 }
 
 static int interpreter_parse(const struct interpreter *this, struct parser *parser) {
@@ -109,6 +116,7 @@ static int interpreter_eval_quite(const struct interpreter *this, const char* sc
 int interpreter_eval(const struct interpreter *this, const char* rpath) {
     char* path = path_alloc_combined(this->data_root, rpath);
     logger_debug("Interpreter is executing %s...", path);
+    action_invoke(&this->on_script_evaluated, path);
     const int code = interpreter_eval_quite(this, path);
     free(path);
 
@@ -120,4 +128,8 @@ int interpreter_eval(const struct interpreter *this, const char* rpath) {
     }
 
     return code;
+}
+
+struct action* interpreter_get_action_on_script_evaluated(struct interpreter *this) {
+    return &this->on_script_evaluated;
 }

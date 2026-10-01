@@ -4,13 +4,16 @@
 
 #include "engine_restarter.h"
 
+#include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "../../logging/logger.h"
 #include "../../devices/keyboard.h"
+#include "../../interpreter/interpreter.h"
 #include "../../utils/action.h"
 #include "../../utils/file_listener.h"
-#include "../../utils/path.h"
+#include "../../utils/list.h"
 #include "../events/engine_events.h"
 #include "../update_context.h"
 #include "../../subsystems/subsystem_internal.h"
@@ -20,7 +23,7 @@
 struct engine_restarter {
     struct subsystem base;
 
-    struct file_listener *script_listener;
+    struct list script_listeners;
 
     struct engine_lifecycle* lifecycle;
 
@@ -29,6 +32,9 @@ struct engine_restarter {
 
     unsigned int pre_frame_token;
     struct action* pre_frame;
+
+    unsigned int on_script_evaluated_token;
+    struct action* on_script_evaluated;
 };
 
 
@@ -36,12 +42,13 @@ static const char* engine_restarter_get_name() {
     return "engine_restarter";
 }
 
+static void engine_restarter_on_destroy(struct subsystem* base);
 static void engine_restarter_on_enable(struct subsystem* base, struct engine_arguments args);
 static void engine_restarter_on_disable(struct subsystem* base);
 
 static struct subsystem_vtable engine_restarter_vtable = {
     .name = engine_restarter_get_name,
-    .on_destroy = NULL,
+    .on_destroy = engine_restarter_on_destroy,
     .on_enable = engine_restarter_on_enable,
     .on_disable = engine_restarter_on_disable
 };
@@ -51,7 +58,12 @@ struct subsystem* engine_restarter_create(const struct subsystem_collection *sub
     struct engine_restarter* this = calloc(1, sizeof(struct engine_restarter));
     struct subsystem* base = (struct subsystem*)this;
     subsystem_create(base, &engine_restarter_vtable, subsystems);
+    this->script_listeners = list_create(4);
     return base;
+}
+void engine_restarter_on_destroy(struct subsystem *base) {
+    struct engine_restarter* this = (struct engine_restarter*)base;
+    list_destroy(&this->script_listeners);
 }
 
 static void engine_restarter_fire(const struct engine_restarter* this) {
@@ -69,9 +81,26 @@ static void engine_restarter_handle_hotkey(void* listener, void *context) {
 static void engine_restarter_handle_pre_frame(void *listener, void *context) {
     const struct engine_restarter *this = listener;
     const struct update_context* update_context = context;
-    if (file_listener_update(this->script_listener, update_context->dt)) {
+    bool changed = false;
+    for (int i = 0; i < list_count(&this->script_listeners); i++) {
+        if (file_listener_update(list_get(&this->script_listeners, i), update_context->dt)) {
+            changed = true;
+        }
+    }
+    if (changed) {
         engine_restarter_fire(this);
     }
+}
+
+static void engine_restarter_handle_script_evaluated(void *listener, void *context) {
+    struct engine_restarter *this = listener;
+    const char* script_path = context;
+    for (int i = 0; i < list_count(&this->script_listeners); i++) {
+        if (strcmp(file_listener_get_path(list_get(&this->script_listeners, i)), script_path) == 0) {
+            return;
+        }
+    }
+    list_add(&this->script_listeners, file_listener_create(script_path));
 }
 
 void engine_restarter_on_enable(struct subsystem *base, const struct engine_arguments args) {
@@ -81,10 +110,6 @@ void engine_restarter_on_enable(struct subsystem *base, const struct engine_argu
         return;
     }
 
-    char* script_path = path_alloc_combined(args.data_root, args.script_path);
-    this->script_listener = file_listener_create(script_path);
-    free(script_path);
-
     this->lifecycle = (struct engine_lifecycle*)subsystem_get_subsystem(base, "engine_lifecycle");
 
     this->on_hotkey = keyboard_require_action_on_key_pressed((struct keyboard*)subsystem_get_subsystem(base, "keyboard"), "F5");
@@ -92,13 +117,16 @@ void engine_restarter_on_enable(struct subsystem *base, const struct engine_argu
 
     this->pre_frame = engine_events_pre_frame((struct engine_events*)subsystem_get_subsystem(base, "engine_events"));
     action_subscribe(this->pre_frame, this, engine_restarter_handle_pre_frame, &this->pre_frame_token);
+
+    this->on_script_evaluated = interpreter_get_action_on_script_evaluated((struct interpreter*)subsystem_get_subsystem(base, "interpreter"));
+    action_subscribe(this->on_script_evaluated, this, engine_restarter_handle_script_evaluated, &this->on_script_evaluated_token);
 }
 void engine_restarter_on_disable(struct subsystem *base) {
     struct engine_restarter* this = (struct engine_restarter*)base;
-    if (this->script_listener != NULL) {
-        file_listener_destroy(this->script_listener);
-        this->script_listener = NULL;
+    for (int i = 0; i < list_count(&this->script_listeners); i++) {
+        file_listener_destroy(list_get(&this->script_listeners, i));
     }
+    list_clear(&this->script_listeners);
 
     this->lifecycle = NULL;
 
@@ -110,5 +138,10 @@ void engine_restarter_on_disable(struct subsystem *base) {
     if (this->pre_frame != NULL) {
         action_unsubscribe(this->pre_frame, this->pre_frame_token);
         this->pre_frame = NULL;
+    }
+
+    if (this->on_script_evaluated != NULL) {
+        action_unsubscribe(this->on_script_evaluated, this->on_script_evaluated_token);
+        this->on_script_evaluated = NULL;
     }
 }

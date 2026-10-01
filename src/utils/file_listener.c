@@ -41,6 +41,10 @@ void file_listener_destroy(struct file_listener *this) {
     free(this);
 }
 
+const char* file_listener_get_path(const struct file_listener *this) {
+    return this->path;
+}
+
 bool file_listener_update(struct file_listener *this, double dt) {
     this->timer += dt;
     if (this->timer < CHECK_INTERVAL) {
