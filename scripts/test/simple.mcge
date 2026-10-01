@@ -21,7 +21,7 @@ once simple_deps end
 
 
 
-scene add prefab Tree1 0 0 72 65
+catalog add prefab Tree1 0 0 72 65
     entity Tree1Body 0 0 1 1
         box_renderer prop1 texture tree1 0
         box_renderer_animated 0.1

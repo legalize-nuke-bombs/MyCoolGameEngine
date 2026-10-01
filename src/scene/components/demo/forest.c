@@ -11,7 +11,7 @@
 #include "../../../rendering/renderer_pipeline.h"
 #include "../../../utils/list.h"
 #include "../../../utils/parser.h"
-#include "../../prefabs/prefab_manager.h"
+#include "../../../catalogs/catalogs.h"
 #include "../../../subsystems/subsystem_collection.h"
 #include "../../../utils/vector2_math.h"
 #include "../../prefabs/prefab.h"
@@ -76,13 +76,13 @@ static void forest_awake(struct component *base) {
     const struct forest *this = (struct forest *) base;
 
     struct scene *scene = entity_get_scene(component_get_parent(base));
-    const struct prefab_manager* prefab_manager = scene_get_prefab_manager(scene);
+    const struct catalogs* catalogs = (struct catalogs*)subsystem_collection_get(scene_get_subsystems(scene), "catalogs");
     struct random* random = (struct random*)subsystem_collection_get(scene_get_subsystems(scene), "random");
 
     struct list prefabs = list_create(list_count(&this->prefabIds));
     for (int i = 0; i < list_count(&this->prefabIds); i++) {
         const char* prefab_id = list_get(&this->prefabIds, i);
-        struct prefab *prefab = prefab_manager_try_get(prefab_manager, prefab_id);
+        struct prefab *prefab = catalogs_get_item(catalogs, "prefab", prefab_id);
         if (prefab == NULL) {
             continue;
         }

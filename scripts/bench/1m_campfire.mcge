@@ -12,7 +12,7 @@ once 1m_campfire_deps start
     catalog add texture gcirc5 512 512 textures/core/gcirc5.png lazy
     catalog add texture gcirc6 512 512 textures/core/gcirc6.png lazy
 
-    scene add prefab Campfire 100 300 64 64
+    catalog add prefab Campfire 100 300 64 64
         box_renderer prop1 texture campfire 0
         box_renderer_animated 0.1
         entity Light 0 0 2 2

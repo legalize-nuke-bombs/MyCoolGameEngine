@@ -15,7 +15,6 @@
 #include "../subsystems/subsystem_internal.h"
 #include "chunks/chunks.h"
 #include "components/component_fabric.h"
-#include "prefabs/prefab_manager.h"
 #include "../subsystems/subsystem_collection.h"
 #include "../interpreter/interpreter.h"
 
@@ -36,7 +35,6 @@ struct scene {
 
     struct component_fabric* component_fabric;
     struct chunks* chunks;
-    struct prefab_manager* prefab_manager;
 };
 
 static const char* scene_get_subsystem_key() {
@@ -64,7 +62,6 @@ struct subsystem* scene_create(char *name, const struct subsystem_collection *su
     this->tmap = tmap_create();
     this->component_fabric = component_fabric_create();
     this->chunks = chunks_create();
-    this->prefab_manager = prefab_manager_create();
 
     return base;
 }
@@ -73,7 +70,6 @@ void scene_on_destroy(struct subsystem *base) {
     const struct scene *this = (struct scene*)base;
     logger_info("Scene %s is destroying...", this->name);
 
-    prefab_manager_destroy(this->prefab_manager);
     component_fabric_destroy(this->component_fabric);
     chunks_destroy(this->chunks);
     entity_collection_destroy(this->entities);
@@ -102,7 +98,6 @@ void scene_on_disable(struct subsystem *base) {
     entity_collection_clear(this->entities);
     tmap_clear(this->tmap);
     chunks_clear(this->chunks);
-    prefab_manager_clear(this->prefab_manager);
 }
 
 
@@ -165,9 +160,6 @@ const struct component_fabric* scene_get_component_fabric(const struct scene* th
 }
 const struct chunks* scene_get_chunks(const struct scene *this) {
     return this->chunks;
-}
-const struct prefab_manager* scene_get_prefab_manager(const struct scene *this) {
-    return this->prefab_manager;
 }
 const struct subsystem_collection* scene_get_subsystems(const struct scene* this) {
     return subsystem_get_subsystems((const struct subsystem*)this);

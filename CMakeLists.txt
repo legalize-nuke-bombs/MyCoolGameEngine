@@ -179,8 +179,8 @@ add_executable(MyCoolGameEngine main.c
         src/scene/components/rendering/box_renderer_animated.c
         src/scene/prefabs/prefab.h
         src/scene/prefabs/prefab.c
-        src/scene/prefabs/prefab_manager.h
-        src/scene/prefabs/prefab_manager.c
+        src/scene/entity_parser.h
+        src/scene/entity_parser.c
         src/scene/components/demo/forest.h
         src/scene/components/demo/forest.c
         src/random/random.h

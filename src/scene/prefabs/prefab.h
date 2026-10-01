@@ -7,6 +7,9 @@
 
 struct prefab;
 struct entity;
+struct catalog_vtable;
+
+extern const struct catalog_vtable prefab_catalog_vtable;
 
 struct prefab* prefab_create(char* name, struct entity* entity);
 void prefab_destroy(struct prefab* this);

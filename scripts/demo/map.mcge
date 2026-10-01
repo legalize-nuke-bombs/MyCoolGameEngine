@@ -30,42 +30,42 @@ once map_deps start
     catalog add texture gcirc5 512 512 textures/core/gcirc5.png lazy
     catalog add texture gcirc6 512 512 textures/core/gcirc6.png lazy
 
-    scene add prefab Tree1 0 0 72 65
+    catalog add prefab Tree1 0 0 72 65
         box_renderer prop1 texture tree1 0
         box_renderer_animated 0.1
     end
 
-    scene add prefab Tree2 0 0 72 65
+    catalog add prefab Tree2 0 0 72 65
         box_renderer prop1 texture tree2 0
         box_renderer_animated 0.1
     end
 
-    scene add prefab Tree3 0 0 72 65
+    catalog add prefab Tree3 0 0 72 65
         box_renderer prop1 texture tree3 0
         box_renderer_animated 0.1
     end
 
-    scene add prefab Tree4 0 0 72 65
+    catalog add prefab Tree4 0 0 72 65
         box_renderer prop1 texture tree4 0
         box_renderer_animated 0.1
     end
 
-    scene add prefab Tree5 0 0 72 65
+    catalog add prefab Tree5 0 0 72 65
         box_renderer prop1 texture tree5 0
         box_renderer_animated 0.1
     end
 
-    scene add prefab Tree6 0 0 72 65
+    catalog add prefab Tree6 0 0 72 65
         box_renderer prop1 texture tree6 0
         box_renderer_animated 0.1
     end
 
-    scene add prefab Tree7 0 0 72 65
+    catalog add prefab Tree7 0 0 72 65
         box_renderer prop1 texture tree7 0
         box_renderer_animated 0.1
     end
 
-    scene add prefab Tree8 0 0 72 65
+    catalog add prefab Tree8 0 0 72 65
         box_renderer prop1 texture tree8 0
         box_renderer_animated 0.1
     end

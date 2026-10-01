@@ -1,4 +1,4 @@
-scene add prefab IdleEntity 0 0 1 1
+catalog add prefab IdleEntity 0 0 1 1
     idle
 end
 
