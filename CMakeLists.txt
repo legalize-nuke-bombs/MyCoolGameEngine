@@ -212,6 +212,8 @@ add_executable(MyCoolGameEngine main.c
         src/interpreter/core/interpreter_eval.c
         src/interpreter/core/interpreter_once.h
         src/interpreter/core/interpreter_once.c
+        src/scene/components/demo/game_closer.h
+        src/scene/components/demo/game_closer.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)

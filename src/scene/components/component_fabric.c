@@ -14,6 +14,7 @@
 #include "core/keyboard_controller.h"
 #include "core/pulsator.h"
 #include "demo/forest.h"
+#include "demo/game_closer.h"
 #include "demo/scene_switcher.h"
 #include "rendering/box_renderer.h"
 #include "rendering/camera.h"
@@ -46,6 +47,7 @@ static void component_fabric_register_all(const struct component_fabric *this) {
     component_fabric_register_component(this, keyboard_controller_component_key(), keyboard_controller_create);
     component_fabric_register_component(this, forest_component_key(), forest_create);
     component_fabric_register_component(this, scene_switcher_component_key(), scene_switcher_create);
+    component_fabric_register_component(this, game_closer_component_key(), game_closer_create);
 }
 
 struct component_fabric* component_fabric_create() {
