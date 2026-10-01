@@ -221,6 +221,8 @@ add_executable(MyCoolGameEngine main.c
         src/interpreter/catalogs/interpreter_catalog.c
         src/interpreter/catalogs/interpreter_catalog_add.h
         src/interpreter/catalogs/interpreter_catalog_add.c
+        src/scene/components/core/simulator.h
+        src/scene/components/core/simulator.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)
