@@ -14,6 +14,7 @@
 #include "core/idle.h"
 #include "core/keyboard_controller.h"
 #include "core/pulsator.h"
+#include "core/sky.h"
 #include "demo/forest.h"
 #include "demo/game_closer.h"
 #include "demo/scene_switcher.h"
@@ -50,6 +51,7 @@ static void component_fabric_register_all(const struct component_fabric *this) {
     component_fabric_register_component(this, scene_switcher_component_key(), scene_switcher_create);
     component_fabric_register_component(this, game_closer_component_key(), game_closer_create);
     component_fabric_register_component(this, clock_component_key(), clock_create);
+    component_fabric_register_component(this, sky_component_key(), sky_create);
 }
 
 struct component_fabric* component_fabric_create() {

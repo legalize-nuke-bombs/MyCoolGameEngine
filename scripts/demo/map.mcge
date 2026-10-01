@@ -79,8 +79,8 @@ scene add entity Terrain 0 0 10000 10000
 end
 
 scene add entity GameState 0 0 1 1
-    renderer_settings 1 50 50 80 255
-    clock 3600
+    clock 36000 3600
+    sky 200 200 200 255 50 50 80 255
     scene_switcher Escape scripts/demo/menu.mcge
 end
 

@@ -7,9 +7,12 @@
 
 struct parser;
 struct entity;
+struct clock;
 
 const char* clock_component_key(void);
 
 struct component* clock_create(struct parser* parser, struct entity *parent);
+
+double clock_get_cycle_progress(const struct clock *this);
 
 #endif //MYCOOLGAMEENGINE_CLOCK_H
