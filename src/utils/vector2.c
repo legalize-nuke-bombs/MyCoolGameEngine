@@ -9,3 +9,5 @@ const struct vector2 vector2_one = { .x = 1.0, .y = 1.0 };
 const struct vector2 vector2_10 = {.x = 10.0, .y = 10.0};
 const struct vector2 vector2_100 = {.x = 100.0, .y = 100.0};
 const struct vector2 vector2_1000 = {.x = 1000.0, .y = 1000.0};
+const struct vector2 vector2_10000 = {.x = 10000.0, .y = 10000.0};
+const struct vector2 vector2_100000 = {.x = 100000.0, .y = 100000.0};

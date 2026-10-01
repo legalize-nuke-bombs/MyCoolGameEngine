@@ -12,13 +12,15 @@
 
 #define MASS_INF 1e+9
 #define FRICTION_DEFAULT 0.5
-#define GRAVITY 10000
+#define GRAVITY 320
 
 
 struct rigid_body {
     struct component base;
     double m;
+
     struct vector2 v;
+    struct vector2 f_sum;
 };
 
 static struct component* rigid_body_clone(struct component base, const struct component *component);
@@ -56,35 +58,38 @@ static struct component* rigid_body_clone(struct component base, const struct co
 
 static void rigid_body_simulation_chunk_update(struct component* base, const struct update_context *context) {
     struct rigid_body *this = (struct rigid_body *) base;
-
     const double dt = context->dt;
 
-    rigid_body_push_off(this, vector2_1000, dt);
+    rigid_body_push(this, vector2_10000);
+
+    const double normal_force = this->m * GRAVITY;
+    const double max_friction = normal_force * FRICTION_DEFAULT;
+
+    const double force_sqr_len = vector_get_sqr_length(this->f_sum);
+    const double friction_sqr_len = max_friction * max_friction;
+
+    struct vector2 f_result = vector2_zero;
+
+    if (friction_sqr_len >= force_sqr_len) {
+        f_result = this->f_sum;
+    }
+    else if (force_sqr_len > 0.0) {
+        const struct vector2 direction = vector_normalize(this->f_sum);
+        f_result = vector_multiply_scalar(direction, max_friction);
+    }
+
+    const struct vector2 a = vector_multiply_scalar(f_result, 1.0 / this->m);
+
+    this->v = vector_sum(this->v, vector_multiply_scalar(a, dt));
 
     const struct vector2 d_pos = vector_multiply_scalar(this->v, dt);
-
     struct rect current_rect = component_get_rect(base);
     current_rect.position = vector_sum(current_rect.position, d_pos);
     entity_set_local_rect(component_get_parent(base), current_rect);
+
+    this->f_sum = vector2_zero;
 }
 
-void rigid_body_push_off(struct rigid_body *this, const struct vector2 push_force, const double dt) {
-    const double n = this->m * GRAVITY;
-    const double max_friction = n * FRICTION_DEFAULT;
-
-    const double push_sqr_len = vector_get_sqr_length(push_force);
-    const double friction_sqr_len = max_friction * max_friction;
-
-    struct vector2 result_f;
-
-    if (friction_sqr_len >= push_sqr_len) {
-        result_f = push_force;
-    }
-    else {
-        const struct vector2 direction = vector_normalize(push_force);
-        result_f = vector_multiply_scalar(direction, max_friction);
-    }
-
-    const struct vector2 result_v = vector_multiply_scalar(result_f, dt / this->m);
-    this->v = vector_sum(this->v, result_v);
+void rigid_body_push(struct rigid_body *this, const struct vector2 f) {
+    this->f_sum = vector_sum(this->f_sum, f);
 }

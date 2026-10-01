@@ -14,5 +14,7 @@ extern const struct vector2 vector2_one;
 extern const struct vector2 vector2_10;
 extern const struct vector2 vector2_100;
 extern const struct vector2 vector2_1000;
+extern const struct vector2 vector2_10000;
+extern const struct vector2 vector2_100000;
 
 #endif

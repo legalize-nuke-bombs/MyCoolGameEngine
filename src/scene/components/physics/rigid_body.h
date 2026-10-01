@@ -14,6 +14,6 @@ const char* rigid_body_component_key(void);
 
 struct component* rigid_body_create(struct parser *parser, struct entity *parent);
 
-void rigid_body_push_off(struct rigid_body *this, struct vector2 push_force, double dt);
+void rigid_body_push(struct rigid_body *this, struct vector2 f);
 
 #endif //MYCOOLGAMEENGINE_RIGID_BODY_H
