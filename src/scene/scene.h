@@ -22,6 +22,7 @@ const struct tmap* scene_get_tmap(const struct scene *this);
 const struct component_fabric* scene_get_component_fabric(const struct scene* this);
 const struct chunks* scene_get_chunks(const struct scene *this);
 const struct prefab_manager* scene_get_prefab_manager(const struct scene *this);
+const struct physics* scene_get_physics(const struct scene *this);
 const struct subsystem_collection* scene_get_subsystems(const struct scene* this);
 
 void scene_capture_entity(struct scene *this, struct entity *entity);

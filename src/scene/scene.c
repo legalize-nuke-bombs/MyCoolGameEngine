@@ -18,6 +18,7 @@
 #include "prefabs/prefab_manager.h"
 #include "../subsystems/subsystem_collection.h"
 #include "../interpreter/interpreter.h"
+#include "physics/physics.h"
 #include "physics/rigid_layer.h"
 #include "physics/rigid_layers.h"
 #include "physics/rigid_materials.h"
@@ -40,8 +41,7 @@ struct scene {
     struct component_fabric* component_fabric;
     struct chunks* chunks;
     struct prefab_manager* prefab_manager;
-    struct rigid_layers *rigid_layers;
-    struct rigid_materials *rigid_materials;
+    struct physics* physics;
 };
 
 static const char* scene_get_subsystem_key() {
@@ -70,8 +70,7 @@ struct subsystem* scene_create(char *name, const struct subsystem_collection *su
     this->component_fabric = component_fabric_create();
     this->chunks = chunks_create();
     this->prefab_manager = prefab_manager_create();
-    this->rigid_layers = rigid_layers_create();
-    this->rigid_materials = rigid_materials_create();
+    this->physics = physics_create();
 
     return base;
 }
@@ -80,8 +79,7 @@ void scene_on_destroy(struct subsystem *base) {
     const struct scene *this = (struct scene*)base;
     logger_info("Scene %s is destroying...", this->name);
 
-    rigid_materials_destroy(this->rigid_materials);
-    rigid_layers_destroy(this->rigid_layers);
+    physics_destroy(this->physics);
     prefab_manager_destroy(this->prefab_manager);
     component_fabric_destroy(this->component_fabric);
     chunks_destroy(this->chunks);
@@ -112,8 +110,7 @@ void scene_on_disable(struct subsystem *base) {
     tmap_clear(this->tmap);
     chunks_clear(this->chunks);
     prefab_manager_clear(this->prefab_manager);
-    rigid_materials_clear(this->rigid_materials);
-    rigid_layers_clear(this->rigid_layers);
+    physics_clear(this->physics);
 }
 
 
@@ -179,6 +176,9 @@ const struct chunks* scene_get_chunks(const struct scene *this) {
 }
 const struct prefab_manager* scene_get_prefab_manager(const struct scene *this) {
     return this->prefab_manager;
+}
+const struct physics* scene_get_physics(const struct scene *this) {
+    return this->physics;
 }
 const struct subsystem_collection* scene_get_subsystems(const struct scene* this) {
     return subsystem_get_subsystems((const struct subsystem*)this);
