@@ -90,9 +90,13 @@ end
 
 scene add entity Cube 0 0 26 26
     box_renderer prop1 texture cube 0
-    camera 100
+    rigid_body 70
+end
+
+scene add entity CameraRig 0 0 1 1
     controller 250
     keyboard_controller
+    camera 100
 end
 
 scene add entity Campfire 100 300 64 64
