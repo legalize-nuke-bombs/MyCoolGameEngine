@@ -71,8 +71,6 @@ static void rigid_body_simulation_chunk_update(struct component* base, const str
     struct rigid_body *this = (struct rigid_body *) base;
     const double dt = context->dt;
 
-    rigid_body_push(this, vector2_10000);
-
     const double normal_force = this->m * GRAVITY;
     const double max_friction = normal_force * rigid_surface_get_friction(this->chunks, component_get_rect(base));
 

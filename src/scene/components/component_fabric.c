@@ -18,6 +18,7 @@
 #include "demo/forest.h"
 #include "demo/game_closer.h"
 #include "demo/scene_switcher.h"
+#include "physics/keyboard_rigid_controller.h"
 #include "physics/rigid_body.h"
 #include "physics/rigid_surface.h"
 #include "rendering/box_renderer.h"
@@ -56,6 +57,7 @@ static void component_fabric_register_all(const struct component_fabric *this) {
     component_fabric_register_component(this, sky_component_key(), sky_create);
     component_fabric_register_component(this, rigid_surface_component_key(), rigid_surface_create);
     component_fabric_register_component(this, rigid_body_component_key(), rigid_body_create);
+    component_fabric_register_component(this, keyboard_rigid_controller_component_key(), keyboard_rigid_controller_create);
 }
 
 struct component_fabric* component_fabric_create() {

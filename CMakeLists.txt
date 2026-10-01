@@ -212,6 +212,8 @@ add_executable(MyCoolGameEngine main.c
         src/scene/physics/rigid_layer.c
         src/scene/components/physics/rigid_surface.h
         src/scene/components/physics/rigid_surface.c
+        src/scene/components/physics/keyboard_rigid_controller.h
+        src/scene/components/physics/keyboard_rigid_controller.c
         src/catalogs/catalog.h
         src/catalogs/catalog.c
         src/catalogs/catalogs.h

@@ -105,11 +105,7 @@ end
 scene add entity Cube 0 0 26 26
     box_renderer prop1 texture cube 0
     rigid_body 50
-end
-
-scene add entity CameraRig 0 0 1 1
-    controller 250
-    keyboard_controller
+    keyboard_rigid_controller 10000
     camera 1000
 end
 
