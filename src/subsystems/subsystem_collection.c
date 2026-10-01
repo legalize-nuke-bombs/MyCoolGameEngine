@@ -8,6 +8,7 @@
 #include <string.h>
 
 #include "subsystem.h"
+#include "../catalogs/catalogs.h"
 #include "../devices/keyboard.h"
 #include "../logging/logger.h"
 #include "../scene/scene.h"
@@ -50,6 +51,7 @@ static void subsystem_collection_capture_all(struct subsystem_collection *this) 
     subsystem_collection_capture(this, engine_lifecycle_create(this));
     subsystem_collection_capture(this, engine_events_create(this));
     subsystem_collection_capture(this, keyboard_create(this));
+    subsystem_collection_capture(this, catalogs_create(this));
     subsystem_collection_capture(this, scene_create(strdup("Default scene"), this));
     subsystem_collection_capture(this, renderer_create(this));
     subsystem_collection_capture(this, interpreter_create(this));

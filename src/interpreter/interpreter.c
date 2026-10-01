@@ -17,6 +17,7 @@
 #include "scene/interpreter_scene.h"
 #include "../subsystems/subsystem_internal.h"
 #include "../utils/action.h"
+#include "catalogs/interpreter_catalog.h"
 #include "core/interpreter_eval.h"
 #include "core/interpreter_ignore.h"
 #include "core/interpreter_once.h"
@@ -58,6 +59,7 @@ struct subsystem* interpreter_create(const struct subsystem_collection* subsyste
     interpreter_command_register_capture_command(interpreter->command_register, interpreter_ignore_as_interpreter_command(interpreter_ignore_create()));
     interpreter_command_register_capture_command(interpreter->command_register, interpreter_eval_as_interpreter_command(interpreter_eval_create()));
     interpreter_command_register_capture_command(interpreter->command_register, interpreter_once_as_interpreter_command(interpreter_once_create()));
+    interpreter_command_register_capture_command(interpreter->command_register, interpreter_catalog_create());
     interpreter_command_register_capture_command(interpreter->command_register, interpreter_renderer_layer_manager_create());
     interpreter_command_register_capture_command(interpreter->command_register, interpreter_texture_manager_create());
     interpreter_command_register_capture_command(interpreter->command_register, interpreter_window_create());

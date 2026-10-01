@@ -236,6 +236,14 @@ add_executable(MyCoolGameEngine main.c
         src/interpreter/scene/physics/interpreter_scene_physics_new_layer.c
         src/scene/components/physics/rigid_surface.h
         src/scene/components/physics/rigid_surface.c
+        src/catalogs/catalog.h
+        src/catalogs/catalog.c
+        src/catalogs/catalogs.h
+        src/catalogs/catalogs.c
+        src/interpreter/catalogs/interpreter_catalog.h
+        src/interpreter/catalogs/interpreter_catalog.c
+        src/interpreter/catalogs/interpreter_catalog_add.h
+        src/interpreter/catalogs/interpreter_catalog_add.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)
