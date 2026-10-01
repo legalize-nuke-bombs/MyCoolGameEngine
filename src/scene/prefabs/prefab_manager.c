@@ -33,7 +33,7 @@ void prefab_manager_destroy(struct prefab_manager* this) {
 void prefab_manager_capture_prefab(const struct prefab_manager* this, struct prefab* prefab) {
     const char* prefab_key = prefab_get_name(prefab);
     if (!dictionary_try_add(this->dict, (void*)prefab_key, prefab)) {
-        logger_error("Prefab manager failed to capture prefab %s", prefab_key);
+        logger_warn("Prefab manager failed to capture prefab %s", prefab_key);
         prefab_destroy(prefab);
     }
 }

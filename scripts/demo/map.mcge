@@ -1,3 +1,77 @@
+
+
+/* Deps */
+once map_deps
+
+renderer_layer_manager new_layer bg1 1
+renderer_layer_manager new_layer prop1 10
+
+texture_manager new_texture cube 64 64 textures/demo/cube.png lazy 1
+texture_manager new_texture tree1 72 65 textures/demo/tree1_tileset.png lazy 1
+texture_manager new_texture tree2 72 65 textures/demo/tree2_tileset.png lazy 1
+texture_manager new_texture tree3 72 65 textures/demo/tree3_tileset.png lazy 1
+texture_manager new_texture tree4 72 65 textures/demo/tree4_tileset.png lazy 1
+texture_manager new_texture tree5 72 65 textures/demo/tree5_tileset.png lazy 1
+texture_manager new_texture tree6 72 65 textures/demo/tree6_tileset.png lazy 1
+texture_manager new_texture tree7 72 65 textures/demo/tree7_tileset.png lazy 1
+texture_manager new_texture tree8 72 65 textures/demo/tree8_tileset.png lazy 1
+texture_manager new_texture campfire 64 64 textures/demo/campfire.png lazy 1
+texture_manager new_texture gcirc1 512 512 textures/core/gcirc1.png lazy 1
+texture_manager new_texture gcirc2 512 512 textures/core/gcirc2.png lazy 1
+texture_manager new_texture gcirc3 512 512 textures/core/gcirc3.png lazy 1
+texture_manager new_texture gcirc4 512 512 textures/core/gcirc4.png lazy 1
+texture_manager new_texture gcirc5 512 512 textures/core/gcirc5.png lazy 1
+texture_manager new_texture gcirc6 512 512 textures/core/gcirc6.png lazy 1
+
+scene add prefab Tree1 0 0 72 65
+box_renderer prop1 texture tree1 0
+box_renderer_animated 0.1
+end
+
+scene add prefab Tree2 0 0 72 65
+box_renderer prop1 texture tree2 0
+box_renderer_animated 0.1
+end
+
+scene add prefab Tree3 0 0 72 65
+box_renderer prop1 texture tree3 0
+box_renderer_animated 0.1
+end
+
+scene add prefab Tree4 0 0 72 65
+box_renderer prop1 texture tree4 0
+box_renderer_animated 0.1
+end
+
+scene add prefab Tree5 0 0 72 65
+box_renderer prop1 texture tree5 0
+box_renderer_animated 0.1
+end
+
+scene add prefab Tree6 0 0 72 65
+box_renderer prop1 texture tree6 0
+box_renderer_animated 0.1
+end
+
+scene add prefab Tree7 0 0 72 65
+box_renderer prop1 texture tree7 0
+box_renderer_animated 0.1
+end
+
+scene add prefab Tree8 0 0 72 65
+box_renderer prop1 texture tree8 0
+box_renderer_animated 0.1
+end
+
+once_end
+
+
+
+
+
+
+/* Scene */
+
 scene add entity Terrain 0 0 10000 10000
 box_renderer bg1 color 54 78 62 255
 end
