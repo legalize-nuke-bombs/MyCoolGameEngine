@@ -10,13 +10,15 @@
 #include "../../../utils/vector2_math.h"
 
 
-#define INF 1e+9
+#define MASS_INF 1e+9
+#define FRICTION_DEFAULT 0.5
+#define GRAVITY 10000
 
 
 struct rigid_body {
     struct component base;
     double m;
-    struct vector2 a, v;
+    struct vector2 v;
 };
 
 static struct component* rigid_body_clone(struct component base, const struct component *component);
@@ -38,9 +40,7 @@ struct component* rigid_body_create(struct parser *parser, struct entity *parent
     component_base_create(base, &rigid_body_vtable, parent);
 
     parser_next_double(parser, &this->m);
-    if (this->m <= 0) this->m = INF;
-
-    this->a = vector2_10;
+    if (this->m <= 0) this->m = MASS_INF;
 
     return base;
 }
@@ -59,14 +59,32 @@ static void rigid_body_simulation_chunk_update(struct component* base, const str
 
     const double dt = context->dt;
 
-    const struct vector2 dv = vector_multiply_scalar(this->a, dt);
-    this->v = vector_sum(this->v, dv);
+    rigid_body_push_off(this, vector2_1000, dt);
 
     const struct vector2 d_pos = vector_multiply_scalar(this->v, dt);
 
     struct rect current_rect = component_get_rect(base);
     current_rect.position = vector_sum(current_rect.position, d_pos);
     entity_set_local_rect(component_get_parent(base), current_rect);
+}
 
-    logger_info("Rigid body moves with %f speed!", vector_get_length(this->v));
+void rigid_body_push_off(struct rigid_body *this, const struct vector2 push_force, const double dt) {
+    const double n = this->m * GRAVITY;
+    const double max_friction = n * FRICTION_DEFAULT;
+
+    const double push_sqr_len = vector_get_sqr_length(push_force);
+    const double friction_sqr_len = max_friction * max_friction;
+
+    struct vector2 result_f;
+
+    if (friction_sqr_len >= push_sqr_len) {
+        result_f = push_force;
+    }
+    else {
+        const struct vector2 direction = vector_normalize(push_force);
+        result_f = vector_multiply_scalar(direction, max_friction);
+    }
+
+    const struct vector2 result_v = vector_multiply_scalar(result_f, dt / this->m);
+    this->v = vector_sum(this->v, result_v);
 }

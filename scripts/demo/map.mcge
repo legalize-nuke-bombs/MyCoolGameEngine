@@ -102,7 +102,7 @@ end
 
 scene add entity Cube 0 0 26 26
     box_renderer prop1 texture cube 0
-    rigid_body 70
+    rigid_body 50
 end
 
 scene add entity CameraRig 0 0 1 1
