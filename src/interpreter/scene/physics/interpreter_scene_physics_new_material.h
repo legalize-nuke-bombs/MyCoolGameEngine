@@ -1,0 +1,10 @@
+//
+// Created by nikita on 01.10.2026.
+//
+
+#ifndef MYCOOLGAMEENGINE_INTERPRETER_SCENE_PHYSICS_NEW_MATERIAL_H
+#define MYCOOLGAMEENGINE_INTERPRETER_SCENE_PHYSICS_NEW_MATERIAL_H
+
+struct interpreter_command* interpreter_scene_physics_new_material_create();
+
+#endif //MYCOOLGAMEENGINE_INTERPRETER_SCENE_PHYSICS_NEW_MATERIAL_H
