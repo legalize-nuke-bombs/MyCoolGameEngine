@@ -12,6 +12,5 @@ struct subsystem* renderer_create(const struct subsystem_collection* subsystems)
 
 struct SDL_Renderer* renderer_get_native_renderer(const struct renderer* renderer);
 struct renderer_pipeline* renderer_get_pipeline(const struct renderer* this);
-struct texture_manager* renderer_get_texture_manager(const struct renderer* this);
 
 #endif //MYCOOLGAMEENGINE_RENDERER_H

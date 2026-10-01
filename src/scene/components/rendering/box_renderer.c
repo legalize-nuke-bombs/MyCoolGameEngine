@@ -15,7 +15,6 @@
 #include "../../../logging/logger.h"
 #include "../../../rendering/renderer.h"
 #include "../../../catalogs/catalogs.h"
-#include "../../../rendering/textures/texture_manager.h"
 #include "../../../utils/parser.h"
 #include "../../../subsystems/subsystem_collection.h"
 
@@ -67,13 +66,11 @@ struct component* box_renderer_create(struct parser *parser, struct entity *pare
         this->square = renderer_square_create_from_color(color);
     }
     else if (strcmp(type, "texture") == 0) {
-        const char* texture_name = parser_next(parser);
-        struct renderer* renderer = (struct renderer*)subsystem_collection_get(scene_get_subsystems(entity_get_scene(component_get_parent(base))), "renderer");
-        struct texture* texture = texture_manager_try_get_texture(renderer_get_texture_manager(renderer), texture_name);
+        const struct catalogs* catalogs = (struct catalogs*)subsystem_collection_get(scene_get_subsystems(entity_get_scene(component_get_parent(base))), "catalogs");
+        struct texture* texture = catalogs_get_item(catalogs, "texture", parser_next(parser));
         int texture_frame;
         parser_next_int(parser, &texture_frame);
         if (texture == NULL) {
-            logger_warn("Box renderer failed to find specified texture `%s`", texture_name);
             this->square = renderer_square_create_from_color(color_black);
         }
         else {

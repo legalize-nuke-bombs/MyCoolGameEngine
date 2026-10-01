@@ -9,6 +9,9 @@
 
 struct texture;
 struct SDL_Renderer;
+struct catalog_vtable;
+
+extern const struct catalog_vtable texture_catalog_vtable;
 
 struct texture* texture_create(char* id, char* path, int tile_w, int tile_h, enum texture_loading_mode loading_mode, struct SDL_Renderer* native_renderer);
 void texture_destroy(struct texture* this);

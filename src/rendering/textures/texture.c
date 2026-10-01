@@ -5,11 +5,16 @@
 #include "texture.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 
+#include "../renderer.h"
+#include "../../catalogs/catalog.h"
 #include "../../logging/logger.h"
+#include "../../subsystems/subsystem_collection.h"
+#include "../../utils/parser.h"
 
 struct texture {
     char* id;
@@ -62,6 +67,38 @@ void texture_destroy(struct texture* this) {
     }
     free(this);
 }
+
+static const char* texture_catalog_key(void) {
+    return "texture";
+}
+
+static void* texture_on_create_item(const char *name, struct parser *parser, const struct subsystem_collection *subsystems) {
+    int tile_w, tile_h;
+    parser_next_int(parser, &tile_w);
+    parser_next_int(parser, &tile_h);
+    char* path = parser_next_dup(parser);
+    const char* loading_mode_name = parser_next(parser);
+
+    enum texture_loading_mode loading_mode = texture_loading_mode_lazy;
+    if (loading_mode_name != NULL && strcmp(loading_mode_name, "eager") == 0) {
+        loading_mode = texture_loading_mode_eager;
+    }
+    else if (loading_mode_name == NULL || strcmp(loading_mode_name, "lazy") != 0) {
+        logger_warn("Unexpected texture loading mode `%s`, `lazy` will be used instead", loading_mode_name ? loading_mode_name : "<null>");
+    }
+
+    const struct renderer* renderer = (struct renderer*)subsystem_collection_get(subsystems, "renderer");
+    return texture_create(strdup(name), path, tile_w, tile_h, loading_mode, renderer_get_native_renderer(renderer));
+}
+static void texture_on_destroy_item(void *item) {
+    texture_destroy(item);
+}
+
+const struct catalog_vtable texture_catalog_vtable = {
+    .key = texture_catalog_key,
+    .on_create_item = texture_on_create_item,
+    .on_destroy_item = texture_on_destroy_item
+};
 
 const char* texture_get_id(const struct texture* this) {
     return this->id;
