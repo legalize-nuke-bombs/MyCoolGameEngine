@@ -9,6 +9,7 @@
 #include "../../utils/dictionary.h"
 #include "../../utils/string_dictionary.h"
 #include "../../logging/logger.h"
+#include "core/clock.h"
 #include "core/controller.h"
 #include "core/idle.h"
 #include "core/keyboard_controller.h"
@@ -48,6 +49,7 @@ static void component_fabric_register_all(const struct component_fabric *this) {
     component_fabric_register_component(this, forest_component_key(), forest_create);
     component_fabric_register_component(this, scene_switcher_component_key(), scene_switcher_create);
     component_fabric_register_component(this, game_closer_component_key(), game_closer_create);
+    component_fabric_register_component(this, clock_component_key(), clock_create);
 }
 
 struct component_fabric* component_fabric_create() {
