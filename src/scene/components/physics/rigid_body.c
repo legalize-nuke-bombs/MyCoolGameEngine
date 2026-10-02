@@ -69,6 +69,7 @@ static struct component* rigid_body_clone(struct component base, const struct co
     struct rigid_body* this = calloc(1, sizeof(struct rigid_body));
     this->base = base;
     this->m = rigid_body->m;
+    this->base_friction_coefficient = rigid_body->base_friction_coefficient;
     this->rolling_friction_coefficient = rigid_body->rolling_friction_coefficient;
     return (struct component*)this;
 }
