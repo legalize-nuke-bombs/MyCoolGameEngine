@@ -14,14 +14,17 @@
 #include "../../../utils/vector2_math.h"
 
 
-#define MASS_INF 1e+9
-#define FRICTION_DEFAULT 0.5
-#define GRAVITY 320
+#define INF 1e+9
+#define EPSILON 1e-9
+
+#define FRICTION_DEFAULT 0.5f
+#define GRAVITY 320.f
 
 
 struct rigid_body {
     struct component base;
     double m;
+    double rolling_friction_coefficient;
 
     struct vector2 v;
     struct vector2 f_sum;
@@ -50,7 +53,9 @@ struct component* rigid_body_create(struct parser *parser, struct entity *parent
     component_base_create(base, &rigid_body_vtable, parent);
 
     parser_next_double(parser, &this->m);
-    if (this->m <= 0) this->m = MASS_INF;
+    if (this->m < 0) this->m = INF;
+    parser_next_double(parser, &this->rolling_friction_coefficient);
+    if (this->rolling_friction_coefficient < 0) this->rolling_friction_coefficient = 0.1f;
 
     return base;
 }
@@ -61,6 +66,7 @@ static struct component* rigid_body_clone(struct component base, const struct co
     struct rigid_body* this = calloc(1, sizeof(struct rigid_body));
     this->base = base;
     this->m = rigid_body->m;
+    this->rolling_friction_coefficient = rigid_body->rolling_friction_coefficient;
     return (struct component*)this;
 }
 
@@ -75,7 +81,7 @@ static void rigid_body_apply_force(struct rigid_body *this, const double dt) {
     this->f_sum = vector2_zero;
 }
 
-static void rigid_body_apply_friction(struct rigid_body *this, const double dt) {
+static void rigid_body_apply_rolling_friction(struct rigid_body *this, const double dt) {
     const double v_scalar = vector_get_length(this->v);
     if (v_scalar <= 0.0001f) {
         this->v = vector2_zero;
@@ -85,7 +91,7 @@ static void rigid_body_apply_friction(struct rigid_body *this, const double dt) 
     const double f_input_scalar = this->m * v_scalar / dt;
 
     const struct vector2 f_friction_direction = vector_multiply_scalar(v_direction, -1);
-    const double f_max_friction_scalar = this->m * GRAVITY * rigid_surface_get_friction(this->chunks, component_get_rect((struct component*)this));
+    const double f_max_friction_scalar = this->m * GRAVITY * this->rolling_friction_coefficient * rigid_surface_get_friction(this->chunks, component_get_rect((struct component*)this));
     const double f_friction_scalar = f_input_scalar >= f_max_friction_scalar ? f_max_friction_scalar : f_input_scalar;
     const struct vector2 f_friction = vector_multiply_scalar(f_friction_direction, f_friction_scalar);
 
@@ -107,10 +113,24 @@ static void rigid_body_simulation_chunk_update(struct component* base, const str
     const double dt = context->dt;
 
     rigid_body_apply_force(this, dt);
-    rigid_body_apply_friction(this, dt);
+    rigid_body_apply_rolling_friction(this, dt);
     rigid_body_move(this, dt);
 }
 
 void rigid_body_push(struct rigid_body *this, const struct vector2 f) {
     this->f_sum = vector_sum(this->f_sum, f);
+}
+
+void rigid_body_push_off(struct rigid_body *this, const struct vector2 f) {
+    const double f_scalar = vector_get_length(f);
+    if (f_scalar <= EPSILON) {
+        return;
+    }
+    const struct vector2 f_direction = vector_multiply_scalar(f, 1.0 / f_scalar);
+
+    const double f_friction_scalar_max = this->m * GRAVITY * rigid_surface_get_friction(this->chunks, component_get_rect((struct component*)this));
+
+    const double f_result_scalar = f_scalar >= f_friction_scalar_max ? f_friction_scalar_max : f_scalar;
+    const struct vector2 f_result = vector_multiply_scalar(f_direction, f_result_scalar);
+    this->f_sum = vector_sum(this->f_sum, f_result);
 }

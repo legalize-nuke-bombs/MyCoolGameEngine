@@ -63,7 +63,7 @@ static void keyboard_rigid_controller_on_update(struct component* base, const st
         direction.x += 1.0;
     }
 
-    rigid_body_push(this->rigid_body, vector_multiply_scalar(vector_normalize(direction), this->force));
+    rigid_body_push_off(this->rigid_body, vector_multiply_scalar(vector_normalize(direction), this->force));
 }
 
 static void keyboard_rigid_controller_on_awake(struct component* base) {
