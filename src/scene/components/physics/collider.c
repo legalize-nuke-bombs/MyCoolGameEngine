@@ -38,6 +38,7 @@ static bool collider_is_chunkable() {
 static void collider_on_destroy(struct component *component);
 static void collider_on_awake(struct component *base);
 static void collider_on_movement(struct component *base);
+static void collider_on_disable(struct component *base);
 
 static const struct component_vtable collider_vtable = {
     .component_key = collider_component_key,
@@ -45,7 +46,8 @@ static const struct component_vtable collider_vtable = {
     .on_destroy = collider_on_destroy,
     .on_awake = collider_on_awake,
     .is_chunkable = collider_is_chunkable,
-    .on_movement = collider_on_movement
+    .on_movement = collider_on_movement,
+    .on_disable = collider_on_disable
 };
 
 struct component* collider_create(struct parser *parser, struct entity *parent) {
@@ -143,6 +145,19 @@ static void collider_validate_old_intersections(struct collider *this, const str
     if (dictionary_count(this->intersections) == 0) {
         dictionary_destroy(this->intersections);
         this->intersections = NULL;
+    }
+}
+
+static void collider_on_disable(struct component *base) {
+    struct collider *this = (struct collider*)base;
+
+    if (this->intersections == NULL) {
+        return;
+    }
+    struct dictionary_iterator intersections_iterator = dictionary_begin(this->intersections);
+    struct dictionary_node node;
+    while (dictionary_next(this->intersections, &intersections_iterator, &node)) {
+        collider_handle_on_trigger_exit(this, node.value, true);
     }
 }
 
