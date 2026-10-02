@@ -21,14 +21,15 @@ struct rect rect_sub(const struct rect *rect1, const struct rect *rect2) {
     return result;
 }
 
-struct rect rect_sdl(const struct rect *obj, const struct rect *viewport) {
+struct rect rect_sdl(const struct rect *obj, const struct rect *viewport, const struct vector2 output_size) {
+    const double pixels_per_meter = output_size.y / viewport->size.y;
     const struct vector2 half_viewport_size = vector_multiply_scalar(viewport->size, 0.5);
     const struct rect result = {
         .position = {
-            .x = half_viewport_size.x + (obj->position.x - viewport->position.x) - (obj->size.x / 2.0f),
-            .y = half_viewport_size.y - (obj->position.y - viewport->position.y) - (obj->size.y / 2.0f)
+            .x = (half_viewport_size.x + (obj->position.x - viewport->position.x) - (obj->size.x / 2.0f)) * pixels_per_meter,
+            .y = (half_viewport_size.y - (obj->position.y - viewport->position.y) - (obj->size.y / 2.0f)) * pixels_per_meter
         },
-        .size = obj->size
+        .size = vector_multiply_scalar(obj->size, pixels_per_meter)
     };
     return result;
 }

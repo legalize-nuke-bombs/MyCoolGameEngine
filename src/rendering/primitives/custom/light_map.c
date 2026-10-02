@@ -27,7 +27,7 @@ struct light_map {
     int dropped_draw_calls_count;
 };
 
-static void light_map_draw(struct renderer_primitive* base, struct rect rect, struct rect viewport, SDL_Renderer* renderer);
+static void light_map_draw(struct renderer_primitive* base, struct rect rect, struct rect viewport, struct vector2 output_size, SDL_Renderer* renderer);
 static bool light_map_is_visible(struct renderer_primitive* base, struct rect rect, struct rect viewport);
 static void light_map_on_destroy(struct renderer_primitive* base);
 
@@ -94,7 +94,7 @@ void light_map_clear_draw_calls(struct light_map* this) {
     this->dropped_draw_calls_count = 0;
 }
 
-static void light_map_draw(struct renderer_primitive* base, const struct rect rect, const struct rect viewport, SDL_Renderer* native_renderer) {
+static void light_map_draw(struct renderer_primitive* base, const struct rect rect, const struct rect viewport, const struct vector2 output_size, SDL_Renderer* native_renderer) {
     struct light_map* this = (struct light_map*)base;
     if (!this->enabled) {
         return;
@@ -124,7 +124,7 @@ static void light_map_draw(struct renderer_primitive* base, const struct rect re
         }
 
         SDL_SetRenderDrawBlendMode(native_renderer, this->light_source_blend_mode);
-        renderer_primitive_draw(draw_call.primitive, draw_call.rect, viewport, native_renderer);
+        renderer_primitive_draw(draw_call.primitive, draw_call.rect, viewport, output_size, native_renderer);
     }
     light_map_clear_draw_calls(this);
 

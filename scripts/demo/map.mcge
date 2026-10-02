@@ -106,7 +106,7 @@ scene add entity Cube 0 0 26 26
     box_renderer prop1 texture cube 0
     rigid_body 50 10 0.2
     keyboard_rigid_controller 200 W S A D
-    camera
+    camera 600
     simulator 500
 end
 

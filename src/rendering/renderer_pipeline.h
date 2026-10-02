@@ -16,9 +16,11 @@ struct renderer_layer;
 struct renderer_pipeline* renderer_pipeline_create(struct SDL_Renderer *native_renderer);
 void renderer_pipeline_destroy(struct renderer_pipeline *this);
 
-void renderer_pipeline_set_viewpoint(struct renderer_pipeline *this, struct vector2 viewpoint);
+void renderer_pipeline_set_viewport(struct renderer_pipeline *this, struct rect viewport);
 void renderer_pipeline_remove_viewport(struct renderer_pipeline *this);
-struct rect renderer_pipeline_get_viewport(struct renderer_pipeline *this);
+struct rect renderer_pipeline_get_viewport(const struct renderer_pipeline *this);
+
+struct vector2 renderer_pipeline_get_output_size(const struct renderer_pipeline *this);
 
 struct renderer_pipeline_draw_call {
     struct rect rect;

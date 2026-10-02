@@ -10,7 +10,7 @@
 struct SDL_Renderer;
 struct renderer_primitive;
 
-void renderer_primitive_draw(struct renderer_primitive* this, struct rect rect, struct rect viewport, struct SDL_Renderer* renderer);
+void renderer_primitive_draw(struct renderer_primitive* this, struct rect rect, struct rect viewport, struct vector2 output_size, struct SDL_Renderer* renderer);
 
 bool renderer_primitive_is_visible(struct renderer_primitive* this, struct rect rect, struct rect viewport);
 

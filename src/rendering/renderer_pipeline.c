@@ -45,12 +45,25 @@ void renderer_pipeline_destroy(struct renderer_pipeline *this) {
     free(this);
 }
 
-void renderer_pipeline_set_viewpoint(struct renderer_pipeline *this, const struct vector2 viewpoint) {
-    this->viewport.position = viewpoint;
+void renderer_pipeline_set_viewport(struct renderer_pipeline *this, const struct rect viewport) {
+    this->viewport = viewport;
     this->viewport_enabled = true;
 }
 void renderer_pipeline_remove_viewport(struct renderer_pipeline *this) {
     this->viewport_enabled = false;
+}
+struct rect renderer_pipeline_get_viewport(const struct renderer_pipeline *this) {
+    return this->viewport;
+}
+
+struct vector2 renderer_pipeline_get_output_size(const struct renderer_pipeline *this) {
+    int native_renderer_w, native_renderer_h;
+    SDL_GetRenderOutputSize(this->native_renderer, &native_renderer_w, &native_renderer_h);
+    const struct vector2 output_size = {
+        .x = native_renderer_w,
+        .y = native_renderer_h
+    };
+    return output_size;
 }
 
 
@@ -64,17 +77,6 @@ void renderer_pipeline_draw_primitive(struct renderer_pipeline *this, struct ren
         return;
     }
     this->draw_calls[this->draw_calls_count++] = draw_call;
-}
-
-static void renderer_pipeline_update_viewport_resolution(struct renderer_pipeline *this) {
-    int native_renderer_w, native_renderer_h;
-    SDL_GetRenderOutputSize(this->native_renderer, &native_renderer_w, &native_renderer_h);
-    this->viewport.size.x = native_renderer_w;
-    this->viewport.size.y = native_renderer_h;
-}
-struct rect renderer_pipeline_get_viewport(struct renderer_pipeline *this) {
-    renderer_pipeline_update_viewport_resolution(this);
-    return this->viewport;
 }
 
 static int draw_calls_compare(const void *a, const void *b) {
@@ -123,7 +125,7 @@ void renderer_pipeline_flush(struct renderer_pipeline *this) {
         .layer = this->light_map_layer
     };
 
-    renderer_pipeline_update_viewport_resolution(this);
+    const struct vector2 output_size = renderer_pipeline_get_output_size(this);
 
     qsort(
            this->draw_calls,
@@ -134,7 +136,7 @@ void renderer_pipeline_flush(struct renderer_pipeline *this) {
 
     for (int i = 0; i < this->draw_calls_count; i++) {
         const struct renderer_pipeline_draw_call draw_call = this->draw_calls[i];
-        renderer_primitive_draw(draw_call.primitive, draw_call.rect, this->viewport, this->native_renderer);
+        renderer_primitive_draw(draw_call.primitive, draw_call.rect, this->viewport, output_size, this->native_renderer);
     }
 
     this->draw_calls_count = 0;

@@ -19,10 +19,10 @@ struct renderer_square {
     unsigned long long texture_frame;
 };
 
-static void renderer_square_draw(struct renderer_primitive* base, const struct rect rect, const struct rect viewport, SDL_Renderer* renderer) {
+static void renderer_square_draw(struct renderer_primitive* base, const struct rect rect, const struct rect viewport, const struct vector2 output_size, SDL_Renderer* renderer) {
     const struct renderer_square* this = (struct renderer_square*)base;
 
-    const struct rect target_rect = rect_sdl(&rect, &viewport);
+    const struct rect target_rect = rect_sdl(&rect, &viewport, output_size);
     const SDL_FRect sdl_target_rect = {
         .x = target_rect.position.x,
         .y = target_rect.position.y,

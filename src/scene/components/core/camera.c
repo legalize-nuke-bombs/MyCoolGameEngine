@@ -10,10 +10,13 @@
 #include "../../../subsystems/subsystem_collection.h"
 #include "../../chunks/chunks.h"
 #include "../../../utils/dictionary.h"
+#include "../../../utils/parser.h"
 
 
 struct camera {
     struct component base;
+
+    double visible_height;
 
     struct renderer_pipeline *renderer;
     const struct chunks *chunks;
@@ -41,6 +44,8 @@ struct component* camera_create(struct parser *parser, struct entity *parent) {
     struct component *base = (struct component *) this;
     component_base_create(base, &camera_vtable, parent);
 
+    parser_next_double(parser, &this->visible_height);
+
     return base;
 }
 
@@ -49,6 +54,7 @@ static struct component* camera_clone(struct component base, const struct compon
 
     struct camera* this = calloc(1, sizeof(struct camera));
     this->base = base;
+    this->visible_height = camera->visible_height;
     return (struct component*)this;
 }
 
@@ -61,7 +67,18 @@ static void camera_awake(struct component *base) {
 }
 
 static void camera_update_renderer_pipeline_viewport(const struct camera *this) {
-    renderer_pipeline_set_viewpoint(this->renderer, component_get_rect((struct component*)this).position);
+    const struct vector2 output_size = renderer_pipeline_get_output_size(this->renderer);
+    if (output_size.y <= 0 || this->visible_height <= 0) {
+        renderer_pipeline_remove_viewport(this->renderer);
+        return;
+    }
+    const double pixels_per_meter = output_size.y / this->visible_height;
+
+    const struct rect viewport = {
+        .position = component_get_rect((struct component*)this).position,
+        .size = { output_size.x / pixels_per_meter, this->visible_height }
+    };
+    renderer_pipeline_set_viewport(this->renderer, viewport);
 }
 
 static void camera_update_visible_chunks(const struct camera *this, const struct update_context *context) {

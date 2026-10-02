@@ -6,8 +6,8 @@
 #include "renderer_primitive_internal.h"
 
 
-void renderer_primitive_draw(struct renderer_primitive* this, const struct rect rect, const struct rect viewport, struct SDL_Renderer* renderer) {
-    this->vtable->draw(this, rect, viewport, renderer);
+void renderer_primitive_draw(struct renderer_primitive* this, const struct rect rect, const struct rect viewport, const struct vector2 output_size, struct SDL_Renderer* renderer) {
+    this->vtable->draw(this, rect, viewport, output_size, renderer);
 }
 
 bool renderer_primitive_is_visible(struct renderer_primitive* this, const struct rect rect, const struct rect viewport) {
