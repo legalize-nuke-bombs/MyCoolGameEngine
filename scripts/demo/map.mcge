@@ -6,7 +6,6 @@ once map_deps start
     catalog add renderer_layer bg1 1
     catalog add renderer_layer bg2 2
     catalog add renderer_layer prop1 10
-    catalog add renderer_layer gizmo 99
 
     catalog add rigid_layer bg1 1
     catalog add rigid_layer bg2 2
@@ -14,6 +13,8 @@ once map_deps start
     catalog add rigid_material ground 0.5 0.15
     catalog add rigid_material ice 0.075 0.55
     catalog add rigid_material rubber 0.7 0.8
+    catalog add rigid_material wood 0.4 0.3
+    catalog add rigid_material stone 0.6 0.05
     catalog add rigid_material character 0.3 0.075
 
     catalog add texture cube 64 64 1 textures/demo/cube.png lazy
@@ -90,7 +91,7 @@ scene add entity Terrain 0 0 250 250
     rigid_surface bg1 ground
 end
 
-scene add entity Ice -10 10 15 15
+scene add entity Lake -7 1 9 9
     box_renderer bg2 color 100 100 255 255
     rigid_surface bg2 ice
 end
@@ -101,11 +102,48 @@ scene add entity GameState 0 0 1 1
     scene_switcher Escape scripts/demo/menu.mcge
 end
 
-scene add entity Forest 0 0 250 250
-    forest 10000 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
+
+/* Dense forest all around a 32 x 24 clearing */
+
+scene add entity ForestNorth 0 68.5 250 113
+    forest 4500 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
 end
 
-scene add entity Campfire 6 4 2 2
+scene add entity ForestSouth 0 -68.5 250 113
+    forest 4500 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
+end
+
+scene add entity ForestWest -70.5 0 109 24
+    forest 420 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
+end
+
+scene add entity ForestEast 70.5 0 109 24
+    forest 420 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
+end
+
+
+/* Sparse fringe along the clearing edge */
+
+scene add entity FringeNorth 0 10 32 4
+    forest 6 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
+end
+
+scene add entity FringeSouth 0 -10 32 4
+    forest 6 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
+end
+
+scene add entity FringeWest -14 0 4 16
+    forest 3 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
+end
+
+scene add entity FringeEast 14 0 4 16
+    forest 3 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
+end
+
+
+/* Camp */
+
+scene add entity Campfire 4 2 2 2
     box_renderer prop1 texture campfire 0
     box_renderer_animated 2.5
     entity Light 0 0 5 5
@@ -117,16 +155,40 @@ scene add entity Campfire 6 4 2 2
     end
 end
 
-scene add entity BoxBig -2 -2 2 2
-    box_renderer prop1 color 255 192 203 255
-    collider rubber
-    rigid_body 200 1 1
+scene add entity Crate1 -3 -5 1 1
+    box_renderer prop1 color 170 120 70 255
+    collider wood
+    rigid_body 25 1 1.5
 end
 
-scene add entity BoxSmall -8 -2 1 1
-    box_renderer prop1 color 255 192 203 255
+scene add entity Crate2 -1.8 -5 1 1
+    box_renderer prop1 color 170 120 70 255
+    collider wood
+    rigid_body 25 1 1.5
+end
+
+scene add entity Crate3 -0.6 -5 1 1
+    box_renderer prop1 color 170 120 70 255
+    collider wood
+    rigid_body 25 1 1.5
+end
+
+scene add entity Boulder 9 -3 1.5 1.5
+    box_renderer prop1 color 120 120 120 255
+    collider stone
+    rigid_body 1000 1 1
+end
+
+scene add entity Ball1 -1 5 0.75 0.75
+    box_renderer prop1 color 230 60 60 255
     collider rubber
-    rigid_body 12.5 1 1
+    rigid_body 5 1 1
+end
+
+scene add entity Ball2 -1 7 0.75 0.75
+    box_renderer prop1 color 230 60 60 255
+    collider rubber
+    rigid_body 5 1 1
 end
 
 scene add entity Cube 0 0 0.8 0.8
