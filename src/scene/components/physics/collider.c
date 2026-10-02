@@ -90,13 +90,7 @@ static void collider_handle_active_intersection(struct collider *this, struct co
     }
 }
 
-static void collider_on_movement(struct component *base) {
-    struct collider* this = (struct collider*)base;
-
-    const struct rect rect = component_get_rect(base);
-    int x_start, x_end, y_start, y_end;
-    chunks_get_rect_indexes(this->chunks, rect, &x_start, &x_end, &y_start, &y_end);
-
+static void collider_check_new_intersections(struct collider *this, const struct rect rect, const int x_start, const int x_end, const int y_start, const int y_end) {
     for (int x = x_start; x <= x_end; x++) {
         for (int y = y_start; y <= y_end; y++) {
             const struct dictionary *colliders = chunks_chunk_get_components_by_type(this->chunks, x, y, "collider");
@@ -118,4 +112,15 @@ static void collider_on_movement(struct component *base) {
             }
         }
     }
+}
+
+static void collider_on_movement(struct component *base) {
+    struct collider* this = (struct collider*)base;
+
+    const struct rect rect = component_get_rect(base);
+    int x_start, x_end, y_start, y_end;
+    chunks_get_rect_indexes(this->chunks, rect, &x_start, &x_end, &y_start, &y_end);
+
+    collider_check_new_intersections(this, rect, x_start, x_end, y_start, y_end);
+
 }
