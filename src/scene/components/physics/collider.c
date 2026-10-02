@@ -5,6 +5,7 @@
 #include "collider.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 #include "../component_internal.h"
 #include "../../../utils/dictionary.h"
@@ -83,7 +84,10 @@ struct component* collider_clone(struct component base, const struct component *
 
     struct collider *this = calloc(1, sizeof(struct collider));
     this->base = base;
-    this->material_name = collider->material_name;
+    if (collider->material_name != NULL) {
+        this->material_name = strdup(collider->material_name);
+    }
+    this->material = collider->material;
     this->on_trigger_enter = action_create();
     this->on_trigger_exit = action_create();
     return (struct component*)this;
