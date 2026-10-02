@@ -27,12 +27,14 @@ static bool collider_is_chunkable() {
 }
 
 static void collider_on_destroy(struct component *component);
+static void collider_on_movement(struct component *component);
 
 static const struct component_vtable collider_vtable = {
     .component_key = collider_component_key,
     .on_clone = collider_clone,
     .on_destroy = collider_on_destroy,
-    .is_chunkable = collider_is_chunkable
+    .is_chunkable = collider_is_chunkable,
+    .on_movement = collider_on_movement
 };
 
 struct component* collider_create(struct parser *parser, struct entity *parent) {
@@ -56,4 +58,9 @@ struct component* collider_clone(struct component base, const struct component *
     struct collider *this = calloc(1, sizeof(struct collider));
     this->base = base;
     return (struct component*)this;
+}
+
+static void collider_on_movement(struct component *component) {
+    struct collider* this = (struct collider*)component;
+
 }
