@@ -15,7 +15,7 @@
 struct keyboard_rigid_controller {
     struct component base;
 
-    double force;
+    double speed;
 
     char* up;
     char* down;
@@ -63,7 +63,7 @@ static void keyboard_rigid_controller_on_update(struct component* base, const st
         direction.x += 1.0;
     }
 
-    rigid_body_push_off(this->rigid_body, vector_multiply_scalar(vector_normalize(direction), this->force));
+    rigid_body_drive(this->rigid_body, vector_multiply_scalar(vector_normalize(direction), this->speed));
 }
 
 static void keyboard_rigid_controller_on_awake(struct component* base) {
@@ -86,7 +86,7 @@ struct component* keyboard_rigid_controller_create(struct parser *parser, struct
     struct component *base = (struct component *) this;
     component_base_create(base, &keyboard_rigid_controller_vtable, parent);
 
-    parser_next_double(parser, &this->force);
+    parser_next_double(parser, &this->speed);
     this->up = parser_next_dup(parser);
     this->down = parser_next_dup(parser);
     this->left = parser_next_dup(parser);
@@ -108,6 +108,6 @@ static struct component* keyboard_rigid_controller_clone(struct component base, 
 
     struct keyboard_rigid_controller* this = calloc(1, sizeof(struct keyboard_rigid_controller));
     this->base = base;
-    this->force = keyboard_rigid_controller->force;
+    this->speed = keyboard_rigid_controller->speed;
     return (struct component*)this;
 }
