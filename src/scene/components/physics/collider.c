@@ -79,24 +79,24 @@ static void collider_lazy_create_intersections(struct collider *this) {
     }
 }
 
-static void collider_handle_active_intersection(struct collider *this, struct collider *collider, const bool share) {
+static void collider_handle_on_trigger_enter(struct collider *this, struct collider *collider, const bool share) {
     collider_lazy_create_intersections(this);
     if (!dictionary_try_add(this->intersections, collider, collider)) {
         return;
     }
-    logger_info("Entity %s registered new intersection with %s!", component_get_global_parent_name((struct component*)this), component_get_global_parent_name((struct component*)collider));
+    logger_info("Entity %s on trigger enter %s!", component_get_global_parent_name((struct component*)this), component_get_global_parent_name((struct component*)collider));
     if (share) {
-        collider_handle_active_intersection(collider, this, false);
+        collider_handle_on_trigger_enter(collider, this, false);
     }
 }
 
-static void collider_handle_no_intersection(struct collider *this, struct collider *collider, const bool share) {
+static void collider_handle_on_trigger_exit(struct collider *this, struct collider *collider, const bool share) {
     if (this->intersections == NULL || dictionary_remove(this->intersections, collider) == 0) {
         return;
     }
-    logger_info("Entity %s registered no intersection with %s!", component_get_global_parent_name((struct component*)this), component_get_global_parent_name((struct component*)collider));
+    logger_info("Entity %s on trigger exit %s!", component_get_global_parent_name((struct component*)this), component_get_global_parent_name((struct component*)collider));
     if (share) {
-        collider_handle_no_intersection(collider, this, false);
+        collider_handle_on_trigger_exit(collider, this, false);
     }
 }
 
@@ -110,7 +110,7 @@ static void collider_check_new_intersections(struct collider *this, const struct
         }
         const struct rect collider_rect = component_get_rect((struct component*)collider);
         if (rects_intersection(rect, collider_rect)) {
-            collider_handle_active_intersection(this, collider, true);
+            collider_handle_on_trigger_enter(this, collider, true);
         }
     }
 }
@@ -125,7 +125,7 @@ static void collider_validate_old_intersections(struct collider *this, const str
         struct collider *collider = node.value;
         const struct rect collider_rect = component_get_rect((struct component*)collider);
         if (!rects_intersection(rect, collider_rect)) {
-            collider_handle_no_intersection(this, collider, true);
+            collider_handle_on_trigger_exit(this, collider, true);
         }
     }
     if (dictionary_count(this->intersections) == 0) {
