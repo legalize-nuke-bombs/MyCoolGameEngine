@@ -104,6 +104,7 @@ end
 
 scene add entity Cube 0 0 0.8 0.8
     box_renderer prop1 texture cube 0
+    collider
     rigid_body 50 10 0.2
     keyboard_rigid_controller 6.25 W S A D
     camera 33.75

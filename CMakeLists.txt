@@ -223,6 +223,8 @@ add_executable(MyCoolGameEngine main.c
         src/interpreter/catalogs/interpreter_catalog_add.c
         src/scene/components/core/simulator.h
         src/scene/components/core/simulator.c
+        src/scene/components/physics/collider.h
+        src/scene/components/physics/collider.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)
