@@ -34,6 +34,9 @@ struct vector2 vector_multiply_scalar(const struct vector2 vector1, double scala
     };
     return result;
 }
+double vector_dot(const struct vector2 vector1, const struct vector2 vector2) {
+    return vector1.x * vector2.x + vector1.y * vector2.y;
+}
 
 struct vector2 vector_normalize(const struct vector2 this) {
     const double length = vector_mod(this);

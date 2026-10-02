@@ -10,6 +10,7 @@ struct vector2 vector_sum(struct vector2 vector1, struct vector2 vector2);
 struct vector2 vector_sub(struct vector2 vector1, struct vector2 vector2);
 struct vector2 vector_multiply_vector(struct vector2 vector1, struct vector2 vector2);
 struct vector2 vector_multiply_scalar(struct vector2 vector1, double scalar);
+double vector_dot(struct vector2 vector1, struct vector2 vector2);
 
 struct vector2 vector_normalize(struct vector2 this);
 
