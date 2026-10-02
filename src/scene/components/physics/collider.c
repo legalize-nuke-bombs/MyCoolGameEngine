@@ -9,12 +9,15 @@
 #include "../component_internal.h"
 #include "../../../utils/dictionary.h"
 #include "../../../utils/pointer_dictionary.h"
+#include "../../scene.h"
 
 
 struct collider {
     struct component base;
 
     struct dictionary* intersections;
+
+    const struct chunks* chunks;
 };
 
 const char* collider_component_key(void) {
@@ -27,12 +30,14 @@ static bool collider_is_chunkable() {
 }
 
 static void collider_on_destroy(struct component *component);
+static void collider_on_awake(struct component *base);
 static void collider_on_movement(struct component *component);
 
 static const struct component_vtable collider_vtable = {
     .component_key = collider_component_key,
     .on_clone = collider_clone,
     .on_destroy = collider_on_destroy,
+    .on_awake = collider_on_awake,
     .is_chunkable = collider_is_chunkable,
     .on_movement = collider_on_movement
 };
@@ -58,6 +63,12 @@ struct component* collider_clone(struct component base, const struct component *
     struct collider *this = calloc(1, sizeof(struct collider));
     this->base = base;
     return (struct component*)this;
+}
+
+static void collider_on_awake(struct component *base) {
+    struct collider *this = (struct collider*)base;
+
+    this->chunks = scene_get_chunks(component_get_scene(base));
 }
 
 static void collider_on_movement(struct component *component) {

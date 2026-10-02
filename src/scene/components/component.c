@@ -109,12 +109,13 @@ void component_notify_rect_changed(struct component *this, const struct rect_pai
         .component = this,
         .rect_pair = rect_pair
     };
-    if (this->vtable->on_movement) {
-        this->vtable->on_movement(this);
-    }
-    struct scene *scene = component_get_scene(this);
+    // Order is important here. Scene infrastructure must be ready before components code
+    const struct scene *scene = component_get_scene(this);
     if (scene) {
         scene_notify_component_resize(scene, &data);
+    }
+    if (this->vtable->on_movement) {
+        this->vtable->on_movement(this);
     }
 }
 
