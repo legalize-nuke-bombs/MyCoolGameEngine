@@ -60,7 +60,7 @@ static void keyboard_controller_on_update(struct component* base, const struct u
     if (this->left && keyboard_is_pressed(this->keyboard, this->left)) {
         direction.x -= 1.0;
     }
-    if (this->down && keyboard_is_pressed(this->keyboard, this->right)) {
+    if (this->right && keyboard_is_pressed(this->keyboard, this->right)) {
         direction.x += 1.0;
     }
 
