@@ -23,7 +23,6 @@ struct scene {
     struct subsystem base;
 
     char* name;
-    bool awoken;
 
     struct action on_component_captured;
     struct action on_component_marked_destroyed;
@@ -95,15 +94,12 @@ static void scene_update(void *listener, void *context);
 
 void scene_on_enable(struct subsystem *base, struct engine_arguments args) {
     struct scene *this = (struct scene*)base;
-    this->awoken = true;
-    entity_collection_awake_everyone(this->entities);
     this->on_physics = engine_events_on_physics((struct engine_events*)subsystem_get_subsystem(base, "engine_events"));
     action_subscribe(this->on_physics, this, scene_update, &this->on_physics_subscription_token);
 }
 
 void scene_on_disable(struct subsystem *base) {
     struct scene *this = (struct scene*)base;
-    this->awoken = false;
     action_unsubscribe(this->on_physics, this->on_physics_subscription_token);
     this->on_physics = NULL;
     entity_collection_clear(this->entities);
@@ -196,7 +192,5 @@ void scene_capture_entity(struct scene *this, struct entity *entity) {
 
     entity_recapture_components(entity);
 
-    if (this->awoken) {
-        entity_awake(entity);
-    }
+    entity_awake(entity);
 }

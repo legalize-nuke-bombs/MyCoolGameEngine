@@ -43,13 +43,6 @@ void entity_collection_destroy(struct entity_collection *this) {
     free(this);
 }
 
-void entity_collection_awake_everyone(const struct entity_collection *this) {
-    struct dictionary_iterator iterator = dictionary_begin(this->entities);
-    struct dictionary_node node;
-    while (dictionary_next(this->entities, &iterator, &node)) {
-        entity_awake(node.value);
-    }
-}
 void entity_collection_clear(struct entity_collection *this) {
     entity_collection_destroy_everyone(this);
     dictionary_clear(this->entities);
