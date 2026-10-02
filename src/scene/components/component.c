@@ -114,7 +114,7 @@ void component_notify_rect_changed(struct component *this, const struct rect_pai
     if (scene) {
         scene_notify_component_resize(scene, &data);
     }
-    if (this->vtable->on_movement) {
+    if (this->awake && this->alive && this->vtable->on_movement) {
         this->vtable->on_movement(this);
     }
 }
