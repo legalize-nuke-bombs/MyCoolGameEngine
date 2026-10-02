@@ -161,9 +161,9 @@ void rigid_body_explosion(struct rect rect, const double f, const struct chunks 
                 struct rigid_body *rb = node.value;
                 const struct vector2 rb_position = component_get_rect((struct component*)rb).position;
 
-                // a body lies in every cell its rect touches: push it only from the cell of its centre
-                int rb_x, rb_x_end, rb_y, rb_y_end;
-                chunks_get_rect_indexes(chunks, (struct rect){ rb_position, vector2_zero }, &rb_x, &rb_x_end, &rb_y, &rb_y_end);
+                // a body lies in every cell its rect touches: push it only from the cell of its centre (a rect's position is its centre)
+                int rb_x, rb_y;
+                chunks_get_position_indexes(chunks, rb_position, &rb_x, &rb_y);
                 if (rb_x != x || rb_y != y) {
                     continue;
                 }
