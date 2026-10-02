@@ -28,8 +28,8 @@ struct rigid_body {
     double rolling_friction_coefficient;
 
     struct vector2 v;
-    struct vector2 v_drive;
-    bool driven;
+    struct vector2 impulse_sum;
+    struct vector2 impulse_drive_sum;
 
     const struct chunks* chunks;
 };
@@ -80,21 +80,28 @@ static void rigid_body_awake(struct component *base) {
     this->chunks = scene_get_chunks(entity_get_scene(component_get_parent(base)));
 }
 
-static void rigid_body_apply_friction(struct rigid_body *this, const double dt) {
-    const double grip = this->driven ? 1 : this->rolling_friction_coefficient;
-    const double j_max_scalar = this->m * GRAVITY * this->base_friction_coefficient * grip * rigid_surface_get_friction(this->chunks, component_get_rect((struct component*)this)) * dt;
-
-    const struct vector2 j_need = vector_multiply_scalar(vector_sub(this->v_drive, this->v), this->m);
-    const double j_need_scalar = vector_mod(j_need);
-
-    if (j_need_scalar <= j_max_scalar) {
-        this->v = this->v_drive;
-    } else {
-        rigid_body_push(this, vector_multiply_scalar(j_need, j_max_scalar / j_need_scalar));
+static void rigid_body_apply_impulses(struct rigid_body *this, const double impulse_drive_max_scalar) {
+    const double impulse_drive_scalar = vector_mod(this->impulse_drive_sum);
+    if (impulse_drive_scalar > impulse_drive_max_scalar) {
+        this->impulse_drive_sum = vector_multiply_scalar(this->impulse_drive_sum, impulse_drive_max_scalar / impulse_drive_scalar);
     }
 
-    this->v_drive = vector2_zero;
-    this->driven = false;
+    const struct vector2 impulse = vector_sum(this->impulse_sum, this->impulse_drive_sum);
+    this->v = vector_sum(this->v, vector_multiply_scalar(impulse, 1.0 / this->m));
+
+    this->impulse_sum = vector2_zero;
+    this->impulse_drive_sum = vector2_zero;
+}
+
+static void rigid_body_apply_rolling_friction(struct rigid_body *this, const double impulse_max_scalar) {
+    const double impulse_need_scalar = this->m * vector_mod(this->v);
+
+    if (impulse_need_scalar <= impulse_max_scalar) {
+        this->v = vector2_zero;
+    }
+    else {
+        this->v = vector_multiply_scalar(this->v, 1.0 - impulse_max_scalar / impulse_need_scalar);
+    }
 }
 
 static void rigid_body_move(struct rigid_body *this, const double dt) {
@@ -110,18 +117,27 @@ static void rigid_body_simulation_chunk_update(struct component* base, const str
     struct rigid_body *this = (struct rigid_body *) base;
     const double dt = context->dt;
 
-    rigid_body_apply_friction(this, dt);
+    const double friction_impulse_max_scalar = this->m * GRAVITY * this->base_friction_coefficient * rigid_surface_get_friction(this->chunks, component_get_rect(base)) * dt;
+
+    rigid_body_apply_impulses(this, friction_impulse_max_scalar);
+    rigid_body_apply_rolling_friction(this, friction_impulse_max_scalar * this->rolling_friction_coefficient);
     rigid_body_move(this, dt);
 }
 
 void rigid_body_push(struct rigid_body *this, const struct vector2 impulse) {
-    const struct vector2 delta_v = vector_multiply_scalar(impulse, 1.0 / this->m);
-    this->v = vector_sum(this->v, delta_v);
+    this->impulse_sum = vector_sum(this->impulse_sum, impulse);
 }
 
-void rigid_body_drive(struct rigid_body *this, const struct vector2 v) {
-    this->v_drive = v;
-    this->driven = true;
+void rigid_body_drive(struct rigid_body *this, const struct vector2 impulse) {
+    this->impulse_drive_sum = vector_sum(this->impulse_drive_sum, impulse);
+}
+
+struct vector2 rigid_body_get_velocity(const struct rigid_body *this) {
+    return this->v;
+}
+
+double rigid_body_get_mass(const struct rigid_body *this) {
+    return this->m;
 }
 
 void rigid_body_explosion(struct rect rect, const double f, const struct chunks *chunks) {
