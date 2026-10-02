@@ -79,7 +79,7 @@ static void collider_lazy_create_intersections(struct collider *this) {
     }
 }
 
-static void collider_handle_active_intersection(struct collider *this, struct collider *collider, bool share) {
+static void collider_handle_active_intersection(struct collider *this, struct collider *collider, const bool share) {
     collider_lazy_create_intersections(this);
     if (!dictionary_try_add(this->intersections, collider, collider)) {
         return;
@@ -87,6 +87,16 @@ static void collider_handle_active_intersection(struct collider *this, struct co
     logger_info("Entity %s registered new intersection with %s!", component_get_global_parent_name((struct component*)this), component_get_global_parent_name((struct component*)collider));
     if (share) {
         collider_handle_active_intersection(collider, this, false);
+    }
+}
+
+static void collider_handle_no_intersection(struct collider *this, struct collider *collider, const bool share) {
+    if (this->intersections == NULL || dictionary_remove(this->intersections, collider) == 0) {
+        return;
+    }
+    logger_info("Entity %s registered no intersection with %s!", component_get_global_parent_name((struct component*)this), component_get_global_parent_name((struct component*)collider));
+    if (share) {
+        collider_handle_no_intersection(collider, this, false);
     }
 }
 
@@ -105,10 +115,33 @@ static void collider_check_new_intersections(struct collider *this, const struct
     }
 }
 
+static void collider_validate_old_intersections(struct collider *this, const struct rect rect) {
+    if (this->intersections == NULL) {
+        return;
+    }
+    struct dictionary_iterator intersections_iterator = dictionary_begin(this->intersections);
+    struct dictionary_node node;
+    while (dictionary_next(this->intersections, &intersections_iterator, &node)) {
+        struct collider *collider = node.value;
+        const struct rect collider_rect = component_get_rect((struct component*)collider);
+        if (!rects_intersection(rect, collider_rect)) {
+            collider_handle_no_intersection(this, collider, true);
+        }
+    }
+    if (dictionary_count(this->intersections) == 0) {
+        dictionary_destroy(this->intersections);
+        this->intersections = NULL;
+    }
+}
+
 static void collider_on_movement(struct component *base) {
     struct collider* this = (struct collider*)base;
 
     const struct rect rect = component_get_rect(base);
+
+    // It is better to validate old intersections sooner than checking new intersections in order to skip validating fresh valid intersections
+    collider_validate_old_intersections(this, rect);
+
     int x_start, x_end, y_start, y_end;
     chunks_get_rect_indexes(this->chunks, rect, &x_start, &x_end, &y_start, &y_end);
 
@@ -122,6 +155,4 @@ static void collider_on_movement(struct component *base) {
             collider_check_new_intersections(this, rect, colliders);
         }
     }
-
-
 }
