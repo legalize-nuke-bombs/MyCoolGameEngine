@@ -57,7 +57,7 @@ static void entity_update_rect(struct entity *this) {
     }
 }
 
-struct entity* entity_create(char *name, struct entity *parent, struct scene *scene) {
+struct entity* entity_create(char *name, struct entity *parent) {
     struct entity *this = calloc(1, sizeof(struct entity));
     this->name = name;
     logger_debug("Entity %s is initializing...", this->name);
@@ -68,7 +68,6 @@ struct entity* entity_create(char *name, struct entity *parent, struct scene *sc
     this->components = list_create(1);
 
     this->parent = parent;
-    this->scene = scene;
 
     this->local_rect.position = vector2_zero;
     this->local_rect.size = vector2_one;
@@ -196,6 +195,7 @@ void entity_capture_entity(struct entity *this, struct entity *entity) {
     entity_set_parent(entity, this);
     entity_update_rect(entity);
     list_add(&this->entities, entity);
+    entity_set_scene(entity, this->scene);
     entity_recapture_components(entity);
 }
 void entity_capture_component(struct entity *this, struct component *component) {

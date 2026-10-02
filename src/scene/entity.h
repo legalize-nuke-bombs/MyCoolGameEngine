@@ -10,7 +10,7 @@ struct entity;
 struct scene;
 struct engine;
 
-struct entity* entity_create(char *name, struct entity *parent, struct scene *scene);
+struct entity* entity_create(char *name, struct entity *parent);
 struct entity* entity_clone(const struct entity* entity);
 void entity_awake(struct entity *this);
 void entity_destroy(struct entity *this);
