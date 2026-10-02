@@ -24,11 +24,12 @@ struct entity_collection *entity_collection_create(void) {
     return this;
 }
 
-static void entity_collection_destroy_everyone(const struct entity_collection *this) {
+static void entity_collection_destroy_everyone(struct entity_collection *this) {
+    // Everyone is disabled before anyone is freed, so on_disable can still reach other components
     struct dictionary_iterator iterator = dictionary_begin(this->entities);
     struct dictionary_node node;
     while (dictionary_next(this->entities, &iterator, &node)) {
-        entity_destroy(node.value);
+        entity_mark_destroyed(node.value);
     }
     for (int i = 0; i < list_count(&this->dead); i++) {
         entity_destroy(list_get(&this->dead, i));
