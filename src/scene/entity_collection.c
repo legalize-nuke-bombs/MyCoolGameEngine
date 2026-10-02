@@ -8,30 +8,19 @@
 
 #include "entity.h"
 #include "../logging/logger.h"
-#include "../utils/action.h"
 #include "../utils/list.h"
 #include "../utils/pointer_dictionary.h"
-#include "scene.h"
 
 struct entity_collection {
     struct dictionary *entities;
     struct list dead;
-
-    struct action* on_entity_marked_destroyed;
-    unsigned int on_entity_marked_destroyed_token;
 };
 
-static void handle_entity_marked_destroyed(void *listener, void *context);
-
-struct entity_collection *entity_collection_create(struct scene *scene) {
+struct entity_collection *entity_collection_create(void) {
     logger_info("Entity_collection is creating...");
     struct entity_collection *this = calloc(1, sizeof(struct entity_collection));
     this->entities = pointer_dictionary_build(4);
     this->dead = list_create(16);
-
-    this->on_entity_marked_destroyed = scene_get_on_entity_marked_destroyed(scene);
-    action_subscribe(this->on_entity_marked_destroyed, this, handle_entity_marked_destroyed, &this->on_entity_marked_destroyed_token);
-
     return this;
 }
 
@@ -48,7 +37,6 @@ static void entity_collection_destroy_everyone(const struct entity_collection *t
 
 void entity_collection_destroy(struct entity_collection *this) {
     logger_info("Entity_collection is destroying...");
-    action_unsubscribe(this->on_entity_marked_destroyed, this->on_entity_marked_destroyed_token);
     entity_collection_destroy_everyone(this);
     dictionary_destroy(this->entities);
     list_destroy(&this->dead);
@@ -75,9 +63,7 @@ void entity_collection_add(struct entity_collection *this, struct entity *entity
     }
     dictionary_try_add(this->entities, entity, entity);
 }
-static void handle_entity_marked_destroyed(void *listener, void *context) {
-    struct entity_collection *this = listener;
-    struct entity *entity = context;
+void entity_collection_move_to_dead(struct entity_collection *this, struct entity *entity) {
     if (dictionary_remove(this->entities, entity)) {
         list_add(&this->dead, entity);
     }
