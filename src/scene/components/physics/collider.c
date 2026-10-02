@@ -90,26 +90,17 @@ static void collider_handle_active_intersection(struct collider *this, struct co
     }
 }
 
-static void collider_check_new_intersections(struct collider *this, const struct rect rect, const int x_start, const int x_end, const int y_start, const int y_end) {
-    for (int x = x_start; x <= x_end; x++) {
-        for (int y = y_start; y <= y_end; y++) {
-            const struct dictionary *colliders = chunks_chunk_get_components_by_type(this->chunks, x, y, "collider");
-            if (colliders == NULL) {
-                continue;
-            }
-
-            struct dictionary_iterator iterator = dictionary_begin(colliders);
-            struct dictionary_node node;
-            while (dictionary_next(colliders, &iterator, &node)) {
-                struct collider *collider = node.value;
-                if (collider == this) {
-                    continue;
-                }
-                const struct rect collider_rect = component_get_rect((struct component*)collider);
-                if (rects_intersection(rect, collider_rect)) {
-                    collider_handle_active_intersection(this, collider, true);
-                }
-            }
+static void collider_check_new_intersections(struct collider *this, const struct rect rect, const struct dictionary *colliders) {
+    struct dictionary_iterator iterator = dictionary_begin(colliders);
+    struct dictionary_node node;
+    while (dictionary_next(colliders, &iterator, &node)) {
+        struct collider *collider = node.value;
+        if (collider == this) {
+            continue;
+        }
+        const struct rect collider_rect = component_get_rect((struct component*)collider);
+        if (rects_intersection(rect, collider_rect)) {
+            collider_handle_active_intersection(this, collider, true);
         }
     }
 }
@@ -121,6 +112,16 @@ static void collider_on_movement(struct component *base) {
     int x_start, x_end, y_start, y_end;
     chunks_get_rect_indexes(this->chunks, rect, &x_start, &x_end, &y_start, &y_end);
 
-    collider_check_new_intersections(this, rect, x_start, x_end, y_start, y_end);
+    for (int x = x_start; x <= x_end; x++) {
+        for (int y = y_start; y <= y_end; y++) {
+            const struct dictionary *colliders = chunks_chunk_get_components_by_type(this->chunks, x, y, "collider");
+            if (colliders == NULL) {
+                continue;
+            }
+
+            collider_check_new_intersections(this, rect, colliders);
+        }
+    }
+
 
 }
