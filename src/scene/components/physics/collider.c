@@ -11,6 +11,7 @@
 #include "../../../utils/pointer_dictionary.h"
 #include "../../scene.h"
 #include "../../../logging/logger.h"
+#include "../../../utils/action.h"
 #include "../../chunks/chunks.h"
 
 
@@ -18,6 +19,9 @@ struct collider {
     struct component base;
 
     struct dictionary* intersections;
+
+    struct action on_trigger_enter;
+    struct action on_trigger_exit;
 
     const struct chunks* chunks;
 };
@@ -48,11 +52,15 @@ struct component* collider_create(struct parser *parser, struct entity *parent) 
     struct collider *this = calloc(1, sizeof(struct collider));
     struct component* base = (struct component*)this;
     component_base_create(base, &collider_vtable, parent);
+    this->on_trigger_enter = action_create();
+    this->on_trigger_exit = action_create();
     return base;
 }
 
 static void collider_on_destroy(struct component *component) {
     struct collider *this = (struct collider*)component;
+    action_destroy(&this->on_trigger_exit);
+    action_destroy(&this->on_trigger_enter);
     if (this->intersections) {
         dictionary_destroy(this->intersections);
         this->intersections = NULL;
@@ -64,6 +72,8 @@ struct component* collider_clone(struct component base, const struct component *
 
     struct collider *this = calloc(1, sizeof(struct collider));
     this->base = base;
+    this->on_trigger_enter = action_create();
+    this->on_trigger_exit = action_create();
     return (struct component*)this;
 }
 
@@ -84,7 +94,8 @@ static void collider_handle_on_trigger_enter(struct collider *this, struct colli
     if (!dictionary_try_add(this->intersections, collider, collider)) {
         return;
     }
-    logger_info("Entity %s on trigger enter %s!", component_get_global_parent_name((struct component*)this), component_get_global_parent_name((struct component*)collider));
+    logger_debug("Entity %s on trigger enter %s!", component_get_global_parent_name((struct component*)this), component_get_global_parent_name((struct component*)collider));
+    action_invoke(&this->on_trigger_enter, component_get_parent((struct component*)collider));
     if (share) {
         collider_handle_on_trigger_enter(collider, this, false);
     }
@@ -94,7 +105,8 @@ static void collider_handle_on_trigger_exit(struct collider *this, struct collid
     if (this->intersections == NULL || dictionary_remove(this->intersections, collider) == 0) {
         return;
     }
-    logger_info("Entity %s on trigger exit %s!", component_get_global_parent_name((struct component*)this), component_get_global_parent_name((struct component*)collider));
+    logger_debug("Entity %s on trigger exit %s!", component_get_global_parent_name((struct component*)this), component_get_global_parent_name((struct component*)collider));
+    action_invoke(&this->on_trigger_exit, component_get_parent((struct component*)collider));
     if (share) {
         collider_handle_on_trigger_exit(collider, this, false);
     }
