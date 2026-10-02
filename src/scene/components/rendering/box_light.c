@@ -24,6 +24,8 @@ struct box_light {
 
     struct light_map* light_map;
 
+    char* texture_name;
+    int texture_frame;
     struct renderer_primitive* square;
 };
 
@@ -45,11 +47,9 @@ const char* box_light_component_key(void) {
 }
 
 struct component* box_light_create(struct parser *parser, struct entity *parent) {
-    struct box_light *this = malloc(sizeof(struct box_light));
+    struct box_light *this = calloc(1, sizeof(struct box_light));
     struct component *base = (struct component*) this;
     component_base_create(base, &box_light_vtable, parent);
-
-    this->light_map = NULL;
 
     const char* type = parser_next(parser);
     if (strcmp(type, "color") == 0) {
@@ -61,16 +61,8 @@ struct component* box_light_create(struct parser *parser, struct entity *parent)
         this->square = renderer_square_create_from_color(color);
     }
     else if (strcmp(type, "texture") == 0) {
-        const struct catalogs* catalogs = (struct catalogs*)subsystem_collection_get(scene_get_subsystems(entity_get_scene(component_get_parent(base))), "catalogs");
-        struct texture* texture = catalogs_get_item(catalogs, "texture", parser_next(parser));
-        int texture_frame;
-        parser_next_int(parser, &texture_frame);
-        if (texture == NULL) {
-            this->square = renderer_square_create_from_color(color_white);
-        }
-        else {
-            this->square = renderer_square_create_from_texture(texture, texture_frame);
-        }
+        this->texture_name = parser_next_dup(parser);
+        parser_next_int(parser, &this->texture_frame);
     }
     else {
         logger_warn("Box light unexpected type `%s`", type);
@@ -85,20 +77,43 @@ static struct component* box_light_clone(struct component base, const struct com
 
     struct box_light *this = calloc(1, sizeof(struct box_light));
     this->base = base;
-    this->square = renderer_square_clone((struct renderer_square*)box_light->square);
+    if (box_light->texture_name != NULL) {
+        this->texture_name = strdup(box_light->texture_name);
+    }
+    this->texture_frame = box_light->texture_frame;
+    if (box_light->square != NULL) {
+        this->square = renderer_square_clone((struct renderer_square*)box_light->square);
+    }
     return (struct component*)this;
 }
 
 static void box_light_on_destroy(struct component *base) {
     const struct box_light *this = (struct box_light *) base;
-    renderer_primitive_destroy(this->square);
+    if (this->square != NULL) {
+        renderer_primitive_destroy(this->square);
+    }
+    free(this->texture_name);
 }
 
 static void box_light_awake(struct component *base) {
     struct box_light *this = (struct box_light *) base;
 
-    const struct renderer* renderer_subsystem = (struct renderer*)subsystem_collection_get(scene_get_subsystems(entity_get_scene(component_get_parent(base))), "renderer");
+    const struct subsystem_collection* subsystems = scene_get_subsystems(entity_get_scene(component_get_parent(base)));
+    const struct renderer* renderer_subsystem = (struct renderer*)subsystem_collection_get(subsystems, "renderer");
     this->light_map = renderer_pipeline_get_light_map(renderer_get_pipeline(renderer_subsystem));
+
+    if (this->square == NULL) {
+        const struct catalogs* catalogs = (struct catalogs*)subsystem_collection_get(subsystems, "catalogs");
+        struct texture* texture = catalogs_get_item(catalogs, "texture", this->texture_name);
+        if (texture == NULL) {
+            this->square = renderer_square_create_from_color(color_white);
+        }
+        else {
+            this->square = renderer_square_create_from_texture(texture, this->texture_frame);
+        }
+    }
+    free(this->texture_name);
+    this->texture_name = NULL;
 }
 
 static void box_light_visible_chunk_update(struct component *base, const struct update_context *context) {
