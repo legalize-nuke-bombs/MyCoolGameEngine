@@ -183,6 +183,8 @@ static void collider_on_movement(struct component *base) {
 }
 
 static struct entity* collider_try_get_obstacle_among(const struct collider *this, const struct rect rect, const struct dictionary *colliders) {
+    const struct rect current_rect = component_get_rect((const struct component*)this);
+
     struct dictionary_iterator iterator = dictionary_begin(colliders);
     struct dictionary_node node;
     while (dictionary_next(colliders, &iterator, &node)) {
@@ -191,7 +193,8 @@ static struct entity* collider_try_get_obstacle_among(const struct collider *thi
             continue;
         }
         const struct rect collider_rect = component_get_rect((const struct component*)collider);
-        if (rects_intersection(rect, collider_rect)) {
+        // A collider we already intersect does not block, otherwise there would be no way out of it
+        if (rects_intersection(rect, collider_rect) && !rects_intersection(current_rect, collider_rect)) {
             return component_get_parent((const struct component*)collider);
         }
     }
