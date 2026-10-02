@@ -225,6 +225,8 @@ add_executable(MyCoolGameEngine main.c
         src/scene/components/core/simulator.c
         src/scene/components/physics/collider.h
         src/scene/components/physics/collider.c
+        src/scene/intersection_pairs/intersection_pair.h
+        src/scene/intersection_pairs/intersection_pair.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)
