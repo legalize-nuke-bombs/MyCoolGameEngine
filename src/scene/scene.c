@@ -89,6 +89,7 @@ void scene_on_destroy(struct subsystem *base) {
     if (this->switch_flag != NULL) free(this->switch_flag);
     action_destroy(&this->on_component_resize);
     action_destroy(&this->on_entity_marked_destroyed);
+    action_destroy(&this->on_entity_captured);
     action_destroy(&this->on_component_marked_destroyed);
     action_destroy(&this->on_component_captured);
     free(this->name);
