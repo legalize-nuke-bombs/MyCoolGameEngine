@@ -11,14 +11,13 @@
 #include "../component_internal.h"
 #include "../../entity.h"
 #include "../../scene.h"
+#include "../../../catalogs/core/rigid_material.h"
 #include "../../../utils/parser.h"
 #include "../../../utils/vector2_math.h"
 
 
 #define FRICTION_DEFAULT 0.5f
 #define GRAVITY 9.8f
-// 1 - a hit loses no kinetic energy
-#define ELASTICITY 1.f
 
 
 static const struct vector2 axis_x = { .x = 1, .y = 0 };
@@ -131,6 +130,9 @@ static struct vector2 rigid_body_get_pushed_velocity(const struct rigid_body *th
 static void rigid_body_hit(struct rigid_body *this, const struct entity *obstacle, const struct vector2 direction) {
     struct rigid_body *other = (struct rigid_body*)entity_try_get_component(obstacle, rigid_body_component_key());
 
+    const struct collider *other_collider = (struct collider*)entity_get_component(obstacle, "collider");
+    const double elasticity = rigid_material_get_restitution(collider_get_rigid_material(this->collider)) * rigid_material_get_restitution(collider_get_rigid_material(other_collider));
+
     const struct vector2 other_v = other ? rigid_body_get_pushed_velocity(other) : vector2_zero;
     const double approach_speed = vector_dot(vector_sub(rigid_body_get_pushed_velocity(this), other_v), direction);
     if (approach_speed <= 0) {
@@ -139,7 +141,7 @@ static void rigid_body_hit(struct rigid_body *this, const struct entity *obstacl
 
     // An obstacle without rigid_body has infinite mass
     const double reduced_mass = other ? this->m * other->m / (this->m + other->m) : this->m;
-    const struct vector2 impulse = vector_multiply_scalar(direction, (1.0 + ELASTICITY) * reduced_mass * approach_speed);
+    const struct vector2 impulse = vector_multiply_scalar(direction, (1.0 + elasticity) * reduced_mass * approach_speed);
 
     rigid_body_push(this, vector_multiply_scalar(impulse, -1.0));
     if (other) {

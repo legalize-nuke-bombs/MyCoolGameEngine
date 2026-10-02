@@ -10,13 +10,20 @@
 #include "../../../utils/dictionary.h"
 #include "../../../utils/pointer_dictionary.h"
 #include "../../scene.h"
+#include "../../../catalogs/catalogs.h"
+#include "../../../catalogs/core/rigid_material.h"
 #include "../../../logging/logger.h"
+#include "../../../subsystems/subsystem_collection.h"
 #include "../../../utils/action.h"
+#include "../../../utils/parser.h"
 #include "../../chunks/chunks.h"
 
 
 struct collider {
     struct component base;
+
+    char *material_name;
+    struct rigid_material *material;
 
     struct dictionary* intersections;
 
@@ -35,10 +42,10 @@ static bool collider_is_chunkable() {
     return true;
 }
 
-static void collider_on_destroy(struct component *component);
 static void collider_on_awake(struct component *base);
 static void collider_on_movement(struct component *base);
 static void collider_on_disable(struct component *base);
+static void collider_on_destroy(struct component *base);
 
 static const struct component_vtable collider_vtable = {
     .component_key = collider_component_key,
@@ -54,13 +61,15 @@ struct component* collider_create(struct parser *parser, struct entity *parent) 
     struct collider *this = calloc(1, sizeof(struct collider));
     struct component* base = (struct component*)this;
     component_base_create(base, &collider_vtable, parent);
+    this->material_name = parser_next_dup(parser);
     this->on_trigger_enter = action_create();
     this->on_trigger_exit = action_create();
     return base;
 }
 
-static void collider_on_destroy(struct component *component) {
-    struct collider *this = (struct collider*)component;
+static void collider_on_destroy(struct component *base) {
+    struct collider *this = (struct collider*)base;
+    if (this->material_name) free(this->material_name);
     action_destroy(&this->on_trigger_exit);
     action_destroy(&this->on_trigger_enter);
     if (this->intersections) {
@@ -70,8 +79,11 @@ static void collider_on_destroy(struct component *component) {
 }
 
 struct component* collider_clone(struct component base, const struct component *component) {
+    const struct collider* collider = (struct collider*)component;
+
     struct collider *this = calloc(1, sizeof(struct collider));
     this->base = base;
+    this->material_name = collider->material_name;
     this->on_trigger_enter = action_create();
     this->on_trigger_exit = action_create();
     return (struct component*)this;
@@ -79,6 +91,10 @@ struct component* collider_clone(struct component base, const struct component *
 
 static void collider_on_awake(struct component *base) {
     struct collider *this = (struct collider*)base;
+
+    this->material = catalogs_get_item((struct catalogs*)subsystem_collection_get(scene_get_subsystems(component_get_scene(base)), "catalogs"), "rigid_material", this->material_name);
+    free(this->material_name);
+    this->material_name = NULL;
 
     this->chunks = scene_get_chunks(component_get_scene(base));
 }
@@ -219,4 +235,15 @@ struct entity* collider_try_get_obstacle(const struct collider *this, const stru
         }
     }
     return NULL;
+}
+
+
+
+
+
+const struct rigid_material* collider_get_rigid_material(const struct collider *this) {
+    if (this->material) {
+        return this->material;
+    }
+    return &rigid_material_default;
 }

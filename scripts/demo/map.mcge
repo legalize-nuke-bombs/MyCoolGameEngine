@@ -10,8 +10,10 @@ once map_deps start
     catalog add rigid_layer bg1 1
     catalog add rigid_layer bg2 2
 
-    catalog add rigid_material ground 0.5
-    catalog add rigid_material ice 0.05
+    catalog add rigid_material ground 0.5 0.15
+    catalog add rigid_material ice 0.075 0.55
+    catalog add rigid_material rubber 0.7 0.8
+    catalog add rigid_material character 0.3 0.075
 
     catalog add texture cube 64 64 textures/demo/cube.png lazy
     catalog add texture tree1 72 65 textures/demo/tree1_tileset.png lazy
@@ -104,7 +106,7 @@ end
 
 scene add entity Cube 0 0 0.8 0.8
     box_renderer prop1 texture cube 0
-    collider
+    collider character
     rigid_body 50 10 0.2
     keyboard_rigid_controller 6.25 W S A D
     camera 33.75
@@ -114,7 +116,7 @@ end
 scene add entity Campfire 3.125 9.375 2 2
     box_renderer prop1 texture campfire 0
     box_renderer_animated 0.1
-    collider
+    collider ground
     entity Light 0 0 5 5
         box_light texture gcirc1 0
         pulsator 0.99 1.01 10
