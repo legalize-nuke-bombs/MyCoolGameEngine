@@ -6,6 +6,7 @@ once map_deps start
     catalog add renderer_layer bg1 1
     catalog add renderer_layer bg2 2
     catalog add renderer_layer prop1 10
+    catalog add renderer_layer gizmo 99
 
     catalog add rigid_layer bg1 1
     catalog add rigid_layer bg2 2
@@ -16,6 +17,7 @@ once map_deps start
     catalog add rigid_material character 0.3 0.075
 
     catalog add texture cube 64 64 1 textures/demo/cube.png lazy
+    catalog add texture campfire 64 64 5 textures/demo/campfire.png lazy
     catalog add texture plant1 512 512 90 textures/demo/plant1.png lazy
     catalog add texture plant2 512 512 90 textures/demo/plant2.png lazy
     catalog add texture plant3 512 512 90 textures/demo/plant3.png lazy
@@ -102,12 +104,12 @@ once map_deps end
 
 
 scene add entity Terrain 0 0 250 250
-    box_renderer bg1 color 0 0 0 255
+    box_renderer bg1 color 0 0 50 255
     rigid_surface bg1 ground
 end
 
-scene add entity Ice 0 0 15 15
-    box_renderer bg2 color 0 0 0 255
+scene add entity Ice -10 10 15 15
+    box_renderer bg2 color 0 0 75 255
     rigid_surface bg2 ice
 end
 
@@ -119,6 +121,30 @@ end
 
 scene add entity Garden 0 0 250 250
     forest 2500 Plant1 Plant2 Plant3 Plant4 Plant5 Plant6 Plant7 Plant8 Plant9 Plant10 Plant11 end
+end
+
+scene add entity Campfire 6 4 2 2
+    box_renderer prop1 texture campfire 0
+    box_renderer_animated 2.5
+    entity Light 0 0 5 5
+        box_light texture gcirc1 0
+        pulsator 0.99 1.01 10
+    end
+    entity Collider 0 -0.25 0.5 0.5
+        collider ground
+    end
+end
+
+scene add entity BoxBig -2 -2 2 2
+    box_renderer prop1 color 255 192 203 255
+    collider rubber
+    rigid_body 200 1 1
+end
+
+scene add entity BoxSmall -8 -2 1 1
+    box_renderer prop1 color 255 192 203 255
+    collider rubber
+    rigid_body 12.5 1 1
 end
 
 scene add entity Cube 0 0 0.8 0.8
