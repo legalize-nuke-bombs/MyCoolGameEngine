@@ -46,7 +46,7 @@ static void idle_simulation_chunk_update(struct component *base, const struct up
     struct idle *this = (struct idle *) base;
     this->timer += context->dt;
     if (this->timer >= 10) {
-        rigid_body_explosion(component_get_rect(base), 1e+7, scene_get_chunks(component_get_scene(base)));
+        rigid_body_explosion(component_get_rect(base), 1e+4, scene_get_chunks(component_get_scene(base)));
         this->timer = 0;
     }
 }

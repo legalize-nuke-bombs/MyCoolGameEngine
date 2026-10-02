@@ -18,7 +18,7 @@
 
 
 #define FRICTION_DEFAULT 0.5f
-#define GRAVITY 320.f
+#define GRAVITY 9.8f
 
 
 struct rigid_body {
@@ -143,7 +143,7 @@ double rigid_body_get_mass(const struct rigid_body *this) {
 void rigid_body_explosion(struct rect rect, const double f, const struct chunks *chunks) {
     logger_debug("Explosion x %f y %f w %f h %f f %f", rect.position.x, rect.position.y, rect.size.x, rect.size.y, f);
 
-    const double f_min = 10000.f; // TODO fix after physical based coordiantes
+    const double f_min = 10.f; // TODO fix after physical based coordiantes
     const double n = f / f_min;
     rect.size = vector_multiply_scalar(rect.size, n);
 

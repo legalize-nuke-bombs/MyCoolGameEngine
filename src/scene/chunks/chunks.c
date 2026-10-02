@@ -15,7 +15,7 @@
 #include "../components/component.h"
 
 #define CHUNKS_SIZE 512
-#define CHUNKS_START_CHUNK_SIZE 256.f
+#define CHUNKS_START_CHUNK_SIZE 8.f
 
 
 struct chunks {
