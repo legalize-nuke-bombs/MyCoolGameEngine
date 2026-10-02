@@ -2,10 +2,10 @@
 
 #include <math.h>
 
-double vector_get_length(const struct vector2 vector) {
-    return sqrt(vector_get_sqr_length(vector));
+double vector_mod(const struct vector2 vector) {
+    return sqrt(vector_sql_mod(vector));
 }
-double vector_get_sqr_length(struct vector2 vector) {
+double vector_sql_mod(struct vector2 vector) {
     return vector.x * vector.x + vector.y * vector.y;
 }
 
@@ -36,7 +36,7 @@ struct vector2 vector_multiply_scalar(const struct vector2 vector1, double scala
 }
 
 struct vector2 vector_normalize(const struct vector2 this) {
-    const double length = vector_get_length(this);
+    const double length = vector_mod(this);
     if (length < 0.00001) {
         return vector2_zero;
     }

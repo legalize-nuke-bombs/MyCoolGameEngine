@@ -3,8 +3,8 @@
 
 #include "vector2.h"
 
-double vector_get_length(struct vector2 vector);
-double vector_get_sqr_length(struct vector2 vector);
+double vector_mod(struct vector2 vector);
+double vector_sql_mod(struct vector2 vector);
 
 struct vector2 vector_sum(struct vector2 vector1, struct vector2 vector2);
 struct vector2 vector_sub(struct vector2 vector1, struct vector2 vector2);

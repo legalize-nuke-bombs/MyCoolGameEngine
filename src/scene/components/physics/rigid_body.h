@@ -9,12 +9,17 @@ struct parser;
 struct entity;
 struct rigid_body;
 struct vector2;
+struct chunks;
+
+#include "../../../utils/rect.h"
 
 const char* rigid_body_component_key(void);
 
 struct component* rigid_body_create(struct parser *parser, struct entity *parent);
 
-void rigid_body_push(struct rigid_body *this, struct vector2 f);
+void rigid_body_push(struct rigid_body *this, struct vector2 impulse);
 void rigid_body_push_off(struct rigid_body *this, struct vector2 f);
+
+void rigid_body_explosion(struct rect rect, double f, const struct chunks *chunks);
 
 #endif //MYCOOLGAMEENGINE_RIGID_BODY_H
