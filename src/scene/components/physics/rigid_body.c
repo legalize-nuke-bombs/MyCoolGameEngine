@@ -52,7 +52,7 @@ struct component* rigid_body_create(struct parser *parser, struct entity *parent
     component_base_create(base, &rigid_body_vtable, parent);
 
     parser_next_double(parser, &this->m);
-    if (this->m < 0) this->m = 1e+9;
+    if (this->m < 0) this->m = 1;
     parser_next_double(parser, &this->base_friction_coefficient);
     if (this->base_friction_coefficient < 0) this->base_friction_coefficient = 1.f;
     parser_next_double(parser, &this->rolling_friction_coefficient);
