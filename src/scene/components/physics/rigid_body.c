@@ -144,6 +144,14 @@ void rigid_body_explosion(struct rect rect, const double f, const struct chunks 
             while (dictionary_next(dict, &iterator, &node)) {
                 struct rigid_body *rb = node.value;
                 const struct vector2 rb_position = component_get_rect((struct component*)rb).position;
+
+                // a body lies in every cell its rect touches: push it only from the cell of its centre
+                int rb_x, rb_x_end, rb_y, rb_y_end;
+                chunks_get_rect_indexes(chunks, (struct rect){ rb_position, vector2_zero }, &rb_x, &rb_x_end, &rb_y, &rb_y_end);
+                if (rb_x != x || rb_y != y) {
+                    continue;
+                }
+
                 const struct vector2 d_pos = vector_sub(rect.position, rb_position);
                 double r_sqr = vector_sql_mod(d_pos);
                 if (r_sqr < 0.01f) r_sqr = 1e+9;
