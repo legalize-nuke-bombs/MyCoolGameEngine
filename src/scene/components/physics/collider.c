@@ -10,6 +10,8 @@
 #include "../../../utils/dictionary.h"
 #include "../../../utils/pointer_dictionary.h"
 #include "../../scene.h"
+#include "../../../logging/logger.h"
+#include "../../chunks/chunks.h"
 
 
 struct collider {
@@ -31,7 +33,7 @@ static bool collider_is_chunkable() {
 
 static void collider_on_destroy(struct component *component);
 static void collider_on_awake(struct component *base);
-static void collider_on_movement(struct component *component);
+static void collider_on_movement(struct component *base);
 
 static const struct component_vtable collider_vtable = {
     .component_key = collider_component_key,
@@ -71,7 +73,49 @@ static void collider_on_awake(struct component *base) {
     this->chunks = scene_get_chunks(component_get_scene(base));
 }
 
-static void collider_on_movement(struct component *component) {
-    struct collider* this = (struct collider*)component;
+static void collider_lazy_create_intersections(struct collider *this) {
+    if (this->intersections == NULL) {
+        this->intersections = pointer_dictionary_build(1);
+    }
+}
 
+static void collider_handle_active_intersection(struct collider *this, struct collider *collider, bool share) {
+    collider_lazy_create_intersections(this);
+    if (!dictionary_try_add(this->intersections, collider, collider)) {
+        return;
+    }
+    logger_info("Entity %s registered new intersection with %s!", component_get_global_parent_name((struct component*)this), component_get_global_parent_name((struct component*)collider));
+    if (share) {
+        collider_handle_active_intersection(collider, this, false);
+    }
+}
+
+static void collider_on_movement(struct component *base) {
+    struct collider* this = (struct collider*)base;
+
+    const struct rect rect = component_get_rect(base);
+    int x_start, x_end, y_start, y_end;
+    chunks_get_rect_indexes(this->chunks, rect, &x_start, &x_end, &y_start, &y_end);
+
+    for (int x = x_start; x <= x_end; x++) {
+        for (int y = y_start; y <= y_end; y++) {
+            const struct dictionary *colliders = chunks_chunk_get_components_by_type(this->chunks, x, y, "collider");
+            if (colliders == NULL) {
+                continue;
+            }
+
+            struct dictionary_iterator iterator = dictionary_begin(colliders);
+            struct dictionary_node node;
+            while (dictionary_next(colliders, &iterator, &node)) {
+                struct collider *collider = node.value;
+                if (collider == this) {
+                    continue;
+                }
+                const struct rect collider_rect = component_get_rect((struct component*)collider);
+                if (rects_intersection(rect, collider_rect)) {
+                    collider_handle_active_intersection(this, collider, true);
+                }
+            }
+        }
+    }
 }
