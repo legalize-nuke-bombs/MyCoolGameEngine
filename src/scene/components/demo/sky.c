@@ -5,6 +5,7 @@
 #include "sky.h"
 
 #include <math.h>
+#include <stdlib.h>
 
 #include "clock.h"
 #include "../component_internal.h"
@@ -47,7 +48,7 @@ const char* sky_component_key(void) {
 }
 
 struct component* sky_create(struct parser *parser, struct entity *parent) {
-    struct sky *this = malloc(sizeof(struct sky));
+    struct sky *this = calloc(1, sizeof(struct sky));
     struct component *base = (struct component *) this;
     component_base_create(base, &sky_vtable, parent);
     parser_next_uint8(parser, &this->day_color.r);

@@ -1,5 +1,7 @@
 #include "clock.h"
 
+#include <stdlib.h>
+
 #include "../component_internal.h"
 #include "../../../utils/parser.h"
 
@@ -28,7 +30,7 @@ const char* clock_component_key(void) {
 }
 
 struct component* clock_create(struct parser *parser, struct entity *parent) {
-    struct clock *this = malloc(sizeof(struct clock));
+    struct clock *this = calloc(1, sizeof(struct clock));
     struct component *base = (struct component *) this;
     component_base_create(base, &clock_vtable, parent);
     parser_next_double(parser, &this->seconds);

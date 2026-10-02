@@ -3,7 +3,6 @@
 
 #include <stdbool.h>
 
-#include "../engine/update_context.h"
 #include "components/component.h"
 #include "../utils/rect.h"
 
@@ -31,9 +30,6 @@ struct scene* entity_get_scene(const struct entity *this);
 struct rect entity_get_local_rect(const struct entity *this);
 void entity_set_local_rect(struct entity *this, struct rect new_local_rect);
 struct rect entity_get_rect(const struct entity *this);
-
-struct action* entity_get_action_on_component_captured(struct entity *this);
-struct action* entity_get_action_on_marked_destroyed(struct entity *this);
 
 void entity_capture_entity(struct entity *this, struct entity *entity);
 void entity_capture_component(struct entity *this, struct component *component);

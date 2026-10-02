@@ -25,16 +25,21 @@ struct scene {
     char* name;
     bool awoken;
 
+    struct action on_component_captured;
+    struct action on_component_marked_destroyed;
+    struct action on_entity_captured;
+    struct action on_entity_marked_destroyed;
+    struct action on_component_resize;
+
     char* switch_flag;
 
     struct entity_collection* entities;
     struct tmap *tmap;
+    struct component_fabric* component_fabric;
+    struct chunks* chunks;
 
     struct action* on_physics;
     unsigned int on_physics_subscription_token;
-
-    struct component_fabric* component_fabric;
-    struct chunks* chunks;
 };
 
 static const char* scene_get_subsystem_key() {
@@ -58,16 +63,23 @@ struct subsystem* scene_create(char *name, const struct subsystem_collection *su
     subsystem_create(base, &scene_vtable, subsystems);
 
     this->name = name;
-    this->entities = entity_collection_create();
-    this->tmap = tmap_create();
+
+    this->on_component_captured = action_create();
+    this->on_component_marked_destroyed = action_create();
+    this->on_entity_captured = action_create();
+    this->on_entity_marked_destroyed = action_create();
+    this->on_component_resize = action_create();
+
+    this->entities = entity_collection_create(this);
+    this->tmap = tmap_create(this);
     this->component_fabric = component_fabric_create();
-    this->chunks = chunks_create();
+    this->chunks = chunks_create(this);
 
     return base;
 }
 
 void scene_on_destroy(struct subsystem *base) {
-    const struct scene *this = (struct scene*)base;
+    struct scene *this = (struct scene*)base;
     logger_info("Scene %s is destroying...", this->name);
 
     component_fabric_destroy(this->component_fabric);
@@ -75,6 +87,10 @@ void scene_on_destroy(struct subsystem *base) {
     entity_collection_destroy(this->entities);
     tmap_destroy(this->tmap);
     if (this->switch_flag != NULL) free(this->switch_flag);
+    action_destroy(&this->on_component_resize);
+    action_destroy(&this->on_entity_marked_destroyed);
+    action_destroy(&this->on_component_marked_destroyed);
+    action_destroy(&this->on_component_captured);
     free(this->name);
 }
 
@@ -124,19 +140,13 @@ void scene_mark_switch(struct scene *this, const char* script_path) {
 
 
 
-static void scene_run_gc(const struct scene *this) {
-    const int destroyed = entity_collection_destroy_dead(this->entities);
-    if (destroyed > 0) {
-        logger_debug("Scene %s gc destroyed %d entities", this->name, destroyed);
-    }
-}
-
 static void scene_update(void *listener, void *context) {
     struct scene* this = listener;
     const struct update_context* update_context = context;
+
     scene_handle_switch(this);
     tmap_update(this->tmap, update_context);
-    scene_run_gc(this);
+    entity_collection_post_update(this->entities);
 }
 
 
@@ -146,11 +156,35 @@ const char* scene_get_name(const struct scene *this) {
     return this->name;
 }
 
-static void handle_new_component(void *base, void *component) {
-    const struct scene *this = base;
-    tmap_register_component(this->tmap, component);
-    chunks_register_component(this->chunks, component);
+
+void scene_notify_component_captured(const struct scene *this, struct component *component) {
+    return action_invoke(&this->on_component_captured, component);
 }
+void scene_notify_component_marked_destroyed(const struct scene *this, struct component *component) {
+    return action_invoke(&this->on_component_marked_destroyed, component);
+}
+void scene_notify_entity_marked_destroyed(const struct scene *this, struct entity *entity) {
+    return action_invoke(&this->on_entity_marked_destroyed, entity);
+}
+void scene_notify_component_resize(const struct scene *this, struct component_on_rect_changed_callback_data *data) {
+    return action_invoke(&this->on_component_resize, data->component);
+}
+struct action* scene_get_on_component_captured(struct scene *this) {
+    return &this->on_component_captured;
+}
+struct action* scene_get_on_component_marked_destroyed(struct scene *this) {
+    return &this->on_component_marked_destroyed;
+}
+struct action* scene_get_on_entity_captured(struct scene *this) {
+    return &this->on_entity_captured;
+}
+struct action* scene_get_on_entity_marked_destroyed(struct scene *this) {
+    return &this->on_entity_marked_destroyed;
+}
+struct action* scene_get_on_component_resize(struct scene *this) {
+    return &this->on_component_resize;
+}
+
 
 const struct tmap* scene_get_tmap(const struct scene *this) {
     return this->tmap;
@@ -169,11 +203,7 @@ void scene_capture_entity(struct scene *this, struct entity *entity) {
     entity_set_scene(entity, this);
     logger_debug("Scene %s is capturing entity %s", this->name, entity_get_name(entity));
 
-    entity_collection_add(this->entities, entity);
-
-    struct action* entity_on_component_captured = entity_get_action_on_component_captured(entity);
-    unsigned int subscription_token; // We do not unsubscribe because scene always lives longer than it's entities
-    action_subscribe(entity_on_component_captured, this, handle_new_component, &subscription_token);
+    action_invoke(&this->on_entity_captured, entity);
 
     entity_recapture_components(entity);
 

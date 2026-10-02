@@ -1,5 +1,6 @@
 #include "scene_switcher.h"
 
+#include <stdlib.h>
 #include <string.h>
 
 #include "../component_internal.h"
@@ -8,6 +9,7 @@
 #include "../../scene.h"
 #include "../../../subsystems/subsystem_collection.h"
 #include "../../../utils/parser.h"
+#include "../../../utils/action.h"
 
 
 struct scene_switcher {

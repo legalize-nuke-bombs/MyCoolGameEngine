@@ -11,17 +11,34 @@
 #include "../utils/action.h"
 #include "../utils/list.h"
 #include "../utils/pointer_dictionary.h"
+#include "scene.h"
 
 struct entity_collection {
     struct dictionary *entities;
     struct list dead;
+
+    struct action* on_entity_captured;
+    unsigned int on_entity_captured_token;
+
+    struct action* on_entity_marked_destroyed;
+    unsigned int on_entity_marked_destroyed_token;
 };
 
-struct entity_collection *entity_collection_create(void) {
+static void handle_entity_captured(void *listener, void *context);
+static void handle_entity_marked_destroyed(void *listener, void *context);
+
+struct entity_collection *entity_collection_create(struct scene *scene) {
     logger_info("Entity_collection is creating...");
-    struct entity_collection *this = malloc(sizeof(struct entity_collection));
+    struct entity_collection *this = calloc(1, sizeof(struct entity_collection));
     this->entities = pointer_dictionary_build(4);
     this->dead = list_create(16);
+
+    this->on_entity_captured = scene_get_on_entity_captured(scene);
+    action_subscribe(this->on_entity_captured, this, handle_entity_captured, &this->on_entity_captured_token);
+
+    this->on_entity_marked_destroyed = scene_get_on_entity_marked_destroyed(scene);
+    action_subscribe(this->on_entity_marked_destroyed, this, handle_entity_marked_destroyed, &this->on_entity_marked_destroyed_token);
+
     return this;
 }
 
@@ -38,6 +55,8 @@ static void entity_collection_destroy_everyone(const struct entity_collection *t
 
 void entity_collection_destroy(struct entity_collection *this) {
     logger_info("Entity_collection is destroying...");
+    action_unsubscribe(this->on_entity_marked_destroyed, this->on_entity_marked_destroyed_token);
+    action_unsubscribe(this->on_entity_captured, this->on_entity_captured_token);
     entity_collection_destroy_everyone(this);
     dictionary_destroy(this->entities);
     list_destroy(&this->dead);
@@ -57,6 +76,16 @@ void entity_collection_clear(struct entity_collection *this) {
     list_clear(&this->dead);
 }
 
+static void handle_entity_captured(void *listener, void *context) {
+    struct entity_collection *this = listener;
+    struct entity *entity = context;
+    if (!entity_is_alive(entity)) {
+        list_add(&this->dead, entity);
+        return;
+    }
+    dictionary_try_add(this->entities, entity, entity);
+
+}
 static void handle_entity_marked_destroyed(void *listener, void *context) {
     struct entity_collection *this = listener;
     struct entity *entity = context;
@@ -64,21 +93,9 @@ static void handle_entity_marked_destroyed(void *listener, void *context) {
     list_add(&this->dead, entity);
 }
 
-void entity_collection_add(struct entity_collection *this, struct entity *entity) {
-    if (!entity_is_alive(entity)) {
-        list_add(&this->dead, entity);
-        return;
-    }
-    dictionary_try_add(this->entities, entity, entity);
-    unsigned int subscription_token; // We do not unsubscribe because collection always lives longer than it's entities
-    action_subscribe(entity_get_action_on_marked_destroyed(entity), (void*)this, handle_entity_marked_destroyed, &subscription_token);
-}
-
-int entity_collection_destroy_dead(struct entity_collection *this) {
+void entity_collection_post_update(struct entity_collection *this) {
     for (int i = 0; i < list_count(&this->dead); i++) {
         entity_destroy(list_get(&this->dead, i));
     }
-    const int destroyed = list_count(&this->dead);
     list_clear(&this->dead);
-    return destroyed;
 }

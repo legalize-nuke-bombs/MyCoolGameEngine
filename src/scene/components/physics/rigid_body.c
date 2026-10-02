@@ -4,6 +4,8 @@
 
 #include "rigid_body.h"
 
+#include <stdlib.h>
+
 #include "rigid_surface.h"
 #include "../component_internal.h"
 #include "../../entity.h"

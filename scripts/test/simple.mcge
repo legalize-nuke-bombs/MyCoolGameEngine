@@ -34,7 +34,7 @@ end
 
 scene add entity Cube 0 0 26 26
     box_renderer prop1 texture cube 0
-    camera 100
+    camera
     controller 250
-    keyboard_controller
+    keyboard_controller W S A D
 end

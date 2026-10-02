@@ -4,7 +4,7 @@
 
 #include "../entity.h"
 #include "../../logging/logger.h"
-#include "../../utils/action.h"
+#include "../scene.h"
 #include "../../utils/rect_pair.h"
 
 void component_base_create(struct component *this, const struct component_vtable *vtable, struct entity *parent) {
@@ -12,9 +12,6 @@ void component_base_create(struct component *this, const struct component_vtable
     logger_debug("Component %s is creating...", component_get_key(this));
     this->awake = false;
     this->alive = true;
-
-    this->on_rect_changed = action_create();
-    this->on_marked_destroyed = action_create();
 
     this->last_visible_chunk_update_frame_number = 0;
     this->last_simulation_chunk_update_frame_number = 0;
@@ -27,8 +24,6 @@ struct component* component_clone(const struct component *component) {
     logger_debug("Component %s is cloning...", component_get_key(component));
     this.awake = false;
     this.alive = true;
-    this.on_rect_changed = action_create();
-    this.on_marked_destroyed = action_create();
     return component->vtable->on_clone(this, component);
 }
 
@@ -47,8 +42,6 @@ void component_awake(struct component *this) {
 void component_destroy(struct component *this) {
     component_mark_destroyed(this);
     logger_debug("Entity %s is destroying component %s...", component_get_parent_name(this), component_get_key(this));
-    action_destroy(&this->on_marked_destroyed);
-    action_destroy(&this->on_rect_changed);
     if (this->vtable->on_destroy) {
         this->vtable->on_destroy(this);
     }
@@ -63,7 +56,10 @@ void component_mark_destroyed(struct component *this) {
     if (this->awake && this->vtable->on_disable) {
         this->vtable->on_disable(this);
     }
-    action_invoke(&this->on_marked_destroyed, this);
+    struct scene *scene = component_get_scene(this);
+    if (scene) {
+        scene_notify_component_marked_destroyed(scene, this);
+    }
 }
 
 bool component_is_awake(const struct component *this) {
@@ -95,6 +91,12 @@ const char* component_get_global_parent_name(const struct component *this) {
     const struct entity* global_parent = component_get_global_parent(this);
     return global_parent ? entity_get_name(global_parent) : "<null>";
 }
+struct scene* component_get_scene(const struct component *this) {
+    if (this->parent == NULL) {
+        return NULL;
+    }
+    return entity_get_scene(this->parent);
+}
 
 struct rect component_get_rect(const struct component *this) {
     if (this->parent == NULL) {
@@ -102,18 +104,15 @@ struct rect component_get_rect(const struct component *this) {
     }
     return entity_get_rect(this->parent);
 }
-struct action* component_get_on_rect_changed(struct component *this) {
-    return &this->on_rect_changed;
-}
 void component_notify_rect_changed(struct component *this, const struct rect_pair rect_pair) {
     struct component_on_rect_changed_callback_data data = {
         .component = this,
         .rect_pair = rect_pair
     };
-    action_invoke(&this->on_rect_changed, &data);
-}
-struct action* component_get_on_marked_destroyed(struct component *this) {
-    return &this->on_marked_destroyed;
+    struct scene *scene = component_get_scene(this);
+    if (scene) {
+        scene_notify_component_resize(scene, &data);
+    }
 }
 
 const char* component_get_key(const struct component *this) {

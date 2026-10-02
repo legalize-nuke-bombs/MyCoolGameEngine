@@ -3,7 +3,6 @@
 
 #include <stdbool.h>
 #include "component.h"
-#include "../../utils/action.h"
 
 
 struct component_vtable {
@@ -22,9 +21,6 @@ struct component {
     const struct component_vtable *vtable;
     bool awake;
     bool alive;
-
-    struct action on_rect_changed;
-    struct action on_marked_destroyed;
 
     unsigned int last_visible_chunk_update_frame_number;
     unsigned int last_simulation_chunk_update_frame_number;

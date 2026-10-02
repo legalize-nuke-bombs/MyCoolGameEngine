@@ -84,6 +84,9 @@ static void camera_update_visible_chunks(const struct camera *this, const struct
                     if (!component_is_visible_chunkable(component)) {
                         break;
                     }
+                    if (!component_is_awake(component)) {
+                        continue;
+                    }
                     component_visible_chunk_update(component, context);
                 }
             }

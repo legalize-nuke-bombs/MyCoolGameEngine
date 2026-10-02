@@ -3,6 +3,9 @@
 //
 
 #include "rigid_surface.h"
+
+#include <stdlib.h>
+
 #include "../component_internal.h"
 #include "../../entity.h"
 #include "../../scene.h"

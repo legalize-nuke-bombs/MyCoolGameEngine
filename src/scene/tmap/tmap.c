@@ -6,6 +6,7 @@
 
 #include <stdlib.h>
 
+#include "../scene.h"
 #include "../../utils/action.h"
 #include "../../utils/dictionary.h"
 #include "../../utils/pointer_dictionary.h"
@@ -15,16 +16,34 @@
 
 struct tmap {
     struct dictionary *types;
+
+    struct action* on_component_captured;
+    unsigned int on_component_captured_subscription_token;
+
+    struct action* on_component_marked_destroyed;
+    unsigned int on_component_marked_destroyed_subscription_token;
 };
 
-struct tmap* tmap_create(void) {
+static void handle_component_captured(void *listener, void *context);
+static void handle_component_marked_destroyed(void *listener, void *context);
+
+struct tmap* tmap_create(struct scene *scene) {
     logger_info("TMap is creating...");
-    struct tmap *this = malloc(sizeof(struct tmap));
+    struct tmap *this = calloc(1, sizeof(struct tmap));
     this->types = string_dictionary_build(4);
+
+    this->on_component_captured = scene_get_on_component_captured(scene);
+    action_subscribe(this->on_component_captured, this, handle_component_captured, &this->on_component_captured_subscription_token);
+
+    this->on_component_marked_destroyed = scene_get_on_component_marked_destroyed(scene);
+    action_subscribe(this->on_component_marked_destroyed, this, handle_component_marked_destroyed, &this->on_component_marked_destroyed_subscription_token);
+
     return this;
 }
 void tmap_destroy(struct tmap *this) {
     logger_info("TMap is destroying...");
+    action_unsubscribe(this->on_component_marked_destroyed, this->on_component_marked_destroyed_subscription_token);
+    action_unsubscribe(this->on_component_captured, this->on_component_captured_subscription_token);
     struct dictionary_iterator iterator = dictionary_begin(this->types);
     struct dictionary_node node;
     while (dictionary_next(this->types, &iterator, &node)) {
@@ -46,6 +65,9 @@ void tmap_update(const struct tmap *this, const struct update_context *context) 
             if (!component_is_updateable(component)) {
                 break;
             }
+            if (!component_is_awake(component)) {
+                continue;
+            }
             component_update(component, context);
         }
     }
@@ -59,16 +81,10 @@ void tmap_clear(const struct tmap *this) {
     }
 }
 
-static void handle_component_marked_destroyed(void *listener, void *context) {
-    const struct tmap *this = listener;
+static void handle_component_captured(void *listener, void *context) {
+    struct tmap *this = listener;
     struct component *component = context;
-    struct dictionary *components = dictionary_get(this->types, (void*) component_get_key(component));
-    if (components != NULL) {
-        dictionary_remove(components, component);
-    }
-}
 
-void tmap_register_component(const struct tmap *this, struct component *component) {
     if (!component_is_alive(component)) {
         return;
     }
@@ -86,9 +102,16 @@ void tmap_register_component(const struct tmap *this, struct component *componen
     }
 
     if (dictionary_try_add(components, component, component)) {
-        unsigned int subscription_token; // We do not unsubscribe because tmap always lives longer than components
-        action_subscribe(component_get_on_marked_destroyed(component), (void*) this, handle_component_marked_destroyed, &subscription_token);
         logger_debug("TMap registered sample of %s", component_key);
+    }
+}
+
+static void handle_component_marked_destroyed(void *listener, void *context) {
+    const struct tmap *this = listener;
+    struct component *component = context;
+    struct dictionary *components = dictionary_get(this->types, (void*) component_get_key(component));
+    if (components != NULL) {
+        dictionary_remove(components, component);
     }
 }
 

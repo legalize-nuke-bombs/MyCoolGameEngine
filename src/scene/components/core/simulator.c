@@ -86,6 +86,9 @@ static void simulator_simulate(const struct simulator *this, const struct update
                     if (!component_is_simulation_chunkable(component)) {
                         break;
                     }
+                    if (!component_is_awake(component)) {
+                        continue;
+                    }
                     component_simulation_chunk_update(component, context);
                 }
             }

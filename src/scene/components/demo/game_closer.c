@@ -1,5 +1,6 @@
 #include "game_closer.h"
 
+#include <stdlib.h>
 #include <string.h>
 
 #include "../component_internal.h"
@@ -9,6 +10,7 @@
 #include "../../../engine/lifecycle/engine_lifecycle.h"
 #include "../../../subsystems/subsystem_collection.h"
 #include "../../../utils/parser.h"
+#include "../../../utils/action.h"
 
 
 struct game_closer {

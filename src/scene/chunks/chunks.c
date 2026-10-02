@@ -8,6 +8,7 @@
 #include <math.h>
 #include <stdlib.h>
 
+#include "../scene.h"
 #include "../../logging/logger.h"
 #include "../../utils/action.h"
 #include "../../utils/pointer_dictionary.h"
@@ -20,13 +21,37 @@
 struct chunks {
     struct chunk chunks[CHUNKS_SIZE][CHUNKS_SIZE];
     float chunk_size;
+
+    struct action* on_component_captured;
+    unsigned int on_component_captured_token;
+
+    struct action* on_component_marked_destroyed;
+    unsigned int on_component_marked_destroyed_token;
+
+    struct action* on_component_resize;
+    unsigned int on_component_resize_token;
 };
 
 
-struct chunks *chunks_create() {
+static void handle_component_captured(void *listener, void *context);
+static void handle_component_marked_destroyed(void *listener, void *context);
+static void handle_component_resize(void *listener, void *context);
+
+
+struct chunks *chunks_create(struct scene *scene) {
     logger_info("Chunks (%d x %d, chunk size %f) are creating...", CHUNKS_SIZE, CHUNKS_SIZE, CHUNKS_START_CHUNK_SIZE);
     struct chunks *this = calloc(1, sizeof(struct chunks));
     this->chunk_size = CHUNKS_START_CHUNK_SIZE;
+
+    this->on_component_captured = scene_get_on_component_captured(scene);
+    action_subscribe(this->on_component_captured, this, handle_component_captured, &this->on_component_captured_token);
+
+    this->on_component_marked_destroyed = scene_get_on_component_marked_destroyed(scene);
+    action_subscribe(this->on_component_marked_destroyed, this, handle_component_marked_destroyed, &this->on_component_marked_destroyed_token);
+
+    this->on_component_resize = scene_get_on_component_resize(scene);
+    action_subscribe(this->on_component_resize, this, handle_component_resize, &this->on_component_resize_token);
+
     return this;
 }
 
@@ -151,26 +176,27 @@ static void chunks_resize(struct chunks *this) {
     dictionary_destroy(all_components);
 }
 
-static void handle_component_rect_changed(void *listener, void *context);
-static void handle_component_marked_destroyed(void *listener, void *context);
-
-void chunks_register_component(struct chunks *this, struct component *component) {
+static void handle_component_captured(void *listener, void *context) {
+    struct chunks *this = listener;
+    struct component *component = context;
     if (!component_is_chunkable(component) || !component_is_alive(component)) {
         return;
     }
-    // We do not unsubscribe because scene infrastructure live longer than components
-    unsigned int on_rect_changed_subscription_token;
-    action_subscribe(component_get_on_rect_changed(component), this, handle_component_rect_changed, &on_rect_changed_subscription_token);
-    unsigned int on_marked_destroyed_subscription_token;
-    action_subscribe(component_get_on_marked_destroyed(component), this, handle_component_marked_destroyed, &on_marked_destroyed_subscription_token);
     chunks_add_component_with_resize(this, component);
 }
-
-static void handle_component_rect_changed(void *listener, void *context) {
+static void handle_component_marked_destroyed(void *listener, void *context) {
+    const struct chunks *this = listener;
+    const struct component *component = context;
+    if (!component_is_chunkable(component)) {
+        return;
+    }
+    chunks_remove_component(this, component_get_rect(component), component);
+}
+static void handle_component_resize(void *listener, void *context) {
     struct chunks *this = listener;
     const struct component_on_rect_changed_callback_data *data = context;
     struct component *component = data->component;
-    if (!component_is_alive(component)) {
+    if (!component_is_chunkable(component) || !component_is_alive(component)) {
         return;
     }
 
@@ -181,13 +207,6 @@ static void handle_component_rect_changed(void *listener, void *context) {
     if (old_x_start == new_x_start && old_x_end == new_x_end && old_y_start == new_y_start && old_y_end == new_y_end) {
         return;
     }
-
     chunks_remove_component(this, data->rect_pair.rect1, component);
     chunks_add_component_with_resize(this, component);
-}
-
-static void handle_component_marked_destroyed(void *listener, void *context) {
-    const struct chunks *this = listener;
-    const struct component *component = context;
-    chunks_remove_component(this, component_get_rect(component), component);
 }

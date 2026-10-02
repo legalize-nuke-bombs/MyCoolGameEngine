@@ -22,15 +22,14 @@ struct entity* component_get_parent(const struct component *this);
 const char* component_get_parent_name(const struct component *this);
 struct entity* component_get_global_parent(const struct component *this);
 const char* component_get_global_parent_name(const struct component *this);
+struct scene* component_get_scene(const struct component *this);
 
 struct component_on_rect_changed_callback_data {
     struct component *component;
     struct rect_pair rect_pair;
 };
 struct rect component_get_rect(const struct component *this);
-struct action* component_get_on_rect_changed(struct component *this);
 void component_notify_rect_changed(struct component *this, struct rect_pair rect_pair);
-struct action* component_get_on_marked_destroyed(struct component *this);
 
 const char* component_get_key(const struct component *this);
 
