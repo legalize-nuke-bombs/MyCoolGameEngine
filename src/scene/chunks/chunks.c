@@ -92,11 +92,6 @@ void chunks_get_rect_indexes(const struct chunks *this, const struct rect rect, 
     *y_end = chunks_get_position_index(this, max_y);
 }
 
-void chunks_get_position_indexes(const struct chunks *this, const struct vector2 position, int *x, int *y) {
-    *x = chunks_get_position_index(this, position.x);
-    *y = chunks_get_position_index(this, position.y);
-}
-
 struct dictionary* chunks_chunk_get_types(const struct chunks *this, const int index_x, const int index_y) {
     if (index_x < 0 || index_y < 0 || index_x >= CHUNKS_SIZE || index_y >= CHUNKS_SIZE) {
         return NULL;

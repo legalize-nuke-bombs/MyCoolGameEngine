@@ -10,16 +10,12 @@
 #include "../component_internal.h"
 #include "../../entity.h"
 #include "../../scene.h"
-#include "../../../logging/logger.h"
-#include "../../../utils/dictionary.h"
 #include "../../../utils/parser.h"
 #include "../../../utils/vector2_math.h"
-#include "../../chunks/chunks.h"
 
 
 #define FRICTION_DEFAULT 0.5f
 #define GRAVITY 9.8f
-#define EXPLOSION_IMPULSE_MIN 10.f
 
 
 struct rigid_body {
@@ -139,48 +135,4 @@ struct vector2 rigid_body_get_velocity(const struct rigid_body *this) {
 
 double rigid_body_get_mass(const struct rigid_body *this) {
     return this->m;
-}
-
-void rigid_body_explosion(const struct vector2 position, const double impulse_at_one_meter, const struct chunks *chunks) {
-    logger_debug("Explosion x %f y %f impulse at one meter %f", position.x, position.y, impulse_at_one_meter);
-
-    const double radius = impulse_at_one_meter / EXPLOSION_IMPULSE_MIN;
-    const struct rect rect = {
-        .position = position,
-        .size = { 2 * radius, 2 * radius }
-    };
-
-    int x_start, x_end, y_start, y_end;
-    chunks_get_rect_indexes(chunks, rect, &x_start, &x_end, &y_start, &y_end);
-    for (int x = x_start; x <= x_end; x++) {
-        for (int y = y_start; y <= y_end; y++) {
-            const struct dictionary *dict = chunks_chunk_get_components_by_type(chunks, x, y, "rigid_body");
-            if (dict == NULL) {
-                continue;
-            }
-            struct dictionary_iterator iterator = dictionary_begin(dict);
-            struct dictionary_node node;
-            while (dictionary_next(dict, &iterator, &node)) {
-                struct rigid_body *rb = node.value;
-                const struct vector2 rb_position = component_get_rect((struct component*)rb).position;
-
-                // a body lies in every cell its rect touches: push it only from the cell of its centre (a rect's position is its centre)
-                int rb_x, rb_y;
-                chunks_get_position_indexes(chunks, rb_position, &rb_x, &rb_y);
-                if (rb_x != x || rb_y != y) {
-                    continue;
-                }
-
-                const struct vector2 d_pos = vector_sub(rb_position, position);
-                const double r_sqr = vector_sql_mod(d_pos);
-                if (r_sqr < 0.01f || r_sqr > radius * radius) {
-                    continue;
-                }
-
-                const struct vector2 impulse = vector_multiply_scalar(d_pos, impulse_at_one_meter / r_sqr);
-                logger_debug("Explosion pushes entity %s with impulse %f %f", component_get_global_parent_name((struct component*)rb), impulse.x, impulse.y);
-                rigid_body_push(rb, impulse);
-            }
-        }
-    }
 }

@@ -113,7 +113,6 @@ end
 scene add entity Campfire 3.125 9.375 2 2
     box_renderer prop1 texture campfire 0
     box_renderer_animated 0.1
-    idle
     entity Light 0 0 5 5
         box_light texture gcirc1 0
         pulsator 0.99 1.01 10
