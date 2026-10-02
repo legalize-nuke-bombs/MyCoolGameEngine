@@ -5,7 +5,6 @@
 #include "texture.h"
 
 #include <stdlib.h>
-#include <string.h>
 
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
@@ -36,7 +35,7 @@ struct texture {
 
 static void texture_load(struct texture* this);
 
-struct texture* texture_create(char* id, char* path, const int tile_w, const int tile_h, const enum texture_loading_mode loading_mode, SDL_Renderer* native_renderer) {
+struct texture* texture_create(char* id, char* path, const int tile_w, const int tile_h, const int tiles_count, const enum texture_loading_mode loading_mode, SDL_Renderer* native_renderer) {
     logger_debug("Texture %s is creating...", id);
     struct texture* this = calloc(1, sizeof(struct texture));
 
@@ -45,7 +44,7 @@ struct texture* texture_create(char* id, char* path, const int tile_w, const int
 
     this->texture_w = -1;
     this->texture_h = -1;
-    this->tiles_count = -1;
+    this->tiles_count = tiles_count;
 
     this->tile_w = tile_w;
     this->tile_h = tile_h;
@@ -73,9 +72,10 @@ static const char* texture_catalog_key(void) {
 }
 
 static void* texture_on_create_item(const char *name, struct parser *parser, const struct subsystem_collection *subsystems) {
-    int tile_w, tile_h;
+    int tile_w, tile_h, tiles_count;
     parser_next_int(parser, &tile_w);
     parser_next_int(parser, &tile_h);
+    parser_next_int(parser, &tiles_count);
     char* path = parser_next_dup(parser);
     const char* loading_mode_name = parser_next(parser);
 
@@ -88,7 +88,7 @@ static void* texture_on_create_item(const char *name, struct parser *parser, con
     }
 
     const struct renderer* renderer = (struct renderer*)subsystem_collection_get(subsystems, "renderer");
-    return texture_create(strdup(name), path, tile_w, tile_h, loading_mode, renderer_get_native_renderer(renderer));
+    return texture_create(strdup(name), path, tile_w, tile_h, tiles_count, loading_mode, renderer_get_native_renderer(renderer));
 }
 static void texture_on_destroy_item(void *item) {
     texture_destroy(item);
@@ -111,36 +111,38 @@ SDL_Texture* texture_get_native_texture(struct texture* this) {
     return this->native_texture;
 }
 
-static int texture_get_tiles_count(struct texture* this) {
-    if (this->tiles_count < 0) {
-        if (this->texture_w < 0 || this->texture_h < 0) {
-            SDL_Texture* texture = texture_get_native_texture(this);
-            if (texture == NULL) {
-                this->texture_w = this->texture_h = 0;
-            }
-            else {
-                SDL_GetTextureSize(texture, &this->texture_w, &this->texture_h);
-            }
-        }
-        this->tiles_count = (int)this->texture_w / this->tile_w * (int)this->texture_h / this->tile_h;
-    }
+int texture_get_tiles_count(const struct texture* this) {
     return this->tiles_count;
 }
 void texture_get_tile_rect(struct texture* this, const unsigned long long frame, float* target_x, float* target_y, float *target_w, float *target_h) {
-    int tiles_count = texture_get_tiles_count(this);
-    if (tiles_count <= 0) {
+    if (this->texture_w < 0 || this->texture_h < 0) {
+        SDL_Texture* texture = texture_get_native_texture(this);
+        SDL_GetTextureSize(texture, &this->texture_w, &this->texture_h);
+    }
+
+    const int tiles_count = texture_get_tiles_count(this);
+
+    if (tiles_count <= 0 || this->tile_w <= 0 || this->tile_h <= 0 || this->texture_w <= 0) {
         *target_x = 0;
         *target_y = 0;
         *target_w = 0;
         *target_h = 0;
+        return;
     }
-    else {
-        *target_x = (float)(frame % texture_get_tiles_count(this)) * (float)this->tile_w;
-        *target_y = 0;
-        *target_w = (float)this->tile_w;
-        *target_h = (float)this->tile_h;
-    }
+
+    const unsigned long long safe_frame = frame % tiles_count;
+    int columns = (int)this->texture_w / this->tile_w;
+    if (columns <= 0) columns = 1;
+
+    const int col = (int)(safe_frame % columns);
+    const int row = (int)(safe_frame / columns);
+
+    *target_x = (float)col * (float)this->tile_w;
+    *target_y = (float)row * (float)this->tile_h;
+    *target_w = (float)this->tile_w;
+    *target_h = (float)this->tile_h;
 }
+
 
 static void texture_load(struct texture* this) {
     if (this->native_texture != NULL) {

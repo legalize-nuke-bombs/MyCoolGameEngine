@@ -84,3 +84,9 @@ struct renderer_primitive* renderer_square_clone(const struct renderer_square* s
 void renderer_square_bump_texture_frame(struct renderer_square* this) {
     this->texture_frame++;
 }
+int renderer_square_get_texture_frames(const struct renderer_square* this) {
+    if (this->texture == NULL) {
+        return 0;
+    }
+    return texture_get_tiles_count(this->texture);
+}

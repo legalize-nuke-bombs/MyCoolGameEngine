@@ -15,61 +15,78 @@ once map_deps start
     catalog add rigid_material rubber 0.7 0.8
     catalog add rigid_material character 0.3 0.075
 
-    catalog add texture cube 64 64 textures/demo/cube.png lazy
-    catalog add texture tree1 72 65 textures/demo/tree1_tileset.png lazy
-    catalog add texture tree2 72 65 textures/demo/tree2_tileset.png lazy
-    catalog add texture tree3 72 65 textures/demo/tree3_tileset.png lazy
-    catalog add texture tree4 72 65 textures/demo/tree4_tileset.png lazy
-    catalog add texture tree5 72 65 textures/demo/tree5_tileset.png lazy
-    catalog add texture tree6 72 65 textures/demo/tree6_tileset.png lazy
-    catalog add texture tree7 72 65 textures/demo/tree7_tileset.png lazy
-    catalog add texture tree8 72 65 textures/demo/tree8_tileset.png lazy
-    catalog add texture campfire 64 64 textures/demo/campfire.png lazy
-    catalog add texture gcirc1 512 512 textures/core/gcirc1.png lazy
-    catalog add texture gcirc2 512 512 textures/core/gcirc2.png lazy
-    catalog add texture gcirc3 512 512 textures/core/gcirc3.png lazy
-    catalog add texture gcirc4 512 512 textures/core/gcirc4.png lazy
-    catalog add texture gcirc5 512 512 textures/core/gcirc5.png lazy
-    catalog add texture gcirc6 512 512 textures/core/gcirc6.png lazy
+    catalog add texture cube 64 64 1 textures/demo/cube.png lazy
+    catalog add texture plant1 512 512 90 textures/demo/plant1.png lazy
+    catalog add texture plant2 512 512 90 textures/demo/plant2.png lazy
+    catalog add texture plant3 512 512 90 textures/demo/plant3.png lazy
+    catalog add texture plant4 512 512 60 textures/demo/plant4.png lazy
+    catalog add texture plant5 512 512 60 textures/demo/plant5.png lazy
+    catalog add texture plant6 512 512 60 textures/demo/plant6.png lazy
+    catalog add texture plant7 512 512 60 textures/demo/plant7.png lazy
+    catalog add texture plant8 512 512 30 textures/demo/plant8.png lazy
+    catalog add texture plant9 512 512 30 textures/demo/plant9.png lazy
+    catalog add texture plant10 512 512 20 textures/demo/plant10.png lazy
+    catalog add texture plant11 512 512 20 textures/demo/plant11.png lazy
+    catalog add texture gcirc1 512 512 1 textures/core/gcirc1.png lazy
+    catalog add texture gcirc2 512 512 1 textures/core/gcirc2.png lazy
+    catalog add texture gcirc3 512 512 1 textures/core/gcirc3.png lazy
+    catalog add texture gcirc4 512 512 1 textures/core/gcirc4.png lazy
+    catalog add texture gcirc5 512 512 1 textures/core/gcirc5.png lazy
+    catalog add texture gcirc6 512 512 1 textures/core/gcirc6.png lazy
 
-    catalog add prefab Tree1 0 0 2.25 2
-        box_renderer prop1 texture tree1 0
-        box_renderer_animated 0.1
+    catalog add prefab Plant1 0 0 3 3
+        box_renderer prop1 texture plant1 0
+        box_renderer_animated 1
     end
 
-    catalog add prefab Tree2 0 0 2.25 2
-        box_renderer prop1 texture tree2 0
-        box_renderer_animated 0.1
+    catalog add prefab Plant2 0 0 3 3
+            box_renderer prop1 texture plant2 0
+            box_renderer_animated 1
     end
 
-    catalog add prefab Tree3 0 0 2.25 2
-        box_renderer prop1 texture tree3 0
-        box_renderer_animated 0.1
+    catalog add prefab Plant3 0 0 3 3
+            box_renderer prop1 texture plant3 0
+            box_renderer_animated 1
     end
 
-    catalog add prefab Tree4 0 0 2.25 2
-        box_renderer prop1 texture tree4 0
-        box_renderer_animated 0.1
+    catalog add prefab Plant4 0 0 3 3
+            box_renderer prop1 texture plant4 0
+            box_renderer_animated 1
     end
 
-    catalog add prefab Tree5 0 0 2.25 2
-        box_renderer prop1 texture tree5 0
-        box_renderer_animated 0.1
+    catalog add prefab Plant5 0 0 3 3
+            box_renderer prop1 texture plant5 0
+            box_renderer_animated 1
     end
 
-    catalog add prefab Tree6 0 0 2.25 2
-        box_renderer prop1 texture tree6 0
-        box_renderer_animated 0.1
+    catalog add prefab Plant6 0 0 3 3
+            box_renderer prop1 texture plant6 0
+            box_renderer_animated 1
     end
 
-    catalog add prefab Tree7 0 0 2.25 2
-        box_renderer prop1 texture tree7 0
-        box_renderer_animated 0.1
+    catalog add prefab Plant7 0 0 3 3
+            box_renderer prop1 texture plant7 0
+            box_renderer_animated 1
     end
 
-    catalog add prefab Tree8 0 0 2.25 2
-        box_renderer prop1 texture tree8 0
-        box_renderer_animated 0.1
+    catalog add prefab Plant8 0 0 3 3
+            box_renderer prop1 texture plant8 0
+            box_renderer_animated 1
+    end
+
+    catalog add prefab Plant9 0 0 3 3
+            box_renderer prop1 texture plant9 0
+            box_renderer_animated 1
+    end
+
+    catalog add prefab Plant10 0 0 3 3
+            box_renderer prop1 texture plant10 0
+            box_renderer_animated 1
+    end
+
+    catalog add prefab Plant11 0 0 3 3
+            box_renderer prop1 texture plant11 0
+            box_renderer_animated 1
     end
 
 once map_deps end
@@ -85,12 +102,12 @@ once map_deps end
 
 
 scene add entity Terrain 0 0 250 250
-    box_renderer bg1 color 54 78 62 255
+    box_renderer bg1 color 0 0 0 255
     rigid_surface bg1 ground
 end
 
 scene add entity Ice 0 0 15 15
-    box_renderer bg2 color 100 100 255 255
+    box_renderer bg2 color 255 192 203 255
     rigid_surface bg2 ice
 end
 
@@ -100,8 +117,8 @@ scene add entity GameState 0 0 1 1
     scene_switcher Escape scripts/demo/menu.mcge
 end
 
-scene add entity Forest 0 0 250 250
-    forest 10000 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
+scene add entity Garden 0 0 250 250
+    forest 2500 Plant1 Plant2 Plant3 Plant4 Plant5 Plant6 Plant7 Plant8 Plant9 Plant10 Plant11 end
 end
 
 scene add entity Cube 0 0 0.8 0.8
@@ -111,14 +128,4 @@ scene add entity Cube 0 0 0.8 0.8
     keyboard_rigid_controller 6.25 W S A D
     camera 33.75
     simulator 50
-end
-
-scene add entity Campfire 3.125 9.375 2 2
-    box_renderer prop1 texture campfire 0
-    box_renderer_animated 0.1
-    collider ground
-    entity Light 0 0 5 5
-        box_light texture gcirc1 0
-        pulsator 0.99 1.01 10
-    end
 end

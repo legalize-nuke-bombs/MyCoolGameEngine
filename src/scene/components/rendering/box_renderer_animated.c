@@ -11,7 +11,7 @@
 struct box_renderer_animated {
     struct component base;
 
-    double frame_interval;
+    double cycles_per_second;
     double frame_timer;
 
     struct box_renderer *box_renderer;
@@ -37,7 +37,7 @@ struct component* box_renderer_animated_create(struct parser *parser, struct ent
     struct component *base = (struct component *) this;
     component_base_create(base, &box_renderer_animated_vtable, parent);
 
-    parser_next_double(parser, &this->frame_interval);
+    parser_next_double(parser, &this->cycles_per_second);
 
     return base;
 }
@@ -47,7 +47,7 @@ static struct component* box_renderer_animated_clone(struct component base, cons
 
     struct box_renderer_animated* this = calloc(1, sizeof(struct box_renderer_animated));
     this->base = base;
-    this->frame_interval = box_renderer_animated->frame_interval;
+    this->cycles_per_second = box_renderer_animated->cycles_per_second;
     return (struct component*)this;
 }
 
@@ -58,15 +58,18 @@ static void box_renderer_animated_awake(struct component *base) {
     this->box_renderer = (struct box_renderer*)entity_get_component(parent, "box_renderer");
     if (this->box_renderer == NULL) {
         entity_mark_destroyed(parent);
+        return;
     }
 }
 
 static void box_renderer_animated_visible_chunk_update(struct component *base, const struct update_context *context) {
     struct box_renderer_animated *this = (struct box_renderer_animated *) base;
 
+    const double frame_time = 1 / (this->cycles_per_second * box_renderer_get_texture_frames(this->box_renderer));
+
     this->frame_timer += context->dt;
-    if (this->frame_timer >= this->frame_interval) {
-        this->frame_timer -= this->frame_interval;
+    if (this->frame_timer >= frame_time) {
+        this->frame_timer -= frame_time;
         box_renderer_bump_texture_frame(this->box_renderer);
     }
 }

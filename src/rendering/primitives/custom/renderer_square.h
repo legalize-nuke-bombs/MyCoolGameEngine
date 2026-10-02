@@ -17,5 +17,6 @@ struct renderer_primitive* renderer_square_create_from_texture(struct texture* t
 struct renderer_primitive* renderer_square_clone(const struct renderer_square* square);
 
 void renderer_square_bump_texture_frame(struct renderer_square* this);
+int renderer_square_get_texture_frames(const struct renderer_square* this);
 
 #endif //MYCOOLGAMEENGINE_RENDERER_SQUARE_H

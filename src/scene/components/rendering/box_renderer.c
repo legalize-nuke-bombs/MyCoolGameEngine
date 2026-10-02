@@ -142,6 +142,9 @@ static void box_renderer_visible_chunk_update(struct component *base, const stru
     renderer_pipeline_draw_primitive(this->renderer, draw_call);
 }
 
-void box_renderer_bump_texture_frame(struct box_renderer *this) {
+void box_renderer_bump_texture_frame(const struct box_renderer *this) {
     renderer_square_bump_texture_frame((struct renderer_square*)this->square);
+}
+int box_renderer_get_texture_frames(const struct box_renderer *this) {
+    return renderer_square_get_texture_frames((struct renderer_square*)this->square);
 }
