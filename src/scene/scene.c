@@ -27,7 +27,6 @@ struct scene {
 
     struct action on_component_captured;
     struct action on_component_marked_destroyed;
-    struct action on_entity_captured;
     struct action on_entity_marked_destroyed;
     struct action on_component_resize;
 
@@ -66,7 +65,6 @@ struct subsystem* scene_create(char *name, const struct subsystem_collection *su
 
     this->on_component_captured = action_create();
     this->on_component_marked_destroyed = action_create();
-    this->on_entity_captured = action_create();
     this->on_entity_marked_destroyed = action_create();
     this->on_component_resize = action_create();
 
@@ -89,7 +87,6 @@ void scene_on_destroy(struct subsystem *base) {
     if (this->switch_flag != NULL) free(this->switch_flag);
     action_destroy(&this->on_component_resize);
     action_destroy(&this->on_entity_marked_destroyed);
-    action_destroy(&this->on_entity_captured);
     action_destroy(&this->on_component_marked_destroyed);
     action_destroy(&this->on_component_captured);
     free(this->name);
@@ -176,9 +173,6 @@ struct action* scene_get_on_component_captured(struct scene *this) {
 struct action* scene_get_on_component_marked_destroyed(struct scene *this) {
     return &this->on_component_marked_destroyed;
 }
-struct action* scene_get_on_entity_captured(struct scene *this) {
-    return &this->on_entity_captured;
-}
 struct action* scene_get_on_entity_marked_destroyed(struct scene *this) {
     return &this->on_entity_marked_destroyed;
 }
@@ -204,7 +198,7 @@ void scene_capture_entity(struct scene *this, struct entity *entity) {
     entity_set_scene(entity, this);
     logger_debug("Scene %s is capturing entity %s", this->name, entity_get_name(entity));
 
-    action_invoke(&this->on_entity_captured, entity);
+    entity_collection_add(this->entities, entity);
 
     entity_recapture_components(entity);
 

@@ -16,6 +16,8 @@ void entity_collection_destroy(struct entity_collection *this);
 void entity_collection_awake_everyone(const struct entity_collection *this);
 void entity_collection_clear(struct entity_collection *this);
 
+void entity_collection_add(struct entity_collection *this, struct entity *entity);
+
 void entity_collection_post_update(struct entity_collection *this);
 
 #endif //MYCOOLGAMEENGINE_ENTITY_COLLECTION_H

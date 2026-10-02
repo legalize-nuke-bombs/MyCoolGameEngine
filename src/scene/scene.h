@@ -24,7 +24,6 @@ void scene_notify_entity_marked_destroyed(const struct scene *this, struct entit
 void scene_notify_component_resize(const struct scene *this, struct component_on_rect_changed_callback_data *data);
 struct action* scene_get_on_component_captured(struct scene *this);
 struct action* scene_get_on_component_marked_destroyed(struct scene *this);
-struct action* scene_get_on_entity_captured(struct scene *this);
 struct action* scene_get_on_entity_marked_destroyed(struct scene *this);
 struct action* scene_get_on_component_resize(struct scene *this);
 
