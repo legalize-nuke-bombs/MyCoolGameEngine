@@ -167,7 +167,7 @@ void scene_notify_entity_marked_destroyed(const struct scene *this, struct entit
     return action_invoke(&this->on_entity_marked_destroyed, entity);
 }
 void scene_notify_component_resize(const struct scene *this, struct component_on_rect_changed_callback_data *data) {
-    return action_invoke(&this->on_component_resize, data->component);
+    return action_invoke(&this->on_component_resize, data);
 }
 struct action* scene_get_on_component_captured(struct scene *this) {
     return &this->on_component_captured;
