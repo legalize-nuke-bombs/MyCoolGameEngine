@@ -70,8 +70,6 @@ static void collider_on_destroy(struct component *component) {
 }
 
 struct component* collider_clone(struct component base, const struct component *component) {
-    struct collider *collider = (struct collider*)component;
-
     struct collider *this = calloc(1, sizeof(struct collider));
     this->base = base;
     this->on_trigger_enter = action_create();
@@ -174,7 +172,7 @@ static void collider_on_movement(struct component *base) {
 
     for (int x = x_start; x <= x_end; x++) {
         for (int y = y_start; y <= y_end; y++) {
-            const struct dictionary *colliders = chunks_chunk_get_components_by_type(this->chunks, x, y, "collider");
+            const struct dictionary *colliders = chunks_chunk_get_components_by_type(this->chunks, x, y, collider_component_key());
             if (colliders == NULL) {
                 continue;
             }
