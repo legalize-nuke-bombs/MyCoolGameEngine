@@ -26,6 +26,8 @@ struct box_renderer {
     char* renderer_layer_name;
     struct renderer_layer* renderer_layer;
 
+    char* texture_name;
+    int texture_frame;
     struct renderer_primitive* square;
 };
 
@@ -47,14 +49,11 @@ const char* box_renderer_component_key(void) {
 }
 
 struct component* box_renderer_create(struct parser *parser, struct entity *parent) {
-    struct box_renderer *this = malloc(sizeof(struct box_renderer));
+    struct box_renderer *this = calloc(1, sizeof(struct box_renderer));
     struct component *base = (struct component*) this;
     component_base_create(base, &box_renderer_vtable, parent);
 
-    this->renderer = NULL;
-
     this->renderer_layer_name = parser_next_dup(parser);
-    this->renderer_layer = NULL;
 
     const char* type = parser_next(parser);
     if (strcmp(type, "color") == 0) {
@@ -66,16 +65,8 @@ struct component* box_renderer_create(struct parser *parser, struct entity *pare
         this->square = renderer_square_create_from_color(color);
     }
     else if (strcmp(type, "texture") == 0) {
-        const struct catalogs* catalogs = (struct catalogs*)subsystem_collection_get(scene_get_subsystems(entity_get_scene(component_get_parent(base))), "catalogs");
-        struct texture* texture = catalogs_get_item(catalogs, "texture", parser_next(parser));
-        int texture_frame;
-        parser_next_int(parser, &texture_frame);
-        if (texture == NULL) {
-            this->square = renderer_square_create_from_color(color_black);
-        }
-        else {
-            this->square = renderer_square_create_from_texture(texture, texture_frame);
-        }
+        this->texture_name = parser_next_dup(parser);
+        parser_next_int(parser, &this->texture_frame);
     }
     else {
         logger_warn("Box renderer unexpected type token `%s`", type);
@@ -90,24 +81,54 @@ static struct component* box_renderer_clone(struct component base, const struct 
 
     struct box_renderer *this = calloc(1, sizeof(struct box_renderer));
     this->base = base;
-    this->renderer_layer_name = strdup(box_renderer->renderer_layer_name);
-    this->square = renderer_square_clone((struct renderer_square*)box_renderer->square);
+    if (box_renderer->renderer_layer_name != NULL) {
+        this->renderer_layer_name = strdup(box_renderer->renderer_layer_name);
+    }
+    this->renderer_layer = box_renderer->renderer_layer;
+    if (box_renderer->texture_name != NULL) {
+        this->texture_name = strdup(box_renderer->texture_name);
+    }
+    this->texture_frame = box_renderer->texture_frame;
+    if (box_renderer->square != NULL) {
+        this->square = renderer_square_clone((struct renderer_square*)box_renderer->square);
+    }
     return (struct component*)this;
 }
 
 static void box_renderer_on_destroy(struct component *base) {
     const struct box_renderer *this = (struct box_renderer *) base;
-    renderer_primitive_destroy(this->square);
+    if (this->square != NULL) {
+        renderer_primitive_destroy(this->square);
+    }
     free(this->renderer_layer_name);
+    free(this->texture_name);
 }
 
 static void box_renderer_awake(struct component *base) {
     struct box_renderer *this = (struct box_renderer *) base;
 
     const struct subsystem_collection* subsystems = scene_get_subsystems(entity_get_scene(component_get_parent(base)));
+    const struct catalogs* catalogs = (struct catalogs*)subsystem_collection_get(subsystems, "catalogs");
     const struct renderer* renderer_subsystem = (struct renderer*)subsystem_collection_get(subsystems, "renderer");
     this->renderer = renderer_get_pipeline(renderer_subsystem);
-    this->renderer_layer = catalogs_try_get_item((struct catalogs*)subsystem_collection_get(subsystems, "catalogs"), "renderer_layer", this->renderer_layer_name);
+
+    if (this->renderer_layer == NULL) {
+        this->renderer_layer = catalogs_try_get_item(catalogs, "renderer_layer", this->renderer_layer_name);
+    }
+    free(this->renderer_layer_name);
+    this->renderer_layer_name = NULL;
+
+    if (this->square == NULL) {
+        struct texture* texture = catalogs_get_item(catalogs, "texture", this->texture_name);
+        if (texture == NULL) {
+            this->square = renderer_square_create_from_color(color_black);
+        }
+        else {
+            this->square = renderer_square_create_from_texture(texture, this->texture_frame);
+        }
+    }
+    free(this->texture_name);
+    this->texture_name = NULL;
 }
 
 static void box_renderer_visible_chunk_update(struct component *base, const struct update_context *context) {
