@@ -181,3 +181,39 @@ static void collider_on_movement(struct component *base) {
         }
     }
 }
+
+static struct entity* collider_try_get_obstacle_among(const struct collider *this, const struct rect rect, const struct dictionary *colliders) {
+    struct dictionary_iterator iterator = dictionary_begin(colliders);
+    struct dictionary_node node;
+    while (dictionary_next(colliders, &iterator, &node)) {
+        const struct collider *collider = node.value;
+        if (collider == this) {
+            continue;
+        }
+        const struct rect collider_rect = component_get_rect((const struct component*)collider);
+        if (rects_intersection(rect, collider_rect)) {
+            return component_get_parent((const struct component*)collider);
+        }
+    }
+    return NULL;
+}
+
+struct entity* collider_try_get_obstacle(const struct collider *this, const struct rect rect) {
+    int x_start, x_end, y_start, y_end;
+    chunks_get_rect_indexes(this->chunks, rect, &x_start, &x_end, &y_start, &y_end);
+
+    for (int x = x_start; x <= x_end; x++) {
+        for (int y = y_start; y <= y_end; y++) {
+            const struct dictionary *colliders = chunks_chunk_get_components_by_type(this->chunks, x, y, collider_component_key());
+            if (colliders == NULL) {
+                continue;
+            }
+
+            struct entity *obstacle = collider_try_get_obstacle_among(this, rect, colliders);
+            if (obstacle != NULL) {
+                return obstacle;
+            }
+        }
+    }
+    return NULL;
+}
