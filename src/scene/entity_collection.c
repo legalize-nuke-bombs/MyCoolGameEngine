@@ -89,8 +89,9 @@ static void handle_entity_captured(void *listener, void *context) {
 static void handle_entity_marked_destroyed(void *listener, void *context) {
     struct entity_collection *this = listener;
     struct entity *entity = context;
-    dictionary_remove(this->entities, entity);
-    list_add(&this->dead, entity);
+    if (dictionary_remove(this->entities, entity)) {
+        list_add(&this->dead, entity);
+    }
 }
 
 void entity_collection_post_update(struct entity_collection *this) {
