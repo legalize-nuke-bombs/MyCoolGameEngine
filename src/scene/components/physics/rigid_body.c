@@ -19,6 +19,7 @@
 
 #define FRICTION_DEFAULT 0.5f
 #define GRAVITY 9.8f
+#define EXPLOSION_IMPULSE_MIN 10.f
 
 
 struct rigid_body {
@@ -57,7 +58,7 @@ struct component* rigid_body_create(struct parser *parser, struct entity *parent
     parser_next_double(parser, &this->m);
     if (this->m < 0) this->m = 1e+9;
     parser_next_double(parser, &this->base_friction_coefficient);
-    if (this->base_friction_coefficient < 0) this->base_friction_coefficient = 0.1f;
+    if (this->base_friction_coefficient < 0) this->base_friction_coefficient = 1.f;
     parser_next_double(parser, &this->rolling_friction_coefficient);
     if (this->rolling_friction_coefficient < 0) this->rolling_friction_coefficient = 0.1f;
 
@@ -140,12 +141,14 @@ double rigid_body_get_mass(const struct rigid_body *this) {
     return this->m;
 }
 
-void rigid_body_explosion(struct rect rect, const double f, const struct chunks *chunks) {
-    logger_debug("Explosion x %f y %f w %f h %f f %f", rect.position.x, rect.position.y, rect.size.x, rect.size.y, f);
+void rigid_body_explosion(const struct vector2 position, const double impulse_at_one_meter, const struct chunks *chunks) {
+    logger_debug("Explosion x %f y %f impulse at one meter %f", position.x, position.y, impulse_at_one_meter);
 
-    const double f_min = 10.f; // TODO fix after physical based coordiantes
-    const double n = f / f_min;
-    rect.size = vector_multiply_scalar(rect.size, n);
+    const double radius = impulse_at_one_meter / EXPLOSION_IMPULSE_MIN;
+    const struct rect rect = {
+        .position = position,
+        .size = { 2 * radius, 2 * radius }
+    };
 
     int x_start, x_end, y_start, y_end;
     chunks_get_rect_indexes(chunks, rect, &x_start, &x_end, &y_start, &y_end);
@@ -168,15 +171,15 @@ void rigid_body_explosion(struct rect rect, const double f, const struct chunks 
                     continue;
                 }
 
-                const struct vector2 d_pos = vector_sub(rect.position, rb_position);
-                double r_sqr = vector_sql_mod(d_pos);
-                if (r_sqr < 0.01f) r_sqr = 1e+9;
-                struct vector2 f_output = vector2_one;
-                f_output = vector_multiply_scalar(f_output, f);
-                f_output = vector_multiply_vector(f_output, d_pos);
-                f_output = vector_multiply_scalar(f_output, -(1 / r_sqr));
-                logger_debug("Explosion pushes entity %s with force %f %f", component_get_global_parent_name((struct component*)rb), f_output.x, f_output.y);
-                rigid_body_push(rb, f_output);
+                const struct vector2 d_pos = vector_sub(rb_position, position);
+                const double r_sqr = vector_sql_mod(d_pos);
+                if (r_sqr < 0.01f || r_sqr > radius * radius) {
+                    continue;
+                }
+
+                const struct vector2 impulse = vector_multiply_scalar(d_pos, impulse_at_one_meter / r_sqr);
+                logger_debug("Explosion pushes entity %s with impulse %f %f", component_get_global_parent_name((struct component*)rb), impulse.x, impulse.y);
+                rigid_body_push(rb, impulse);
             }
         }
     }

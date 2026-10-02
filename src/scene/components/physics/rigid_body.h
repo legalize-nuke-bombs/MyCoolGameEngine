@@ -23,6 +23,6 @@ void rigid_body_drive(struct rigid_body *this, struct vector2 impulse);
 struct vector2 rigid_body_get_velocity(const struct rigid_body *this);
 double rigid_body_get_mass(const struct rigid_body *this);
 
-void rigid_body_explosion(struct rect rect, double f, const struct chunks *chunks);
+void rigid_body_explosion(struct vector2 position, double impulse_at_one_meter, const struct chunks *chunks);
 
 #endif //MYCOOLGAMEENGINE_RIGID_BODY_H
