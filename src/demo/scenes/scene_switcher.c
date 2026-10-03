@@ -3,13 +3,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../../../scene/components/component_internal.h"
-#include "../../../scene/entity.h"
-#include "../../../devices/keyboard.h"
-#include "../../../scene/scene.h"
-#include "../../../subsystems/subsystem_collection.h"
-#include "../../../utils/parser.h"
-#include "../../../utils/action.h"
+#include "../../scene/components/component_internal.h"
+#include "../../scene/entity.h"
+#include "../../devices/keyboard.h"
+#include "../../scene/scene.h"
+#include "../../subsystems/subsystem_collection.h"
+#include "../../utils/parser.h"
+#include "../../utils/action.h"
 
 
 struct scene_switcher {

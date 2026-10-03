@@ -2,8 +2,8 @@
 
 #include <stdlib.h>
 
-#include "../../../scene/components/component_internal.h"
-#include "../../../utils/parser.h"
+#include "../../scene/components/component_internal.h"
+#include "../../utils/parser.h"
 
 
 static const int DAY_DURATION = 24 * 3600;

@@ -3,17 +3,17 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../../../scene/components/component_internal.h"
-#include "../../../scene/entity.h"
-#include "../../../scene/scene.h"
-#include "../../../logging/logger.h"
-#include "../../../random/random.h"
-#include "../../../utils/list.h"
-#include "../../../utils/parser.h"
-#include "../../../catalogs/catalogs.h"
-#include "../../../subsystems/subsystem_collection.h"
-#include "../../../utils/vector2_math.h"
-#include "../../../scene/prefabs/prefab.h"
+#include "../../scene/components/component_internal.h"
+#include "../../scene/entity.h"
+#include "../../scene/scene.h"
+#include "../../logging/logger.h"
+#include "../../random/random.h"
+#include "../../utils/list.h"
+#include "../../utils/parser.h"
+#include "../../catalogs/catalogs.h"
+#include "../../subsystems/subsystem_collection.h"
+#include "../../utils/vector2_math.h"
+#include "../../scene/prefabs/prefab.h"
 
 
 struct forest {

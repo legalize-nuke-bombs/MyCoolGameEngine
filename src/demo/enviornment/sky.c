@@ -8,17 +8,17 @@
 #include <stdlib.h>
 
 #include "clock.h"
-#include "../../../scene/components/component_internal.h"
-#include "../../../scene/scene.h"
-#include "../../../scene/entity.h"
-#include "../../../logging/logger.h"
-#include "../../../utils/dictionary.h"
-#include "../../../utils/color.h"
-#include "../../../utils/parser.h"
-#include "../../../rendering/renderer.h"
-#include "../../../subsystems/subsystem_collection.h"
-#include "../../../rendering/renderer_pipeline.h"
-#include "../../../rendering/primitives/custom/light_map.h"
+#include "../../scene/components/component_internal.h"
+#include "../../scene/scene.h"
+#include "../../scene/entity.h"
+#include "../../logging/logger.h"
+#include "../../utils/dictionary.h"
+#include "../../utils/color.h"
+#include "../../utils/parser.h"
+#include "../../rendering/renderer.h"
+#include "../../subsystems/subsystem_collection.h"
+#include "../../rendering/renderer_pipeline.h"
+#include "../../rendering/primitives/custom/light_map.h"
 
 struct sky {
     struct component base;

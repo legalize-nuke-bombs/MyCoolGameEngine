@@ -9,11 +9,11 @@
 #include <stdlib.h>
 
 #include "skill.h"
-#include "../../../../devices/keyboard.h"
-#include "../../../../scene/scene.h"
-#include "../../../../scene/components/component_internal.h"
-#include "../../../../subsystems/subsystem_collection.h"
-#include "../../../../utils/action.h"
+#include "../../../devices/keyboard.h"
+#include "../../../scene/scene.h"
+#include "../../../scene/components/component_internal.h"
+#include "../../../subsystems/subsystem_collection.h"
+#include "../../../utils/action.h"
 #include "custom/printer.h"
 
 #define SKILLS_NUM 1

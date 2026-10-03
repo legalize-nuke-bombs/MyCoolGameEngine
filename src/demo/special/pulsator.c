@@ -3,10 +3,10 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include "../../../scene/components/component_internal.h"
-#include "../../../scene/entity.h"
-#include "../../../utils/parser.h"
-#include "../../../utils/vector2_math.h"
+#include "../../scene/components/component_internal.h"
+#include "../../scene/entity.h"
+#include "../../utils/parser.h"
+#include "../../utils/vector2_math.h"
 
 
 struct pulsator {

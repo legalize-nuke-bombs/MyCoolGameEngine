@@ -2,18 +2,18 @@
 // Created by nikita on 03.10.2026.
 //
 
-#include "player_is_near.h"
+#include "../bt/player_is_near.h"
 
 #include <stdlib.h>
 
-#include "../../modules/bt/bt_node_internal.h"
-#include "../../modules/bt/bt_node.h"
+#include "../../../modules/bt/bt_node_internal.h"
+#include "../../../modules/bt/bt_node.h"
 #include "blackboard.h"
-#include "../../scene/entity.h"
-#include "../../scene/scene.h"
-#include "../../utils/dictionary.h"
-#include "../../utils/parser.h"
-#include "../../utils/vector2_math.h"
+#include "../../../scene/entity.h"
+#include "../../../scene/scene.h"
+#include "../../../utils/dictionary.h"
+#include "../../../utils/parser.h"
+#include "../../../utils/vector2_math.h"
 
 struct player_is_near {
     struct bt_node base;

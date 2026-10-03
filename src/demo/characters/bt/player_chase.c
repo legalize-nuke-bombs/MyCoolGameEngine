@@ -2,19 +2,18 @@
 // Created by nikita on 03.10.2026.
 //
 
-#include "player_chase.h"
+#include "../bt/player_chase.h"
 
 #include <stdlib.h>
 
-#include "../../modules/bt/bt_node_internal.h"
-#include "../../modules/bt/bt_node.h"
+#include "../../../modules/bt/bt_node_internal.h"
+#include "../../../modules/bt/bt_node.h"
 #include "blackboard.h"
-#include "../../logging/logger.h"
-#include "../../scene/entity.h"
-#include "../../scene/scene.h"
-#include "../../scene/components/physics/rigid_body.h"
-#include "../../utils/parser.h"
-#include "../../utils/vector2_math.h"
+#include "../../../scene/entity.h"
+#include "../../../scene/scene.h"
+#include "../../../scene/components/physics/rigid_body.h"
+#include "../../../utils/parser.h"
+#include "../../../utils/vector2_math.h"
 
 
 struct player_chase {

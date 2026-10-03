@@ -178,29 +178,29 @@ add_executable(MyCoolGameEngine main.c
         src/scene/prefabs/prefab.c
         src/scene/entity_parser.h
         src/scene/entity_parser.c
-        src/demo/components/world/forest.h
-        src/demo/components/world/forest.c
+        src/demo/world/forest.h
+        src/demo/world/forest.c
         src/random/random.h
         src/random/random.c
-        src/demo/components/special/pulsator.h
-        src/demo/components/special/pulsator.c
+        src/demo/special/pulsator.h
+        src/demo/special/pulsator.c
         src/utils/rect_pair.h
         src/scene/chunks/chunks.h
         src/scene/chunks/chunks.c
         src/scene/chunks/chunk.h
         src/scene/chunks/chunk.c
-        src/demo/components/scenes/scene_switcher.h
-        src/demo/components/scenes/scene_switcher.c
+        src/demo/scenes/scene_switcher.h
+        src/demo/scenes/scene_switcher.c
         src/interpreter/core/interpreter_eval.h
         src/interpreter/core/interpreter_eval.c
         src/interpreter/core/interpreter_once.h
         src/interpreter/core/interpreter_once.c
-        src/demo/components/scenes/game_closer.h
-        src/demo/components/scenes/game_closer.c
-        src/demo/components/enviornment/clock.h
-        src/demo/components/enviornment/clock.c
-        src/demo/components/enviornment/sky.h
-        src/demo/components/enviornment/sky.c
+        src/demo/scenes/game_closer.h
+        src/demo/scenes/game_closer.c
+        src/demo/enviornment/clock.h
+        src/demo/enviornment/clock.c
+        src/demo/enviornment/sky.h
+        src/demo/enviornment/sky.c
         src/scene/components/physics/rigid_body.h
         src/scene/components/physics/rigid_body.c
         src/modules/physics/rigid_material.h
@@ -223,8 +223,8 @@ add_executable(MyCoolGameEngine main.c
         src/scene/components/core/simulator.c
         src/scene/components/physics/collider.h
         src/scene/components/physics/collider.c
-        src/demo/components/characters/player.h
-        src/demo/components/characters/player.c
+        src/demo/characters/player.h
+        src/demo/characters/player.c
         src/modules/bt/bt_node.h
         src/modules/bt/bt_status.h
         src/modules/bt/bt_node_internal.h
@@ -233,27 +233,27 @@ add_executable(MyCoolGameEngine main.c
         src/modules/bt/core/bt_sequence.c
         src/modules/bt/core/bt_selector.h
         src/modules/bt/core/bt_selector.c
-        src/demo/bt/blackboard.h
-        src/demo/bt/player_is_near.h
-        src/demo/bt/player_is_near.c
-        src/demo/components/characters/behaviour_agent.h
-        src/demo/components/characters/behaviour_agent.c
-        src/demo/bt/player_chase.h
-        src/demo/bt/player_chase.c
+        src/demo/characters/bt/blackboard.h
+        src/demo/characters/bt/player_is_near.h
+        src/demo/characters/bt/player_is_near.c
+        src/demo/characters/bt/behaviour_agent.h
+        src/demo/characters/bt/behaviour_agent.c
+        src/demo/characters/bt/player_chase.h
+        src/demo/characters/bt/player_chase.c
         src/demo/version.h
         src/modules/bt/bt_node_factory.h
         src/modules/bt/bt_node_factory.c
         src/modules/bt/bt_graph.h
         src/modules/bt/bt_graph.c
-        src/demo/components/characters/mana.h
-        src/demo/components/characters/mana.c
-        src/demo/components/characters/skills/skill.h
-        src/demo/components/characters/skills/skill.c
-        src/demo/components/characters/skills/skill_internal.h
-        src/demo/components/characters/skills/custom/printer.h
-        src/demo/components/characters/skills/custom/printer.c
-        src/demo/components/characters/skills/skilled.h
-        src/demo/components/characters/skills/skilled.c
+        src/demo/characters/mana.h
+        src/demo/characters/mana.c
+        src/demo/characters/skills/skill.h
+        src/demo/characters/skills/skill.c
+        src/demo/characters/skills/skill_internal.h
+        src/demo/characters/skills/custom/printer.h
+        src/demo/characters/skills/custom/printer.c
+        src/demo/characters/skills/skilled.h
+        src/demo/characters/skills/skilled.c
         src/factories/factory.h
         src/factories/factory.c
         src/factories/factory_internal.h

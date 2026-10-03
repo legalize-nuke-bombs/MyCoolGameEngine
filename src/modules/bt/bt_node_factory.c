@@ -10,8 +10,8 @@
 #include "../../factories/factory_internal.h"
 #include "core/bt_selector.h"
 #include "core/bt_sequence.h"
-#include "../../demo/bt/player_is_near.h"
-#include "../../demo/bt/player_chase.h"
+#include "../../demo/characters/bt/player_is_near.h"
+#include "../../demo/characters/bt/player_chase.h"
 
 struct bt_node_factory {
     struct factory base;

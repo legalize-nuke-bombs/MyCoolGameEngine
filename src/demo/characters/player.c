@@ -7,7 +7,7 @@
 
 
 #include <stdlib.h>
-#include "../../../scene/components/component_internal.h"
+#include "../../scene/components/component_internal.h"
 
 struct player {
     struct component base;

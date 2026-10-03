@@ -7,8 +7,8 @@
 #include <stdlib.h>
 
 #include "../skill_internal.h"
-#include "../../../../../logging/logger.h"
-#include "../../../../../utils/parser.h"
+#include "../../../../logging/logger.h"
+#include "../../../../utils/parser.h"
 
 struct printer {
     struct skill base;
