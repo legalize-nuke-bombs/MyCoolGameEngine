@@ -254,6 +254,8 @@ add_executable(MyCoolGameEngine main.c
         src/demo/components/characters/skills/skill.h
         src/demo/components/characters/skills/skill.c
         src/demo/components/characters/skills/skill_internal.h
+        src/demo/components/characters/skills/custom/printer.h
+        src/demo/components/characters/skills/custom/printer.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)

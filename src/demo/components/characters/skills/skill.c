@@ -9,15 +9,6 @@
 #include "../../../../logging/logger.h"
 #include "../../../../scene/entity.h"
 
-struct skill {
-    const struct skill_vtable* vtable;
-    double manacost;
-    double cool_timer;
-    double cooldown;
-    struct entity *self;
-    struct mana *mana;
-};
-
 void skill_base_create(struct skill *this, const struct skill_vtable *vtable, const double manacost, const double cooldown, struct entity *self) {
     this->vtable = vtable;
     this->manacost = manacost;

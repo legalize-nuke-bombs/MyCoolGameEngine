@@ -16,6 +16,15 @@ struct skill_vtable {
     bool (*on_invoke)(struct skill *this);
 };
 
+struct skill {
+    const struct skill_vtable* vtable;
+    double manacost;
+    double cool_timer;
+    double cooldown;
+    struct entity *self;
+    struct mana *mana;
+};
+
 void skill_base_create(struct skill *this, const struct skill_vtable *vtable, double manacost, double cooldown, struct entity *self);
 
 #endif //MYCOOLGAMEENGINE_SKILL_INTERNAL_H
