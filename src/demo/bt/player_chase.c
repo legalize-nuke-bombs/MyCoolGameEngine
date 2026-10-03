@@ -13,6 +13,7 @@
 #include "../../scene/entity.h"
 #include "../../scene/scene.h"
 #include "../../scene/components/physics/rigid_body.h"
+#include "../../utils/parser.h"
 #include "../../utils/vector2_math.h"
 
 
@@ -24,7 +25,7 @@ struct player_chase {
 static enum bt_status player_chase_run(struct bt_node *base, void *bb);
 
 static const struct bt_node_vtable player_chase_vtable = {
-    .key = "player_chase",
+    .key = BT_NODE_PLAYER_CHASE,
     .run = player_chase_run
 };
 
@@ -34,6 +35,12 @@ struct bt_node* player_chase_create(const double speed) {
     bt_node_base_create(base, &player_chase_vtable);
     this->speed = speed;
     return base;
+}
+
+struct bt_node* player_chase_parse(struct parser *parser, const struct bt_node_factory *factory) {
+    double speed;
+    parser_next_double(parser, &speed);
+    return player_chase_create(speed);
 }
 
 static enum bt_status player_chase_run(struct bt_node *base, void *bb) {

@@ -12,6 +12,7 @@
 #include "../../scene/entity.h"
 #include "../../scene/scene.h"
 #include "../../utils/dictionary.h"
+#include "../../utils/parser.h"
 #include "../../utils/vector2_math.h"
 
 struct player_is_near {
@@ -22,7 +23,7 @@ struct player_is_near {
 static enum bt_status player_is_near_run(struct bt_node *base, void *bb);
 
 static const struct bt_node_vtable player_is_near_vtable = {
-    .key = "player_is_near",
+    .key = BT_NODE_PLAYER_IS_NEAR,
     .run = player_is_near_run
 };
 
@@ -32,6 +33,12 @@ struct bt_node* player_is_near_create(const double radius) {
     bt_node_base_create(base, &player_is_near_vtable);
     this->radius_sqr = radius * radius;
     return base;
+}
+
+struct bt_node* player_is_near_parse(struct parser *parser, const struct bt_node_factory *factory) {
+    double radius;
+    parser_next_double(parser, &radius);
+    return player_is_near_create(radius);
 }
 
 static enum bt_status player_is_near_run(struct bt_node *base, void *bb) {

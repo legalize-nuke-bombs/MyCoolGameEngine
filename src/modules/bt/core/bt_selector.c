@@ -5,10 +5,13 @@
 #include "bt_selector.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 #include "../bt_node.h"
+#include "../bt_node_factory.h"
 #include "../bt_node_internal.h"
 #include "../../../utils/list.h"
+#include "../../../utils/parser.h"
 
 
 struct bt_selector {
@@ -22,7 +25,7 @@ static void bt_selector_on_destroy(struct bt_node *base);
 
 
 struct bt_node_vtable bt_selector_vtable = {
-    .key = "selector",
+    .key = BT_NODE_SELECTOR,
     .run = bt_selector_run,
     .on_destroy = bt_selector_on_destroy
 };
@@ -34,6 +37,21 @@ struct bt_selector* bt_selector_create() {
     bt_node_base_create(base, &bt_selector_vtable);
     this->nodes = list_create(1);
     return this;
+}
+struct bt_node* bt_selector_parse(struct parser *parser, const struct bt_node_factory *factory) {
+    struct bt_selector* this = bt_selector_create();
+    for (; ;) {
+        const char* word = parser_next(parser);
+        if (word == NULL || strcmp(word, "end") == 0) {
+            break;
+        }
+        struct bt_node* node = bt_node_factory_try_produce_node(factory, word, parser);
+        if (node == NULL) {
+            break;
+        }
+        bt_selector_capture_node(this, node);
+    }
+    return (struct bt_node*)this;
 }
 
 static void bt_selector_on_destroy(struct bt_node *base) {
