@@ -9,23 +9,36 @@
 #include <stdlib.h>
 
 #include "skill.h"
+#include "../../../../devices/keyboard.h"
+#include "../../../../scene/scene.h"
 #include "../../../../scene/components/component_internal.h"
+#include "../../../../subsystems/subsystem_collection.h"
+#include "../../../../utils/action.h"
 #include "custom/printer.h"
 
-#define SKILLS_NUM 4
+#define SKILLS_NUM 1
 
 struct skilled {
     struct component base;
+
     struct skill* skills[SKILLS_NUM];
+    struct action* hotkey_actions[SKILLS_NUM];
+    unsigned int hotkey_tokens[SKILLS_NUM];
 };
 
 static struct component* skilled_clone(struct component base, const struct component *component);
 static void skilled_destroy(struct component *base);
+static void skilled_awake(struct component *base);
+static void skilled_disable(struct component *base);
+static void skilled_update(struct component *base, const struct update_context *context);
 
 static const struct component_vtable skilled_vtable = {
     .component_key = skilled_component_key,
     .on_clone = skilled_clone,
-    .on_destroy = skilled_destroy
+    .on_destroy = skilled_destroy,
+    .on_awake = skilled_awake,
+    .on_disable = skilled_disable,
+    .on_update = skilled_update
 };
 
 const char* skilled_component_key(void) {
@@ -59,6 +72,40 @@ static void skilled_destroy(struct component *base) {
     for (int i = 0; i < SKILLS_NUM; i++) {
         if (this->skills[i]) {
             skill_destroy(this->skills[i]);
+        }
+    }
+}
+
+static void skilled_invoke_skill(void *listener, void *context) {
+    const struct skilled *this = listener;
+    if (this->skills[0] == NULL) {
+        return;
+    }
+    skill_invoke(this->skills[0]);
+}
+
+static void skilled_awake(struct component *base) {
+    struct skilled *this = (struct skilled *) base;
+    struct keyboard* keyboard = (struct keyboard*)subsystem_collection_get(scene_get_subsystems(component_get_scene(base)), "keyboard");
+    for (int i = 0; i < SKILLS_NUM; i++) {
+        if (this->skills[i]) {
+            skill_enable(this->skills[i]);
+        }
+    }
+    this->hotkey_actions[0] = keyboard_require_action_on_key_pressed(keyboard, "1");
+    action_subscribe(this->hotkey_actions[0], this, skilled_invoke_skill, &this->hotkey_tokens[0]);
+}
+
+static void skilled_disable(struct component *base) {
+    const struct skilled *this = (struct skilled *) base;
+    action_unsubscribe(this->hotkey_actions[0], this->hotkey_tokens[0]);
+}
+
+static void skilled_update(struct component *base, const struct update_context *context) {
+    const struct skilled *this = (struct skilled *) base;
+    for (int i = 0; i < SKILLS_NUM; i++) {
+        if (this->skills[i]) {
+            skill_update(this->skills[i], context->dt);
         }
     }
 }
