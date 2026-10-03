@@ -11,4 +11,6 @@ struct bt_node;
 
 enum bt_status bt_node_run(struct bt_node *this, void *bb);
 
+void bt_node_destroy(struct bt_node *this);
+
 #endif //MYCOOLGAMEENGINE_BT_NODE_H
