@@ -11,7 +11,7 @@
 #include "../component_internal.h"
 #include "../../entity.h"
 #include "../../scene.h"
-#include "../../../catalogs/core/rigid_material.h"
+#include "../../../physics/rigid_material.h"
 #include "../../../utils/parser.h"
 #include "../../../utils/vector2_math.h"
 

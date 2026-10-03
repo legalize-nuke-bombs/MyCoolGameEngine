@@ -13,7 +13,7 @@
 #include "../../../catalogs/catalogs.h"
 #include "../../../subsystems/subsystem_collection.h"
 #include "../../../utils/vector2_math.h"
-#include "../../../catalogs/core/prefab.h"
+#include "../../../scene/prefabs/prefab.h"
 
 
 struct forest {

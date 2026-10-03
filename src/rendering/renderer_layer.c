@@ -7,8 +7,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../catalog.h"
-#include "../../utils/parser.h"
+#include "../catalogs/catalog.h"
+#include "../utils/parser.h"
 
 
 struct renderer_layer {
