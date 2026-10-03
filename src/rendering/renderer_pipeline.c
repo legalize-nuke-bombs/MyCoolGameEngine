@@ -45,6 +45,13 @@ void renderer_pipeline_destroy(struct renderer_pipeline *this) {
     free(this);
 }
 
+void renderer_pipeline_enable(struct renderer_pipeline *this) {
+
+}
+void renderer_pipeline_disable(const struct renderer_pipeline *this) {
+    light_map_reset((struct light_map*)this->light_map);
+}
+
 void renderer_pipeline_set_viewport(struct renderer_pipeline *this, const struct rect viewport) {
     this->viewport = viewport;
     this->viewport_enabled = true;

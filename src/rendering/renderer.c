@@ -80,6 +80,7 @@ static void renderer_update(void *listener, void *context) {
 
 void renderer_on_enable(struct subsystem* base, struct engine_arguments args) {
     struct renderer* this = (struct renderer*)base;
+    renderer_pipeline_enable(this->pipeline);
     this->on_rendering = engine_events_on_rendering((struct engine_events*)subsystem_get_subsystem(base, "engine_events"));
     action_subscribe(this->on_rendering, this, renderer_update, &this->on_rendering_subscription_token);
 }
@@ -87,6 +88,7 @@ void renderer_on_disable(struct subsystem* base) {
     struct renderer* this = (struct renderer*)base;
     action_unsubscribe(this->on_rendering, this->on_rendering_subscription_token);
     this->on_rendering = NULL;
+    renderer_pipeline_disable(this->pipeline);
 }
 
 SDL_Renderer* renderer_get_native_renderer(const struct renderer* this) {

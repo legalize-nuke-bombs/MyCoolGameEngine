@@ -3,6 +3,7 @@ eval scripts/demo/menu_deps.mcge
 scene add entity MenuState 0 0 1 1
     game_closer Escape
     scene_switcher Return scripts/demo/map.mcge
+    renderer_settings 1 40 40 70 255
 end
 
 scene add entity Terrain 0 0 250 250
