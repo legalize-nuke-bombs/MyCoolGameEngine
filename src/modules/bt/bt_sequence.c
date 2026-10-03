@@ -22,6 +22,7 @@ static void bt_sequence_on_destroy(struct bt_node *base);
 
 
 struct bt_node_vtable bt_sequence_vtable = {
+    .key = "sequence",
     .run = bt_sequence_run,
     .on_destroy = bt_sequence_on_destroy
 };

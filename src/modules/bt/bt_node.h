@@ -9,6 +9,8 @@
 
 struct bt_node;
 
+const char* bt_node_key(const struct bt_node *this);
+
 enum bt_status bt_node_run(struct bt_node *this, void *bb);
 
 void bt_node_destroy(struct bt_node *this);

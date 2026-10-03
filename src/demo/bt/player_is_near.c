@@ -22,6 +22,7 @@ struct player_is_near {
 static enum bt_status player_is_near_run(struct bt_node *base, void *bb);
 
 static const struct bt_node_vtable player_is_near_vtable = {
+    .key = "player_is_near",
     .run = player_is_near_run
 };
 

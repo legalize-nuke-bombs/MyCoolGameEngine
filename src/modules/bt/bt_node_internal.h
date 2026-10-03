@@ -6,6 +6,7 @@
 #define MYCOOLGAMEENGINE_BT_NODE_INTERNAL_H
 
 struct bt_node_vtable {
+    const char* key;
     enum bt_status (*run)(struct bt_node *this, void *bb);
     void (*on_destroy)(struct bt_node *this);
 };

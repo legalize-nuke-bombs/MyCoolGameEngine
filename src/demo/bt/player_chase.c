@@ -24,6 +24,7 @@ struct player_chase {
 static enum bt_status player_chase_run(struct bt_node *base, void *bb);
 
 static const struct bt_node_vtable player_chase_vtable = {
+    .key = "player_chase",
     .run = player_chase_run
 };
 

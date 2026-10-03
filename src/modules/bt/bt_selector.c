@@ -22,6 +22,7 @@ static void bt_selector_on_destroy(struct bt_node *base);
 
 
 struct bt_node_vtable bt_selector_vtable = {
+    .key = "selector",
     .run = bt_selector_run,
     .on_destroy = bt_selector_on_destroy
 };

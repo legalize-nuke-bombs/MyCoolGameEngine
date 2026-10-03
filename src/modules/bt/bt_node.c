@@ -8,6 +8,9 @@
 
 #include "bt_node_internal.h"
 
+const char* bt_node_key(const struct bt_node *this) {
+    return this->vtable->key;
+}
 
 enum bt_status bt_node_run(struct bt_node *this, void *bb) {
     return this->vtable->run(this, bb);
