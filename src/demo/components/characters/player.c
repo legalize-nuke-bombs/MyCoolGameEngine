@@ -5,10 +5,9 @@
 #include "player.h"
 
 
-#include "player.h"
 
 #include <stdlib.h>
-#include "../component_internal.h"
+#include "../../../scene/components/component_internal.h"
 
 struct player {
     struct component base;

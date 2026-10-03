@@ -3,12 +3,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../component_internal.h"
-#include "../../entity.h"
-#include "../../scene.h"
+#include "../../../scene/components/component_internal.h"
+#include "../../../scene/entity.h"
+#include "../../../scene/scene.h"
 #include "../../../logging/logger.h"
 #include "../../../random/random.h"
-#include "../../../rendering/renderer_pipeline.h"
 #include "../../../utils/list.h"
 #include "../../../utils/parser.h"
 #include "../../../catalogs/catalogs.h"

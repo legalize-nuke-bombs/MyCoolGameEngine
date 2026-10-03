@@ -3,10 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../component_internal.h"
-#include "../../entity.h"
+#include "../../../scene/components/component_internal.h"
+#include "../../../scene/entity.h"
 #include "../../../devices/keyboard.h"
-#include "../../scene.h"
+#include "../../../scene/scene.h"
 #include "../../../engine/lifecycle/engine_lifecycle.h"
 #include "../../../subsystems/subsystem_collection.h"
 #include "../../../utils/parser.h"

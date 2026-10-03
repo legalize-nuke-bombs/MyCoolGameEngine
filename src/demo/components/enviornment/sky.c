@@ -8,9 +8,9 @@
 #include <stdlib.h>
 
 #include "clock.h"
-#include "../component_internal.h"
-#include "../../scene.h"
-#include "../../entity.h"
+#include "../../../scene/components/component_internal.h"
+#include "../../../scene/scene.h"
+#include "../../../scene/entity.h"
 #include "../../../logging/logger.h"
 #include "../../../utils/dictionary.h"
 #include "../../../utils/color.h"

@@ -138,8 +138,8 @@ add_executable(MyCoolGameEngine main.c
         src/profiler/profiler.c
         src/profiler/time_estimator.h
         src/profiler/time_estimator.c
-        src/scene/components/demo/idle.h
-        src/scene/components/demo/idle.c
+        src/scene/components/core/idle.h
+        src/scene/components/core/idle.c
         src/utils/file_listener.h
         src/utils/file_listener.c
         src/engine/events/engine_events.h
@@ -180,29 +180,29 @@ add_executable(MyCoolGameEngine main.c
         src/catalogs/core/prefab.c
         src/scene/entity_parser.h
         src/scene/entity_parser.c
-        src/scene/components/demo/forest.h
-        src/scene/components/demo/forest.c
+        src/demo/components/world/forest.h
+        src/demo/components/world/forest.c
         src/random/random.h
         src/random/random.c
-        src/scene/components/demo/pulsator.h
-        src/scene/components/demo/pulsator.c
+        src/demo/components/special/pulsator.h
+        src/demo/components/special/pulsator.c
         src/utils/rect_pair.h
         src/scene/chunks/chunks.h
         src/scene/chunks/chunks.c
         src/scene/chunks/chunk.h
         src/scene/chunks/chunk.c
-        src/scene/components/demo/scene_switcher.h
-        src/scene/components/demo/scene_switcher.c
+        src/demo/components/scenes/scene_switcher.h
+        src/demo/components/scenes/scene_switcher.c
         src/interpreter/core/interpreter_eval.h
         src/interpreter/core/interpreter_eval.c
         src/interpreter/core/interpreter_once.h
         src/interpreter/core/interpreter_once.c
-        src/scene/components/demo/game_closer.h
-        src/scene/components/demo/game_closer.c
-        src/scene/components/demo/clock.h
-        src/scene/components/demo/clock.c
-        src/scene/components/demo/sky.h
-        src/scene/components/demo/sky.c
+        src/demo/components/scenes/game_closer.h
+        src/demo/components/scenes/game_closer.c
+        src/demo/components/enviornment/clock.h
+        src/demo/components/enviornment/clock.c
+        src/demo/components/enviornment/sky.h
+        src/demo/components/enviornment/sky.c
         src/scene/components/physics/rigid_body.h
         src/scene/components/physics/rigid_body.c
         src/catalogs/core/rigid_material.h
@@ -225,8 +225,8 @@ add_executable(MyCoolGameEngine main.c
         src/scene/components/core/simulator.c
         src/scene/components/physics/collider.h
         src/scene/components/physics/collider.c
-        src/scene/components/demo/player.h
-        src/scene/components/demo/player.c
+        src/demo/components/characters/player.h
+        src/demo/components/characters/player.c
         src/modules/bt/bt_node.h
         src/modules/bt/bt_status.h
         src/modules/bt/bt_node_internal.h

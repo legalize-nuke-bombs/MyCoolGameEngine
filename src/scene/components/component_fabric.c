@@ -9,22 +9,22 @@
 #include "../../utils/dictionary.h"
 #include "../../utils/string_dictionary.h"
 #include "../../logging/logger.h"
-#include "demo/clock.h"
+#include "../../demo/components/enviornment/clock.h"
 #include "movement/controller.h"
-#include "demo/idle.h"
+#include "core/idle.h"
 #include "movement/keyboard_controller.h"
-#include "demo/pulsator.h"
-#include "demo/sky.h"
-#include "demo/forest.h"
-#include "demo/game_closer.h"
-#include "demo/scene_switcher.h"
+#include "../../demo/components/special/pulsator.h"
+#include "../../demo/components/enviornment/sky.h"
+#include "../../demo/components/world/forest.h"
+#include "../../demo/components/scenes/game_closer.h"
+#include "../../demo/components/scenes/scene_switcher.h"
 #include "physics/keyboard_rigid_controller.h"
 #include "physics/rigid_body.h"
 #include "physics/rigid_surface.h"
 #include "rendering/box_renderer.h"
 #include "core/camera.h"
 #include "core/simulator.h"
-#include "demo/player.h"
+#include "../../demo/components/characters/player.h"
 #include "physics/collider.h"
 #include "rendering/box_light.h"
 #include "rendering/box_renderer_animated.h"
@@ -44,25 +44,28 @@ static void component_fabric_register_component(const struct component_fabric *t
 }
 
 static void component_fabric_register_all(const struct component_fabric *this) {
+    // Core components
     component_fabric_register_component(this, idle_component_key(), idle_create);
     component_fabric_register_component(this, camera_component_key(), camera_create);
     component_fabric_register_component(this, renderer_settings_component_key(), renderer_settings_create);
     component_fabric_register_component(this, box_renderer_component_key(), box_renderer_create);
     component_fabric_register_component(this, box_renderer_animated_component_key(), box_renderer_animated_create);
     component_fabric_register_component(this, box_light_component_key(), box_light_create);
-    component_fabric_register_component(this, pulsator_component_key(), pulsator_create);
     component_fabric_register_component(this, controller_component_key(), controller_create);
     component_fabric_register_component(this, keyboard_controller_component_key(), keyboard_controller_create);
-    component_fabric_register_component(this, forest_component_key(), forest_create);
-    component_fabric_register_component(this, scene_switcher_component_key(), scene_switcher_create);
-    component_fabric_register_component(this, game_closer_component_key(), game_closer_create);
-    component_fabric_register_component(this, clock_component_key(), clock_create);
     component_fabric_register_component(this, simulator_component_key(), simulator_create);
-    component_fabric_register_component(this, sky_component_key(), sky_create);
     component_fabric_register_component(this, rigid_surface_component_key(), rigid_surface_create);
     component_fabric_register_component(this, collider_component_key(), collider_create);
     component_fabric_register_component(this, rigid_body_component_key(), rigid_body_create);
     component_fabric_register_component(this, keyboard_rigid_controller_component_key(), keyboard_rigid_controller_create);
+
+    // Demo components
+    component_fabric_register_component(this, pulsator_component_key(), pulsator_create);
+    component_fabric_register_component(this, forest_component_key(), forest_create);
+    component_fabric_register_component(this, scene_switcher_component_key(), scene_switcher_create);
+    component_fabric_register_component(this, game_closer_component_key(), game_closer_create);
+    component_fabric_register_component(this, clock_component_key(), clock_create);
+    component_fabric_register_component(this, sky_component_key(), sky_create);
     component_fabric_register_component(this, player_component_key(), player_create);
 }
 

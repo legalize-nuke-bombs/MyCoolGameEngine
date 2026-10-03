@@ -2,7 +2,7 @@
 
 #include <stdlib.h>
 
-#include "../component_internal.h"
+#include "../../../scene/components/component_internal.h"
 #include "../../../utils/parser.h"
 
 

@@ -3,8 +3,8 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include "../component_internal.h"
-#include "../../entity.h"
+#include "../../../scene/components/component_internal.h"
+#include "../../../scene/entity.h"
 #include "../../../utils/parser.h"
 #include "../../../utils/vector2_math.h"
 
