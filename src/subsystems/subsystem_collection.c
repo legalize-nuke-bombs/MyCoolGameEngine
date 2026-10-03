@@ -22,6 +22,7 @@
 #include "../rendering/renderer.h"
 #include "../engine/utils/engine_closer.h"
 #include "../engine/lifecycle/engine_lifecycle.h"
+#include "../modules/bt/bt_module.h"
 #include "../random/random.h"
 
 
@@ -59,14 +60,15 @@ static void subsystem_collection_capture_all(struct subsystem_collection *this) 
     subsystem_collection_capture(this, engine_closer_create(this));
     subsystem_collection_capture(this, engine_restarter_create(this));
     subsystem_collection_capture(this, random_create(this));
+    subsystem_collection_capture(this, bt_module_create(this));
 }
 
 
 struct subsystem_collection* subsystem_collection_create() {
     logger_info("Subsystem collection is creating...");
     struct subsystem_collection* this = malloc(sizeof(struct subsystem_collection));
-    this->list = list_create(1024);
-    this->dict = string_dictionary_build(4);
+    this->list = list_create(32);
+    this->dict = string_dictionary_build(5);
     subsystem_collection_capture_all(this);
     logger_info("Subsystem collection knows %d subsystems", list_count(&this->list));
     return this;
