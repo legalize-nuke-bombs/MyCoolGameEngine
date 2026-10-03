@@ -238,8 +238,8 @@ add_executable(MyCoolGameEngine main.c
         src/demo/bt/blackboard.h
         src/demo/bt/player_is_near.h
         src/demo/bt/player_is_near.c
-        src/demo/components/characters/behaviour_agent.h
-        src/demo/components/characters/behaviour_agent.c
+        src/scene/components/bt/behaviour_agent.h
+        src/scene/components/bt/behaviour_agent.c
         src/demo/bt/player_chase.h
         src/demo/bt/player_chase.c
         src/demo/version.h

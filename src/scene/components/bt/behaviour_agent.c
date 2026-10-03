@@ -11,12 +11,12 @@
 #include "../../../logging/logger.h"
 #include "../../../modules/bt/bt_node.h"
 #include "../../../modules/bt/bt_graph.h"
-#include "../../../scene/entity.h"
-#include "../../../scene/scene.h"
-#include "../../../scene/components/component_internal.h"
+#include "../../entity.h"
+#include "../../scene.h"
+#include "../component_internal.h"
 #include "../../../subsystems/subsystem_collection.h"
 #include "../../../utils/parser.h"
-#include "../../bt/blackboard.h"
+#include "../../../demo/bt/blackboard.h"
 
 
 struct behaviour_agent {
