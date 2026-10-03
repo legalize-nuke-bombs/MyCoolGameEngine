@@ -128,8 +128,6 @@ add_executable(MyCoolGameEngine main.c
         src/rendering/renderer_layer.c
         src/interpreter/scene/interpreter_scene.h
         src/interpreter/scene/interpreter_scene.c
-        src/scene/components/component_fabric.h
-        src/scene/components/component_fabric.c
         src/interpreter/scene/interpreter_scene_add.h
         src/interpreter/scene/interpreter_scene_add.c
         src/devices/keyboard.h
@@ -263,6 +261,8 @@ add_executable(MyCoolGameEngine main.c
         src/factories/factory_internal.h
         src/factories/factories.h
         src/factories/factories.c
+        src/scene/components/component_factory.h
+        src/scene/components/component_factory.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)

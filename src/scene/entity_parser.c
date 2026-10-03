@@ -4,7 +4,9 @@
 
 #include "entity.h"
 #include "scene.h"
-#include "components/component_fabric.h"
+#include "../subsystems/subsystem_collection.h"
+#include "../factories/factories.h"
+#include "components/component_factory.h"
 #include "../utils/parser.h"
 
 
@@ -18,7 +20,7 @@ struct entity* entity_parse(struct parser *parser, struct scene *scene, char *na
     parser_next_double(parser, &rect.size.y);
     entity_set_local_rect(entity, rect);
 
-    const struct component_fabric *component_fabric = scene_get_component_fabric(scene);
+    const struct component_factory *component_factory = (struct component_factory*)factories_get((struct factories*)subsystem_collection_get(scene_get_subsystems(scene), "factories"), "component_factory");
 
     for (;;) {
         const char* word = parser_next(parser);
@@ -34,7 +36,7 @@ struct entity* entity_parse(struct parser *parser, struct scene *scene, char *na
             continue;
         }
 
-        struct component* component = component_fabric_try_produce_component(component_fabric, word, parser, entity);
+        struct component* component = component_factory_produce(component_factory, word, parser, entity);
         if (component != NULL) {
             entity_capture_component(entity, component);
         }

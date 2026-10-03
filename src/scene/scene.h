@@ -27,7 +27,6 @@ struct action* scene_get_on_component_marked_destroyed(struct scene *this);
 struct action* scene_get_on_component_resize(struct scene *this);
 
 const struct tmap* scene_get_tmap(const struct scene *this);
-const struct component_fabric* scene_get_component_fabric(const struct scene* this);
 const struct chunks* scene_get_chunks(const struct scene *this);
 const struct subsystem_collection* scene_get_subsystems(const struct scene* this);
 

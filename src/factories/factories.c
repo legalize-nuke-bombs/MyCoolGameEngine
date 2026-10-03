@@ -11,6 +11,7 @@
 #include "../subsystems/subsystem_internal.h"
 #include "factory.h"
 #include "../logging/logger.h"
+#include "../scene/components/component_factory.h"
 
 struct factories {
     struct subsystem base;
@@ -39,7 +40,8 @@ static void factories_register_factory(const struct factories *this, struct fact
 }
 
 static void factories_register_all(const struct factories *this) {
-
+    // Core factories
+    factories_register_factory(this, component_factory_create());
 }
 
 struct subsystem* factories_create(const struct subsystem_collection *subsystems) {
@@ -47,6 +49,7 @@ struct subsystem* factories_create(const struct subsystem_collection *subsystems
     struct subsystem *base = (struct subsystem*)this;
     subsystem_create(base, &factories_vtable, subsystems);
     this->dict = string_dictionary_build(4);
+    factories_register_all(this);
     return base;
 }
 

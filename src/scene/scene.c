@@ -14,7 +14,6 @@
 #include "../utils/action.h"
 #include "../subsystems/subsystem_internal.h"
 #include "chunks/chunks.h"
-#include "components/component_fabric.h"
 #include "../subsystems/subsystem_collection.h"
 #include "../interpreter/interpreter.h"
 
@@ -32,7 +31,6 @@ struct scene {
 
     struct entity_collection* entities;
     struct tmap *tmap;
-    struct component_fabric* component_fabric;
     struct chunks* chunks;
 
     struct action* on_physics;
@@ -67,7 +65,6 @@ struct subsystem* scene_create(char *name, const struct subsystem_collection *su
 
     this->entities = entity_collection_create();
     this->tmap = tmap_create(this);
-    this->component_fabric = component_fabric_create();
     this->chunks = chunks_create(this);
 
     return base;
@@ -77,7 +74,6 @@ void scene_on_destroy(struct subsystem *base) {
     struct scene *this = (struct scene*)base;
     logger_info("Scene %s is destroying...", this->name);
 
-    component_fabric_destroy(this->component_fabric);
     chunks_destroy(this->chunks);
     entity_collection_destroy(this->entities);
     tmap_destroy(this->tmap);
@@ -173,9 +169,6 @@ struct action* scene_get_on_component_resize(struct scene *this) {
 
 const struct tmap* scene_get_tmap(const struct scene *this) {
     return this->tmap;
-}
-const struct component_fabric* scene_get_component_fabric(const struct scene* this) {
-    return this->component_fabric;
 }
 const struct chunks* scene_get_chunks(const struct scene *this) {
     return this->chunks;

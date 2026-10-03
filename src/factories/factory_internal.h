@@ -9,7 +9,6 @@
 
 struct factory_vtable {
     const char* key;
-    void* (*on_produce)(struct factory *base, const char *key);
 };
 
 struct factory {
