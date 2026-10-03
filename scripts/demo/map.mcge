@@ -103,7 +103,7 @@ scene add entity GameState 0 0 1 1
 end
 
 
-/* Dense forest all around a 32 x 24 clearing */
+/* Dense forest all around */
 
 scene add entity ForestNorth 0 68.5 250 113
     forest 4500 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
@@ -124,20 +124,20 @@ end
 
 /* Sparse fringe along the clearing edge */
 
-scene add entity FringeNorth 0 10 32 4
-    forest 6 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
+scene add entity FringeNorth 0 10 64 8
+    forest 48 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
 end
 
-scene add entity FringeSouth 0 -10 32 4
-    forest 6 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
+scene add entity FringeSouth 0 -10 64 8
+    forest 48 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
 end
 
-scene add entity FringeWest -14 0 4 16
-    forest 3 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
+scene add entity FringeWest -14 0 8 32
+    forest 24 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
 end
 
-scene add entity FringeEast 14 0 4 16
-    forest 3 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
+scene add entity FringeEast 14 0 8 32
+    forest 24 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
 end
 
 
