@@ -9,15 +9,17 @@
 #include "../../../logging/logger.h"
 #include "../../../modules/bt/bt_node.h"
 #include "../../../scene/components/component_internal.h"
-#include "../../../modules/bt/bt_selector.h"
+#include "../../../modules/bt/bt_sequence.h"
 #include "../../bt/player_is_near.h"
 #include "../../bt/blackboard.h"
+#include "../../bt/player_chase.h"
 
 
 static struct bt_node* enemy_build_bt_graph() {
-    struct bt_selector* selector = bt_selector_create();
-    bt_selector_capture_node(selector, player_is_near_create(10));
-    return (struct bt_node*)selector;
+    struct bt_sequence* bt_graph = bt_sequence_create();
+    bt_sequence_capture_node(bt_graph, player_is_near_create(10));
+    bt_sequence_capture_node(bt_graph, player_chase_create(6.25));
+    return (struct bt_node*)bt_graph;
 }
 
 static struct bt_node* bt_graph = NULL;
