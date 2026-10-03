@@ -227,6 +227,10 @@ add_executable(MyCoolGameEngine main.c
         src/scene/components/physics/collider.c
         src/scene/components/demo/player.h
         src/scene/components/demo/player.c
+        src/modules/bt/bt_node.h
+        src/modules/bt/bt_status.h
+        src/modules/bt/bt_node_internal.h
+        src/modules/bt/bt_node.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)
