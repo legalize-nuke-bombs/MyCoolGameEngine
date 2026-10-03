@@ -1,0 +1,25 @@
+eval scripts/demo/menu_deps.mcge
+
+once map_deps start
+    catalog add rigid_layer bg1 1
+    catalog add rigid_layer bg2 2
+
+    catalog add rigid_material ground 0.5 0.15
+    catalog add rigid_material ice 0.075 0.55
+    catalog add rigid_material rubber 0.7 0.8
+    catalog add rigid_material wood 0.4 0.3
+    catalog add rigid_material stone 0.6 0.05
+    catalog add rigid_material character 0.3 0.075
+
+    catalog add bt_graph enemy selector
+    sequence player_is_near 50 player_chase 3 end
+    end
+
+    catalog add prefab Enemy 0 0 0.8 0.8
+        box_renderer prop1 texture cube 0
+        collider character
+        rigid_body 50 10 0.2
+        behaviour_agent enemy
+    end
+
+once map_deps end

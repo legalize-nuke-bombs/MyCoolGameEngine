@@ -1,101 +1,10 @@
+eval scripts/demo/map_deps.mcge
 
-
-/* Deps */
-once map_deps start
-
-    catalog add renderer_layer bg1 1
-    catalog add renderer_layer bg2 2
-    catalog add renderer_layer prop1 10
-
-    catalog add rigid_layer bg1 1
-    catalog add rigid_layer bg2 2
-
-    catalog add rigid_material ground 0.5 0.15
-    catalog add rigid_material ice 0.075 0.55
-    catalog add rigid_material rubber 0.7 0.8
-    catalog add rigid_material wood 0.4 0.3
-    catalog add rigid_material stone 0.6 0.05
-    catalog add rigid_material character 0.3 0.075
-
-    catalog add texture cube 64 64 1 textures/demo/cube.png lazy
-    catalog add texture campfire 64 64 5 textures/demo/campfire.png lazy
-    catalog add texture tree1 72 65 4 textures/demo/tree1_tileset.png lazy
-    catalog add texture tree2 72 65 4 textures/demo/tree2_tileset.png lazy
-    catalog add texture tree3 72 65 4 textures/demo/tree3_tileset.png lazy
-    catalog add texture tree4 72 65 4 textures/demo/tree4_tileset.png lazy
-    catalog add texture tree5 72 65 4 textures/demo/tree5_tileset.png lazy
-    catalog add texture tree6 72 65 4 textures/demo/tree6_tileset.png lazy
-    catalog add texture tree7 72 65 4 textures/demo/tree7_tileset.png lazy
-    catalog add texture tree8 72 65 4 textures/demo/tree8_tileset.png lazy
-    catalog add texture gcirc1 512 512 1 textures/core/gcirc1.png lazy
-    catalog add texture gcirc2 512 512 1 textures/core/gcirc2.png lazy
-    catalog add texture gcirc3 512 512 1 textures/core/gcirc3.png lazy
-    catalog add texture gcirc4 512 512 1 textures/core/gcirc4.png lazy
-    catalog add texture gcirc5 512 512 1 textures/core/gcirc5.png lazy
-    catalog add texture gcirc6 512 512 1 textures/core/gcirc6.png lazy
-
-    catalog add bt_graph enemy selector
-    sequence player_is_near 50 player_chase 3 end
-    end
-
-    catalog add prefab Tree1 0 0 2.25 2
-        box_renderer prop1 texture tree1 0
-        box_renderer_animated 2.5
-    end
-
-    catalog add prefab Tree2 0 0 2.25 2
-        box_renderer prop1 texture tree2 0
-        box_renderer_animated 2.5
-    end
-
-    catalog add prefab Tree3 0 0 2.25 2
-        box_renderer prop1 texture tree3 0
-        box_renderer_animated 2.5
-    end
-
-    catalog add prefab Tree4 0 0 2.25 2
-        box_renderer prop1 texture tree4 0
-        box_renderer_animated 2.5
-    end
-
-    catalog add prefab Tree5 0 0 2.25 2
-        box_renderer prop1 texture tree5 0
-        box_renderer_animated 2.5
-    end
-
-    catalog add prefab Tree6 0 0 2.25 2
-        box_renderer prop1 texture tree6 0
-        box_renderer_animated 2.5
-    end
-
-    catalog add prefab Tree7 0 0 2.25 2
-        box_renderer prop1 texture tree7 0
-        box_renderer_animated 2.5
-    end
-
-    catalog add prefab Tree8 0 0 2.25 2
-        box_renderer prop1 texture tree8 0
-        box_renderer_animated 2.5
-    end
-
-    catalog add prefab Enemy 0 0 0.8 0.8
-        box_renderer prop1 texture cube 0
-        collider character
-        rigid_body 50 10 0.2
-        behaviour_agent enemy
-    end
-
-once map_deps end
-
-
-
-
-
-
-
-
-/* Scene */
-
+scene add entity GameState 0 0 1 1
+    clock 36000 3600
+    sky 125 125 150 255 40 40 70 255
+    scene_switcher Escape scripts/demo/menu.mcge
+end
 
 scene add entity Terrain 0 0 250 250
     box_renderer bg1 color 50 60 60 255
@@ -107,14 +16,6 @@ scene add entity Lake -7 1 9 9
     rigid_surface bg2 ice
 end
 
-scene add entity GameState 0 0 1 1
-    clock 36000 3600
-    sky 125 125 150 255 40 40 70 255
-    scene_switcher Escape scripts/demo/menu.mcge
-end
-
-
-
 scene add entity Forest 0 0 250 250
     forest 5000 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
 end
@@ -122,9 +23,6 @@ end
 scene add entity Forest 0 0 250 250
     forest 500 Enemy end
 end
-
-
-/* Camp */
 
 scene add entity Campfire 4 2 2 2
     box_renderer prop1 texture campfire 0

@@ -1,0 +1,63 @@
+once menu_deps start
+    catalog add renderer_layer bg1 1
+    catalog add renderer_layer bg2 2
+    catalog add renderer_layer prop1 10
+
+    catalog add texture cube 64 64 1 textures/demo/cube.png lazy
+    catalog add texture campfire 64 64 5 textures/demo/campfire.png lazy
+    catalog add texture tree1 72 65 4 textures/demo/tree1_tileset.png lazy
+    catalog add texture tree2 72 65 4 textures/demo/tree2_tileset.png lazy
+    catalog add texture tree3 72 65 4 textures/demo/tree3_tileset.png lazy
+    catalog add texture tree4 72 65 4 textures/demo/tree4_tileset.png lazy
+    catalog add texture tree5 72 65 4 textures/demo/tree5_tileset.png lazy
+    catalog add texture tree6 72 65 4 textures/demo/tree6_tileset.png lazy
+    catalog add texture tree7 72 65 4 textures/demo/tree7_tileset.png lazy
+    catalog add texture tree8 72 65 4 textures/demo/tree8_tileset.png lazy
+
+    catalog add texture gcirc1 512 512 1 textures/core/gcirc1.png lazy
+    catalog add texture gcirc2 512 512 1 textures/core/gcirc2.png lazy
+    catalog add texture gcirc3 512 512 1 textures/core/gcirc3.png lazy
+    catalog add texture gcirc4 512 512 1 textures/core/gcirc4.png lazy
+    catalog add texture gcirc5 512 512 1 textures/core/gcirc5.png lazy
+    catalog add texture gcirc6 512 512 1 textures/core/gcirc6.png lazy
+
+    catalog add prefab Tree1 0 0 2.25 2
+            box_renderer prop1 texture tree1 0
+            box_renderer_animated 2.5
+    end
+
+    catalog add prefab Tree2 0 0 2.25 2
+                box_renderer prop1 texture tree2 0
+                box_renderer_animated 2.5
+            end
+    
+            catalog add prefab Tree3 0 0 2.25 2
+                box_renderer prop1 texture tree3 0
+                box_renderer_animated 2.5
+            end
+    
+            catalog add prefab Tree4 0 0 2.25 2
+                box_renderer prop1 texture tree4 0
+                box_renderer_animated 2.5
+            end
+    
+            catalog add prefab Tree5 0 0 2.25 2
+                box_renderer prop1 texture tree5 0
+                box_renderer_animated 2.5
+            end
+    
+            catalog add prefab Tree6 0 0 2.25 2
+                box_renderer prop1 texture tree6 0
+                box_renderer_animated 2.5
+            end
+    
+            catalog add prefab Tree7 0 0 2.25 2
+                box_renderer prop1 texture tree7 0
+                box_renderer_animated 2.5
+            end
+    
+            catalog add prefab Tree8 0 0 2.25 2
+                box_renderer prop1 texture tree8 0
+                box_renderer_animated 2.5
+            end
+once menu_deps end
