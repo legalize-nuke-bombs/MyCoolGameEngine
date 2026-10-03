@@ -249,6 +249,8 @@ add_executable(MyCoolGameEngine main.c
         src/modules/bt/bt_module.c
         src/modules/bt/bt_graph.h
         src/modules/bt/bt_graph.c
+        src/demo/components/characters/mana.h
+        src/demo/components/characters/mana.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)
