@@ -9,6 +9,8 @@
 
 #include "skill.h"
 
+struct parser;
+
 struct skill_vtable {
     const char* key;
     void (*on_destroy)(struct skill *this);
@@ -26,5 +28,6 @@ struct skill {
 };
 
 void skill_base_create(struct skill *this, const struct skill_vtable *vtable, double manacost, double cooldown, struct entity *self);
+void skill_base_parse(struct skill *this, const struct skill_vtable *vtable, struct parser *parser, struct entity *self);
 
 #endif //MYCOOLGAMEENGINE_SKILL_INTERNAL_H

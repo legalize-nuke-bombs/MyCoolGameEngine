@@ -45,16 +45,11 @@ const char* skilled_component_key(void) {
     return "skilled";
 }
 
-static void skilled_setup_skills(struct skilled *this) {
-    const struct component* base = (struct component*)this;
-    this->skills[0] = printer_create(component_get_parent(base));
-}
-
 struct component* skilled_create(struct parser *parser, struct entity *parent) {
     struct skilled *this = calloc(1, sizeof(struct skilled));
     struct component *base = (struct component *) this;
     component_base_create(base, &skilled_vtable, parent);
-    skilled_setup_skills(this);
+    this->skills[0] = printer_parse(parser, parent);
     return base;
 }
 
@@ -63,7 +58,7 @@ static struct component* skilled_clone(struct component base, const struct compo
 
     struct skilled* this = calloc(1, sizeof(struct skilled));
     this->base = base;
-    skilled_setup_skills(this);
+    // TODO skill cloning
     return (struct component*)this;
 }
 

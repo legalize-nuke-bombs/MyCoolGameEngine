@@ -5,8 +5,9 @@
 #ifndef MYCOOLGAMEENGINE_PRINTER_H
 #define MYCOOLGAMEENGINE_PRINTER_H
 
+struct parser;
 struct entity;
 
-struct skill* printer_create(struct entity *self);
+struct skill* printer_parse(struct parser *parser, struct entity *self);
 
 #endif //MYCOOLGAMEENGINE_PRINTER_H
