@@ -6,9 +6,9 @@
 
 #include <stdlib.h>
 
-#include "bt_node.h"
-#include "bt_node_internal.h"
-#include "../../utils/list.h"
+#include "../bt_node.h"
+#include "../bt_node_internal.h"
+#include "../../../utils/list.h"
 
 
 struct bt_sequence {

@@ -231,10 +231,10 @@ add_executable(MyCoolGameEngine main.c
         src/modules/bt/bt_status.h
         src/modules/bt/bt_node_internal.h
         src/modules/bt/bt_node.c
-        src/modules/bt/bt_sequence.h
-        src/modules/bt/bt_sequence.c
-        src/modules/bt/bt_selector.h
-        src/modules/bt/bt_selector.c
+        src/modules/bt/core/bt_sequence.h
+        src/modules/bt/core/bt_sequence.c
+        src/modules/bt/core/bt_selector.h
+        src/modules/bt/core/bt_selector.c
         src/demo/bt/blackboard.h
         src/demo/bt/player_is_near.h
         src/demo/bt/player_is_near.c

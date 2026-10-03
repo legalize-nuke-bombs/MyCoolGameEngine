@@ -9,7 +9,7 @@
 #include "../../../logging/logger.h"
 #include "../../../modules/bt/bt_node.h"
 #include "../../../scene/components/component_internal.h"
-#include "../../../modules/bt/bt_sequence.h"
+#include "../../../modules/bt/core/bt_sequence.h"
 #include "../../bt/player_is_near.h"
 #include "../../bt/blackboard.h"
 #include "../../bt/player_chase.h"
