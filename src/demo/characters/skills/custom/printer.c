@@ -28,7 +28,7 @@ static const struct skill_vtable printer_vtable = {
 struct skill* printer_parse(struct parser *parser, struct entity *self) {
     struct printer* this = calloc(1, sizeof(struct printer));
     struct skill* base = (struct skill*)this;
-    skill_base_create(base, &printer_vtable, 100, 2.5, self);
+    skill_base_parse(base, &printer_vtable, parser, self);
     this->string = parser_next_dup(parser);
     return base;
 }

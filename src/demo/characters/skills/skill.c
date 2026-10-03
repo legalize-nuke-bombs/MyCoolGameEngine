@@ -13,7 +13,7 @@
 void skill_base_create(struct skill *this, const struct skill_vtable *vtable, const double manacost, const double cooldown, struct entity *self) {
     this->vtable = vtable;
     this->manacost = manacost;
-    this->cool_timer = 0;
+    this->cool_timer = 1e+9;
     this->cooldown = cooldown;
     this->self = self;
 }
