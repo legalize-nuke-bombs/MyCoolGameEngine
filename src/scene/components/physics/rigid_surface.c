@@ -15,8 +15,8 @@
 #include "../../../subsystems/subsystem_collection.h"
 #include "../../../utils/dictionary.h"
 #include "../../chunks/chunks.h"
-#include "../../../physics/rigid_layer.h"
-#include "../../../physics/rigid_material.h"
+#include "../../../modules/physics/rigid_layer.h"
+#include "../../../modules/physics/rigid_material.h"
 
 
 struct rigid_surface {

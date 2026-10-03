@@ -203,10 +203,10 @@ add_executable(MyCoolGameEngine main.c
         src/demo/components/enviornment/sky.c
         src/scene/components/physics/rigid_body.h
         src/scene/components/physics/rigid_body.c
-        src/physics/rigid_material.h
-        src/physics/rigid_material.c
-        src/physics/rigid_layer.h
-        src/physics/rigid_layer.c
+        src/modules/physics/rigid_material.h
+        src/modules/physics/rigid_material.c
+        src/modules/physics/rigid_layer.h
+        src/modules/physics/rigid_layer.c
         src/scene/components/physics/rigid_surface.h
         src/scene/components/physics/rigid_surface.c
         src/scene/components/physics/keyboard_rigid_controller.h

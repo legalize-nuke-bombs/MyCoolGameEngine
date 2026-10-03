@@ -12,7 +12,7 @@
 #include "../../../utils/pointer_dictionary.h"
 #include "../../scene.h"
 #include "../../../catalogs/catalogs.h"
-#include "../../../physics/rigid_material.h"
+#include "../../../modules/physics/rigid_material.h"
 #include "../../../logging/logger.h"
 #include "../../../subsystems/subsystem_collection.h"
 #include "../../../utils/action.h"

@@ -6,8 +6,8 @@
 
 #include <stdlib.h>
 
-#include "../catalogs/catalog.h"
-#include "../utils/parser.h"
+#include "../../catalogs/catalog.h"
+#include "../../utils/parser.h"
 
 struct rigid_layer {
     uint8_t priority;
