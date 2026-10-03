@@ -10,6 +10,6 @@ struct parser;
 struct entity;
 
 struct factory* skill_factory_create();
-struct skill* skill_produce(const struct skill_factory *this, const char* key, struct parser *parser, struct entity *parent);
+struct skill* skill_factory_produce(const struct skill_factory *this, const char* key, struct parser *parser, struct entity *parent);
 
 #endif //MYCOOLGAMEENGINE_SKILL_FACTORY_H

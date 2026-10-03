@@ -9,12 +9,15 @@
 #include <stdlib.h>
 
 #include "skill.h"
+#include "skill_factory.h"
 #include "../../../devices/keyboard.h"
+#include "../../../factories/factories.h"
+#include "../../../scene/entity.h"
 #include "../../../scene/scene.h"
 #include "../../../scene/components/component_internal.h"
 #include "../../../subsystems/subsystem_collection.h"
 #include "../../../utils/action.h"
-#include "custom/printer.h"
+#include "../../../utils/parser.h"
 
 #define SKILLS_NUM 1
 
@@ -45,11 +48,13 @@ const char* skilled_component_key(void) {
     return "skilled";
 }
 
+// TODO с зависимостями беда беда
 struct component* skilled_create(struct parser *parser, struct entity *parent) {
     struct skilled *this = calloc(1, sizeof(struct skilled));
     struct component *base = (struct component *) this;
     component_base_create(base, &skilled_vtable, parent);
-    this->skills[0] = printer_parse(parser, parent);
+    const struct skill_factory* skill_factory = (struct skill_factory*)factories_get((struct factories*)subsystem_collection_get(scene_get_subsystems(entity_get_scene(parent)), "factories"), "skill_factory");
+    this->skills[0] = skill_factory_produce(skill_factory, parser_next(parser), parser, parent);
     return base;
 }
 
