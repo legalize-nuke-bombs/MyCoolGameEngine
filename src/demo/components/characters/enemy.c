@@ -17,8 +17,8 @@
 
 static struct bt_node* enemy_build_bt_graph() {
     struct bt_sequence* bt_graph = bt_sequence_create();
-    bt_sequence_capture_node(bt_graph, player_is_near_create(10));
-    bt_sequence_capture_node(bt_graph, player_chase_create(6.25));
+    bt_sequence_capture_node(bt_graph, player_is_near_create(50));
+    bt_sequence_capture_node(bt_graph, player_chase_create(4));
     return (struct bt_node*)bt_graph;
 }
 
