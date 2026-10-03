@@ -5,15 +5,15 @@
 #include "behaviour_agent.h"
 
 #include <stdlib.h>
-#include <_string.h>
+#include <string.h>
 
 #include "../../../catalogs/catalogs.h"
 #include "../../../logging/logger.h"
 #include "../../../modules/bt/bt_node.h"
 #include "../../../modules/bt/bt_graph.h"
-#include "../../entity.h"
-#include "../../scene.h"
-#include "../component_internal.h"
+#include "../../../scene/entity.h"
+#include "../../../scene/scene.h"
+#include "../../../scene/components/component_internal.h"
 #include "../../../subsystems/subsystem_collection.h"
 #include "../../../utils/parser.h"
 #include "../../../demo/bt/blackboard.h"

@@ -6,7 +6,6 @@
 
 #include <stdlib.h>
 
-#include "bt/behaviour_agent.h"
 #include "../../utils/dictionary.h"
 #include "../../utils/string_dictionary.h"
 #include "../../logging/logger.h"
@@ -30,6 +29,7 @@
 #include "rendering/box_light.h"
 #include "rendering/box_renderer_animated.h"
 #include "rendering/renderer_settings.h"
+#include "../../modules/bt/components/behaviour_agent.h"
 
 struct component_fabric {
     struct dictionary* types;
@@ -59,6 +59,8 @@ static void component_fabric_register_all(const struct component_fabric *this) {
     component_fabric_register_component(this, collider_component_key(), collider_create);
     component_fabric_register_component(this, rigid_body_component_key(), rigid_body_create);
     component_fabric_register_component(this, keyboard_rigid_controller_component_key(), keyboard_rigid_controller_create);
+
+    // Bt module
     component_fabric_register_component(this, behaviour_agent_component_key(), behaviour_agent_create);
 
     // Demo components
