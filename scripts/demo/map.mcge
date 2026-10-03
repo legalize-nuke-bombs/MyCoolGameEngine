@@ -201,8 +201,9 @@ scene add entity Cube 2.5 1.5 0.8 0.8
     player
 end
 
-scene add entity Entity 10 10 0.8 0.8
+scene add entity Enemy 10 10 0.8 0.8
     box_renderer prop1 texture cube 0
     collider character
     rigid_body 50 10 0.2
+    enemy
 end

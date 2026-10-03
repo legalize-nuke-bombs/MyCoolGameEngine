@@ -25,7 +25,7 @@ const char* player_component_key(void) {
 }
 
 struct component* player_create(struct parser *parser, struct entity *parent) {
-    struct player *this = malloc(sizeof(struct player));
+    struct player *this = calloc(1, sizeof(struct player));
     struct component *base = (struct component *) this;
     component_base_create(base, &player_vtable, parent);
     return base;

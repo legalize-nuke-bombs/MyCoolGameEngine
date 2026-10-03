@@ -238,6 +238,8 @@ add_executable(MyCoolGameEngine main.c
         src/demo/bt/blackboard.h
         src/demo/bt/player_is_near.h
         src/demo/bt/player_is_near.c
+        src/demo/components/characters/enemy.h
+        src/demo/components/characters/enemy.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)
