@@ -60,11 +60,11 @@ static void factories_on_destroy(struct subsystem *base) {
     dictionary_destroy(this->dict);
 }
 
-void *factories_produce(const struct factories *this, const char *key, const char *name) {
+struct factory* factories_get(const struct factories *this, const char *key) {
     struct factory* factory = dictionary_get(this->dict, (void*)key);
     if (factory == NULL) {
         logger_error("Factories do not know factory %s", key);
         return NULL;
     }
-    return factory_produce(factory, key);
+    return factory;
 }

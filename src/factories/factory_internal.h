@@ -20,5 +20,6 @@ struct factory {
 void factory_base_create(struct factory *this, const struct factory_vtable *vtable);
 
 void factory_register(const struct factory *this, const char *key, void *constructor);
+void* factory_get_constructor(const struct factory *this, const char *key);
 
 #endif //MYCOOLGAMEENGINE_FACTORY_INTERNAL_H

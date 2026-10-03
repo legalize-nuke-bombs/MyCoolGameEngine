@@ -8,9 +8,10 @@
 struct subsystem;
 struct subsystem_collection;
 struct factories;
+struct factory;
 
 struct subsystem* factories_create(const struct subsystem_collection *subsystems);
 
-void *factories_produce(const struct factories *this, const char *key, const char *name);
+struct factory* factories_get(const struct factories *this, const char *key);
 
 #endif //MYCOOLGAMEENGINE_FACTORIES_H
