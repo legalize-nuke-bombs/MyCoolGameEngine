@@ -34,6 +34,9 @@ once map_deps start
     catalog add texture gcirc5 512 512 1 textures/core/gcirc5.png lazy
     catalog add texture gcirc6 512 512 1 textures/core/gcirc6.png lazy
 
+    catalog add bt_graph enemy
+    bt_selector end
+
     catalog add prefab Tree1 0 0 2.25 2
         box_renderer prop1 texture tree1 0
         box_renderer_animated 2.5

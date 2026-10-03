@@ -4,6 +4,7 @@
 
 #include "catalog.h"
 #include "../logging/logger.h"
+#include "../modules/bt/bt_graph.h"
 #include "core/renderer_layer.h"
 #include "core/texture.h"
 #include "core/rigid_layer.h"
@@ -58,6 +59,7 @@ static void catalogs_register_all(struct catalogs *this) {
     catalogs_register(this, &rigid_layer_catalog_vtable);
     catalogs_register(this, &rigid_material_catalog_vtable);
     catalogs_register(this, &prefab_catalog_vtable);
+    catalogs_register(this, &bt_graph_catalog_vtable);
     logger_info("Catalogs know %d catalogs", list_count(&this->list));
 }
 
