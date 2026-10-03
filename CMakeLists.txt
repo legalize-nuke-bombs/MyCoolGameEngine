@@ -261,6 +261,8 @@ add_executable(MyCoolGameEngine main.c
         src/factories/factory.h
         src/factories/factory.c
         src/factories/factory_internal.h
+        src/factories/factories.h
+        src/factories/factories.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)

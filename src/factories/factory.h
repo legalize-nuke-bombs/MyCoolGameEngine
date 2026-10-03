@@ -11,4 +11,6 @@ void factory_destroy(struct factory *this);
 
 void* factory_produce(struct factory *this, const char *key);
 
+const char* factory_get_key(const struct factory *this);
+
 #endif //MYCOOLGAMEENGINE_FACTORY_H

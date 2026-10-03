@@ -31,3 +31,7 @@ void factory_destroy(struct factory *this) {
 void* factory_produce(struct factory *this, const char *key) {
     return this->vtable->on_produce(this, key);
 }
+
+const char* factory_get_key(const struct factory *this) {
+    return this->vtable->key;
+}

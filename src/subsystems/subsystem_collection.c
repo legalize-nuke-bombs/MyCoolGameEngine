@@ -22,6 +22,7 @@
 #include "../rendering/renderer.h"
 #include "../engine/utils/engine_closer.h"
 #include "../engine/lifecycle/engine_lifecycle.h"
+#include "../factories/factories.h"
 #include "../modules/bt/bt_module.h"
 #include "../random/random.h"
 
@@ -51,6 +52,7 @@ static void subsystem_collection_capture(struct subsystem_collection* this, stru
 static void subsystem_collection_capture_all(struct subsystem_collection *this) {
     subsystem_collection_capture(this, engine_lifecycle_create(this));
     subsystem_collection_capture(this, engine_events_create(this));
+    subsystem_collection_capture(this, factories_create(this));
     subsystem_collection_capture(this, keyboard_create(this));
     subsystem_collection_capture(this, catalogs_create(this));
     subsystem_collection_capture(this, scene_create(strdup("Default scene"), this));
