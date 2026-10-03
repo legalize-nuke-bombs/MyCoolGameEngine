@@ -29,7 +29,7 @@
 #include "rendering/box_light.h"
 #include "rendering/box_renderer_animated.h"
 #include "rendering/renderer_settings.h"
-#include "../../modules/bt/components/behaviour_agent.h"
+#include "../../demo/components/characters/behaviour_agent.h"
 
 struct component_fabric {
     struct dictionary* types;
@@ -60,9 +60,6 @@ static void component_fabric_register_all(const struct component_fabric *this) {
     component_fabric_register_component(this, rigid_body_component_key(), rigid_body_create);
     component_fabric_register_component(this, keyboard_rigid_controller_component_key(), keyboard_rigid_controller_create);
 
-    // Bt module
-    component_fabric_register_component(this, behaviour_agent_component_key(), behaviour_agent_create);
-
     // Demo components
     component_fabric_register_component(this, pulsator_component_key(), pulsator_create);
     component_fabric_register_component(this, forest_component_key(), forest_create);
@@ -71,6 +68,7 @@ static void component_fabric_register_all(const struct component_fabric *this) {
     component_fabric_register_component(this, clock_component_key(), clock_create);
     component_fabric_register_component(this, sky_component_key(), sky_create);
     component_fabric_register_component(this, player_component_key(), player_create);
+    component_fabric_register_component(this, behaviour_agent_component_key(), behaviour_agent_create);
 }
 
 struct component_fabric* component_fabric_create() {

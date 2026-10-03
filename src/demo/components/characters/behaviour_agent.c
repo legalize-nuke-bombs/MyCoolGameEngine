@@ -16,7 +16,7 @@
 #include "../../../scene/components/component_internal.h"
 #include "../../../subsystems/subsystem_collection.h"
 #include "../../../utils/parser.h"
-#include "../../../demo/bt/blackboard.h"
+#include "../../bt/blackboard.h"
 
 
 struct behaviour_agent {
