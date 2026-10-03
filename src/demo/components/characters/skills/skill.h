@@ -6,8 +6,11 @@
 #define MYCOOLGAMEENGINE_SKILL_H
 
 struct skill;
+struct entity;
 
 void skill_destroy(struct skill *this);
+
+void skill_enable(struct skill *this);
 
 void skill_update(struct skill *this, double dt);
 

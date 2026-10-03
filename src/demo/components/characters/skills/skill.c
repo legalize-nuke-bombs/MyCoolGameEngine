@@ -5,17 +5,25 @@
 #include <stdlib.h>
 
 #include "skill_internal.h"
+#include "../mana.h"
 #include "../../../../logging/logger.h"
+#include "../../../../scene/entity.h"
 
 struct skill {
     const struct skill_vtable* vtable;
+    double manacost;
     double cool_timer;
     double cooldown;
+    struct entity *self;
+    struct mana *mana;
 };
 
-void skill_base_create(struct skill *this, const struct skill_vtable *vtable, double cooldown) {
+void skill_base_create(struct skill *this, const struct skill_vtable *vtable, const double manacost, const double cooldown, struct entity *self) {
     this->vtable = vtable;
+    this->manacost = manacost;
+    this->cool_timer = 0;
     this->cooldown = cooldown;
+    this->self = self;
 }
 
 void skill_destroy(struct skill *this) {
@@ -23,6 +31,13 @@ void skill_destroy(struct skill *this) {
         this->vtable->on_destroy(this);
     }
     free(this);
+}
+
+void skill_enable(struct skill *this) {
+    this->mana = (struct mana*)entity_get_component(this->self, "mana");
+    if (this->vtable->on_enable) {
+        this->vtable->on_enable(this);
+    }
 }
 
 void skill_update(struct skill *this, const double dt) {
@@ -41,9 +56,13 @@ double skill_get_cooldown_full(const struct skill *this) {
 
 
 enum skill_invoke_result skill_invoke(struct skill *this) {
-    if (this->cool_timer < this->cooldown) {
+    if (this->cooldown > this->cool_timer) {
         logger_debug("Failed to invoke skill %s: cooldown", this->vtable->key);
         return skill_invoke_cooldown;
+    }
+    if (this->mana == NULL || this->manacost > mana_amount(this->mana)) {
+        logger_debug("Failed to invoke skill %s: insufficient mana", this->vtable->key);
+        return skill_invoke_insufficient_mana;
     }
     if (this->vtable->on_invoke == NULL) {
         logger_debug("Failed to invoke skill %s: vfunc is null", this->vtable->key);
@@ -52,6 +71,7 @@ enum skill_invoke_result skill_invoke(struct skill *this) {
     if (this->vtable->on_invoke(this)) {
         logger_debug("Skill %s invoked", this->vtable->key);
         this->cool_timer = 0;
+        mana_try_take(this->mana, this->manacost);
         return skill_invoke_ok;
     }
     logger_debug("Failed to invoke skill %s: child class declined", this->vtable->key);
