@@ -8,6 +8,8 @@
 struct parser;
 struct entity;
 
+#define SKILL_PRINTER_KEY "printer"
+
 struct skill* printer_parse(struct parser *parser, struct entity *self);
 
 #endif //MYCOOLGAMEENGINE_PRINTER_H

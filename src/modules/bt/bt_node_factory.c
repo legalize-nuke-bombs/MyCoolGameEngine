@@ -15,7 +15,6 @@
 
 struct bt_node_factory {
     struct factory base;
-    struct dictionary* dict;
 };
 
 static const struct factory_vtable bt_node_factory_vtable = {

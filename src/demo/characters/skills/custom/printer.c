@@ -19,7 +19,7 @@ static void printer_on_destroy(struct skill *base);
 static bool printer_invoke(struct skill* base);
 
 static const struct skill_vtable printer_vtable = {
-    .key = "printer",
+    .key = SKILL_PRINTER_KEY,
     .on_destroy = printer_on_destroy,
     .on_invoke = printer_invoke
 };

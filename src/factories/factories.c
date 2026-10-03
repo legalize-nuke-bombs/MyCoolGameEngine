@@ -13,6 +13,7 @@
 #include "../logging/logger.h"
 #include "../modules/bt/bt_node_factory.h"
 #include "../scene/components/component_factory.h"
+#include "../demo/characters/skills/skill_factory.h"
 
 struct factories {
     struct subsystem base;
@@ -46,6 +47,9 @@ static void factories_register_all(const struct factories *this) {
 
     // Bt module factories
     factories_register_factory(this, bt_node_factory_create());
+
+    // Demo factories
+    factories_register_factory(this, skill_factory_create());
 }
 
 struct subsystem* factories_create(const struct subsystem_collection *subsystems) {
