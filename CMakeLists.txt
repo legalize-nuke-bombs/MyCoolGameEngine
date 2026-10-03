@@ -242,6 +242,7 @@ add_executable(MyCoolGameEngine main.c
         src/demo/components/characters/enemy.c
         src/demo/bt/player_chase.h
         src/demo/bt/player_chase.c
+        src/demo/version.h
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)

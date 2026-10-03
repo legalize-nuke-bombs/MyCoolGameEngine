@@ -23,7 +23,7 @@ struct engine {
 };
 
 struct engine* engine_create() {
-    logger_info("MyCoolGameEngine v%d.%d.%d", VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH);
+    logger_info("MyCoolGameEngine v%d.%d.%d", ENGINE_V_MAJOR, ENGINE_V_MINOR, ENGINE_V_PATCH);
     logger_info("Engine is creating...");
     struct engine *this = malloc(sizeof(struct engine));
     this->subsystems = subsystem_collection_create();

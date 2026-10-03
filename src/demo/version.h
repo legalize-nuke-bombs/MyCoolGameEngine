@@ -1,12 +1,12 @@
 //
-// Created by nikita on 22.09.2026.
+// Created by nikita on 03.10.2026.
 //
 
 #ifndef MYCOOLGAMEENGINE_VERSION_H
 #define MYCOOLGAMEENGINE_VERSION_H
 
-#define ENGINE_V_MAJOR 0
-#define ENGINE_V_MINOR 3
-#define ENGINE_V_PATCH 1
+#define DEMO_V_MAJOR 0
+#define DEMO_V_MINOR 0
+#define DEMO_V_PATCH 0
 
 #endif //MYCOOLGAMEENGINE_VERSION_H
