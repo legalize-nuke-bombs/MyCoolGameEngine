@@ -24,6 +24,7 @@
 #include "rendering/box_renderer.h"
 #include "core/camera.h"
 #include "core/simulator.h"
+#include "demo/player.h"
 #include "physics/collider.h"
 #include "rendering/box_light.h"
 #include "rendering/box_renderer_animated.h"
@@ -62,6 +63,7 @@ static void component_fabric_register_all(const struct component_fabric *this) {
     component_fabric_register_component(this, collider_component_key(), collider_create);
     component_fabric_register_component(this, rigid_body_component_key(), rigid_body_create);
     component_fabric_register_component(this, keyboard_rigid_controller_component_key(), keyboard_rigid_controller_create);
+    component_fabric_register_component(this, player_component_key(), player_create);
 }
 
 struct component_fabric* component_fabric_create() {
