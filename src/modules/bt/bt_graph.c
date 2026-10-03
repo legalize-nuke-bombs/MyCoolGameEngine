@@ -6,11 +6,11 @@
 
 #include <stdlib.h>
 
-#include "bt_module.h"
-#include "bt_node.h"
 #include "bt_node_factory.h"
-#include "../../catalogs/catalog.h"
+#include "../../factories/factories.h"
 #include "../../subsystems/subsystem_collection.h"
+#include "bt_node.h"
+#include "../../catalogs/catalog.h"
 #include "../../utils/parser.h"
 
 
@@ -25,8 +25,8 @@ static const char* bt_graph_catalog_key(void) {
 
 static void* bt_graph_on_create_item(const char *name, struct parser *parser, const struct subsystem_collection *subsystems) {
     const char* type = parser_next(parser);
-    const struct bt_node_factory* factory = bt_module_node_factory((struct bt_module*)subsystem_collection_get(subsystems, "bt_module"));
-    struct bt_node* node = bt_node_factory_try_produce_node(factory, type, parser);
+    const struct bt_node_factory* factory = (struct bt_node_factory*)factories_get((struct factories*)subsystem_collection_get(subsystems, "factories"), "bt_node_factory");
+    struct bt_node* node = bt_node_factory_produce(factory, type, parser);
     return bt_graph_create(node);
 }
 static void bt_graph_on_destroy_item(void *item) {

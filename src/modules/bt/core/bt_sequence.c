@@ -45,7 +45,7 @@ struct bt_node* bt_sequence_parse(struct parser *parser, const struct bt_node_fa
         if (word == NULL || strcmp(word, "end") == 0) {
             break;
         }
-        struct bt_node* node = bt_node_factory_try_produce_node(factory, word, parser);
+        struct bt_node* node = bt_node_factory_produce(factory, word, parser);
         if (node == NULL) {
             break;
         }

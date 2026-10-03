@@ -11,6 +11,7 @@
 #include "../subsystems/subsystem_internal.h"
 #include "factory.h"
 #include "../logging/logger.h"
+#include "../modules/bt/bt_node_factory.h"
 #include "../scene/components/component_factory.h"
 
 struct factories {
@@ -42,6 +43,9 @@ static void factories_register_factory(const struct factories *this, struct fact
 static void factories_register_all(const struct factories *this) {
     // Core factories
     factories_register_factory(this, component_factory_create());
+
+    // Bt module factories
+    factories_register_factory(this, bt_node_factory_create());
 }
 
 struct subsystem* factories_create(const struct subsystem_collection *subsystems) {

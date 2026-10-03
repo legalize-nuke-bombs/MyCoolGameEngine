@@ -243,8 +243,6 @@ add_executable(MyCoolGameEngine main.c
         src/demo/version.h
         src/modules/bt/bt_node_factory.h
         src/modules/bt/bt_node_factory.c
-        src/modules/bt/bt_module.h
-        src/modules/bt/bt_module.c
         src/modules/bt/bt_graph.h
         src/modules/bt/bt_graph.c
         src/demo/components/characters/mana.h

@@ -23,7 +23,6 @@
 #include "../engine/utils/engine_closer.h"
 #include "../engine/lifecycle/engine_lifecycle.h"
 #include "../factories/factories.h"
-#include "../modules/bt/bt_module.h"
 #include "../random/random.h"
 
 
@@ -62,7 +61,6 @@ static void subsystem_collection_capture_all(struct subsystem_collection *this) 
     subsystem_collection_capture(this, engine_closer_create(this));
     subsystem_collection_capture(this, engine_restarter_create(this));
     subsystem_collection_capture(this, random_create(this));
-    subsystem_collection_capture(this, bt_module_create(this));
 }
 
 
