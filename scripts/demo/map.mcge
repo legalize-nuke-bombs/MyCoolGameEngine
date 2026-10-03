@@ -74,6 +74,13 @@ once map_deps start
         box_renderer_animated 2.5
     end
 
+    catalog add prefab Enemy 0 0 0.8 0.8
+        box_renderer prop1 texture cube 0
+        collider character
+        rigid_body 50 10 0.2
+        enemy
+    end
+
 once map_deps end
 
 
@@ -103,8 +110,13 @@ scene add entity GameState 0 0 1 1
 end
 
 
+
 scene add entity Forest 0 0 250 250
     forest 5000 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
+end
+
+scene add entity Forest 0 0 250 250
+    forest 500 Enemy end
 end
 
 
@@ -166,11 +178,4 @@ scene add entity Cube 2.5 1.5 0.8 0.8
     camera 33.75
     simulator 50
     player
-end
-
-scene add entity Enemy 10 10 0.8 0.8
-    box_renderer prop1 texture cube 0
-    collider character
-    rigid_body 50 10 0.2
-    enemy
 end
