@@ -34,8 +34,9 @@ once map_deps start
     catalog add texture gcirc5 512 512 1 textures/core/gcirc5.png lazy
     catalog add texture gcirc6 512 512 1 textures/core/gcirc6.png lazy
 
-    catalog add bt_graph enemy
-    bt_selector end
+    catalog add bt_graph enemy selector
+    sequence player_is_near 50 player_chase 3 end
+    end
 
     catalog add prefab Tree1 0 0 2.25 2
         box_renderer prop1 texture tree1 0
@@ -81,7 +82,7 @@ once map_deps start
         box_renderer prop1 texture cube 0
         collider character
         rigid_body 50 10 0.2
-        enemy
+        behaviour_agent enemy
     end
 
 once map_deps end

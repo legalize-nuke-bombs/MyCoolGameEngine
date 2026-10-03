@@ -58,6 +58,7 @@ void bt_node_factory_clear(const struct bt_node_factory *this) {
 struct bt_node* bt_node_factory_try_produce_node(const struct bt_node_factory *this, const char *key, struct parser *parser) {
     struct bt_node* (*constructor)(struct parser *parser, const struct bt_node_factory *factory) = dictionary_get(this->dict, (void*)key);
     if (constructor == NULL) {
+        logger_warn("Behaviour tree node factory does not know node %s", key);
         return NULL;
     }
     return constructor(parser, this);

@@ -26,7 +26,8 @@ static const char* bt_graph_catalog_key(void) {
 static void* bt_graph_on_create_item(const char *name, struct parser *parser, const struct subsystem_collection *subsystems) {
     const char* type = parser_next(parser);
     const struct bt_node_factory* factory = bt_module_node_factory((struct bt_module*)subsystem_collection_get(subsystems, "bt_module"));
-    return bt_graph_create(bt_node_factory_try_produce_node(factory, type, parser));
+    struct bt_node* node = bt_node_factory_try_produce_node(factory, type, parser);
+    return bt_graph_create(node);
 }
 static void bt_graph_on_destroy_item(void *item) {
     bt_graph_destroy(item);

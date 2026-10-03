@@ -6,7 +6,7 @@
 
 #include <stdlib.h>
 
-#include "../../demo/components/characters/enemy.h"
+#include "../../demo/components/characters/behaviour_agent.h"
 #include "../../utils/dictionary.h"
 #include "../../utils/string_dictionary.h"
 #include "../../logging/logger.h"
@@ -68,7 +68,7 @@ static void component_fabric_register_all(const struct component_fabric *this) {
     component_fabric_register_component(this, clock_component_key(), clock_create);
     component_fabric_register_component(this, sky_component_key(), sky_create);
     component_fabric_register_component(this, player_component_key(), player_create);
-    component_fabric_register_component(this, enemy_component_key(), enemy_create);
+    component_fabric_register_component(this, behaviour_agent_component_key(), behaviour_agent_create);
 }
 
 struct component_fabric* component_fabric_create() {

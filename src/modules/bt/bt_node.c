@@ -13,6 +13,7 @@ const char* bt_node_key(const struct bt_node *this) {
 }
 
 enum bt_status bt_node_run(struct bt_node *this, void *bb) {
+    if (this == NULL) return bt_failed;
     return this->vtable->run(this, bb);
 }
 
