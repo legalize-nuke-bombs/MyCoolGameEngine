@@ -31,6 +31,7 @@
 #include "rendering/renderer_settings.h"
 #include "../../demo/components/characters/behaviour_agent.h"
 #include "../../demo/components/characters/mana.h"
+#include "../../demo/components/characters/skills/skilled.h"
 
 struct component_fabric {
     struct dictionary* types;
@@ -71,6 +72,7 @@ static void component_fabric_register_all(const struct component_fabric *this) {
     component_fabric_register_component(this, player_component_key(), player_create);
     component_fabric_register_component(this, behaviour_agent_component_key(), behaviour_agent_create);
     component_fabric_register_component(this, mana_component_key(), mana_create);
+    component_fabric_register_component(this, skilled_component_key(), skilled_create);
 }
 
 struct component_fabric* component_fabric_create() {
