@@ -1,7 +1,7 @@
 eval scripts/demo/map_deps.mcge
 
 scene add entity GameState 0 0 1 1
-    clock 36000 3600
+    clock 0 3600
     sky 125 125 150 255 40 40 70 255
     scene_switcher Escape scripts/demo/menu.mcge
 end
