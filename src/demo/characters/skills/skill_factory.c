@@ -7,6 +7,7 @@
 #include <stdlib.h>
 
 #include "../../../factories/factory_internal.h"
+#include "custom/fear_balls.h"
 #include "custom/printer.h"
 
 struct skill_factory {
@@ -19,6 +20,7 @@ static const struct factory_vtable skill_factory_vtable = {
 
 static void skill_factory_register_all(const struct factory *base) {
     factory_register(base, SKILL_PRINTER_KEY, printer_parse);
+    factory_register(base, SKILL_FEAR_BALLS_KEY, fear_balls_parse);
 }
 
 struct factory* skill_factory_create() {

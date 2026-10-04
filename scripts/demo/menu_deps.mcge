@@ -2,6 +2,7 @@ once menu_deps start
     catalog add renderer_layer bg1 1
     catalog add renderer_layer bg2 2
     catalog add renderer_layer prop1 10
+    catalog add renderer_layer effect1 30
 
     catalog add texture cube 64 64 1 textures/demo/cube.png lazy
     catalog add texture campfire 64 64 5 textures/demo/campfire.png lazy
@@ -30,32 +31,32 @@ once menu_deps start
                 box_renderer prop1 texture tree2 0
                 box_renderer_animated 2.5
             end
-    
+
             catalog add prefab Tree3 0 0 2.25 2
                 box_renderer prop1 texture tree3 0
                 box_renderer_animated 2.5
             end
-    
+
             catalog add prefab Tree4 0 0 2.25 2
                 box_renderer prop1 texture tree4 0
                 box_renderer_animated 2.5
             end
-    
+
             catalog add prefab Tree5 0 0 2.25 2
                 box_renderer prop1 texture tree5 0
                 box_renderer_animated 2.5
             end
-    
+
             catalog add prefab Tree6 0 0 2.25 2
                 box_renderer prop1 texture tree6 0
                 box_renderer_animated 2.5
             end
-    
+
             catalog add prefab Tree7 0 0 2.25 2
                 box_renderer prop1 texture tree7 0
                 box_renderer_animated 2.5
             end
-    
+
             catalog add prefab Tree8 0 0 2.25 2
                 box_renderer prop1 texture tree8 0
                 box_renderer_animated 2.5

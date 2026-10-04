@@ -81,5 +81,5 @@ scene add entity Cube 2.5 1.5 0.8 0.8
     simulator 50
     player
     mana 800
-    skilled printer 100 1 1000-7=?
+    skilled fear_balls 100 1 FearBall
 end
