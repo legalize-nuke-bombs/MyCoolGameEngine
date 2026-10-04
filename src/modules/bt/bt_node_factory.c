@@ -12,6 +12,7 @@
 #include "core/bt_sequence.h"
 #include "../../demo/characters/bt/player_is_near.h"
 #include "../../demo/characters/bt/player_chase.h"
+#include "../../demo/characters/bt/player_run_away.h"
 
 struct bt_node_factory {
     struct factory base;
@@ -29,6 +30,7 @@ static void bt_node_factory_register_all(const struct factory *base) {
     // Demo
     factory_register(base, BT_NODE_PLAYER_IS_NEAR, player_is_near_parse);
     factory_register(base, BT_NODE_PLAYER_CHASE, player_chase_parse);
+    factory_register(base, BT_NODE_PLAYER_RUN_AWAY, player_run_away_parse);
 }
 
 struct factory* bt_node_factory_create() {

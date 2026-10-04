@@ -269,6 +269,8 @@ add_executable(MyCoolGameEngine main.c
         src/demo/characters/skills/custom/fear_balls/fear_ball.c
         src/demo/characters/effects.h
         src/demo/characters/effects.c
+        src/demo/characters/bt/player_run_away.h
+        src/demo/characters/bt/player_run_away.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)
