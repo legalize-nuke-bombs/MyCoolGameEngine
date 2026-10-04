@@ -12,14 +12,14 @@ scene add entity Terrain 0 0 250 250
 end
 
 scene add entity Forest 0 0 250 250
-    forest 1000 Tree1 Tree2 Tree3 Tree4 Tree5 end
+    forest 2000 Tree1 Tree2 Tree3 Tree4 Tree5 end
 end
 
 scene add entity Forest 0 0 250 250
     forest 500 Enemy end
 end
 
-scene add entity Campfire 4 2 2 2
+scene add entity Campfire 4 2 1.5 1.5
     box_renderer prop1 texture campfire 0
     box_renderer_animated 2.5
     entity Light 0 0 5 5
@@ -31,15 +31,15 @@ scene add entity Campfire 4 2 2 2
     end
 end
 
-scene add entity Character 2.5 1.5 3 6
+scene add entity Character 2.5 1.5 1.5 3
     entity Hitbox 0 0 0.45 0.6
         collider character
     end
     box_renderer prop1 texture character 0
     box_renderer_animated 1
-    rigid_body 1000 10 0.2
+    rigid_body 250 10 0.2
     keyboard_rigid_controller 6.25 W S A D
-    camera 33.75
+    camera 17.5
     simulator 50
     player
     mana 800

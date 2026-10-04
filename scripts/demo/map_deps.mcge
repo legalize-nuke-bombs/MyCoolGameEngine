@@ -20,13 +20,41 @@ once map_deps start
     end
     end
 
-    catalog add prefab Enemy 0 0 0.8 0.8
-        box_renderer prop1 color 255 255 255 255
-        collider character
+    catalog add prefab Enemy 0 0 1 1
+        entity Hitbox 0 0 0.5 0.5
+            collider character
+        end
+        box_renderer prop1 texture enemy1 0
+        box_renderer_animated 1
         rigid_body 50 10 0.2
         behaviour_agent enemy
         effects
     end
+
+    catalog add prefab Tree1 0 0 3 3
+                box_renderer prop1 texture tree1 0
+                box_renderer_animated 1
+    end
+
+        catalog add prefab Tree2 0 0 3 3
+                   box_renderer prop1 texture tree2 0
+                   box_renderer_animated 1
+       end
+
+       catalog add prefab Tree3 0 0 3 3
+                   box_renderer prop1 texture tree3 0
+                   box_renderer_animated 1
+       end
+
+       catalog add prefab Tree4 0 0 3 3
+                   box_renderer prop1 texture tree4 0
+                   box_renderer_animated 1
+       end
+
+       catalog add prefab Tree5 0 0 3 3
+                   box_renderer prop1 texture tree5 0
+                   box_renderer_animated 1
+       end
 
     catalog add prefab FearBall 0 0 1 1
         box_renderer effect1 color 150 0 150 200

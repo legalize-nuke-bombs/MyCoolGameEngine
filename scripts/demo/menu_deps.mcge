@@ -13,6 +13,8 @@ once menu_deps start
     catalog add texture tree3 512 512 16 textures/demo/tree3.png lazy
     catalog add texture tree4 512 512 16 textures/demo/tree4.png lazy
     catalog add texture tree5 512 512 16 textures/demo/tree5.png lazy
+    catalog add texture enemy1 192 192 16 textures/demo/enemy1.png lazy
+    catalog add texture enemy2 192 192 16 textures/demo/enemy2.png lazy
 
     catalog add texture gcirc1 512 512 1 textures/core/gcirc1.png lazy
     catalog add texture gcirc2 512 512 1 textures/core/gcirc2.png lazy
@@ -20,29 +22,4 @@ once menu_deps start
     catalog add texture gcirc4 512 512 1 textures/core/gcirc4.png lazy
     catalog add texture gcirc5 512 512 1 textures/core/gcirc5.png lazy
     catalog add texture gcirc6 512 512 1 textures/core/gcirc6.png lazy
-
-    catalog add prefab Tree1 0 0 4 4
-            box_renderer prop1 texture tree1 0
-            box_renderer_animated 1
-    end
-
-   catalog add prefab Tree2 0 0 4 4
-               box_renderer prop1 texture tree2 0
-               box_renderer_animated 1
-   end
-
-   catalog add prefab Tree3 0 0 4 4
-               box_renderer prop1 texture tree3 0
-               box_renderer_animated 1
-   end
-
-   catalog add prefab Tree4 0 0 4 4
-               box_renderer prop1 texture tree4 0
-               box_renderer_animated 1
-   end
-
-   catalog add prefab Tree5 0 0 4 4
-               box_renderer prop1 texture tree5 0
-               box_renderer_animated 1
-   end
 once menu_deps end
