@@ -7,12 +7,12 @@ scene add entity GameState 0 0 1 1
 end
 
 scene add entity Terrain 0 0 250 250
-    box_renderer bg1 color 50 60 60 255
+    box_renderer bg1 color 30 30 40 255
     rigid_surface bg1 ground
 end
 
 scene add entity Forest 0 0 250 250
-    forest 5000 Tree1 Tree2 Tree3 Tree4 Tree5 Tree6 Tree7 Tree8 end
+    forest 1000 Tree1 Tree2 Tree3 Tree4 Tree5 end
 end
 
 scene add entity Forest 0 0 250 250

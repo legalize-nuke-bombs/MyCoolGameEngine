@@ -6,8 +6,8 @@ scene add entity MenuState 0 0 1 1
     renderer_settings 1 40 40 70 255
 end
 
-scene add entity Terrain 0 0 250 250
-    box_renderer bg1 color 50 60 60 255
+scene add entity Terrain 0 0 20 20
+    box_renderer bg1 color 30 30 40 255
 end
 
 scene add entity PlayButton -5 4 2 0.6
