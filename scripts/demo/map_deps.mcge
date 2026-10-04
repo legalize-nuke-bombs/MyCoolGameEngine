@@ -12,7 +12,12 @@ once map_deps start
     catalog add rigid_material character 0.3 0.075
 
     catalog add bt_graph enemy selector
-    sequence player_is_near 50 player_chase 3 end
+    sequence player_is_near 50
+    selector
+    sequence is_scared player_run_away 4 end
+    sequence player_chase 4 end
+    end
+    end
     end
 
     catalog add prefab Enemy 0 0 0.8 0.8
