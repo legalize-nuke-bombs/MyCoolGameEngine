@@ -4,6 +4,7 @@
 
 #ifndef MYCOOLGAMEENGINE_COLLIDER_H
 #define MYCOOLGAMEENGINE_COLLIDER_H
+#include <stdbool.h>
 
 struct collider;
 struct parser;
@@ -17,5 +18,6 @@ struct component* collider_create(struct parser *parser, struct entity *parent);
 struct entity* collider_try_get_obstacle(const struct collider *this, struct rect rect);
 
 const struct rigid_material* collider_get_rigid_material(const struct collider *this);
+bool collider_is_trigger(const struct collider *this);
 
 #endif //MYCOOLGAMEENGINE_COLLIDER_H

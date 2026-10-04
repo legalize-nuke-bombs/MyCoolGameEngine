@@ -24,6 +24,7 @@ struct collider {
     struct component base;
 
     char *material_name;
+    bool trigger;
     struct rigid_material *material;
 
     struct dictionary* intersections;
@@ -63,6 +64,7 @@ struct component* collider_create(struct parser *parser, struct entity *parent) 
     struct component* base = (struct component*)this;
     component_base_create(base, &collider_vtable, parent);
     this->material_name = parser_next_dup(parser);
+    if (strcmp(this->material_name, "trigger") == 0) this->trigger = true;
     this->on_trigger_enter = action_create();
     this->on_trigger_exit = action_create();
     return base;
@@ -88,6 +90,7 @@ struct component* collider_clone(struct component base, const struct component *
         this->material_name = strdup(collider->material_name);
     }
     this->material = collider->material;
+    this->trigger = collider->trigger;
     this->on_trigger_enter = action_create();
     this->on_trigger_exit = action_create();
     return (struct component*)this;
@@ -96,7 +99,9 @@ struct component* collider_clone(struct component base, const struct component *
 static void collider_on_awake(struct component *base) {
     struct collider *this = (struct collider*)base;
 
-    this->material = catalogs_get_item((struct catalogs*)subsystem_collection_get(scene_get_subsystems(component_get_scene(base)), "catalogs"), "rigid_material", this->material_name);
+    if (strcmp(this->material_name, "trigger") != 0) {
+        this->material = catalogs_get_item((struct catalogs*)subsystem_collection_get(scene_get_subsystems(component_get_scene(base)), "catalogs"), "rigid_material", this->material_name);
+    }
     free(this->material_name);
     this->material_name = NULL;
 
@@ -209,7 +214,7 @@ static struct entity* collider_try_get_obstacle_among(const struct collider *thi
     struct dictionary_node node;
     while (dictionary_next(colliders, &iterator, &node)) {
         const struct collider *collider = node.value;
-        if (collider == this) {
+        if (collider == this || collider_is_trigger(collider)) {
             continue;
         }
         const struct rect collider_rect = component_get_rect((const struct component*)collider);
@@ -250,4 +255,7 @@ const struct rigid_material* collider_get_rigid_material(const struct collider *
         return this->material;
     }
     return &rigid_material_default;
+}
+bool collider_is_trigger(const struct collider *this) {
+    return this->trigger;
 }
