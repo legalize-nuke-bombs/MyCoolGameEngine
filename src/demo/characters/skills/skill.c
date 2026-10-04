@@ -24,6 +24,10 @@ void skill_base_parse(struct skill *this, const struct skill_vtable *vtable, str
     skill_base_create(this, vtable, manacost, cooldown, self);
 }
 
+struct entity* skill_self(const struct skill* this) {
+    return this->self;
+}
+
 void skill_destroy(struct skill *this) {
     if (this->vtable->on_destroy) {
         this->vtable->on_destroy(this);

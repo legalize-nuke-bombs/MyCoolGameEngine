@@ -30,4 +30,6 @@ struct skill {
 void skill_base_create(struct skill *this, const struct skill_vtable *vtable, double manacost, double cooldown, struct entity *self);
 void skill_base_parse(struct skill *this, const struct skill_vtable *vtable, struct parser *parser, struct entity *self);
 
+struct entity* skill_self(const struct skill *this);
+
 #endif //MYCOOLGAMEENGINE_SKILL_INTERNAL_H
