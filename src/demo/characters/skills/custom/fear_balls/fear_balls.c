@@ -45,6 +45,10 @@ static bool fear_balls_invoke(struct skill* base) {
         logger_warn("Failed to invoke fear balls, prefab is null");
         return false;
     }
+    if (!prefab_contains_component(this->prefab, "fear_ball")) {
+        logger_warn("Failed to invoke fear balls, prefab does not contain fear_ball component");
+        return false;
+    }
     for (int i = 0; i < this->fear_balls_num; i++) {
         struct entity *fear_ball = prefab_instantiate(this->prefab);
         struct rect fear_ball_rect = entity_get_local_rect(fear_ball);

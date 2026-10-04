@@ -24,6 +24,7 @@ once map_deps start
 
     catalog add prefab FearBall 0 0 0.5 0.5
         box_renderer effect1 color 255 0 255 100
+        fear_ball
     end
 
 once map_deps end

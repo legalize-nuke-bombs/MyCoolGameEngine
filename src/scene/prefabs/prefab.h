@@ -4,6 +4,7 @@
 
 #ifndef MYCOOLGAMEENGINE_PREFAB_H
 #define MYCOOLGAMEENGINE_PREFAB_H
+#include <stdbool.h>
 
 struct prefab;
 struct entity;
@@ -17,5 +18,6 @@ void prefab_destroy(struct prefab* this);
 struct entity* prefab_instantiate(struct prefab* this);
 
 const char* prefab_get_name(const struct prefab* this);
+bool prefab_contains_component(const struct prefab* this, const char *key);
 
 #endif //MYCOOLGAMEENGINE_PREFAB_H

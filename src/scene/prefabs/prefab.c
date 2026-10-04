@@ -62,3 +62,6 @@ struct entity* prefab_instantiate(struct prefab* this) {
 const char* prefab_get_name(const struct prefab* this) {
     return this->name;
 }
+bool prefab_contains_component(const struct prefab* this, const char* key) {
+    return entity_try_get_component(this->entity, key);
+}

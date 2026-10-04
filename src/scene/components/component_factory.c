@@ -30,6 +30,7 @@
 #include "../../demo/characters/bt/behaviour_agent.h"
 #include "../../demo/characters/mana.h"
 #include "../../demo/characters/skills/skilled.h"
+#include "../../demo/characters/skills/custom/fear_balls/fear_ball.h"
 
 struct component_factory {
     struct factory base;
@@ -66,6 +67,7 @@ static void component_factory_register_all(const struct factory *base) {
     factory_register(base, behaviour_agent_component_key(), behaviour_agent_create);
     factory_register(base, mana_component_key(), mana_create);
     factory_register(base, skilled_component_key(), skilled_create);
+    factory_register(base, fear_ball_component_key(), fear_ball_create);
 }
 
 struct factory* component_factory_create() {
