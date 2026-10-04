@@ -36,42 +36,6 @@ scene add entity Campfire 4 2 2 2
     end
 end
 
-scene add entity Crate1 -3 -5 1 1
-    box_renderer prop1 color 170 120 70 255
-    collider wood
-    rigid_body 25 1 1.5
-end
-
-scene add entity Crate2 -1.8 -5 1 1
-    box_renderer prop1 color 170 120 70 255
-    collider wood
-    rigid_body 25 1 1.5
-end
-
-scene add entity Crate3 -0.6 -5 1 1
-    box_renderer prop1 color 170 120 70 255
-    collider wood
-    rigid_body 25 1 1.5
-end
-
-scene add entity Boulder 9 -3 1.5 1.5
-    box_renderer prop1 color 120 120 120 255
-    collider stone
-    rigid_body 1000 1 1
-end
-
-scene add entity Ball1 -1 5 0.75 0.75
-    box_renderer prop1 color 230 60 60 255
-    collider rubber
-    rigid_body 5 1 1
-end
-
-scene add entity Ball2 -1 7 0.75 0.75
-    box_renderer prop1 color 230 60 60 255
-    collider rubber
-    rigid_body 5 1 1
-end
-
 scene add entity Character 2.5 1.5 3 6
     entity Hitbox 0 0 0.45 0.6
         collider character
