@@ -6,6 +6,7 @@
 
 #include <stdlib.h>
 
+#include "../../demo/characters/effects.h"
 #include "../../factories/factory_internal.h"
 #include "core/camera.h"
 #include "core/idle.h"
@@ -68,6 +69,7 @@ static void component_factory_register_all(const struct factory *base) {
     factory_register(base, mana_component_key(), mana_create);
     factory_register(base, skilled_component_key(), skilled_create);
     factory_register(base, fear_ball_component_key(), fear_ball_create);
+    factory_register(base, effects_component_key(), effects_create);
 }
 
 struct factory* component_factory_create() {
