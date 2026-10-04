@@ -20,6 +20,7 @@ const char* effects_component_key(void);
 struct component* effects_create(struct parser *parser, struct entity *parent);
 
 void effects_set_effect(struct effects *this, enum effect effect, double length);
+double effects_get_effect(const struct effects *this, enum effect effect);
 bool effects_has_effect(const struct effects *this, enum effect effect);
 
 #endif //MYCOOLGAMEENGINE_EFFECTS_H

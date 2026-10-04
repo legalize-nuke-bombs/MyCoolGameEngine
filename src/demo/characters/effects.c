@@ -53,9 +53,10 @@ static void effects_simulation_chunk_update(struct component *base, const struct
 }
 
 void effects_set_effect(struct effects *this, const enum effect effect, const double length) {
-    if (length > this->lengths[effect]) {
-        this->lengths[effect] = length;
-    }
+    this->lengths[effect] = length;
+}
+double effects_get_effect(const struct effects *this, const enum effect effect) {
+    return this->lengths[effect];
 }
 bool effects_has_effect(const struct effects *this, const enum effect effect) {
     return this->lengths[effect] > 1e-3;

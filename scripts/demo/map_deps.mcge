@@ -28,9 +28,9 @@ once map_deps start
         effects
     end
 
-    catalog add prefab FearBall 0 0 0.5 0.5
+    catalog add prefab FearBall 0 0 0.75 0.5
         box_renderer effect1 color 255 0 255 100
-        fear_ball 1 1 5
+        fear_ball 1 1 5 1.25
         collider trigger
     end
 

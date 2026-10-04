@@ -259,3 +259,9 @@ const struct rigid_material* collider_get_rigid_material(const struct collider *
 bool collider_is_trigger(const struct collider *this) {
     return this->trigger;
 }
+struct action* collider_on_trigger_enter(struct collider *this) {
+    return &this->on_trigger_enter;
+}
+struct action* collider_on_trigger_exit(struct collider *this) {
+    return &this->on_trigger_exit;
+}
