@@ -7,12 +7,13 @@
 #include <stdlib.h>
 
 #include "../skill_internal.h"
-#include "../../../../logging/logger.h"
 #include "../../../../utils/parser.h"
+#include "../../../../utils/system_message_box.h"
 
 struct printer {
     struct skill base;
-    char *string;
+    char *title;
+    char *body;
 };
 
 static void printer_on_destroy(struct skill *base);
@@ -29,17 +30,19 @@ struct skill* printer_parse(struct parser *parser, struct entity *self) {
     struct printer* this = calloc(1, sizeof(struct printer));
     struct skill* base = (struct skill*)this;
     skill_base_parse(base, &printer_vtable, parser, self);
-    this->string = parser_next_dup(parser);
+    this->title = parser_next_dup(parser);
+    this->body = parser_next_dup(parser);
     return base;
 }
 
 static void printer_on_destroy(struct skill *base) {
     const struct printer* this = (struct printer*)base;
-    free(this->string);
+    free(this->title);
+    free(this->body);
 }
 
 static bool printer_invoke(struct skill* base) {
     const struct printer* this = (struct printer*)base;
-    logger_info("%s", this->string);
+    system_message_box_show(this->title, this->body);
     return true;
 }
