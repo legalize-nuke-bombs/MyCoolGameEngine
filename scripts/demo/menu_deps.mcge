@@ -4,6 +4,7 @@ once menu_deps start
     catalog add renderer_layer prop1 10
     catalog add renderer_layer effect1 30
     catalog add renderer_layer gizmo 255
+    catalog add renderer_layer ui1 101
 
     catalog add texture character 256 512 64 textures/demo/character.png lazy
     catalog add texture campfire 64 64 5 textures/demo/campfire.png lazy
