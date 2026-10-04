@@ -4,8 +4,10 @@
 
 #include "fear_balls.h"
 
+#include <math.h>
 #include <stdlib.h>
 
+#include "fear_ball.h"
 #include "../../skill_internal.h"
 #include "../../../../../utils/parser.h"
 #include "../../../../../scene/prefabs/prefab.h"
@@ -50,11 +52,20 @@ static bool fear_balls_invoke(struct skill* base) {
         return false;
     }
     for (int i = 0; i < this->fear_balls_num; i++) {
-        struct entity *fear_ball = prefab_instantiate(this->prefab);
-        struct rect fear_ball_rect = entity_get_local_rect(fear_ball);
-        fear_ball_rect.position = entity_get_local_rect(skill_self(base)).position;
-        entity_set_local_rect(fear_ball, fear_ball_rect);
-        scene_capture_entity(entity_get_scene(skill_self(base)), fear_ball);
+        struct entity *entity = prefab_instantiate(this->prefab);
+        struct rect rect = entity_get_local_rect(entity);
+        rect.position = entity_get_local_rect(skill_self(base)).position;
+        entity_set_local_rect(entity, rect);
+
+        struct fear_ball* fear_ball = (struct fear_ball*)entity_get_component(entity, "fear_ball");
+        const double angle = (2.0f * M_PI * i) / this->fear_balls_num;
+        struct vector2 direction = {
+            .x = cosl(angle),
+            .y = sinl(angle)
+        };
+        fear_ball_set_direction(fear_ball, direction);
+
+        scene_capture_entity(entity_get_scene(skill_self(base)), entity);
     }
     return true;
 }
