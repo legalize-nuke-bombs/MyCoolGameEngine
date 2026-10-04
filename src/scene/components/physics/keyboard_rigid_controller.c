@@ -70,7 +70,7 @@ static void keyboard_rigid_controller_on_update(struct component* base, const st
 
 static void keyboard_rigid_controller_on_awake(struct component* base) {
     struct keyboard_rigid_controller* this = (struct keyboard_rigid_controller*)base;
-    this->rigid_body = (struct rigid_body*)entity_get_component(component_get_parent(base), "rigid_body");
+    this->rigid_body = (struct rigid_body*)entity_get_component(component_get_parent(base), "rigid_body", entity_query_local);
     if (this->rigid_body == NULL) {
         entity_mark_destroyed(component_get_parent(base));
     }

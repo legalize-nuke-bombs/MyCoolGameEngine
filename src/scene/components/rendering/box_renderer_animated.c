@@ -55,7 +55,7 @@ static void box_renderer_animated_awake(struct component *base) {
     struct box_renderer_animated *this = (struct box_renderer_animated *) base;
     struct entity *parent = component_get_parent(base);
 
-    this->box_renderer = (struct box_renderer*)entity_get_component(parent, "box_renderer");
+    this->box_renderer = (struct box_renderer*)entity_get_component(parent, "box_renderer", entity_query_local);
     if (this->box_renderer == NULL) {
         entity_mark_destroyed(parent);
         return;

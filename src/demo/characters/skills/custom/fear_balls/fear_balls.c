@@ -47,7 +47,7 @@ static bool fear_balls_invoke(struct skill* base) {
         logger_warn("Failed to invoke fear balls, prefab is null");
         return false;
     }
-    if (!prefab_contains_component(this->prefab, "fear_ball")) {
+    if (!prefab_contains_component(this->prefab, "fear_ball", entity_query_local)) {
         logger_warn("Failed to invoke fear balls, prefab does not contain fear_ball component");
         return false;
     }
@@ -57,7 +57,7 @@ static bool fear_balls_invoke(struct skill* base) {
         rect.position = entity_get_local_rect(skill_self(base)).position;
         entity_set_local_rect(entity, rect);
 
-        struct fear_ball* fear_ball = (struct fear_ball*)entity_get_component(entity, "fear_ball");
+        struct fear_ball* fear_ball = (struct fear_ball*)entity_get_component(entity, "fear_ball", entity_query_local);
         const double angle = (2.0f * M_PI * i) / this->fear_balls_num;
         struct vector2 direction = {
             .x = cosl(angle),

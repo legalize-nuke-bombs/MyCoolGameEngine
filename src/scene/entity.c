@@ -222,17 +222,28 @@ void entity_recapture_components(const struct entity *this) {
     }
 }
 
-struct component* entity_try_get_component(const struct entity *this, const char *name) {
+struct component* entity_try_get_component(const struct entity *this, const char *name, enum entity_query query) {
     for (int i = 0; i < list_count(&this->components); i++) {
         struct component *component = list_get(&this->components, i);
         if (strcmp(component_get_key(component), name) == 0) {
             return component;
         }
     }
+    if (query == entity_query_recursive) {
+        for (int i = 0; i < list_count(&this->entities); i++) {
+            const struct entity *child = list_get(&this->entities, i);
+            if (entity_is_alive(child)) {
+                struct component* result = entity_try_get_component(child, name, query);
+                if (result) {
+                    return result;
+                }
+            }
+        }
+    }
     return NULL;
 }
-struct component* entity_get_component(const struct entity *this, const char *name) {
-    struct component *component = entity_try_get_component(this, name);
+struct component* entity_get_component(const struct entity *this, const char *name, enum entity_query query) {
+    struct component *component = entity_try_get_component(this, name, query);
     if (component == NULL) {
         logger_error("Entity %s does not contain required component %s", this->name, name);
     }

@@ -120,7 +120,7 @@ static void collider_handle_on_trigger_enter(struct collider *this, struct colli
         return;
     }
     logger_debug("Entity %s on trigger enter %s!", component_get_global_parent_name((struct component*)this), component_get_global_parent_name((struct component*)collider));
-    action_invoke(&this->on_trigger_enter, component_get_parent((struct component*)collider));
+    action_invoke(&this->on_trigger_enter, component_get_global_parent((struct component*)collider));
     if (share) {
         collider_handle_on_trigger_enter(collider, this, false);
     }
@@ -131,7 +131,7 @@ static void collider_handle_on_trigger_exit(struct collider *this, struct collid
         return;
     }
     logger_debug("Entity %s on trigger exit %s!", component_get_global_parent_name((struct component*)this), component_get_global_parent_name((struct component*)collider));
-    action_invoke(&this->on_trigger_exit, component_get_parent((struct component*)collider));
+    action_invoke(&this->on_trigger_exit, component_get_global_parent((struct component*)collider));
     if (share) {
         collider_handle_on_trigger_exit(collider, this, false);
     }
@@ -208,19 +208,20 @@ static void collider_on_movement(struct component *base) {
 }
 
 static struct entity* collider_try_get_obstacle_among(const struct collider *this, const struct rect rect, const struct dictionary *colliders) {
+    const struct entity* current_parent = component_get_global_parent((const struct component*)this);
     const struct rect current_rect = component_get_rect((const struct component*)this);
 
     struct dictionary_iterator iterator = dictionary_begin(colliders);
     struct dictionary_node node;
     while (dictionary_next(colliders, &iterator, &node)) {
         const struct collider *collider = node.value;
-        if (collider == this || collider_is_trigger(collider)) {
+        if (collider_is_trigger(collider) || component_get_global_parent((const struct component*)collider) == current_parent) {
             continue;
         }
         const struct rect collider_rect = component_get_rect((const struct component*)collider);
         // A collider we already intersect does not block, otherwise there would be no way out of it
         if (rects_intersection(rect, collider_rect) && !rects_intersection(current_rect, collider_rect)) {
-            return component_get_parent((const struct component*)collider);
+            return component_get_global_parent((const struct component*)collider);
         }
     }
     return NULL;

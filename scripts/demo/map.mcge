@@ -72,10 +72,13 @@ scene add entity Ball2 -1 7 0.75 0.75
     rigid_body 5 1 1
 end
 
-scene add entity Cube 2.5 1.5 0.8 0.8
-    box_renderer prop1 texture cube 0
-    collider character
-    rigid_body 50 10 0.2
+scene add entity Character 2.5 1.5 3 6
+    entity Hitbox 0 0 0.45 0.6
+        collider character
+    end
+    box_renderer prop1 texture character 0
+    box_renderer_animated 1
+    rigid_body 1000 10 0.2
     keyboard_rigid_controller 6.25 W S A D
     camera 33.75
     simulator 50

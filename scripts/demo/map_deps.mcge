@@ -21,16 +21,16 @@ once map_deps start
     end
 
     catalog add prefab Enemy 0 0 0.8 0.8
-        box_renderer prop1 texture cube 0
+        box_renderer prop1 color 255 255 255 255
         collider character
         rigid_body 50 10 0.2
         behaviour_agent enemy
         effects
     end
 
-    catalog add prefab FearBall 0 0 0.75 0.5
-        box_renderer effect1 color 255 0 255 100
-        fear_ball 1 1 5 1.25
+    catalog add prefab FearBall 0 0 1 1
+        box_renderer effect1 color 150 0 150 200
+        fear_ball 50 -50 1 1.25
         collider trigger
     end
 

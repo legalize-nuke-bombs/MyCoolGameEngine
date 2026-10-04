@@ -35,7 +35,11 @@ void entity_capture_entity(struct entity *this, struct entity *entity);
 void entity_capture_component(struct entity *this, struct component *component);
 void entity_recapture_components(const struct entity *this);
 
-struct component* entity_try_get_component(const struct entity *this, const char *name);
-struct component* entity_get_component(const struct entity *this, const char *name);
+enum entity_query {
+    entity_query_local,
+    entity_query_recursive
+};
+struct component* entity_try_get_component(const struct entity *this, const char *name, enum entity_query query);
+struct component* entity_get_component(const struct entity *this, const char *name, enum entity_query query);
 
 #endif

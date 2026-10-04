@@ -39,7 +39,7 @@ static enum bt_status is_scared_run(struct bt_node *base, void *bb) {
     const struct blackboard* blackboard = bb;
 
     const struct entity *self = blackboard->self;
-    const struct effects* effects = (struct effects*)entity_get_component(self, "effects");
+    const struct effects* effects = (struct effects*)entity_get_component(self, "effects", entity_query_local);
     if (effects == NULL) {
         return bt_failed;
     }

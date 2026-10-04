@@ -36,7 +36,7 @@ void skill_destroy(struct skill *this) {
 }
 
 void skill_enable(struct skill *this) {
-    this->mana = (struct mana*)entity_get_component(this->self, "mana");
+    this->mana = (struct mana*)entity_get_component(this->self, "mana", entity_query_local);
     if (this->vtable->on_enable) {
         this->vtable->on_enable(this);
     }

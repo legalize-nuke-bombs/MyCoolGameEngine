@@ -51,7 +51,8 @@ scene add entity Ball2 -1 7 0.75 0.75
     box_renderer prop1 color 230 60 60 255
 end
 
-scene add entity Cube 2.5 1.5 0.8 0.8
-    box_renderer prop1 texture cube 0
+scene add entity Character 2.5 1.5 3 6
+    box_renderer prop1 texture character 0
+    box_renderer_animated 1
     camera 33.75
 end

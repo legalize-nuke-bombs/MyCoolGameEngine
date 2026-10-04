@@ -6,6 +6,8 @@
 #define MYCOOLGAMEENGINE_PREFAB_H
 #include <stdbool.h>
 
+#include "../entity.h"
+
 struct prefab;
 struct entity;
 struct catalog_vtable;
@@ -18,6 +20,6 @@ void prefab_destroy(struct prefab* this);
 struct entity* prefab_instantiate(struct prefab* this);
 
 const char* prefab_get_name(const struct prefab* this);
-bool prefab_contains_component(const struct prefab* this, const char *key);
+bool prefab_contains_component(const struct prefab* this, const char *key, enum entity_query query);
 
 #endif //MYCOOLGAMEENGINE_PREFAB_H

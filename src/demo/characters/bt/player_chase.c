@@ -55,7 +55,7 @@ static enum bt_status player_chase_run(struct bt_node *base, void *bb) {
     }
     const struct vector2 target_position = component_get_rect((const struct component*)target).position;
 
-    struct rigid_body *rigid_body = (struct rigid_body*)entity_get_component(self, "rigid_body");
+    struct rigid_body *rigid_body = (struct rigid_body*)entity_get_component(self, "rigid_body", entity_query_local);
     if (rigid_body == NULL) {
         return bt_failed;
     }

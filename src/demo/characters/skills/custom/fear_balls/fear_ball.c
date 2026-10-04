@@ -68,7 +68,7 @@ static void handle_on_trigger_enter(void *listener, void *context);
 static void fear_ball_awake(struct component *base) {
     struct fear_ball* this = (struct fear_ball*)base;
     this->self = component_get_parent(base);
-    struct collider *collider = (struct collider*)entity_get_component(this->self, "collider");
+    struct collider *collider = (struct collider*)entity_get_component(this->self, "collider", entity_query_recursive);
     if (collider == NULL) {
         entity_mark_destroyed(this->self);
         return;
@@ -99,7 +99,7 @@ void fear_ball_set_direction(struct fear_ball* this, struct vector2 direction) {
 static void handle_on_trigger_enter(void *listener, void *context) {
     struct fear_ball* this = listener;
     const struct entity* entity = context;
-    struct effects* effects = (struct effects*)entity_try_get_component(entity, "effects");
+    struct effects* effects = (struct effects*)entity_try_get_component(entity, "effects", entity_query_local);
     if (effects == NULL) {
         return;
     }

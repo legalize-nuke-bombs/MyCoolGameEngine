@@ -63,7 +63,7 @@ void entity_collection_move_to_dead(struct entity_collection *this, struct entit
     }
 }
 
-void entity_collection_post_update(struct entity_collection *this) {
+void entity_collection_pre_update(struct entity_collection *this) {
     for (int i = 0; i < list_count(&this->dead); i++) {
         entity_destroy(list_get(&this->dead, i));
     }

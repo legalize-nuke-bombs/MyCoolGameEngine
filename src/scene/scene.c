@@ -132,8 +132,8 @@ static void scene_update(void *listener, void *context) {
     const struct update_context* update_context = context;
 
     scene_handle_switch(this);
+    entity_collection_pre_update(this->entities);
     tmap_update(this->tmap, update_context);
-    entity_collection_post_update(this->entities);
 }
 
 
