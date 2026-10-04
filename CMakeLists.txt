@@ -263,8 +263,8 @@ add_executable(MyCoolGameEngine main.c
         src/scene/components/component_factory.c
         src/demo/characters/skills/skill_factory.h
         src/demo/characters/skills/skill_factory.c
-        src/demo/characters/skills/custom/fear_balls.h
-        src/demo/characters/skills/custom/fear_balls.c
+        src/demo/characters/skills/custom/fear_balls/fear_balls.h
+        src/demo/characters/skills/custom/fear_balls/fear_balls.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)

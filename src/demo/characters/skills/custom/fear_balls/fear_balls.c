@@ -6,14 +6,14 @@
 
 #include <stdlib.h>
 
-#include "../skill_internal.h"
-#include "../../../../utils/parser.h"
-#include "../../../../scene/prefabs/prefab.h"
-#include "../../../../subsystems/subsystem_collection.h"
-#include "../../../../catalogs/catalogs.h"
-#include "../../../../logging/logger.h"
-#include "../../../../scene/entity.h"
-#include "../../../../scene/scene.h"
+#include "../../skill_internal.h"
+#include "../../../../../utils/parser.h"
+#include "../../../../../scene/prefabs/prefab.h"
+#include "../../../../../subsystems/subsystem_collection.h"
+#include "../../../../../catalogs/catalogs.h"
+#include "../../../../../logging/logger.h"
+#include "../../../../../scene/entity.h"
+#include "../../../../../scene/scene.h"
 
 struct fear_balls {
     struct skill base;

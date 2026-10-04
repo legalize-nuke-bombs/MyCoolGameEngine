@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 #include "../../../factories/factory_internal.h"
-#include "custom/fear_balls.h"
+#include "custom/fear_balls/fear_balls.h"
 #include "custom/printer.h"
 
 struct skill_factory {

@@ -22,8 +22,8 @@ once map_deps start
         behaviour_agent enemy
     end
 
-    catalog add prefab FearBall 0 0 1 1
-        box_renderer effect1 color 255 0 255 255
+    catalog add prefab FearBall 0 0 0.5 0.5
+        box_renderer effect1 color 255 0 255 100
     end
 
 once map_deps end
