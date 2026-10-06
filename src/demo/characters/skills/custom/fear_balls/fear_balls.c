@@ -79,7 +79,7 @@ static bool fear_balls_invoke(struct skill* base) {
             .x = cosl(angle),
             .y = sinl(angle)
         };
-        fear_ball_set_direction(fear_ball, direction);
+        fear_ball_launch(skill_self(base), fear_ball, direction);
 
         scene_capture_entity(entity);
     }

@@ -4,6 +4,7 @@
 
 #include "fear_ball.h"
 
+#include <math.h>
 #include <stdlib.h>
 
 #include "../../../effects.h"
@@ -19,9 +20,9 @@ struct fear_ball {
     struct component base;
     double v;
     double a;
-    double lifetime_timer;
-    double lifetime;
+    bool coming_back;
     double fear_length;
+    const struct entity *launcher;
     struct vector2 direction;
     struct entity* self;
 };
@@ -31,21 +32,20 @@ const char* fear_ball_component_key(void) {
 }
 static void fear_ball_on_create(struct component *base, struct fields *fields);
 static void fear_ball_awake(struct component *base);
-static void fear_ball_on_simulation_chunk_update(struct component *base, const struct update_context *context);
+static void fear_ball_on_update(struct component *base, const struct update_context *context);
 
 const struct component_vtable fear_ball_vtable = {
     .component_key = fear_ball_component_key,
     .size = sizeof(struct fear_ball),
     .on_create = fear_ball_on_create,
     .on_awake = fear_ball_awake,
-    .on_update = fear_ball_on_simulation_chunk_update
+    .on_update = fear_ball_on_update
 };
 
 static void fear_ball_on_create(struct component *base, struct fields *fields) {
     struct fear_ball *this = (struct fear_ball *) base;
     this->v = fields_get_double(fields, "speed", 0);
     this->a = fields_get_double(fields, "acceleration", 0);
-    this->lifetime = fields_get_double(fields, "lifetime", 0);
     this->fear_length = fields_get_double(fields, "fear", 0);
 }
 
@@ -64,28 +64,51 @@ static void fear_ball_awake(struct component *base) {
     action_subscribe_no_token(on_trigger_enter, this, handle_on_trigger_enter);
 }
 
-static void fear_ball_on_simulation_chunk_update(struct component *base, const struct update_context *context) {
+static void fear_ball_on_update(struct component *base, const struct update_context *context) {
     struct fear_ball* this = (struct fear_ball*)base;
 
     this->v += this->a * context->dt;
+    if (this->v < 0) {
+        this->coming_back = true;
+    }
+
+    struct vector2 direction;
+    if (this->coming_back) {
+        if (this->launcher == NULL) { // TODO This safeguard will not work without smart refs and will crash program if launcher was destroyed
+            direction = vector2_zero;
+            entity_mark_destroyed(component_get_parent(base));
+        }
+        else {
+            const struct rect launcher_rect = entity_get_local_rect(this->launcher);
+            direction = vector_normalize(vector_sub(launcher_rect.position, component_get_rect(base).position));
+        }
+    }
+    else {
+        direction = this->direction;
+    }
 
     struct rect rect = entity_get_local_rect(this->self);
-    rect.position = vector_sum(rect.position, vector_multiply_scalar(this->direction, this->v * context->dt));
+    rect.position = vector_sum(rect.position, vector_multiply_scalar(direction, fabs(this->v) * context->dt));
     entity_set_local_rect(this->self, rect);
-
-    this->lifetime_timer += context->dt;
-    if (this->lifetime_timer >= this->lifetime) {
-        entity_mark_destroyed(this->self);
-    }
 }
 
-void fear_ball_set_direction(struct fear_ball* this, struct vector2 direction) {
+void fear_ball_launch(const struct entity *launcher, struct fear_ball* this, const struct vector2 direction) {
+    this->launcher = launcher;
     this->direction = vector_normalize(direction);
 }
 
 static void handle_on_trigger_enter(void *listener, void *context) {
     struct fear_ball* this = listener;
     const struct entity* entity = context;
+    if (this->launcher) // TODO See the first note
+    {
+        if (this->launcher == entity) {
+            if (this->coming_back) {
+                entity_mark_destroyed(component_get_parent((struct component*)this));
+            }
+            return;
+        }
+    }
     struct effects* effects = (struct effects*)entity_try_get_component(entity, "effects", entity_query_local);
     if (effects == NULL) {
         return;

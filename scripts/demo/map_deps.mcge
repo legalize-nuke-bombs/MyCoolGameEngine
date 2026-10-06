@@ -64,7 +64,7 @@ once name=map_deps body=[
 
     prefab name=FearBall components=[
         box_renderer layer=effect1 color=[150 0 150 200]
-        fear_ball speed=50 acceleration=-50 lifetime=1 fear=1.25
+        fear_ball speed=50 acceleration=-100 fear=1.25
         collider trigger=true
     ]
 ]
