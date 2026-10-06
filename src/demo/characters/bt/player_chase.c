@@ -36,7 +36,7 @@ struct bt_node* player_chase_create(const double speed) {
     return base;
 }
 
-struct bt_node* player_chase_parse(struct parser *parser, const struct bt_node_factory *factory) {
+struct bt_node* player_chase_parse(struct parser *parser) {
     double speed;
     parser_next_double(parser, &speed);
     return player_chase_create(speed);

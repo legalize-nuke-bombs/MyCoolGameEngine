@@ -250,11 +250,8 @@ add_executable(MyCoolGameEngine main.c
         src/demo/characters/skills/custom/printer.c
         src/demo/characters/skills/skilled.h
         src/demo/characters/skills/skilled.c
-        src/factories/factory.h
-        src/factories/factory.c
-        src/factories/factory_internal.h
-        src/factories/factories.h
-        src/factories/factories.c
+        src/utils/factory.h
+        src/utils/factory.c
         src/scene/components/component_factory.h
         src/scene/components/component_factory.c
         src/demo/characters/skills/skill_factory.h
@@ -273,6 +270,10 @@ add_executable(MyCoolGameEngine main.c
         src/utils/system_message_box.c
         src/utils/fields.h
         src/utils/fields.c
+        src/modules/bt/bt_module.h
+        src/modules/bt/bt_module.c
+        src/demo/demo.h
+        src/demo/demo.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)

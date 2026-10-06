@@ -30,7 +30,7 @@ struct bt_node* is_scared_create() {
     return base;
 }
 
-struct bt_node* is_scared_parse(struct parser *parser, const struct bt_node_factory *factory) {
+struct bt_node* is_scared_parse(struct parser *parser) {
     return is_scared_create();
 }
 

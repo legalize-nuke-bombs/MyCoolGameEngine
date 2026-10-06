@@ -19,7 +19,7 @@
 #include "utils/engine_restarter.h"
 #include "../catalogs/catalogs.h"
 #include "../devices/keyboard.h"
-#include "../factories/factories.h"
+#include "../modules/bt/bt_module.h"
 #include "../profiler/profiler.h"
 #include "../random/random.h"
 #include "../rendering/renderer.h"
@@ -80,7 +80,7 @@ void engine_create(void) {
     logger_info("Engine is creating...");
     engine_register_msystem(&engine_lifecycle_msystem);
     engine_register_msystem(&engine_events_msystem);
-    engine_register_msystem(&factories_msystem);
+    engine_register_msystem(&bt_msystem);
     engine_register_msystem(&keyboard_msystem);
     engine_register_msystem(&catalogs_msystem);
     engine_register_msystem(&scene_msystem);

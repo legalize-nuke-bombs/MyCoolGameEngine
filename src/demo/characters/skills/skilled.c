@@ -11,7 +11,6 @@
 #include "skill.h"
 #include "skill_factory.h"
 #include "../../../devices/keyboard.h"
-#include "../../../factories/factories.h"
 #include "../../../scene/entity.h"
 #include "../../../scene/scene.h"
 #include "../../../scene/components/component_internal.h"
@@ -47,13 +46,11 @@ const char* skilled_component_key(void) {
     return "skilled";
 }
 
-// TODO с зависимостями беда беда
 struct component* skilled_create(struct parser *parser, struct entity *parent) {
     struct skilled *this = calloc(1, sizeof(struct skilled));
     struct component *base = (struct component *) this;
     component_base_create(base, &skilled_vtable, parent);
-    const struct skill_factory* skill_factory = (struct skill_factory*)factories_get("skill_factory");
-    this->skills[0] = skill_factory_produce(skill_factory, parser_next(parser), parser, parent);
+    this->skills[0] = skill_factory_produce(parser_next(parser), parser, parent);
     return base;
 }
 

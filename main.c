@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include "src/engine/engine.h"
 #include "src/engine/engine_arguments.h"
+#include "src/demo/demo.h"
 #include "src/logging/logger.h"
 
 
@@ -38,6 +39,7 @@ int main(const int argc, char *argv[]) {
     }
 
     engine_create();
+    demo_install();
     engine_execute(engine_arguments);
     engine_destroy();
 

@@ -10,10 +10,9 @@
 struct bt_sequence;
 struct bt_node;
 struct parser;
-struct bt_node_factory;
 
 struct bt_sequence* bt_sequence_create();
-struct bt_node* bt_sequence_parse(struct parser *parser, const struct bt_node_factory *factory);
+struct bt_node* bt_sequence_parse(struct parser *parser);
 
 void bt_sequence_capture_node(struct bt_sequence *this, struct bt_node *node);
 

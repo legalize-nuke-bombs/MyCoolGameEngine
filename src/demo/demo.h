@@ -1,0 +1,6 @@
+#ifndef MYCOOLGAMEENGINE_DEMO_H
+#define MYCOOLGAMEENGINE_DEMO_H
+
+void demo_install(void);
+
+#endif //MYCOOLGAMEENGINE_DEMO_H

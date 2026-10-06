@@ -7,7 +7,6 @@
 #include <stdlib.h>
 
 #include "bt_node_factory.h"
-#include "../../factories/factories.h"
 #include "bt_node.h"
 #include "../../catalogs/catalog.h"
 #include "../../utils/parser.h"
@@ -24,8 +23,7 @@ static const char* bt_graph_catalog_key(void) {
 
 static void* bt_graph_on_create_item(const char *name, struct parser *parser) {
     const char* type = parser_next(parser);
-    const struct bt_node_factory* factory = (struct bt_node_factory*)factories_get("bt_node_factory");
-    struct bt_node* node = bt_node_factory_produce(factory, type, parser);
+    struct bt_node* node = bt_node_factory_produce(type, parser);
     return bt_graph_create(node);
 }
 static void bt_graph_on_destroy_item(void *item) {

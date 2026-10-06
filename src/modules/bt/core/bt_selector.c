@@ -38,14 +38,14 @@ struct bt_selector* bt_selector_create() {
     this->nodes = list_create(1);
     return this;
 }
-struct bt_node* bt_selector_parse(struct parser *parser, const struct bt_node_factory *factory) {
+struct bt_node* bt_selector_parse(struct parser *parser) {
     struct bt_selector* this = bt_selector_create();
     for (; ;) {
         const char* word = parser_next(parser);
         if (word == NULL || strcmp(word, "end") == 0) {
             break;
         }
-        struct bt_node* node = bt_node_factory_produce(factory, word, parser);
+        struct bt_node* node = bt_node_factory_produce(word, parser);
         if (node == NULL) {
             break;
         }

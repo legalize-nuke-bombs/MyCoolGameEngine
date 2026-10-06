@@ -7,10 +7,12 @@
 
 struct parser;
 struct entity;
-struct component_factory;
+struct component;
 
-struct factory* component_factory_create();
+void component_factory_create(void);
+void component_factory_destroy(void);
 
-struct component* component_factory_produce(const struct component_factory *this, const char *key, struct parser *parser, struct entity *parent);
+void component_factory_register(const char *key, struct component* (*create)(struct parser *parser, struct entity *parent));
+struct component* component_factory_produce(const char *key, struct parser *parser, struct entity *parent);
 
 #endif //MYCOOLGAMEENGINE_COMPONENT_FACTORY_H

@@ -14,6 +14,7 @@
 #include "../utils/action.h"
 #include "../msystems/msystem.h"
 #include "chunks/chunks.h"
+#include "components/component_factory.h"
 #include "../interpreter/interpreter.h"
 
 
@@ -41,6 +42,8 @@ static void scene_on_create(void) {
     scene.on_component_marked_destroyed = action_create();
     scene.on_component_resize = action_create();
 
+    component_factory_create();
+
     scene.entities = entity_collection_create();
     scene.tmap = tmap_create();
     scene.chunks = chunks_create();
@@ -57,6 +60,8 @@ static void scene_on_destroy(void) {
     action_destroy(&scene.on_component_resize);
     action_destroy(&scene.on_component_marked_destroyed);
     action_destroy(&scene.on_component_captured);
+
+    component_factory_destroy();
 }
 
 

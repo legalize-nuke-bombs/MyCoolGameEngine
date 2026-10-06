@@ -8,12 +8,11 @@
 struct bt_selector;
 struct bt_node;
 struct parser;
-struct bt_node_factory;
 
 #define BT_NODE_SELECTOR "selector"
 
 struct bt_selector* bt_selector_create();
-struct bt_node* bt_selector_parse(struct parser *parser, const struct bt_node_factory *factory);
+struct bt_node* bt_selector_parse(struct parser *parser);
 
 void bt_selector_capture_node(struct bt_selector *this, struct bt_node *node);
 

@@ -18,14 +18,19 @@
 
 struct fear_balls {
     struct skill base;
+    char* prefab_name;
     struct prefab* prefab;
     int fear_balls_num;
 };
 
+static void fear_balls_on_destroy(struct skill* base);
+static void fear_balls_on_enable(struct skill* base);
 static bool fear_balls_invoke(struct skill* base);
 
 static const struct skill_vtable fear_balls_vtable = {
     .key = SKILL_FEAR_BALLS_KEY,
+    .on_destroy = fear_balls_on_destroy,
+    .on_enable = fear_balls_on_enable,
     .on_invoke = fear_balls_invoke
 };
 
@@ -34,10 +39,23 @@ struct skill* fear_balls_parse(struct parser *parser, struct entity *self) {
     struct fear_balls* this = calloc(1, sizeof(struct fear_balls));
     struct skill* base = (struct skill*)this;
     skill_base_parse(base, &fear_balls_vtable, parser, self);
-    const char* prefab_name = parser_next(parser);
+    this->prefab_name = parser_next_dup(parser);
     parser_next_int(parser, &this->fear_balls_num);
-    this->prefab = catalogs_get_item("prefab", prefab_name);
     return base;
+}
+
+static void fear_balls_on_destroy(struct skill* base) {
+    const struct fear_balls* this = (struct fear_balls*)base;
+    free(this->prefab_name);
+}
+
+static void fear_balls_on_enable(struct skill* base) {
+    struct fear_balls* this = (struct fear_balls*)base;
+    if (this->prefab_name) {
+        this->prefab = catalogs_get_item("prefab", this->prefab_name);
+        free(this->prefab_name);
+        this->prefab_name = NULL;
+    }
 }
 
 static bool fear_balls_invoke(struct skill* base) {

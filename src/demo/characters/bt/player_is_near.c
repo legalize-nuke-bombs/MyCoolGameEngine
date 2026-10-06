@@ -35,7 +35,7 @@ struct bt_node* player_is_near_create(const double radius) {
     return base;
 }
 
-struct bt_node* player_is_near_parse(struct parser *parser, const struct bt_node_factory *factory) {
+struct bt_node* player_is_near_parse(struct parser *parser) {
     double radius;
     parser_next_double(parser, &radius);
     return player_is_near_create(radius);

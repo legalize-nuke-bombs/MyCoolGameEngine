@@ -6,11 +6,10 @@
 #define MYCOOLGAMEENGINE_PLAYER_CHASE_H
 
 struct parser;
-struct bt_node_factory;
 
 #define BT_NODE_PLAYER_CHASE "player_chase"
 
 struct bt_node* player_chase_create(double speed);
-struct bt_node* player_chase_parse(struct parser *parser, const struct bt_node_factory *factory);
+struct bt_node* player_chase_parse(struct parser *parser);
 
 #endif //MYCOOLGAMEENGINE_PLAYER_CHASE_H
