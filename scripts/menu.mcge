@@ -1,8 +1,8 @@
-eval path=scripts/demo/menu_deps.mcge
+eval path=scripts/menu_deps.mcge
 
 entity name=MenuState components=[
     game_closer key=Escape
-    scene_switcher key=Return script=scripts/demo/map.mcge
+    scene_switcher key=Return script=scripts/map.mcge
     renderer_settings darkness=[40 40 70 255]
 ]
 

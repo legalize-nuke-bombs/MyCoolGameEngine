@@ -1,9 +1,9 @@
-eval path=scripts/demo/map_deps.mcge
+eval path=scripts/map_deps.mcge
 
 entity name=GameState components=[
     clock seconds=0 speed=3600
     sky day=[125 125 150 255] night=[40 40 70 255]
-    scene_switcher key=Escape script=scripts/demo/menu.mcge
+    scene_switcher key=Escape script=scripts/menu.mcge
 ]
 
 entity name=Terrain size=[250 250] components=[

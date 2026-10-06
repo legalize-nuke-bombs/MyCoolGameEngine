@@ -1,0 +1,24 @@
+once name=menu_deps body=[
+    renderer_layer name=bg1 priority=1
+    renderer_layer name=bg2 priority=2
+    renderer_layer name=prop1 priority=10
+    renderer_layer name=effect1 priority=30
+    renderer_layer name=gizmo priority=255
+    renderer_layer name=ui1 priority=101
+
+    texture name=character tile=[256 512] count=64 path=textures/character.png
+    texture name=campfire1 tile=[384 384] count=16 path=textures/campfire1.png
+    texture name=campfire2 tile=[384 384] count=16 path=textures/campfire2.png
+    texture name=tree1 tile=[512 512] count=16 path=textures/tree1.png
+    texture name=tree2 tile=[512 512] count=16 path=textures/tree2.png
+    texture name=tree3 tile=[512 512] count=16 path=textures/tree3.png
+    texture name=tree4 tile=[512 512] count=16 path=textures/tree4.png
+    texture name=tree5 tile=[512 512] count=16 path=textures/tree5.png
+    texture name=enemy1 tile=[192 192] count=16 path=textures/enemy1.png
+    texture name=enemy2 tile=[192 192] count=16 path=textures/enemy2.png
+    texture name=soul1 tile=[192 192] count=16 path=textures/soul1.png
+    texture name=soul2 tile=[192 192] count=16 path=textures/soul2.png
+    texture name=soul3 tile=[192 192] count=16 path=textures/soul3.png
+
+    texture name=light1 tile=[512 512] path=textures/light1.png
+]

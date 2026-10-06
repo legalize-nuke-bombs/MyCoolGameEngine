@@ -1,4 +1,4 @@
-eval path=scripts/demo/menu_deps.mcge
+eval path=scripts/menu_deps.mcge
 
 once name=map_deps body=[
     rigid_layer name=bg1 priority=1
