@@ -29,6 +29,8 @@ struct fields_field {
 struct fields {
     char *key;
     int line;
+    bool is_number;
+    double number;
     struct list fields;
 };
 
@@ -162,15 +164,24 @@ static char* token_dup(const struct token token) {
 }
 
 
+static bool word_to_double(const char *word, double *out_value) {
+    char *end;
+    const double value = strtod(word, &end);
+    if (end == word || *end != '\0') {
+        return false;
+    }
+    *out_value = value;
+    return true;
+}
+
 static struct fields* fields_create(const struct token token) {
     struct fields *this = calloc(1, sizeof(struct fields));
     this->key = token_dup(token);
     this->line = token.line;
+    this->is_number = word_to_double(this->key, &this->number);
     this->fields = list_create(1);
     return this;
 }
-
-static void fields_destroy(struct fields *this);
 
 static void fields_list_clear(struct fields_list *this) {
     for (int i = 0; i < list_count(&this->nodes); i++) {
@@ -185,7 +196,7 @@ static void fields_field_destroy(struct fields_field *this) {
     free(this);
 }
 
-static void fields_destroy(struct fields *this) {
+void fields_destroy(struct fields *this) {
     for (int i = 0; i < list_count(&this->fields); i++) {
         fields_field_destroy(list_get(&this->fields, i));
     }
@@ -340,7 +351,7 @@ bool fields_has(const struct fields *this, const char *name) {
     return fields_find(this, name) != NULL;
 }
 
-static const char* fields_get_word(const struct fields *this, const char *name) {
+static const struct fields* fields_get_value(const struct fields *this, const char *name) {
     struct fields_field *field = fields_find(this, name);
     if (field == NULL) {
         return NULL;
@@ -350,40 +361,47 @@ static const char* fields_get_word(const struct fields *this, const char *name) 
         logger_warn("%s (line %d) expected one value in field `%s`, got %d", this->key, this->line, name, list_count(&field->value.nodes));
         return NULL;
     }
-    const struct fields *value = list_get(&field->value.nodes, 0);
-    return value->key;
-}
-
-static bool word_to_double(const char *word, double *out_value) {
-    char *end;
-    const double value = strtod(word, &end);
-    if (end == word || *end != '\0') {
-        return false;
-    }
-    *out_value = value;
-    return true;
+    return list_get(&field->value.nodes, 0);
 }
 
 const char* fields_get_string(struct fields *this, const char *name, const char *default_value) {
-    const char *word = fields_get_word(this, name);
-    return word != NULL ? word : default_value;
+    const struct fields *value = fields_get_value(this, name);
+    return value != NULL ? value->key : default_value;
+}
+char* fields_dup_string(struct fields *this, const char *name, const char *default_value) {
+    const char *word = fields_get_string(this, name, default_value);
+    return word != NULL ? strdup(word) : NULL;
+}
+
+bool fields_get_bool(struct fields *this, const char *name, const bool default_value) {
+    const struct fields *value = fields_get_value(this, name);
+    if (value == NULL) {
+        return default_value;
+    }
+    if (strcmp(value->key, "true") == 0 || strcmp(value->key, "1") == 0) {
+        return true;
+    }
+    if (strcmp(value->key, "false") == 0 || strcmp(value->key, "0") == 0) {
+        return false;
+    }
+    logger_warn("%s (line %d) expected true or false in field `%s`, got %s", this->key, this->line, name, value->key);
+    return default_value;
 }
 
 double fields_get_double(struct fields *this, const char *name, const double default_value) {
-    const char *word = fields_get_word(this, name);
-    if (word == NULL) {
+    const struct fields *value = fields_get_value(this, name);
+    if (value == NULL) {
         return default_value;
     }
-    double value;
-    if (!word_to_double(word, &value)) {
-        logger_warn("%s (line %d) expected double in field `%s`, got %s", this->key, this->line, name, word);
+    if (!value->is_number) {
+        logger_warn("%s (line %d) expected double in field `%s`, got %s", this->key, this->line, name, value->key);
         return default_value;
     }
-    return value;
+    return value->number;
 }
 
 int fields_get_int(struct fields *this, const char *name, const int default_value) {
-    const char *word = fields_get_word(this, name);
+    const char *word = fields_get_string(this, name, NULL);
     if (word == NULL) {
         return default_value;
     }
@@ -402,13 +420,39 @@ struct vector2 fields_get_vector2(struct fields *this, const char *name, const s
     if (list == NULL) {
         return default_value;
     }
-    struct vector2 value;
-    if (fields_list_count(list) != 2
-        || !word_to_double(fields_key(fields_list_get(list, 0)), &value.x)
-        || !word_to_double(fields_key(fields_list_get(list, 1)), &value.y)) {
+    if (fields_list_count(list) != 2 || !fields_list_get(list, 0)->is_number || !fields_list_get(list, 1)->is_number) {
         logger_warn("%s (line %d) expected two doubles in field `%s`", this->key, this->line, name);
         return default_value;
     }
+    const struct vector2 value = {
+        .x = fields_list_get(list, 0)->number,
+        .y = fields_list_get(list, 1)->number
+    };
+    return value;
+}
+
+struct color fields_get_color(struct fields *this, const char *name, const struct color default_value) {
+    const struct fields_list *list = fields_get_list(this, name);
+    if (list == NULL) {
+        return default_value;
+    }
+    uint8_t channels[4];
+    bool ok = fields_list_count(list) == 4;
+    for (int i = 0; ok && i < 4; i++) {
+        const struct fields *channel = fields_list_get(list, i);
+        ok = channel->is_number && channel->number >= 0 && channel->number <= UINT8_MAX && channel->number == (int)channel->number;
+        channels[i] = ok ? (uint8_t)channel->number : 0;
+    }
+    if (!ok) {
+        logger_warn("%s (line %d) expected four numbers from 0 to 255 in field `%s`", this->key, this->line, name);
+        return default_value;
+    }
+    const struct color value = {
+        .r = channels[0],
+        .g = channels[1],
+        .b = channels[2],
+        .a = channels[3]
+    };
     return value;
 }
 
@@ -421,11 +465,34 @@ const struct fields_list* fields_get_list(struct fields *this, const char *name)
     return &field->value;
 }
 
-void fields_warn_unknown(const struct fields *this) {
+// A field is reported once: the tree of a prefab is asked again for every instance
+void fields_warn_unknown(struct fields *this) {
     for (int i = 0; i < list_count(&this->fields); i++) {
-        const struct fields_field *field = list_get(&this->fields, i);
+        struct fields_field *field = list_get(&this->fields, i);
         if (!field->asked) {
             logger_warn("%s (line %d) does not know field `%s`", this->key, this->line, field->name);
+            field->asked = true;
         }
     }
+}
+
+struct fields* fields_clone(const struct fields *this) {
+    struct fields *clone = calloc(1, sizeof(struct fields));
+    clone->key = strdup(this->key);
+    clone->line = this->line;
+    clone->is_number = this->is_number;
+    clone->number = this->number;
+    clone->fields = list_create(list_count(&this->fields));
+    for (int i = 0; i < list_count(&this->fields); i++) {
+        const struct fields_field *field = list_get(&this->fields, i);
+        struct fields_field *field_clone = calloc(1, sizeof(struct fields_field));
+        field_clone->name = strdup(field->name);
+        field_clone->asked = field->asked;
+        field_clone->value.nodes = list_create(list_count(&field->value.nodes));
+        for (int j = 0; j < list_count(&field->value.nodes); j++) {
+            list_add(&field_clone->value.nodes, fields_clone(list_get(&field->value.nodes, j)));
+        }
+        list_add(&clone->fields, field_clone);
+    }
+    return clone;
 }
