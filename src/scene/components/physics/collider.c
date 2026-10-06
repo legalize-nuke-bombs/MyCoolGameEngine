@@ -95,16 +95,28 @@ static void collider_lazy_create_intersections(struct collider *this) {
     }
 }
 
+static void collider_handle_on_trigger_exit(struct collider *this, struct collider *collider, bool share);
+
 static void collider_handle_on_trigger_enter(struct collider *this, struct collider *collider, const bool share) {
+    // The dead do not enter anybody: their on_disable has already left everyone
+    if (!component_is_alive((struct component*)this) || !component_is_alive((struct component*)collider)) {
+        return;
+    }
     collider_lazy_create_intersections(this);
     if (!dictionary_try_add(this->intersections, collider, collider)) {
         return;
     }
     logger_debug("Entity %s on trigger enter %s!", component_get_global_parent_name((struct component*)this), component_get_global_parent_name((struct component*)collider));
     action_invoke(&this->on_trigger_enter, component_get_global_parent((struct component*)collider));
-    if (share) {
-        collider_handle_on_trigger_enter(collider, this, false);
+    if (!share) {
+        return;
     }
+    // A subscriber could have destroyed the other side, and its on_disable did not know about this one yet
+    if (!component_is_alive((struct component*)collider)) {
+        collider_handle_on_trigger_exit(this, collider, false);
+        return;
+    }
+    collider_handle_on_trigger_enter(collider, this, false);
 }
 
 static void collider_handle_on_trigger_exit(struct collider *this, struct collider *collider, const bool share) {
