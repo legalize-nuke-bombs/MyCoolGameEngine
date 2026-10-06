@@ -1,5 +1,7 @@
 #include "rigid_materials.h"
 
+#include <stddef.h>
+
 #include "rigid_material.h"
 #include "../../assets/asset_storage.h"
 #include "../../assets/asset_type.h"

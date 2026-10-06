@@ -1,5 +1,7 @@
 #include "rigid_layers.h"
 
+#include <stddef.h>
+
 #include "rigid_layer.h"
 #include "../../assets/asset_storage.h"
 #include "../../assets/asset_type.h"

@@ -1,5 +1,7 @@
 #include "prefabs.h"
 
+#include <stddef.h>
+
 #include "prefab.h"
 #include "../../assets/asset_storage.h"
 #include "../../assets/asset_type.h"
