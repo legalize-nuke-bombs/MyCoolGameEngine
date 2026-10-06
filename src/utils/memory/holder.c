@@ -16,17 +16,21 @@ holder holder_create(void *ptr, void (*destructor)(void *ptr)) {
     this._block->refs = 1;
     return this;
 }
+// The holder gives up its ref only after the destructor: the destructor may destroy the last refs to this object,
+// and the block must outlive that. The refs see NULL from the first moment of the destructor.
 void holder_destroy(holder *this) {
-    this->_block->holders--;
-    this->_block->refs--;
-    if (this->_block->holders == 0) {
-        this->_block->destructor(this->_block->ptr);
-        this->_block->ptr = NULL;
-    }
-    if (this->_block->refs == 0) {
-        free(this->_block);
-    }
+    struct control_block *block = this->_block;
     this->_block = NULL;
+    block->holders--;
+    if (block->holders == 0) {
+        void *ptr = block->ptr;
+        block->ptr = NULL;
+        block->destructor(ptr);
+    }
+    block->refs--;
+    if (block->refs == 0) {
+        free(block);
+    }
 }
 
 holder holder_copy(const holder *holder) {
