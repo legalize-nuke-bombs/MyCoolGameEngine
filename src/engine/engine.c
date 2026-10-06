@@ -25,7 +25,7 @@
 #include "../rendering/renderer.h"
 #include "../scene/scene.h"
 
-#define FRAME_DT_EXPLOSION_THRESHOLD 0.1f
+#define FRAME_DT_EXPLOSION_THRESHOLD 0.03f
 #define ENGINE_MSYSTEMS_MAX 32
 
 static struct {
