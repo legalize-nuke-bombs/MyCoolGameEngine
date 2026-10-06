@@ -5,12 +5,14 @@
 #ifndef MYCOOLGAMEENGINE_CAMERA_H
 #define MYCOOLGAMEENGINE_CAMERA_H
 
+#include "../../../api.h"
+
 
 struct component_vtable;
 struct entity;
 
-const char* camera_component_key(void);
+MCGE_API const char* camera_component_key(void);
 
-extern const struct component_vtable camera_vtable;
+MCGE_API extern const struct component_vtable camera_vtable;
 
 #endif //MYCOOLGAMEENGINE_CAMERA_H

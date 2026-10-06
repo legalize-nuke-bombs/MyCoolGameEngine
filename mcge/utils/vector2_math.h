@@ -2,21 +2,22 @@
 #define MYCOOLGAMEENGINE_VECTOR2MATH_H
 
 #include "vector2.h"
+#include "../api.h"
 
-double vector_mod(struct vector2 vector);
-double vector_sql_mod(struct vector2 vector);
+MCGE_API double vector_mod(struct vector2 vector);
+MCGE_API double vector_sql_mod(struct vector2 vector);
 
-struct vector2 vector_sum(struct vector2 vector1, struct vector2 vector2);
-struct vector2 vector_sub(struct vector2 vector1, struct vector2 vector2);
-struct vector2 vector_multiply_vector(struct vector2 vector1, struct vector2 vector2);
-struct vector2 vector_multiply_scalar(struct vector2 vector1, double scalar);
-double vector_dot(struct vector2 vector1, struct vector2 vector2);
+MCGE_API struct vector2 vector_sum(struct vector2 vector1, struct vector2 vector2);
+MCGE_API struct vector2 vector_sub(struct vector2 vector1, struct vector2 vector2);
+MCGE_API struct vector2 vector_multiply_vector(struct vector2 vector1, struct vector2 vector2);
+MCGE_API struct vector2 vector_multiply_scalar(struct vector2 vector1, double scalar);
+MCGE_API double vector_dot(struct vector2 vector1, struct vector2 vector2);
 
-struct vector2 vector_normalize(struct vector2 this);
+MCGE_API struct vector2 vector_normalize(struct vector2 this);
 
-double vector_distance(const struct vector2 *point1, const struct vector2 *point2);
-double vector_sqr_distance(const struct vector2 *point1, const struct vector2 *point2);
+MCGE_API double vector_distance(const struct vector2 *point1, const struct vector2 *point2);
+MCGE_API double vector_sqr_distance(const struct vector2 *point1, const struct vector2 *point2);
 
-struct vector2 vector_relu(const struct vector2 *vector);
+MCGE_API struct vector2 vector_relu(const struct vector2 *vector);
 
 #endif

@@ -8,6 +8,7 @@
 #include <stddef.h>
 
 #include "bt_node.h"
+#include "../../api.h"
 
 struct fields;
 
@@ -23,6 +24,6 @@ struct bt_node {
     const struct bt_node_vtable *vtable;
 };
 
-void bt_node_base_create(struct bt_node *this, const struct bt_node_vtable *vtable);
+MCGE_API void bt_node_base_create(struct bt_node *this, const struct bt_node_vtable *vtable);
 
 #endif //MYCOOLGAMEENGINE_BT_NODE_INTERNAL_H

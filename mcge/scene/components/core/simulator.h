@@ -5,12 +5,14 @@
 #ifndef MYCOOLGAMEENGINE_SIMULATOR_H
 #define MYCOOLGAMEENGINE_SIMULATOR_H
 
+#include "../../../api.h"
+
 
 struct component_vtable;
 struct entity;
 
-const char* simulator_component_key();
+MCGE_API const char* simulator_component_key();
 
-extern const struct component_vtable simulator_vtable;
+MCGE_API extern const struct component_vtable simulator_vtable;
 
 #endif //MYCOOLGAMEENGINE_SIMULATOR_H

@@ -2,7 +2,8 @@
 #define MYCOOLGAMEENGINE_POINTER_DICTIONARY_H
 
 #include "dictionary.h"
+#include "../api.h"
 
-struct dictionary* pointer_dictionary_build(int dim);
+MCGE_API struct dictionary* pointer_dictionary_build(int dim);
 
 #endif //MYCOOLGAMEENGINE_POINTER_DICTIONARY_H

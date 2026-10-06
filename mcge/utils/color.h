@@ -6,6 +6,7 @@
 #define MYCOOLGAMEENGINE_COLOR_H
 
 #include <stdint.h>
+#include "../api.h"
 
 struct color {
     uint8_t r;
@@ -14,7 +15,7 @@ struct color {
     uint8_t a;
 };
 
-extern const struct color color_black;
-extern const struct color color_white;
+MCGE_API extern const struct color color_black;
+MCGE_API extern const struct color color_white;
 
 #endif //MYCOOLGAMEENGINE_COLOR_H

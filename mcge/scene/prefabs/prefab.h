@@ -7,17 +7,18 @@
 #include <stdbool.h>
 
 #include "../entity.h"
+#include "../../api.h"
 
 struct prefab;
 struct entity;
 struct fields;
 
-struct prefab* prefab_create(struct fields *fields);
-void prefab_destroy(struct prefab* this);
+MCGE_API struct prefab* prefab_create(struct fields *fields);
+MCGE_API void prefab_destroy(struct prefab* this);
 
-struct entity* prefab_instantiate(struct prefab* this);
+MCGE_API struct entity* prefab_instantiate(struct prefab* this);
 
-const char* prefab_get_name(const struct prefab* this);
-bool prefab_contains_component(const struct prefab* this, const char *key, enum entity_query query);
+MCGE_API const char* prefab_get_name(const struct prefab* this);
+MCGE_API bool prefab_contains_component(const struct prefab* this, const char *key, enum entity_query query);
 
 #endif //MYCOOLGAMEENGINE_PREFAB_H

@@ -6,7 +6,8 @@
 #define MYCOOLGAMEENGINE_STRING_DICTIONARY_H
 
 #include "dictionary.h"
+#include "../api.h"
 
-struct dictionary* string_dictionary_build(int dim);
+MCGE_API struct dictionary* string_dictionary_build(int dim);
 
 #endif //MYCOOLGAMEENGINE_STRING_DICTIONARY_H

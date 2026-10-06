@@ -6,10 +6,11 @@
 #define MYCOOLGAMEENGINE_RECT_MATH_H
 
 #include "rect.h"
+#include "../api.h"
 
-struct rect rect_sum(const struct rect *rect1, const struct rect *rect2);
-struct rect rect_sub(const struct rect *rect1, const struct rect *rect2);
+MCGE_API struct rect rect_sum(const struct rect *rect1, const struct rect *rect2);
+MCGE_API struct rect rect_sub(const struct rect *rect1, const struct rect *rect2);
 
-struct rect rect_sdl(const struct rect *obj, const struct rect *viewport, struct vector2 output_size);
+MCGE_API struct rect rect_sdl(const struct rect *obj, const struct rect *viewport, struct vector2 output_size);
 
 #endif //MYCOOLGAMEENGINE_RECT_MATH_H

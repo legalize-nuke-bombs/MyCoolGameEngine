@@ -5,6 +5,8 @@
 #ifndef MYCOOLGAMEENGINE_STRING_HASHER_H
 #define MYCOOLGAMEENGINE_STRING_HASHER_H
 
-int string_hasher_djb2(const char *string);
+#include "../api.h"
+
+MCGE_API int string_hasher_djb2(const char *string);
 
 #endif //MYCOOLGAMEENGINE_STRING_HASHER_H

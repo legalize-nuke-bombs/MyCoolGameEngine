@@ -5,8 +5,10 @@
 #ifndef MYCOOLGAMEENGINE_PROFILER_H
 #define MYCOOLGAMEENGINE_PROFILER_H
 
+#include "../api.h"
+
 struct msystem;
 
-extern const struct msystem profiler_msystem;
+MCGE_API extern const struct msystem profiler_msystem;
 
 #endif //MYCOOLGAMEENGINE_PROFILER_H

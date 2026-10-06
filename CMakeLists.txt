@@ -60,7 +60,8 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(SDL3 SDL3_image)
 
-add_library(mcge STATIC
+add_library(mcge SHARED
+        mcge/api.h
         mcge/scene/entity.h
         mcge/scene/entity.c
         mcge/utils/vector2.h
@@ -231,6 +232,10 @@ add_library(mcge STATIC
         mcge/utils/memory/holder.c
         mcge/utils/memory/ref.c
 )
+set_target_properties(mcge PROPERTIES DEFINE_SYMBOL MCGE_EXPORT)
+if(WIN32)
+    set_target_properties(mcge PROPERTIES PREFIX "")
+endif()
 target_include_directories(mcge PUBLIC .)
 target_link_libraries(mcge PUBLIC SDL3::SDL3 SDL3_image::SDL3_image)
 

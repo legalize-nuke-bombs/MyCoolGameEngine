@@ -1,6 +1,8 @@
 #ifndef MYCOOLGAMEENGINE_FACTORY_H
 #define MYCOOLGAMEENGINE_FACTORY_H
 
+#include "../api.h"
+
 struct dictionary;
 
 struct factory {
@@ -8,10 +10,10 @@ struct factory {
     struct dictionary *_items;
 };
 
-struct factory factory_create(const char *name);
-void factory_destroy(struct factory *this);
+MCGE_API struct factory factory_create(const char *name);
+MCGE_API void factory_destroy(struct factory *this);
 
-void factory_register(struct factory *this, const char *key, void *item);
-void* factory_find(const struct factory *this, const char *key);
+MCGE_API void factory_register(struct factory *this, const char *key, void *item);
+MCGE_API void* factory_find(const struct factory *this, const char *key);
 
 #endif //MYCOOLGAMEENGINE_FACTORY_H

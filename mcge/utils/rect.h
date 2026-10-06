@@ -9,16 +9,17 @@
 #include <stdbool.h>
 
 #include "vector2.h"
+#include "../api.h"
 
 struct rect {
     struct vector2 position;
     struct vector2 size;
 };
 
-bool rects_equal(struct rect rect1, struct rect rect2);
+MCGE_API bool rects_equal(struct rect rect1, struct rect rect2);
 
-bool rects_intersection(struct rect rect1, struct rect rect2);
+MCGE_API bool rects_intersection(struct rect rect1, struct rect rect2);
 
-extern const struct rect rect_0;
+MCGE_API extern const struct rect rect_0;
 
 #endif //MYCOOLGAMEENGINE_RECT_H

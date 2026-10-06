@@ -5,8 +5,10 @@
 #ifndef MYCOOLGAMEENGINE_ENGINE_CLOSER_H
 #define MYCOOLGAMEENGINE_ENGINE_CLOSER_H
 
+#include "../../api.h"
+
 struct msystem;
 
-extern const struct msystem engine_closer_msystem;
+MCGE_API extern const struct msystem engine_closer_msystem;
 
 #endif //MYCOOLGAMEENGINE_ENGINE_CLOSER_H

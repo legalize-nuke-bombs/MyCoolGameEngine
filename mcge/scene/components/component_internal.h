@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include "component.h"
+#include "../../api.h"
 
 struct fields;
 
@@ -36,6 +37,6 @@ struct component {
     struct entity *parent;
 };
 
-void component_base_create(struct component *this, const struct component_vtable *vtable, struct entity *parent);
+MCGE_API void component_base_create(struct component *this, const struct component_vtable *vtable, struct entity *parent);
 
 #endif //MYCOOLGAMEENGINE_COMPONENT_INTERNAL_H

@@ -7,6 +7,7 @@
 
 #include "control_block.h"
 #include "ref.h"
+#include "../../api.h"
 
 struct holder {
     struct control_block* _block;
@@ -14,12 +15,12 @@ struct holder {
 
 typedef struct holder holder;
 
-holder holder_create(void *ptr, void (*destructor)(void *ptr));
-void holder_destroy(holder *this);
+MCGE_API holder holder_create(void *ptr, void (*destructor)(void *ptr));
+MCGE_API void holder_destroy(holder *this);
 
-holder holder_copy(const holder *holder);
-ref holder_ref(const holder *holder);
+MCGE_API holder holder_copy(const holder *holder);
+MCGE_API ref holder_ref(const holder *holder);
 
-void* holder_ptr(const holder *this);
+MCGE_API void* holder_ptr(const holder *this);
 
 #endif //MYCOOLGAMEENGINE_HOLDER_H
