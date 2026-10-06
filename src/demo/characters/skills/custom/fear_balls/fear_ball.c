@@ -4,6 +4,7 @@
 
 #include "fear_ball.h"
 
+#include <math.h>
 #include <stdlib.h>
 
 #include "../../../effects.h"
@@ -17,12 +18,12 @@
 
 struct fear_ball {
     struct component base;
-    double speed;
+    double v;
     double a;
     bool coming_back;
     double fear_length;
     const struct entity *launcher;
-    struct vector2 v;
+    struct vector2 direction;
     struct entity* self;
 };
 
@@ -43,7 +44,7 @@ const struct component_vtable fear_ball_vtable = {
 
 static void fear_ball_on_create(struct component *base, struct fields *fields) {
     struct fear_ball *this = (struct fear_ball *) base;
-    this->speed = fields_get_double(fields, "speed", 0);
+    this->v = fields_get_double(fields, "speed", 0);
     this->a = fields_get_double(fields, "acceleration", 0);
     this->fear_length = fields_get_double(fields, "fear", 0);
 }
@@ -66,25 +67,34 @@ static void fear_ball_awake(struct component *base) {
 static void fear_ball_on_update(struct component *base, const struct update_context *context) {
     struct fear_ball* this = (struct fear_ball*)base;
 
-    if (this->launcher == NULL) { // TODO This safeguard will not work without smart refs and will crash program if launcher was destroyed
-        entity_mark_destroyed(this->self);
-        return;
+    this->v += this->a * context->dt;
+    if (this->v < 0) {
+        this->coming_back = true;
+    }
+
+    struct vector2 direction;
+    if (this->coming_back) {
+        if (this->launcher == NULL) { // TODO This safeguard will not work without smart refs and will crash program if launcher was destroyed
+            direction = vector2_zero;
+            entity_mark_destroyed(component_get_parent(base));
+        }
+        else {
+            const struct rect launcher_rect = entity_get_local_rect(this->launcher);
+            direction = vector_normalize(vector_sub(launcher_rect.position, component_get_rect(base).position));
+        }
+    }
+    else {
+        direction = this->direction;
     }
 
     struct rect rect = entity_get_local_rect(this->self);
-    const struct vector2 to_launcher = vector_normalize(vector_sub(entity_get_local_rect(this->launcher).position, rect.position));
-
-    // The acceleration always points along the line to the launcher: it slows the ball on its way out and then brings it back
-    this->v = vector_sum(this->v, vector_multiply_scalar(to_launcher, -this->a * context->dt));
-    this->coming_back = vector_dot(this->v, to_launcher) > 0;
-
-    rect.position = vector_sum(rect.position, vector_multiply_scalar(this->v, context->dt));
+    rect.position = vector_sum(rect.position, vector_multiply_scalar(direction, fabs(this->v) * context->dt));
     entity_set_local_rect(this->self, rect);
 }
 
 void fear_ball_launch(const struct entity *launcher, struct fear_ball* this, const struct vector2 direction) {
     this->launcher = launcher;
-    this->v = vector_multiply_scalar(vector_normalize(direction), this->speed);
+    this->direction = vector_normalize(direction);
 }
 
 static void handle_on_enter(void *listener, void *context) {
