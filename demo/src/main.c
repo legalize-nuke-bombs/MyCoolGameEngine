@@ -1,10 +1,10 @@
 #include <stdbool.h>
 #include <stddef.h>
-#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <mcge/mcge.h>
 #include "demo.h"
+#include "version.h"
 
 
 static void parse_arguments(const int argc, char* argv[], const char **out_data_root, struct engine_arguments *out_args, int *out_logger_level) {
@@ -30,6 +30,8 @@ int main(const int argc, char *argv[]) {
     parse_arguments(argc, argv, &data_root, &engine_arguments, &logger_level);
 
     logger_init(logger_level);
+
+    logger_info("Demo game v%d.%d.%d!", DEMO_V_MAJOR, DEMO_V_MINOR, DEMO_V_PATCH);
 
     if (data_root != NULL && chdir(data_root) != 0) {
         logger_error("Failed to enter data root %s", data_root);
