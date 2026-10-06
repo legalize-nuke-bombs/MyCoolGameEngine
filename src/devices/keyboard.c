@@ -38,6 +38,15 @@ static void keyboard_on_destroy(void) {
     }
 }
 
+static void keyboard_release_all(void) {
+    for (int i = 0; i < SDL3_SCANCODE_NUMBER; i++) {
+        if (keyboard.status[i]) {
+            keyboard.status[i] = false;
+            action_invoke(&keyboard.on_key_released[i], NULL);
+        }
+    }
+}
+
 static void keyboard_register_native_event(void* listener, void* context) {
     const SDL_Event *event = context;
     const int scancode = event->key.scancode;
@@ -53,6 +62,11 @@ static void keyboard_register_native_event(void* listener, void* context) {
         logger_debug("Keyboard registered key up");
         keyboard.status[scancode] = false;
         action_invoke(&keyboard.on_key_released[scancode], NULL);
+    }
+    else if (event->type == SDL_EVENT_WINDOW_FOCUS_LOST) {
+        // The key up events of a window without the keyboard focus go to somebody else
+        logger_debug("Keyboard lost focus");
+        keyboard_release_all();
     }
 }
 static void keyboard_on_enable(struct engine_arguments args) {
