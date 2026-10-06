@@ -5,7 +5,6 @@
 #include "../interpreter_command_internal.h"
 #include "../../catalogs/catalog.h"
 #include "../../catalogs/catalogs.h"
-#include "../../subsystems/subsystem_collection.h"
 #include "../../utils/parser.h"
 
 
@@ -17,13 +16,12 @@ static const char* interpreter_catalog_add_get_key(const struct interpreter_comm
     return "add";
 }
 
-static void interpreter_catalog_add_execute(const struct interpreter_command *this, struct parser *parser, const struct subsystem_collection *subsystems) {
-    const struct catalogs *catalogs = (struct catalogs*)subsystem_collection_get(subsystems, "catalogs");
-    struct catalog *catalog = catalogs_get(catalogs, parser_next(parser));
+static void interpreter_catalog_add_execute(const struct interpreter_command *this, struct parser *parser) {
+    struct catalog *catalog = catalogs_get(parser_next(parser));
     if (catalog == NULL) {
         return;
     }
-    catalog_add(catalog, parser, subsystems);
+    catalog_add(catalog, parser);
 }
 
 static const struct interpreter_command_vtable catalog_add_vtable = {

@@ -22,7 +22,7 @@ struct entity* component_get_parent(const struct component *this);
 const char* component_get_parent_name(const struct component *this);
 struct entity* component_get_global_parent(const struct component *this);
 const char* component_get_global_parent_name(const struct component *this);
-struct scene* component_get_scene(const struct component *this);
+bool component_is_in_scene(const struct component *this);
 
 struct component_on_rect_changed_callback_data {
     struct component *component;

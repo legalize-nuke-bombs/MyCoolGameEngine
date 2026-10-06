@@ -7,9 +7,13 @@
 
 #include "engine_arguments.h"
 
-struct engine* engine_create();
-void engine_destroy(struct engine *this);
+struct msystem;
 
-void engine_execute(const struct engine *this, struct engine_arguments args);
+void engine_create(void);
+void engine_destroy(void);
+
+void engine_register_msystem(const struct msystem *msystem);
+
+void engine_execute(struct engine_arguments args);
 
 #endif //MYCOOLGAMEENGINE_ENGINE_H

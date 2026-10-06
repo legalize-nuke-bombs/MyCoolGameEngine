@@ -7,7 +7,6 @@
 #include "../../scene/entity.h"
 #include "../../devices/keyboard.h"
 #include "../../scene/scene.h"
-#include "../../subsystems/subsystem_collection.h"
 #include "../../utils/parser.h"
 #include "../../utils/action.h"
 
@@ -62,16 +61,13 @@ static struct component* scene_switcher_clone(struct component base, const struc
 
 static void scene_switcher_execute(void* listener, void *context) {
     const struct scene_switcher* this = listener;
-    const struct component* base = listener;
-    struct scene *scene = entity_get_scene(component_get_parent(base));
-    scene_mark_switch(scene, this->map_path);
+    scene_mark_switch(this->map_path);
 }
 
 static void scene_switcher_awake(struct component *base) {
     struct scene_switcher *this = (struct scene_switcher *) base;
 
-    struct keyboard* keyboard = (struct keyboard*)subsystem_collection_get(scene_get_subsystems(entity_get_scene(component_get_parent(base))), "keyboard");
-    this->on_hotkey_pressed = keyboard_require_action_on_key_pressed(keyboard, this->hotkey);
+    this->on_hotkey_pressed = keyboard_require_action_on_key_pressed(this->hotkey);
     action_subscribe(this->on_hotkey_pressed, this, scene_switcher_execute, &this->on_hotkey_pressed_token);
 }
 

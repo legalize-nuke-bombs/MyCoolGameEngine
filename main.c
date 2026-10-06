@@ -37,9 +37,9 @@ int main(const int argc, char *argv[]) {
         return 1;
     }
 
-    struct engine *engine = engine_create();
-    engine_execute(engine, engine_arguments);
-    engine_destroy(engine);
+    engine_create();
+    engine_execute(engine_arguments);
+    engine_destroy();
 
     return 0;
 }

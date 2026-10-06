@@ -10,9 +10,8 @@
 struct chunks;
 struct component;
 struct dictionary;
-struct scene;
 
-struct chunks *chunks_create(struct scene *scene);
+struct chunks *chunks_create(void);
 void chunks_destroy(struct chunks *this);
 
 void chunks_clear(struct chunks *this);

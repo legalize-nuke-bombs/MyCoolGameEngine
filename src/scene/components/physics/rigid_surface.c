@@ -12,7 +12,6 @@
 #include "../../scene.h"
 #include "../../../utils/parser.h"
 #include "../../../catalogs/catalogs.h"
-#include "../../../subsystems/subsystem_collection.h"
 #include "../../../utils/dictionary.h"
 #include "../../chunks/chunks.h"
 #include "../../../modules/physics/rigid_layer.h"
@@ -78,16 +77,14 @@ static struct component* rigid_surface_clone(struct component base, const struct
 static void rigid_surface_awake(struct component *base) {
     struct rigid_surface *this = (struct rigid_surface *) base;
 
-    const struct catalogs* catalogs = (struct catalogs*)subsystem_collection_get(scene_get_subsystems(entity_get_scene(component_get_parent(base))), "catalogs");
-
     if (this->layer == NULL) {
-        this->layer = catalogs_get_item(catalogs, "rigid_layer", this->layer_name);
+        this->layer = catalogs_get_item("rigid_layer", this->layer_name);
     }
     free(this->layer_name);
     this->layer_name = NULL;
 
     if (this->material == NULL) {
-        this->material = catalogs_get_item(catalogs, "rigid_material", this->material_name);
+        this->material = catalogs_get_item("rigid_material", this->material_name);
     }
     free(this->material_name);
     this->material_name = NULL;

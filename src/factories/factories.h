@@ -5,13 +5,11 @@
 #ifndef MYCOOLGAMEENGINE_FACTORIES_H
 #define MYCOOLGAMEENGINE_FACTORIES_H
 
-struct subsystem;
-struct subsystem_collection;
-struct factories;
+struct msystem;
 struct factory;
 
-struct subsystem* factories_create(const struct subsystem_collection *subsystems);
+extern const struct msystem factories_msystem;
 
-struct factory* factories_get(const struct factories *this, const char *key);
+struct factory* factories_get(const char *key);
 
 #endif //MYCOOLGAMEENGINE_FACTORIES_H

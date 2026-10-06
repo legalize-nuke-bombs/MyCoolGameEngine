@@ -4,96 +4,74 @@
 
 #include "renderer.h"
 
-#include <stdlib.h>
-
 #include "../engine/events/engine_events.h"
 #include "../utils/action.h"
 #include <SDL3/SDL.h>
 #include "../logging/logger.h"
-#include "../subsystems/subsystem_internal.h"
+#include "../msystems/msystem.h"
 #include "renderer_pipeline.h"
 
 
-struct renderer {
-    struct subsystem base;
-
+static struct {
     SDL_Window *window;
     SDL_Renderer *native;
     struct renderer_pipeline *pipeline;
 
     struct action* on_rendering;
     unsigned int on_rendering_subscription_token;
-};
+} renderer;
 
 
-static const char* renderer_get_name() {
-    return "renderer";
-}
-static void renderer_on_destroy(struct subsystem* base);
-static void renderer_on_enable(struct subsystem* base, struct engine_arguments args);
-static void renderer_on_disable(struct subsystem* base);
-
-static struct subsystem_vtable renderer_vtable = {
-    .name = renderer_get_name,
-    .on_destroy = renderer_on_destroy,
-    .on_enable = renderer_on_enable,
-    .on_disable = renderer_on_disable
-};
-
-
-struct subsystem* renderer_create(const struct subsystem_collection* subsystems) {
-    struct renderer* this = calloc(1, sizeof(struct renderer));
-    struct subsystem* base = (struct subsystem*)this;
-    subsystem_create(base, &renderer_vtable, subsystems);
-
+static void renderer_on_create(void) {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         logger_error("SDL_Init failed: %s", SDL_GetError());
-        return NULL;
+        return;
     }
-    if (SDL_CreateWindowAndRenderer("MyCoolGameEngine", 800, 600, SDL_WINDOW_RESIZABLE, &this->window, &this->native)) {
-        SDL_SetRenderDrawBlendMode(this->native, SDL_BLENDMODE_BLEND);
+    if (SDL_CreateWindowAndRenderer("MyCoolGameEngine", 800, 600, SDL_WINDOW_RESIZABLE, &renderer.window, &renderer.native)) {
+        SDL_SetRenderDrawBlendMode(renderer.native, SDL_BLENDMODE_BLEND);
     }
     else {
         logger_error("SDL Failed to create window and renderer: %s", SDL_GetError());
-        return NULL;
+        return;
     }
-    this->pipeline = renderer_pipeline_create(this->native);
-
-    return base;
+    renderer.pipeline = renderer_pipeline_create(renderer.native);
 }
-void renderer_on_destroy(struct subsystem* base) {
-    const struct renderer* this = (struct renderer*)base;
-
-    renderer_pipeline_destroy(this->pipeline);
-    SDL_DestroyRenderer(this->native);
-    SDL_DestroyWindow(this->window);
+static void renderer_on_destroy(void) {
+    renderer_pipeline_destroy(renderer.pipeline);
+    SDL_DestroyRenderer(renderer.native);
+    SDL_DestroyWindow(renderer.window);
     SDL_Quit();
 }
 
 static void renderer_update(void *listener, void *context) {
-    const struct renderer* this = listener;
-    SDL_SetRenderDrawColor(this->native, 0, 0, 0, 255);
-    SDL_RenderClear(this->native);
-    renderer_pipeline_flush(this->pipeline);
-    SDL_RenderPresent(this->native);
+    SDL_SetRenderDrawColor(renderer.native, 0, 0, 0, 255);
+    SDL_RenderClear(renderer.native);
+    renderer_pipeline_flush(renderer.pipeline);
+    SDL_RenderPresent(renderer.native);
 }
 
-void renderer_on_enable(struct subsystem* base, struct engine_arguments args) {
-    struct renderer* this = (struct renderer*)base;
-    renderer_pipeline_enable(this->pipeline);
-    this->on_rendering = engine_events_on_rendering((struct engine_events*)subsystem_get_subsystem(base, "engine_events"));
-    action_subscribe(this->on_rendering, this, renderer_update, &this->on_rendering_subscription_token);
+static void renderer_on_enable(struct engine_arguments args) {
+    renderer_pipeline_enable(renderer.pipeline);
+    renderer.on_rendering = engine_events_on_rendering();
+    action_subscribe(renderer.on_rendering, NULL, renderer_update, &renderer.on_rendering_subscription_token);
 }
-void renderer_on_disable(struct subsystem* base) {
-    struct renderer* this = (struct renderer*)base;
-    action_unsubscribe(this->on_rendering, this->on_rendering_subscription_token);
-    this->on_rendering = NULL;
-    renderer_pipeline_disable(this->pipeline);
+static void renderer_on_disable(void) {
+    action_unsubscribe(renderer.on_rendering, renderer.on_rendering_subscription_token);
+    renderer.on_rendering = NULL;
+    renderer_pipeline_disable(renderer.pipeline);
 }
 
-SDL_Renderer* renderer_get_native_renderer(const struct renderer* this) {
-    return this->native;
+const struct msystem renderer_msystem = {
+    .name = "renderer",
+    .on_create = renderer_on_create,
+    .on_enable = renderer_on_enable,
+    .on_disable = renderer_on_disable,
+    .on_destroy = renderer_on_destroy
+};
+
+SDL_Renderer* renderer_get_native_renderer(void) {
+    return renderer.native;
 }
-struct renderer_pipeline* renderer_get_pipeline(const struct renderer* this) {
-    return this->pipeline;
+struct renderer_pipeline* renderer_get_pipeline(void) {
+    return renderer.pipeline;
 }

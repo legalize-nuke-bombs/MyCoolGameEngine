@@ -11,7 +11,7 @@
 struct tmap;
 struct dictionary;
 
-struct tmap* tmap_create(struct scene *scene);
+struct tmap* tmap_create(void);
 void tmap_destroy(struct tmap *this);
 
 void tmap_update(const struct tmap *this, const struct update_context *context);

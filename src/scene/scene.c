@@ -12,16 +12,13 @@
 #include "entity_collection.h"
 #include "../engine/events/engine_events.h"
 #include "../utils/action.h"
-#include "../subsystems/subsystem_internal.h"
+#include "../msystems/msystem.h"
 #include "chunks/chunks.h"
-#include "../subsystems/subsystem_collection.h"
 #include "../interpreter/interpreter.h"
 
 
-struct scene {
-    struct subsystem base;
-
-    char* name;
+static struct {
+    const char* name;
 
     struct action on_component_captured;
     struct action on_component_marked_destroyed;
@@ -35,153 +32,132 @@ struct scene {
 
     struct action* on_physics;
     unsigned int on_physics_subscription_token;
-};
+} scene;
 
-static const char* scene_get_subsystem_key() {
-    return "scene";
+static void scene_on_create(void) {
+    scene.name = "Default scene";
+
+    scene.on_component_captured = action_create();
+    scene.on_component_marked_destroyed = action_create();
+    scene.on_component_resize = action_create();
+
+    scene.entities = entity_collection_create();
+    scene.tmap = tmap_create();
+    scene.chunks = chunks_create();
 }
 
-static void scene_on_destroy(struct subsystem *base);
-static void scene_on_enable(struct subsystem *base, struct engine_arguments args);
-static void scene_on_disable(struct subsystem *base);
+static void scene_on_destroy(void) {
+    logger_info("Scene %s is destroying...", scene.name);
 
-static struct subsystem_vtable scene_vtable = {
-    .name = scene_get_subsystem_key,
-    .on_destroy = scene_on_destroy,
-    .on_enable = scene_on_enable,
-    .on_disable = scene_on_disable
-};
-
-struct subsystem* scene_create(char *name, const struct subsystem_collection *subsystems) {
-    struct scene *this = calloc(1, sizeof(struct scene));
-    struct subsystem *base = (struct subsystem*)this;
-    subsystem_create(base, &scene_vtable, subsystems);
-
-    this->name = name;
-
-    this->on_component_captured = action_create();
-    this->on_component_marked_destroyed = action_create();
-    this->on_component_resize = action_create();
-
-    this->entities = entity_collection_create();
-    this->tmap = tmap_create(this);
-    this->chunks = chunks_create(this);
-
-    return base;
-}
-
-void scene_on_destroy(struct subsystem *base) {
-    struct scene *this = (struct scene*)base;
-    logger_info("Scene %s is destroying...", this->name);
-
-    chunks_destroy(this->chunks);
-    entity_collection_destroy(this->entities);
-    tmap_destroy(this->tmap);
-    if (this->switch_flag != NULL) free(this->switch_flag);
-    action_destroy(&this->on_component_resize);
-    action_destroy(&this->on_component_marked_destroyed);
-    action_destroy(&this->on_component_captured);
-    free(this->name);
+    chunks_destroy(scene.chunks);
+    entity_collection_destroy(scene.entities);
+    tmap_destroy(scene.tmap);
+    if (scene.switch_flag != NULL) free(scene.switch_flag);
+    scene.switch_flag = NULL;
+    action_destroy(&scene.on_component_resize);
+    action_destroy(&scene.on_component_marked_destroyed);
+    action_destroy(&scene.on_component_captured);
 }
 
 
 
 static void scene_update(void *listener, void *context);
 
-void scene_on_enable(struct subsystem *base, struct engine_arguments args) {
-    struct scene *this = (struct scene*)base;
-    this->on_physics = engine_events_on_physics((struct engine_events*)subsystem_get_subsystem(base, "engine_events"));
-    action_subscribe(this->on_physics, this, scene_update, &this->on_physics_subscription_token);
+static void scene_on_enable(struct engine_arguments args) {
+    scene.on_physics = engine_events_on_physics();
+    action_subscribe(scene.on_physics, NULL, scene_update, &scene.on_physics_subscription_token);
 }
 
-void scene_on_disable(struct subsystem *base) {
-    struct scene *this = (struct scene*)base;
-    action_unsubscribe(this->on_physics, this->on_physics_subscription_token);
-    this->on_physics = NULL;
-    entity_collection_clear(this->entities);
-    tmap_clear(this->tmap);
-    chunks_clear(this->chunks);
+static void scene_on_disable(void) {
+    action_unsubscribe(scene.on_physics, scene.on_physics_subscription_token);
+    scene.on_physics = NULL;
+    entity_collection_clear(scene.entities);
+    tmap_clear(scene.tmap);
+    chunks_clear(scene.chunks);
 }
 
+const struct msystem scene_msystem = {
+    .name = "scene",
+    .on_create = scene_on_create,
+    .on_enable = scene_on_enable,
+    .on_disable = scene_on_disable,
+    .on_destroy = scene_on_destroy
+};
 
 
-static void scene_handle_switch(struct scene *this) {
-    if (this->switch_flag == NULL) {
+
+static void scene_handle_switch(void) {
+    if (scene.switch_flag == NULL) {
         return;
     }
     logger_info("Scene is switching...");
-    chunks_clear(this->chunks);
-    entity_collection_clear(this->entities);
-    tmap_clear(this->tmap);
-    const struct interpreter* interpreter = (struct interpreter*)subsystem_collection_get(scene_get_subsystems(this), "interpreter");
-    interpreter_eval(interpreter, this->switch_flag);
-    if (this->switch_flag != NULL) free(this->switch_flag);
-    this->switch_flag = NULL;
+    chunks_clear(scene.chunks);
+    entity_collection_clear(scene.entities);
+    tmap_clear(scene.tmap);
+    interpreter_eval(scene.switch_flag);
+    if (scene.switch_flag != NULL) free(scene.switch_flag);
+    scene.switch_flag = NULL;
 }
 
-void scene_mark_switch(struct scene *this, const char* script_path) {
-    free(this->switch_flag);
-    this->switch_flag = strdup(script_path);
+void scene_mark_switch(const char* script_path) {
+    free(scene.switch_flag);
+    scene.switch_flag = strdup(script_path);
 }
 
 
 
 
 static void scene_update(void *listener, void *context) {
-    struct scene* this = listener;
     const struct update_context* update_context = context;
 
-    scene_handle_switch(this);
-    entity_collection_pre_update(this->entities);
-    tmap_update(this->tmap, update_context);
+    scene_handle_switch();
+    entity_collection_pre_update(scene.entities);
+    tmap_update(scene.tmap, update_context);
 }
 
 
 
 
-const char* scene_get_name(const struct scene *this) {
-    return this->name;
+const char* scene_get_name(void) {
+    return scene.name;
 }
 
 
-void scene_notify_component_captured(const struct scene *this, struct component *component) {
-    return action_invoke(&this->on_component_captured, component);
+void scene_notify_component_captured(struct component *component) {
+    return action_invoke(&scene.on_component_captured, component);
 }
-void scene_notify_component_marked_destroyed(const struct scene *this, struct component *component) {
-    return action_invoke(&this->on_component_marked_destroyed, component);
+void scene_notify_component_marked_destroyed(struct component *component) {
+    return action_invoke(&scene.on_component_marked_destroyed, component);
 }
-void scene_notify_entity_marked_destroyed(const struct scene *this, struct entity *entity) {
-    entity_collection_move_to_dead(this->entities, entity);
+void scene_notify_entity_marked_destroyed(struct entity *entity) {
+    entity_collection_move_to_dead(scene.entities, entity);
 }
-void scene_notify_component_resize(const struct scene *this, struct component_on_rect_changed_callback_data *data) {
-    return action_invoke(&this->on_component_resize, data);
+void scene_notify_component_resize(struct component_on_rect_changed_callback_data *data) {
+    return action_invoke(&scene.on_component_resize, data);
 }
-struct action* scene_get_on_component_captured(struct scene *this) {
-    return &this->on_component_captured;
+struct action* scene_get_on_component_captured(void) {
+    return &scene.on_component_captured;
 }
-struct action* scene_get_on_component_marked_destroyed(struct scene *this) {
-    return &this->on_component_marked_destroyed;
+struct action* scene_get_on_component_marked_destroyed(void) {
+    return &scene.on_component_marked_destroyed;
 }
-struct action* scene_get_on_component_resize(struct scene *this) {
-    return &this->on_component_resize;
-}
-
-
-const struct tmap* scene_get_tmap(const struct scene *this) {
-    return this->tmap;
-}
-const struct chunks* scene_get_chunks(const struct scene *this) {
-    return this->chunks;
-}
-const struct subsystem_collection* scene_get_subsystems(const struct scene* this) {
-    return subsystem_get_subsystems((const struct subsystem*)this);
+struct action* scene_get_on_component_resize(void) {
+    return &scene.on_component_resize;
 }
 
-void scene_capture_entity(struct scene *this, struct entity *entity) {
-    entity_set_scene(entity, this);
-    logger_debug("Scene %s is capturing entity %s", this->name, entity_get_name(entity));
 
-    entity_collection_add(this->entities, entity);
+const struct tmap* scene_get_tmap(void) {
+    return scene.tmap;
+}
+const struct chunks* scene_get_chunks(void) {
+    return scene.chunks;
+}
+
+void scene_capture_entity(struct entity *entity) {
+    entity_set_in_scene(entity, true);
+    logger_debug("Scene %s is capturing entity %s", scene.name, entity_get_name(entity));
+
+    entity_collection_add(scene.entities, entity);
 
     entity_recapture_components(entity);
 

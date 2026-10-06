@@ -4,47 +4,26 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "../subsystems/subsystem_internal.h"
+#include "../msystems/msystem.h"
 
 
-static const char* random_get_name() {
-    return "random";
-}
-
-static void random_on_enable(struct subsystem* subsystem, struct engine_arguments arguments);
-
-static struct subsystem_vtable engine_lifecycle_vtable = {
-    .name = random_get_name,
-    .on_destroy = NULL,
-    .on_enable = random_on_enable,
-    .on_disable = NULL
-};
-
-
-struct random {
-    struct subsystem base;
-};
-
-
-struct subsystem* random_create(const struct subsystem_collection* collections) {
-    struct random* this = calloc(1, sizeof(struct random));
-    struct subsystem* base = (struct subsystem*)this;
-    subsystem_create(base, &engine_lifecycle_vtable, collections);
-    return base;
-}
-
-static void random_on_enable(struct subsystem* subsystem, struct engine_arguments arguments) {
+static void random_on_enable(struct engine_arguments arguments) {
     srand((unsigned int)time(NULL));
 }
 
-int random_next_int(struct random* random, const int l, const int r) {
+const struct msystem random_msystem = {
+    .name = "random",
+    .on_enable = random_on_enable
+};
+
+int random_next_int(const int l, const int r) {
     if (l >= r) {
         return l;
     }
     return l + rand() % (r - l);
 }
 
-double random_next_double(struct random* random, const double l, const double r) {
+double random_next_double(const double l, const double r) {
     if (l >= r) {
         return l;
     }

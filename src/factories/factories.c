@@ -8,32 +8,20 @@
 
 #include "../utils/dictionary.h"
 #include "../utils/string_dictionary.h"
-#include "../subsystems/subsystem_internal.h"
+#include "../msystems/msystem.h"
 #include "factory.h"
 #include "../logging/logger.h"
 #include "../modules/bt/bt_node_factory.h"
 #include "../scene/components/component_factory.h"
 #include "../demo/characters/skills/skill_factory.h"
 
-struct factories {
-    struct subsystem base;
-
+static struct {
     struct dictionary *dict;
-};
+} factories;
 
-static const char* factories_get_name() {
-    return "factories";
-}
-static void factories_on_destroy(struct subsystem *base);
-
-static const struct subsystem_vtable factories_vtable = {
-    .name = factories_get_name,
-    .on_destroy = factories_on_destroy
-};
-
-static void factories_register_factory(const struct factories *this, struct factory *factory) {
+static void factories_register_factory(struct factory *factory) {
     const char* factory_key = factory_get_key(factory);
-    if (dictionary_try_add(this->dict, (void*)factory_key, factory)) {
+    if (dictionary_try_add(factories.dict, (void*)factory_key, factory)) {
         logger_debug("Factories registered factory %s", factory_key);
     }
     else {
@@ -41,38 +29,39 @@ static void factories_register_factory(const struct factories *this, struct fact
     }
 }
 
-static void factories_register_all(const struct factories *this) {
+static void factories_register_all(void) {
     // Core factories
-    factories_register_factory(this, component_factory_create());
+    factories_register_factory(component_factory_create());
 
     // Bt module factories
-    factories_register_factory(this, bt_node_factory_create());
+    factories_register_factory(bt_node_factory_create());
 
     // Demo factories
-    factories_register_factory(this, skill_factory_create());
+    factories_register_factory(skill_factory_create());
 }
 
-struct subsystem* factories_create(const struct subsystem_collection *subsystems) {
-    struct factories *this = calloc(1, sizeof(struct factories));
-    struct subsystem *base = (struct subsystem*)this;
-    subsystem_create(base, &factories_vtable, subsystems);
-    this->dict = string_dictionary_build(4);
-    factories_register_all(this);
-    return base;
+static void factories_on_create(void) {
+    factories.dict = string_dictionary_build(4);
+    factories_register_all();
 }
 
-static void factories_on_destroy(struct subsystem *base) {
-    const struct factories *this = (struct factories*)base;
-    struct dictionary_iterator iterator = dictionary_begin(this->dict);
+static void factories_on_destroy(void) {
+    struct dictionary_iterator iterator = dictionary_begin(factories.dict);
     struct dictionary_node node;
-    while (dictionary_next(this->dict, &iterator, &node)) {
+    while (dictionary_next(factories.dict, &iterator, &node)) {
         factory_destroy(node.value);
     }
-    dictionary_destroy(this->dict);
+    dictionary_destroy(factories.dict);
 }
 
-struct factory* factories_get(const struct factories *this, const char *key) {
-    struct factory* factory = dictionary_get(this->dict, (void*)key);
+const struct msystem factories_msystem = {
+    .name = "factories",
+    .on_create = factories_on_create,
+    .on_destroy = factories_on_destroy
+};
+
+struct factory* factories_get(const char *key) {
+    struct factory* factory = dictionary_get(factories.dict, (void*)key);
     if (factory == NULL) {
         logger_error("Factories do not know factory %s", key);
         return NULL;

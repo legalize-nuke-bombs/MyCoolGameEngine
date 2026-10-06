@@ -5,19 +5,19 @@
 #ifndef MYCOOLGAMEENGINE_ENGINE_EVENTS_H
 #define MYCOOLGAMEENGINE_ENGINE_EVENTS_H
 
-struct engine_events;
-struct subsystem_collection;
+struct msystem;
+struct action;
 
-struct subsystem* engine_events_create(const struct subsystem_collection *subsystems);
+extern const struct msystem engine_events_msystem;
 
-struct action* engine_events_pre_frame(struct engine_events *this);
-struct action* engine_events_pre_physics(struct engine_events *this);
-struct action* engine_events_on_physics(struct engine_events *this);
-struct action* engine_events_post_physics(struct engine_events *this);
-struct action* engine_events_pre_rendering(struct engine_events *this);
-struct action* engine_events_on_rendering(struct engine_events *this);
-struct action* engine_events_post_rendering(struct engine_events *this);
-struct action* engine_events_on_native_event(struct engine_events *this);
+struct action* engine_events_pre_frame(void);
+struct action* engine_events_pre_physics(void);
+struct action* engine_events_on_physics(void);
+struct action* engine_events_post_physics(void);
+struct action* engine_events_pre_rendering(void);
+struct action* engine_events_on_rendering(void);
+struct action* engine_events_post_rendering(void);
+struct action* engine_events_on_native_event(void);
 
 
 #endif //MYCOOLGAMEENGINE_ENGINE_EVENTS_H

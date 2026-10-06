@@ -14,7 +14,6 @@
 #include "../../scene.h"
 #include "../../../logging/logger.h"
 #include "../../../rendering/renderer.h"
-#include "../../../subsystems/subsystem_collection.h"
 #include "../../../rendering/primitives/custom/light_map.h"
 #include "../../../utils/parser.h"
 #include "../../../catalogs/catalogs.h"
@@ -98,13 +97,10 @@ static void box_light_on_destroy(struct component *base) {
 static void box_light_awake(struct component *base) {
     struct box_light *this = (struct box_light *) base;
 
-    const struct subsystem_collection* subsystems = scene_get_subsystems(entity_get_scene(component_get_parent(base)));
-    const struct renderer* renderer_subsystem = (struct renderer*)subsystem_collection_get(subsystems, "renderer");
-    this->light_map = renderer_pipeline_get_light_map(renderer_get_pipeline(renderer_subsystem));
+    this->light_map = renderer_pipeline_get_light_map(renderer_get_pipeline());
 
     if (this->square == NULL) {
-        const struct catalogs* catalogs = (struct catalogs*)subsystem_collection_get(subsystems, "catalogs");
-        struct texture* texture = catalogs_get_item(catalogs, "texture", this->texture_name);
+        struct texture* texture = catalogs_get_item("texture", this->texture_name);
         if (texture == NULL) {
             this->square = renderer_square_create_from_color(color_white);
         }

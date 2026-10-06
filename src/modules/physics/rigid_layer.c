@@ -17,7 +17,7 @@ static const char* rigid_layer_catalog_key(void) {
     return "rigid_layer";
 }
 
-static void* rigid_layer_on_create_item(const char *name, struct parser *parser, const struct subsystem_collection *subsystems) {
+static void* rigid_layer_on_create_item(const char *name, struct parser *parser) {
     struct rigid_layer* this = calloc(1, sizeof(struct rigid_layer));
     parser_next_uint8(parser, &this->priority);
     return this;

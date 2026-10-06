@@ -10,40 +10,23 @@
 #include "../modules/physics/rigid_layer.h"
 #include "../modules/physics/rigid_material.h"
 #include "../scene/prefabs/prefab.h"
-#include "../subsystems/subsystem_internal.h"
+#include "../msystems/msystem.h"
 #include "../utils/dictionary.h"
 #include "../utils/list.h"
 #include "../utils/string_dictionary.h"
 
 
-struct catalogs {
-    struct subsystem base;
-
+static struct {
     struct list list;
     struct dictionary *dict;
-};
+} catalogs;
 
 
-static const char* catalogs_get_name() {
-    return "catalogs";
-}
-
-static void catalogs_on_destroy(struct subsystem *base);
-static void catalogs_on_disable(struct subsystem *base);
-
-static struct subsystem_vtable catalogs_vtable = {
-    .name = catalogs_get_name,
-    .on_destroy = catalogs_on_destroy,
-    .on_enable = NULL,
-    .on_disable = catalogs_on_disable
-};
-
-
-static void catalogs_register(struct catalogs *this, const struct catalog_vtable *vtable) {
+static void catalogs_register(const struct catalog_vtable *vtable) {
     struct catalog *catalog = catalog_create(vtable);
     const char *key = catalog_get_key(catalog);
-    if (dictionary_try_add(this->dict, (void*)key, catalog)) {
-        list_add(&this->list, catalog);
+    if (dictionary_try_add(catalogs.dict, (void*)key, catalog)) {
+        list_add(&catalogs.list, catalog);
         logger_debug("Catalogs know catalog %s", key);
     }
     else {
@@ -53,59 +36,58 @@ static void catalogs_register(struct catalogs *this, const struct catalog_vtable
 }
 
 // Catalogs are cleared from the last one to the first one: register a catalog after the catalogs its items point to
-static void catalogs_register_all(struct catalogs *this) {
-    catalogs_register(this, &texture_catalog_vtable);
-    catalogs_register(this, &renderer_layer_catalog_vtable);
-    catalogs_register(this, &rigid_layer_catalog_vtable);
-    catalogs_register(this, &rigid_material_catalog_vtable);
-    catalogs_register(this, &prefab_catalog_vtable);
-    catalogs_register(this, &bt_graph_catalog_vtable);
-    logger_info("Catalogs know %d catalogs", list_count(&this->list));
+static void catalogs_register_all(void) {
+    catalogs_register(&texture_catalog_vtable);
+    catalogs_register(&renderer_layer_catalog_vtable);
+    catalogs_register(&rigid_layer_catalog_vtable);
+    catalogs_register(&rigid_material_catalog_vtable);
+    catalogs_register(&prefab_catalog_vtable);
+    catalogs_register(&bt_graph_catalog_vtable);
+    logger_info("Catalogs know %d catalogs", list_count(&catalogs.list));
 }
 
-struct subsystem* catalogs_create(const struct subsystem_collection *subsystems) {
-    struct catalogs *this = calloc(1, sizeof(struct catalogs));
-    struct subsystem *base = (struct subsystem*)this;
-    subsystem_create(base, &catalogs_vtable, subsystems);
-
-    this->list = list_create(8);
-    this->dict = string_dictionary_build(3);
-    catalogs_register_all(this);
-
-    return base;
+static void catalogs_on_create(void) {
+    catalogs.list = list_create(8);
+    catalogs.dict = string_dictionary_build(3);
+    catalogs_register_all();
 }
-static void catalogs_on_destroy(struct subsystem *base) {
-    struct catalogs *this = (struct catalogs*)base;
-    for (int i = list_count(&this->list) - 1; i >= 0; i--) {
-        catalog_destroy(list_get(&this->list, i));
+static void catalogs_on_destroy(void) {
+    for (int i = list_count(&catalogs.list) - 1; i >= 0; i--) {
+        catalog_destroy(list_get(&catalogs.list, i));
     }
-    list_destroy(&this->list);
-    dictionary_destroy(this->dict);
+    list_destroy(&catalogs.list);
+    dictionary_destroy(catalogs.dict);
 }
 
-static void catalogs_on_disable(struct subsystem *base) {
-    const struct catalogs *this = (struct catalogs*)base;
-    for (int i = list_count(&this->list) - 1; i >= 0; i--) {
-        catalog_clear(list_get(&this->list, i));
+static void catalogs_on_disable(void) {
+    for (int i = list_count(&catalogs.list) - 1; i >= 0; i--) {
+        catalog_clear(list_get(&catalogs.list, i));
     }
 }
 
-struct catalog* catalogs_get(const struct catalogs *this, const char *key) {
-    struct catalog *catalog = key != NULL ? dictionary_get(this->dict, (void*)key) : NULL;
+const struct msystem catalogs_msystem = {
+    .name = "catalogs",
+    .on_create = catalogs_on_create,
+    .on_disable = catalogs_on_disable,
+    .on_destroy = catalogs_on_destroy
+};
+
+struct catalog* catalogs_get(const char *key) {
+    struct catalog *catalog = key != NULL ? dictionary_get(catalogs.dict, (void*)key) : NULL;
     if (catalog == NULL) {
         logger_warn("Catalogs do not know catalog `%s`", key ? key : "<null>");
     }
     return catalog;
 }
-void* catalogs_try_get_item(const struct catalogs *this, const char *key, const char *name) {
-    const struct catalog *catalog = catalogs_get(this, key);
+void* catalogs_try_get_item(const char *key, const char *name) {
+    const struct catalog *catalog = catalogs_get(key);
     if (catalog == NULL) {
         return NULL;
     }
     return catalog_get(catalog, name);
 }
-void* catalogs_get_item(const struct catalogs *this, const char *key, const char *name) {
-    void *item = catalogs_try_get_item(this, key, name);
+void* catalogs_get_item(const char *key, const char *name) {
+    void *item = catalogs_try_get_item(key, name);
     if (item == NULL) {
         logger_warn("Catalog %s failed to find `%s`", key, name ? name : "<null>");
     }

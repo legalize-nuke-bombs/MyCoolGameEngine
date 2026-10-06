@@ -5,12 +5,11 @@
 #ifndef MYCOOLGAMEENGINE_RANDOM_H
 #define MYCOOLGAMEENGINE_RANDOM_H
 
-struct subsystem_collection;
-struct random;
+struct msystem;
 
-struct subsystem* random_create(const struct subsystem_collection* subsystems);
+extern const struct msystem random_msystem;
 
-int random_next_int(struct random* random, int l, int r);
-double random_next_double(struct random* random, double l, double r);
+int random_next_int(int l, int r);
+double random_next_double(double l, double r);
 
 #endif //MYCOOLGAMEENGINE_RANDOM_H

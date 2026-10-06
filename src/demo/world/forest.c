@@ -11,7 +11,6 @@
 #include "../../utils/list.h"
 #include "../../utils/parser.h"
 #include "../../catalogs/catalogs.h"
-#include "../../subsystems/subsystem_collection.h"
 #include "../../utils/vector2_math.h"
 #include "../../scene/prefabs/prefab.h"
 
@@ -74,14 +73,10 @@ static struct component* forest_clone(struct component base, const struct compon
 static void forest_awake(struct component *base) {
     const struct forest *this = (struct forest *) base;
 
-    struct scene *scene = entity_get_scene(component_get_parent(base));
-    const struct catalogs* catalogs = (struct catalogs*)subsystem_collection_get(scene_get_subsystems(scene), "catalogs");
-    struct random* random = (struct random*)subsystem_collection_get(scene_get_subsystems(scene), "random");
-
     struct list prefabs = list_create(list_count(&this->prefabIds));
     for (int i = 0; i < list_count(&this->prefabIds); i++) {
         const char* prefab_id = list_get(&this->prefabIds, i);
-        struct prefab *prefab = catalogs_get_item(catalogs, "prefab", prefab_id);
+        struct prefab *prefab = catalogs_get_item("prefab", prefab_id);
         if (prefab == NULL) {
             continue;
         }
@@ -100,18 +95,18 @@ static void forest_awake(struct component *base) {
     const struct vector2 half_size = vector_multiply_scalar(rect.size, 0.5);
 
     for (int i = 0; i < this->trees_number; i++) {
-        const int tree_spec = random_next_int(random, 0, list_count(&prefabs));
+        const int tree_spec = random_next_int(0, list_count(&prefabs));
         struct prefab* prefab = list_get(&prefabs, tree_spec);
         struct entity* tree = prefab_instantiate(prefab);
 
         struct rect tree_rect = entity_get_local_rect(tree);
         const struct vector2 tree_half_size = vector_multiply_scalar(tree_rect.size, 0.5);
 
-        tree_rect.position.x = (float)random_next_double(random, rect.position.x - half_size.x + tree_half_size.x, rect.position.x + half_size.x - tree_half_size.x);
-        tree_rect.position.y = (float)random_next_double(random, rect.position.y - half_size.y + tree_half_size.y, rect.position.y + half_size.y - tree_half_size.y);
+        tree_rect.position.x = (float)random_next_double(rect.position.x - half_size.x + tree_half_size.x, rect.position.x + half_size.x - tree_half_size.x);
+        tree_rect.position.y = (float)random_next_double(rect.position.y - half_size.y + tree_half_size.y, rect.position.y + half_size.y - tree_half_size.y);
         entity_set_local_rect(tree, tree_rect);
 
-        scene_capture_entity(scene, tree);
+        scene_capture_entity(tree);
     }
 
     list_destroy(&prefabs);

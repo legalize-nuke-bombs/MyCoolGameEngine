@@ -9,14 +9,13 @@
 #define INTERPRETER_OK 0
 #define INTERPRETER_FAILED_OPEN_SCRIPT 1
 
-struct interpreter;
-struct subsystem_collection;
+struct msystem;
 struct action;
 
-struct subsystem* interpreter_create(const struct subsystem_collection *subsystems);
+extern const struct msystem interpreter_msystem;
 
-int interpreter_eval(const struct interpreter *this, const char* script_path);
+int interpreter_eval(const char* script_path);
 
-struct action* interpreter_get_action_on_script_evaluated(struct interpreter *this);
+struct action* interpreter_get_action_on_script_evaluated(void);
 
 #endif //MYCOOLGAMEENGINE_INTERPRETER_H

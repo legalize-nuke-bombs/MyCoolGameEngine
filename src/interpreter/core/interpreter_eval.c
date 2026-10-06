@@ -4,7 +4,6 @@
 
 #include "../interpreter_command.h"
 #include "../interpreter_command_internal.h"
-#include "../../subsystems/subsystem_collection.h"
 #include "../../utils/parser.h"
 #include "../interpreter.h"
 
@@ -17,10 +16,9 @@ static const char* interpreter_eval_get_key(const struct interpreter_command *th
     return "eval";
 }
 
-static void interpreter_eval_execute(const struct interpreter_command *this, struct parser *parser, const struct subsystem_collection *subsystems) {
-    const struct interpreter* interpreter = (struct interpreter*)subsystem_collection_get(subsystems, "interpreter");
+static void interpreter_eval_execute(const struct interpreter_command *this, struct parser *parser) {
     const char* script_path = parser_next(parser);
-    interpreter_eval(interpreter, script_path);
+    interpreter_eval(script_path);
 }
 
 static const struct interpreter_command_vtable eval_vtable = {

@@ -5,9 +5,8 @@
 #ifndef MYCOOLGAMEENGINE_ENGINE_RESTARTER_H
 #define MYCOOLGAMEENGINE_ENGINE_RESTARTER_H
 
-struct subsystem_collection;
-struct engine_restarter;
+struct msystem;
 
-struct subsystem* engine_restarter_create(const struct subsystem_collection *subsystems);
+extern const struct msystem engine_restarter_msystem;
 
 #endif //MYCOOLGAMEENGINE_ENGINE_RESTARTER_H

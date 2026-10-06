@@ -6,15 +6,14 @@
 #define MYCOOLGAMEENGINE_KEYBOARD_H
 #include <stdbool.h>
 
-struct subsystem_collection;
-struct keyboard;
+struct msystem;
 struct action;
 
-struct subsystem* keyboard_create(const struct subsystem_collection *subsystems);
+extern const struct msystem keyboard_msystem;
 
-bool keyboard_is_pressed(const struct keyboard *this, const char* keycode);
+bool keyboard_is_pressed(const char* keycode);
 
-struct action* keyboard_require_action_on_key_pressed(struct keyboard *this, const char* keycode);
-struct action* keyboard_require_action_on_key_released(struct keyboard *this, const char* keycode);
+struct action* keyboard_require_action_on_key_pressed(const char* keycode);
+struct action* keyboard_require_action_on_key_released(const char* keycode);
 
 #endif //MYCOOLGAMEENGINE_KEYBOARD_H

@@ -3,8 +3,7 @@
 
 struct entity;
 struct parser;
-struct scene;
 
-struct entity* entity_parse(struct parser *parser, struct scene *scene, char *name);
+struct entity* entity_parse(struct parser *parser, char *name);
 
 #endif //MYCOOLGAMEENGINE_ENTITY_PARSER_H

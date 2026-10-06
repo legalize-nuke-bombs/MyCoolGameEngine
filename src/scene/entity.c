@@ -22,7 +22,7 @@ struct entity {
     struct rect rect;
 
     struct entity *parent;
-    struct scene *scene;
+    bool in_scene;
 };
 
 static struct rect entity_compute_rect(const struct entity *this) {
@@ -142,8 +142,8 @@ void entity_mark_destroyed(struct entity *this) {
         struct component *component = list_get(&this->components, i);
         component_mark_destroyed(component);
     }
-    if (this->scene) {
-        scene_notify_entity_marked_destroyed(this->scene, this);
+    if (this->in_scene) {
+        scene_notify_entity_marked_destroyed(this);
     }
 }
 
@@ -165,15 +165,15 @@ struct entity* entity_get_parent(const struct entity *this) {
     return this->parent;
 }
 
-void entity_set_scene(struct entity *this, struct scene *new_scene) {
-    this->scene = new_scene;
+void entity_set_in_scene(struct entity *this, const bool in_scene) {
+    this->in_scene = in_scene;
     for (int i = 0; i < list_count(&this->entities); i++) {
         struct entity *child_entity = list_get(&this->entities, i);
-        entity_set_scene(child_entity, new_scene);
+        entity_set_in_scene(child_entity, in_scene);
     }
 }
-struct scene* entity_get_scene(const struct entity *this) {
-    return this->scene;
+bool entity_is_in_scene(const struct entity *this) {
+    return this->in_scene;
 }
 
 struct rect entity_get_local_rect(const struct entity *this) {
@@ -195,7 +195,7 @@ void entity_capture_entity(struct entity *this, struct entity *entity) {
     entity_set_parent(entity, this);
     entity_update_rect(entity);
     list_add(&this->entities, entity);
-    entity_set_scene(entity, this->scene);
+    entity_set_in_scene(entity, this->in_scene);
     entity_recapture_components(entity);
 }
 void entity_capture_component(struct entity *this, struct component *component) {
@@ -205,16 +205,16 @@ void entity_capture_component(struct entity *this, struct component *component) 
         component_awake(component);
     }
     list_add(&this->components, component);
-    if (this->scene) {
-        scene_notify_component_captured(this->scene, component);
+    if (this->in_scene) {
+        scene_notify_component_captured(component);
     }
 }
 void entity_recapture_components(const struct entity *this) {
     logger_debug("Entity %s is recapturing all components...", this->name);
-    if (!this->scene) return;
+    if (!this->in_scene) return;
     for (int i = 0; i < list_count(&this->components); i++) {
         struct component *component = list_get(&this->components, i);
-        scene_notify_component_captured(this->scene, component);
+        scene_notify_component_captured(component);
     }
     for (int i = 0; i < list_count(&this->entities); i++) {
         const struct entity *child_entity = list_get(&this->entities, i);

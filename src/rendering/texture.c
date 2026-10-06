@@ -12,7 +12,6 @@
 #include "renderer.h"
 #include "../catalogs/catalog.h"
 #include "../logging/logger.h"
-#include "../subsystems/subsystem_collection.h"
 #include "../utils/parser.h"
 
 struct texture {
@@ -71,7 +70,7 @@ static const char* texture_catalog_key(void) {
     return "texture";
 }
 
-static void* texture_on_create_item(const char *name, struct parser *parser, const struct subsystem_collection *subsystems) {
+static void* texture_on_create_item(const char *name, struct parser *parser) {
     int tile_w, tile_h, tiles_count;
     parser_next_int(parser, &tile_w);
     parser_next_int(parser, &tile_h);
@@ -87,8 +86,7 @@ static void* texture_on_create_item(const char *name, struct parser *parser, con
         logger_warn("Unexpected texture loading mode `%s`, `lazy` will be used instead", loading_mode_name ? loading_mode_name : "<null>");
     }
 
-    const struct renderer* renderer = (struct renderer*)subsystem_collection_get(subsystems, "renderer");
-    return texture_create(strdup(name), path, tile_w, tile_h, tiles_count, loading_mode, renderer_get_native_renderer(renderer));
+    return texture_create(strdup(name), path, tile_w, tile_h, tiles_count, loading_mode, renderer_get_native_renderer());
 }
 static void texture_on_destroy_item(void *item) {
     texture_destroy(item);

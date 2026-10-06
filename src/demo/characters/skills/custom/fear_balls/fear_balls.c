@@ -11,7 +11,6 @@
 #include "../../skill_internal.h"
 #include "../../../../../utils/parser.h"
 #include "../../../../../scene/prefabs/prefab.h"
-#include "../../../../../subsystems/subsystem_collection.h"
 #include "../../../../../catalogs/catalogs.h"
 #include "../../../../../logging/logger.h"
 #include "../../../../../scene/entity.h"
@@ -37,7 +36,7 @@ struct skill* fear_balls_parse(struct parser *parser, struct entity *self) {
     skill_base_parse(base, &fear_balls_vtable, parser, self);
     const char* prefab_name = parser_next(parser);
     parser_next_int(parser, &this->fear_balls_num);
-    this->prefab = catalogs_get_item((struct catalogs*)subsystem_collection_get(scene_get_subsystems(entity_get_scene(self)), "catalogs"), "prefab", prefab_name);
+    this->prefab = catalogs_get_item("prefab", prefab_name);
     return base;
 }
 
@@ -65,7 +64,7 @@ static bool fear_balls_invoke(struct skill* base) {
         };
         fear_ball_set_direction(fear_ball, direction);
 
-        scene_capture_entity(entity_get_scene(skill_self(base)), entity);
+        scene_capture_entity(entity);
     }
     return true;
 }

@@ -148,11 +148,7 @@ add_executable(MyCoolGameEngine main.c
         src/engine/utils/engine_closer.c
         src/engine/utils/engine_restarter.h
         src/engine/utils/engine_restarter.c
-        src/subsystems/subsystem.h
-        src/subsystems/subsystem.c
-        src/subsystems/subsystem_internal.h
-        src/subsystems/subsystem_collection.h
-        src/subsystems/subsystem_collection.c
+        src/msystems/msystem.h
         src/engine/lifecycle/engine_lifecycle.h
         src/engine/lifecycle/engine_lifecycle.c
         src/engine/engine_arguments.h

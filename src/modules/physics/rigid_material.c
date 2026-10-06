@@ -15,7 +15,7 @@ static const char* rigid_material_catalog_key(void) {
     return "rigid_material";
 }
 
-static void* rigid_material_on_create_item(const char *name, struct parser *parser, const struct subsystem_collection *subsystems) {
+static void* rigid_material_on_create_item(const char *name, struct parser *parser) {
     struct rigid_material *this = calloc(1, sizeof(struct rigid_material));
     parser_next_double(parser, &this->_friction);
     parser_next_double(parser, &this->_restitution);

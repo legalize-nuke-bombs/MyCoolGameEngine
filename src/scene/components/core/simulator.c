@@ -55,8 +55,7 @@ static struct component* simulator_clone(struct component base, const struct com
 static void simulator_awake(struct component *base) {
     struct simulator *this = (struct simulator *) base;
 
-    const struct scene* scene = entity_get_scene(component_get_parent(base));
-    this->chunks = scene_get_chunks(scene);
+    this->chunks = scene_get_chunks();
 }
 
 static void simulator_simulate(const struct simulator *this, const struct update_context *context) {

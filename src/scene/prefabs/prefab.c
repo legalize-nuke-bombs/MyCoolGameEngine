@@ -12,7 +12,6 @@
 #include "../scene.h"
 #include "../../catalogs/catalog.h"
 #include "../../logging/logger.h"
-#include "../../subsystems/subsystem_collection.h"
 
 struct prefab {
     char* name;
@@ -38,9 +37,8 @@ static const char* prefab_catalog_key(void) {
     return "prefab";
 }
 
-static void* prefab_on_create_item(const char *name, struct parser *parser, const struct subsystem_collection *subsystems) {
-    struct scene *scene = (struct scene*)subsystem_collection_get(subsystems, "scene");
-    struct entity *entity = entity_parse(parser, scene, strdup(name));
+static void* prefab_on_create_item(const char *name, struct parser *parser) {
+    struct entity *entity = entity_parse(parser, strdup(name));
     return prefab_create(strdup(name), entity);
 }
 static void prefab_on_destroy_item(void *item) {

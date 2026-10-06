@@ -4,15 +4,14 @@
 
 #include "entity.h"
 #include "scene.h"
-#include "../subsystems/subsystem_collection.h"
 #include "../factories/factories.h"
 #include "components/component_factory.h"
 #include "../utils/parser.h"
 
 
-struct entity* entity_parse(struct parser *parser, struct scene *scene, char *name) {
+struct entity* entity_parse(struct parser *parser, char *name) {
     struct entity *entity = entity_create(name, NULL);
-    entity_set_scene(entity, scene);
+    entity_set_in_scene(entity, true);
 
     struct rect rect;
     parser_next_double(parser, &rect.position.x);
@@ -21,7 +20,7 @@ struct entity* entity_parse(struct parser *parser, struct scene *scene, char *na
     parser_next_double(parser, &rect.size.y);
     entity_set_local_rect(entity, rect);
 
-    const struct component_factory *component_factory = (struct component_factory*)factories_get((struct factories*)subsystem_collection_get(scene_get_subsystems(scene), "factories"), "component_factory");
+    const struct component_factory *component_factory = (struct component_factory*)factories_get("component_factory");
 
     for (;;) {
         const char* word = parser_next(parser);
@@ -30,7 +29,7 @@ struct entity* entity_parse(struct parser *parser, struct scene *scene, char *na
         }
 
         if (strcmp(word, "child") == 0 || strcmp(word, "entity") == 0) {
-            struct entity *child = entity_parse(parser, scene, parser_next_dup(parser));
+            struct entity *child = entity_parse(parser, parser_next_dup(parser));
             if (child != NULL) {
                 entity_capture_entity(entity, child);
             }

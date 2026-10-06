@@ -22,7 +22,7 @@ static const char* interpreter_once_get_key(const struct interpreter_command *th
     return "once";
 }
 
-static void interpreter_once_execute(const struct interpreter_command *base, struct parser *parser, const struct subsystem_collection *subsystems) {
+static void interpreter_once_execute(const struct interpreter_command *base, struct parser *parser) {
     const struct interpreter_once *this = (const struct interpreter_once*)base;
 
     char* block_name = parser_next_dup(parser);

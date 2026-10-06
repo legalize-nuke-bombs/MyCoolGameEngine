@@ -13,7 +13,6 @@
 #include "../../scene/entity.h"
 #include "../../scene/entity_parser.h"
 #include "../../scene/scene.h"
-#include "../../subsystems/subsystem_collection.h"
 
 
 struct interpreter_scene_add {
@@ -24,18 +23,16 @@ static const char* interpreter_scene_add_get_key(const struct interpreter_comman
     return "add";
 }
 
-static void interpreter_scene_add_execute(const struct interpreter_command *this, struct parser *parser, const struct subsystem_collection *subsystems) {
-    struct scene *scene = (struct scene*)subsystem_collection_get(subsystems, "scene");
-
+static void interpreter_scene_add_execute(const struct interpreter_command *this, struct parser *parser) {
     const char* type = parser_next(parser);
     if (type == NULL) return;
 
     if (strcmp(type, "entity") != 0) {
         logger_warn("Interpreter scene add unexpected type `%s`, parsing it as entity", type);
     }
-    struct entity *root_entity = entity_parse(parser, scene, parser_next_dup(parser));
+    struct entity *root_entity = entity_parse(parser, parser_next_dup(parser));
     if (root_entity != NULL) {
-        scene_capture_entity(scene, root_entity);
+        scene_capture_entity(root_entity);
     }
 }
 

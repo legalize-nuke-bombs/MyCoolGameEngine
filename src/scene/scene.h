@@ -7,29 +7,26 @@
 
 #include "tmap/tmap.h"
 
-struct scene;
 struct entity;
-struct subsystem;
-struct subsystem_collection;
+struct msystem;
 
-struct subsystem* scene_create(char* name, const struct subsystem_collection *subsystems);
+extern const struct msystem scene_msystem;
 
-void scene_mark_switch(struct scene *this, const char *script_path);
+void scene_mark_switch(const char *script_path);
 
-const char* scene_get_name(const struct scene *this);
+const char* scene_get_name(void);
 
-void scene_notify_component_captured(const struct scene *this, struct component *component);
-void scene_notify_component_marked_destroyed(const struct scene *this, struct component *component);
-void scene_notify_entity_marked_destroyed(const struct scene *this, struct entity *entity);
-void scene_notify_component_resize(const struct scene *this, struct component_on_rect_changed_callback_data *data);
-struct action* scene_get_on_component_captured(struct scene *this);
-struct action* scene_get_on_component_marked_destroyed(struct scene *this);
-struct action* scene_get_on_component_resize(struct scene *this);
+void scene_notify_component_captured(struct component *component);
+void scene_notify_component_marked_destroyed(struct component *component);
+void scene_notify_entity_marked_destroyed(struct entity *entity);
+void scene_notify_component_resize(struct component_on_rect_changed_callback_data *data);
+struct action* scene_get_on_component_captured(void);
+struct action* scene_get_on_component_marked_destroyed(void);
+struct action* scene_get_on_component_resize(void);
 
-const struct tmap* scene_get_tmap(const struct scene *this);
-const struct chunks* scene_get_chunks(const struct scene *this);
-const struct subsystem_collection* scene_get_subsystems(const struct scene* this);
+const struct tmap* scene_get_tmap(void);
+const struct chunks* scene_get_chunks(void);
 
-void scene_capture_entity(struct scene *this, struct entity *entity);
+void scene_capture_entity(struct entity *entity);
 
 #endif //MYCOOLGAMEENGINE_SCENE_H

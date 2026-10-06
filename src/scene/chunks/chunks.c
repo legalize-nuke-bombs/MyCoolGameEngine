@@ -38,18 +38,18 @@ static void handle_component_marked_destroyed(void *listener, void *context);
 static void handle_component_resize(void *listener, void *context);
 
 
-struct chunks *chunks_create(struct scene *scene) {
+struct chunks *chunks_create(void) {
     logger_info("Chunks (%d x %d, chunk size %f) are creating...", CHUNKS_SIZE, CHUNKS_SIZE, CHUNKS_START_CHUNK_SIZE);
     struct chunks *this = calloc(1, sizeof(struct chunks));
     this->chunk_size = CHUNKS_START_CHUNK_SIZE;
 
-    this->on_component_captured = scene_get_on_component_captured(scene);
+    this->on_component_captured = scene_get_on_component_captured();
     action_subscribe(this->on_component_captured, this, handle_component_captured, &this->on_component_captured_token);
 
-    this->on_component_marked_destroyed = scene_get_on_component_marked_destroyed(scene);
+    this->on_component_marked_destroyed = scene_get_on_component_marked_destroyed();
     action_subscribe(this->on_component_marked_destroyed, this, handle_component_marked_destroyed, &this->on_component_marked_destroyed_token);
 
-    this->on_component_resize = scene_get_on_component_resize(scene);
+    this->on_component_resize = scene_get_on_component_resize();
     action_subscribe(this->on_component_resize, this, handle_component_resize, &this->on_component_resize_token);
 
     return this;

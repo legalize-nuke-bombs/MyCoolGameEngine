@@ -16,7 +16,6 @@
 #include "../../../rendering/renderer.h"
 #include "../../../catalogs/catalogs.h"
 #include "../../../utils/parser.h"
-#include "../../../subsystems/subsystem_collection.h"
 
 struct box_renderer {
     struct component base;
@@ -107,19 +106,16 @@ static void box_renderer_on_destroy(struct component *base) {
 static void box_renderer_awake(struct component *base) {
     struct box_renderer *this = (struct box_renderer *) base;
 
-    const struct subsystem_collection* subsystems = scene_get_subsystems(entity_get_scene(component_get_parent(base)));
-    const struct catalogs* catalogs = (struct catalogs*)subsystem_collection_get(subsystems, "catalogs");
-    const struct renderer* renderer_subsystem = (struct renderer*)subsystem_collection_get(subsystems, "renderer");
-    this->renderer = renderer_get_pipeline(renderer_subsystem);
+    this->renderer = renderer_get_pipeline();
 
     if (this->renderer_layer == NULL) {
-        this->renderer_layer = catalogs_try_get_item(catalogs, "renderer_layer", this->renderer_layer_name);
+        this->renderer_layer = catalogs_try_get_item("renderer_layer", this->renderer_layer_name);
     }
     free(this->renderer_layer_name);
     this->renderer_layer_name = NULL;
 
     if (this->square == NULL) {
-        struct texture* texture = catalogs_get_item(catalogs, "texture", this->texture_name);
+        struct texture* texture = catalogs_get_item("texture", this->texture_name);
         if (texture == NULL) {
             this->square = renderer_square_create_from_color(color_black);
         }

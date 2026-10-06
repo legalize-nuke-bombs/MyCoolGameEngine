@@ -42,13 +42,13 @@ const char* catalog_get_key(const struct catalog *this) {
     return this->vtable->key();
 }
 
-void catalog_add(struct catalog *this, struct parser *parser, const struct subsystem_collection *subsystems) {
+void catalog_add(struct catalog *this, struct parser *parser) {
     char *name = parser_next_dup(parser);
     if (name == NULL) {
         logger_warn("Catalog %s expected item name, got end of file", catalog_get_key(this));
         return;
     }
-    void *item = this->vtable->on_create_item(name, parser, subsystems);
+    void *item = this->vtable->on_create_item(name, parser);
     if (item != NULL && dictionary_try_add(this->items, name, item)) {
         logger_debug("Catalog %s captured %s", catalog_get_key(this), name);
         return;

@@ -1,15 +1,13 @@
 #ifndef MYCOOLGAMEENGINE_CATALOGS_H
 #define MYCOOLGAMEENGINE_CATALOGS_H
 
-struct catalogs;
 struct catalog;
-struct subsystem;
-struct subsystem_collection;
+struct msystem;
 
-struct subsystem* catalogs_create(const struct subsystem_collection *subsystems);
+extern const struct msystem catalogs_msystem;
 
-struct catalog* catalogs_get(const struct catalogs *this, const char *key);
-void* catalogs_try_get_item(const struct catalogs *this, const char *key, const char *name);
-void* catalogs_get_item(const struct catalogs *this, const char *key, const char *name);
+struct catalog* catalogs_get(const char *key);
+void* catalogs_try_get_item(const char *key, const char *name);
+void* catalogs_get_item(const char *key, const char *name);
 
 #endif //MYCOOLGAMEENGINE_CATALOGS_H

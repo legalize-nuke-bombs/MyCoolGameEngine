@@ -20,7 +20,7 @@ static const char* interpreter_ignore_get_key(const struct interpreter_command *
     return "/*";
 }
 
-static void interpreter_ignore_execute(const struct interpreter_command *this, struct parser *parser, const struct subsystem_collection *subsystems) {
+static void interpreter_ignore_execute(const struct interpreter_command *this, struct parser *parser) {
     const char* word;
     do {
         word = parser_next(parser);

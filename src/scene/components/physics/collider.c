@@ -14,7 +14,6 @@
 #include "../../../catalogs/catalogs.h"
 #include "../../../modules/physics/rigid_material.h"
 #include "../../../logging/logger.h"
-#include "../../../subsystems/subsystem_collection.h"
 #include "../../../utils/action.h"
 #include "../../../utils/parser.h"
 #include "../../chunks/chunks.h"
@@ -100,12 +99,12 @@ static void collider_on_awake(struct component *base) {
     struct collider *this = (struct collider*)base;
 
     if (strcmp(this->material_name, "trigger") != 0) {
-        this->material = catalogs_get_item((struct catalogs*)subsystem_collection_get(scene_get_subsystems(component_get_scene(base)), "catalogs"), "rigid_material", this->material_name);
+        this->material = catalogs_get_item("rigid_material", this->material_name);
     }
     free(this->material_name);
     this->material_name = NULL;
 
-    this->chunks = scene_get_chunks(component_get_scene(base));
+    this->chunks = scene_get_chunks();
 }
 
 static void collider_lazy_create_intersections(struct collider *this) {

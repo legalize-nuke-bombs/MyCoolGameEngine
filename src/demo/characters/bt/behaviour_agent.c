@@ -14,7 +14,6 @@
 #include "../../../scene/entity.h"
 #include "../../../scene/scene.h"
 #include "../../../scene/components/component_internal.h"
-#include "../../../subsystems/subsystem_collection.h"
 #include "../../../utils/parser.h"
 #include "../bt/blackboard.h"
 
@@ -68,7 +67,7 @@ static void behaviour_agent_on_destroy(struct component *base) {
 static void behaviour_agent_awake(struct component *base) {
     struct behaviour_agent *this = (struct behaviour_agent*)base;
     if (this->bt_graph_name) {
-        this->bt_graph = catalogs_get_item((struct catalogs*)subsystem_collection_get(scene_get_subsystems(component_get_scene(base)), "catalogs"), "bt_graph", this->bt_graph_name);
+        this->bt_graph = catalogs_get_item("bt_graph", this->bt_graph_name);
         free(this->bt_graph_name);
         this->bt_graph_name = NULL;
     }

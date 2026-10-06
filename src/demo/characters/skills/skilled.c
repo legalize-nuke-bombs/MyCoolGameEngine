@@ -15,7 +15,6 @@
 #include "../../../scene/entity.h"
 #include "../../../scene/scene.h"
 #include "../../../scene/components/component_internal.h"
-#include "../../../subsystems/subsystem_collection.h"
 #include "../../../utils/action.h"
 #include "../../../utils/parser.h"
 
@@ -53,7 +52,7 @@ struct component* skilled_create(struct parser *parser, struct entity *parent) {
     struct skilled *this = calloc(1, sizeof(struct skilled));
     struct component *base = (struct component *) this;
     component_base_create(base, &skilled_vtable, parent);
-    const struct skill_factory* skill_factory = (struct skill_factory*)factories_get((struct factories*)subsystem_collection_get(scene_get_subsystems(entity_get_scene(parent)), "factories"), "skill_factory");
+    const struct skill_factory* skill_factory = (struct skill_factory*)factories_get("skill_factory");
     this->skills[0] = skill_factory_produce(skill_factory, parser_next(parser), parser, parent);
     return base;
 }
@@ -86,13 +85,12 @@ static void skilled_invoke_skill(void *listener, void *context) {
 
 static void skilled_awake(struct component *base) {
     struct skilled *this = (struct skilled *) base;
-    struct keyboard* keyboard = (struct keyboard*)subsystem_collection_get(scene_get_subsystems(component_get_scene(base)), "keyboard");
     for (int i = 0; i < SKILLS_NUM; i++) {
         if (this->skills[i]) {
             skill_enable(this->skills[i]);
         }
     }
-    this->hotkey_actions[0] = keyboard_require_action_on_key_pressed(keyboard, "1");
+    this->hotkey_actions[0] = keyboard_require_action_on_key_pressed("1");
     action_subscribe(this->hotkey_actions[0], this, skilled_invoke_skill, &this->hotkey_tokens[0]);
 }
 

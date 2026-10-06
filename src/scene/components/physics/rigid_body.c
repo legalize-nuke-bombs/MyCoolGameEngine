@@ -85,7 +85,7 @@ static void rigid_body_awake(struct component *base) {
     struct rigid_body *this = (struct rigid_body *) base;
     struct entity *parent = component_get_parent(base);
 
-    this->chunks = scene_get_chunks(entity_get_scene(parent));
+    this->chunks = scene_get_chunks();
     this->collider = (struct collider*)entity_get_component(parent, collider_component_key(), entity_query_recursive);
     if (this->collider == NULL) {
         entity_mark_destroyed(parent);

@@ -48,7 +48,7 @@ static enum bt_status player_is_near_run(struct bt_node *base, void *bb) {
     const struct entity *self = blackboard->self;
     const struct vector2 position = entity_get_rect(self).position;
 
-    const struct dictionary *players = tmap_try_get_components(scene_get_tmap(entity_get_scene(self)), "player");
+    const struct dictionary *players = tmap_try_get_components(scene_get_tmap(), "player");
     if (players == NULL) {
         return bt_failed;
     }

@@ -8,7 +8,6 @@
 #include "../../devices/keyboard.h"
 #include "../../scene/scene.h"
 #include "../../engine/lifecycle/engine_lifecycle.h"
-#include "../../subsystems/subsystem_collection.h"
 #include "../../utils/parser.h"
 #include "../../utils/action.h"
 
@@ -59,17 +58,13 @@ static struct component* game_closer_clone(struct component base, const struct c
 }
 
 static void game_closer_execute(void* listener, void *context) {
-    const struct game_closer* this = listener;
-    const struct component* base = listener;
-    struct engine_lifecycle* engine_lifecycle = (struct engine_lifecycle*)subsystem_collection_get(scene_get_subsystems(entity_get_scene(component_get_parent(base))), "engine_lifecycle");
-    engine_lifecycle_mark_stop(engine_lifecycle);
+    engine_lifecycle_mark_stop();
 }
 
 static void game_closer_awake(struct component *base) {
     struct game_closer *this = (struct game_closer *) base;
 
-    struct keyboard* keyboard = (struct keyboard*)subsystem_collection_get(scene_get_subsystems(entity_get_scene(component_get_parent(base))), "keyboard");
-    this->on_hotkey_pressed = keyboard_require_action_on_key_pressed(keyboard, this->hotkey);
+    this->on_hotkey_pressed = keyboard_require_action_on_key_pressed(this->hotkey);
     action_subscribe(this->on_hotkey_pressed, this, game_closer_execute, &this->on_hotkey_pressed_token);
 }
 

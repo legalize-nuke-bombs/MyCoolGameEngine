@@ -16,7 +16,6 @@
 #include "../../utils/color.h"
 #include "../../utils/parser.h"
 #include "../../rendering/renderer.h"
-#include "../../subsystems/subsystem_collection.h"
 #include "../../rendering/renderer_pipeline.h"
 #include "../../rendering/primitives/custom/light_map.h"
 
@@ -75,8 +74,7 @@ static struct component* sky_clone(struct component base, const struct component
 static void sky_awake(struct component *base) {
     struct sky* this = (struct sky*)base;
 
-    const struct tmap* tmap = scene_get_tmap(entity_get_scene(component_get_parent(base)));;
-    const struct dictionary* clocks = tmap_try_get_components(tmap, "clock");
+    const struct dictionary* clocks = tmap_try_get_components(scene_get_tmap(), "clock");
     if (clocks == NULL) {
         logger_error("Entity %s failed to find clock", component_get_global_parent_name(base));
         entity_mark_destroyed(component_get_parent(base));
@@ -93,8 +91,7 @@ static void sky_awake(struct component *base) {
         return;
     }
 
-    const struct renderer* renderer_subsystem = (struct renderer*)subsystem_collection_get(scene_get_subsystems(entity_get_scene(component_get_parent(base))), "renderer");
-    this->light_map = renderer_pipeline_get_light_map(renderer_get_pipeline(renderer_subsystem));
+    this->light_map = renderer_pipeline_get_light_map(renderer_get_pipeline());
 }
 static void sky_on_disable(struct component *base) {
     struct sky* this = (struct sky*)base;

@@ -4,7 +4,6 @@
 
 #include "../component_internal.h"
 #include "../../scene.h"
-#include "../../../subsystems/subsystem_collection.h"
 #include "../../entity.h"
 #include "../../../devices/keyboard.h"
 #include "../../../utils/parser.h"
@@ -23,7 +22,6 @@ struct keyboard_rigid_controller {
     char* right;
 
     struct rigid_body* rigid_body;
-    struct keyboard* keyboard;
 };
 
 static struct component* keyboard_rigid_controller_clone(struct component base, const struct component *component);
@@ -50,16 +48,16 @@ static void keyboard_rigid_controller_on_update(struct component* base, const st
 
     struct vector2 direction = {0.0, 0.0};
 
-    if (this->up && keyboard_is_pressed(this->keyboard, this->up)) {
+    if (this->up && keyboard_is_pressed(this->up)) {
         direction.y += 1.0;
     }
-    if (this->down && keyboard_is_pressed(this->keyboard, this->down)) {
+    if (this->down && keyboard_is_pressed(this->down)) {
         direction.y -= 1.0;
     }
-    if (this->left && keyboard_is_pressed(this->keyboard, this->left)) {
+    if (this->left && keyboard_is_pressed(this->left)) {
         direction.x -= 1.0;
     }
-    if (this->right && keyboard_is_pressed(this->keyboard, this->right)) {
+    if (this->right && keyboard_is_pressed(this->right)) {
         direction.x += 1.0;
     }
 
@@ -74,13 +72,11 @@ static void keyboard_rigid_controller_on_awake(struct component* base) {
     if (this->rigid_body == NULL) {
         entity_mark_destroyed(component_get_parent(base));
     }
-    this->keyboard = (struct keyboard*)subsystem_collection_get(scene_get_subsystems(entity_get_scene(component_get_parent(base))), "keyboard");
 }
 
 static void keyboard_rigid_controller_on_disable(struct component* base) {
     struct keyboard_rigid_controller* this = (struct keyboard_rigid_controller*)base;
     this->rigid_body = NULL;
-    this->keyboard = NULL;
 }
 
 struct component* keyboard_rigid_controller_create(struct parser *parser, struct entity *parent) {

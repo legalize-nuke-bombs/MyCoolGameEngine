@@ -27,15 +27,15 @@ struct tmap {
 static void handle_component_captured(void *listener, void *context);
 static void handle_component_marked_destroyed(void *listener, void *context);
 
-struct tmap* tmap_create(struct scene *scene) {
+struct tmap* tmap_create(void) {
     logger_info("TMap is creating...");
     struct tmap *this = calloc(1, sizeof(struct tmap));
     this->types = string_dictionary_build(4);
 
-    this->on_component_captured = scene_get_on_component_captured(scene);
+    this->on_component_captured = scene_get_on_component_captured();
     action_subscribe(this->on_component_captured, this, handle_component_captured, &this->on_component_captured_subscription_token);
 
-    this->on_component_marked_destroyed = scene_get_on_component_marked_destroyed(scene);
+    this->on_component_marked_destroyed = scene_get_on_component_marked_destroyed();
     action_subscribe(this->on_component_marked_destroyed, this, handle_component_marked_destroyed, &this->on_component_marked_destroyed_subscription_token);
 
     return this;

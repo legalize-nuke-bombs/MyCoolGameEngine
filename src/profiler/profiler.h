@@ -5,10 +5,8 @@
 #ifndef MYCOOLGAMEENGINE_PROFILER_H
 #define MYCOOLGAMEENGINE_PROFILER_H
 
-struct subsystem_collection;
-struct profiler;
-struct time_estimator;
+struct msystem;
 
-struct subsystem* profiler_create(const struct subsystem_collection* subsystems);
+extern const struct msystem profiler_msystem;
 
 #endif //MYCOOLGAMEENGINE_PROFILER_H

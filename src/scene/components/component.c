@@ -56,9 +56,8 @@ void component_mark_destroyed(struct component *this) {
     if (this->awake && this->vtable->on_disable) {
         this->vtable->on_disable(this);
     }
-    struct scene *scene = component_get_scene(this);
-    if (scene) {
-        scene_notify_component_marked_destroyed(scene, this);
+    if (component_is_in_scene(this)) {
+        scene_notify_component_marked_destroyed(this);
     }
 }
 
@@ -91,11 +90,11 @@ const char* component_get_global_parent_name(const struct component *this) {
     const struct entity* global_parent = component_get_global_parent(this);
     return global_parent ? entity_get_name(global_parent) : "<null>";
 }
-struct scene* component_get_scene(const struct component *this) {
+bool component_is_in_scene(const struct component *this) {
     if (this->parent == NULL) {
-        return NULL;
+        return false;
     }
-    return entity_get_scene(this->parent);
+    return entity_is_in_scene(this->parent);
 }
 
 struct rect component_get_rect(const struct component *this) {
@@ -110,9 +109,8 @@ void component_notify_rect_changed(struct component *this, const struct rect_pai
         .rect_pair = rect_pair
     };
     // Order is important here. Scene infrastructure must be ready before components code
-    const struct scene *scene = component_get_scene(this);
-    if (scene) {
-        scene_notify_component_resize(scene, &data);
+    if (component_is_in_scene(this)) {
+        scene_notify_component_resize(&data);
     }
     if (this->awake && this->alive && this->vtable->on_movement) {
         this->vtable->on_movement(this);

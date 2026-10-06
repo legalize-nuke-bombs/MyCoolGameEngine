@@ -7,8 +7,6 @@
 #include "../utils/rect.h"
 
 struct entity;
-struct scene;
-struct engine;
 
 struct entity* entity_create(char *name, struct entity *parent);
 struct entity* entity_clone(const struct entity* entity);
@@ -24,8 +22,8 @@ bool entity_is_alive(const struct entity *this);
 void entity_set_parent(struct entity *this, struct entity *new_parent);
 struct entity* entity_get_parent(const struct entity *this);
 
-void entity_set_scene(struct entity *this, struct scene *new_scene);
-struct scene* entity_get_scene(const struct entity *this);
+void entity_set_in_scene(struct entity *this, bool in_scene);
+bool entity_is_in_scene(const struct entity *this);
 
 struct rect entity_get_local_rect(const struct entity *this);
 void entity_set_local_rect(struct entity *this, struct rect new_local_rect);
