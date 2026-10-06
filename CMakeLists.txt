@@ -268,6 +268,11 @@ add_executable(MyCoolGameEngine main.c
         src/modules/physics/collision_layers.c
         src/modules/physics/collision_response.c
         src/modules/physics/collision_rules.c
+        src/utils/memory/control_block.h
+        src/utils/memory/holder.h
+        src/utils/memory/ref.h
+        src/utils/memory/holder.c
+        src/utils/memory/ref.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)
