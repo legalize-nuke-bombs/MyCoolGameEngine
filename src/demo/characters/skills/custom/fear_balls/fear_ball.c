@@ -4,7 +4,6 @@
 
 #include "fear_ball.h"
 
-#include <math.h>
 #include <stdlib.h>
 
 #include "../../../effects.h"
@@ -18,8 +17,9 @@
 
 struct fear_ball {
     struct component base;
-    double v;
-    double a;
+    double speed;
+    double range;
+    double travelled;
     bool coming_back;
     double fear_length;
     const struct entity *launcher;
@@ -44,8 +44,8 @@ const struct component_vtable fear_ball_vtable = {
 
 static void fear_ball_on_create(struct component *base, struct fields *fields) {
     struct fear_ball *this = (struct fear_ball *) base;
-    this->v = fields_get_double(fields, "speed", 0);
-    this->a = fields_get_double(fields, "acceleration", 0);
+    this->speed = fields_get_double(fields, "speed", 0);
+    this->range = fields_get_double(fields, "range", 0);
     this->fear_length = fields_get_double(fields, "fear", 0);
 }
 
@@ -67,8 +67,10 @@ static void fear_ball_awake(struct component *base) {
 static void fear_ball_on_update(struct component *base, const struct update_context *context) {
     struct fear_ball* this = (struct fear_ball*)base;
 
-    this->v += this->a * context->dt;
-    if (this->v < 0) {
+    // The speed is constant: the ball flies out for range metres and then turns back at once
+    const double step = this->speed * context->dt;
+    this->travelled += step;
+    if (this->travelled >= this->range) {
         this->coming_back = true;
     }
 
@@ -88,7 +90,7 @@ static void fear_ball_on_update(struct component *base, const struct update_cont
     }
 
     struct rect rect = entity_get_local_rect(this->self);
-    rect.position = vector_sum(rect.position, vector_multiply_scalar(direction, fabs(this->v) * context->dt));
+    rect.position = vector_sum(rect.position, vector_multiply_scalar(direction, step));
     entity_set_local_rect(this->self, rect);
 }
 
