@@ -11,6 +11,7 @@
 #include "../../skill_internal.h"
 #include "../../../../../utils/fields.h"
 #include "../../../../../scene/prefabs/prefab.h"
+#include "../../../../../scene/prefabs/prefabs.h"
 #include "../../../../../logging/logger.h"
 #include "../../../../../scene/entity.h"
 #include "../../../../../scene/scene.h"
@@ -51,7 +52,7 @@ static void fear_balls_on_destroy(struct skill* base) {
 static void fear_balls_on_enable(struct skill* base) {
     struct fear_balls* this = (struct fear_balls*)base;
     if (this->prefab_name) {
-        this->prefab = prefab_asset_get(this->prefab_name);
+        this->prefab = prefabs_get(this->prefab_name);
         free(this->prefab_name);
         this->prefab_name = NULL;
     }

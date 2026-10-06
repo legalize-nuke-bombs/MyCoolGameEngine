@@ -14,7 +14,9 @@
 #include "../../scene.h"
 #include "../../../logging/logger.h"
 #include "../../../rendering/renderer.h"
+#include "../../../rendering/renderer_layers.h"
 #include "../../../rendering/texture.h"
+#include "../../../rendering/textures.h"
 #include "../../../utils/fields.h"
 
 struct box_renderer {
@@ -79,13 +81,13 @@ static void box_renderer_awake(struct component *base) {
     this->renderer = renderer_get_pipeline();
 
     if (this->renderer_layer == NULL) {
-        this->renderer_layer = renderer_layer_asset_try_get(this->renderer_layer_name);
+        this->renderer_layer = renderer_layers_try_get(this->renderer_layer_name);
     }
     free(this->renderer_layer_name);
     this->renderer_layer_name = NULL;
 
     if (this->square == NULL) {
-        struct texture* texture = texture_asset_get(this->texture_name);
+        struct texture* texture = textures_get(this->texture_name);
         if (texture == NULL) {
             this->square = renderer_square_create_from_color(color_black);
         }

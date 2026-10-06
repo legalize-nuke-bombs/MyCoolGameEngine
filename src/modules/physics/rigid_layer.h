@@ -7,11 +7,9 @@
 #include <stdint.h>
 
 struct rigid_layer;
-struct asset_type;
 
-extern const struct asset_type rigid_layer_asset_type;
-
-struct rigid_layer* rigid_layer_asset_get(const char *name);
+struct rigid_layer* rigid_layer_create(uint8_t priority);
+void rigid_layer_destroy(struct rigid_layer *this);
 
 uint8_t rigid_layer_get_priority(const struct rigid_layer* this);
 

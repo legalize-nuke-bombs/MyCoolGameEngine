@@ -12,6 +12,7 @@
 #include "../../utils/fields.h"
 #include "../../utils/vector2_math.h"
 #include "../../scene/prefabs/prefab.h"
+#include "../../scene/prefabs/prefabs.h"
 
 
 struct forest {
@@ -56,7 +57,7 @@ static void forest_awake(struct component *base) {
     struct list prefabs = list_create(list_count(&this->prefabIds));
     for (int i = 0; i < list_count(&this->prefabIds); i++) {
         const char* prefab_id = list_get(&this->prefabIds, i);
-        struct prefab *prefab = prefab_asset_get(prefab_id);
+        struct prefab *prefab = prefabs_get(prefab_id);
         if (prefab == NULL) {
             continue;
         }

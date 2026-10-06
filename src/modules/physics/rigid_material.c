@@ -6,43 +6,14 @@
 
 #include <stdlib.h>
 
-#include "../../assets/asset_storage.h"
-#include "../../assets/asset_type.h"
-#include "../../utils/fields.h"
-
-
-
-static void rigid_material_destroy_item(void *item) {
-    free(item);
-}
-
-static struct asset_storage rigid_materials = {
-    ._key = "rigid_material",
-    ._destroy_item = rigid_material_destroy_item
-};
-
-static void rigid_material_asset_on_add(struct fields *fields) {
+struct rigid_material* rigid_material_create(const double friction, const double restitution) {
     struct rigid_material *this = calloc(1, sizeof(struct rigid_material));
-    this->_friction = fields_get_double(fields, "friction", rigid_material_default._friction);
-    this->_restitution = fields_get_double(fields, "restitution", rigid_material_default._restitution);
-    asset_storage_add(&rigid_materials, fields_get_string(fields, "name", NULL), this);
+    this->_friction = friction;
+    this->_restitution = restitution;
+    return this;
 }
-static void rigid_material_asset_on_clear(void) {
-    asset_storage_clear(&rigid_materials);
-}
-static void rigid_material_asset_on_destroy(void) {
-    asset_storage_destroy(&rigid_materials);
-}
-
-const struct asset_type rigid_material_asset_type = {
-    .key = "rigid_material",
-    .on_add = rigid_material_asset_on_add,
-    .on_clear = rigid_material_asset_on_clear,
-    .on_destroy = rigid_material_asset_on_destroy
-};
-
-struct rigid_material* rigid_material_asset_get(const char *name) {
-    return asset_storage_get(&rigid_materials, name);
+void rigid_material_destroy(struct rigid_material *this) {
+    free(this);
 }
 
 double rigid_material_get_friction(const struct rigid_material *this) {

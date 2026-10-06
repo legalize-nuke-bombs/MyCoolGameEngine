@@ -14,7 +14,9 @@
 #include "../../../utils/dictionary.h"
 #include "../../chunks/chunks.h"
 #include "../../../modules/physics/rigid_layer.h"
+#include "../../../modules/physics/rigid_layers.h"
 #include "../../../modules/physics/rigid_material.h"
+#include "../../../modules/physics/rigid_materials.h"
 
 
 struct rigid_surface {
@@ -57,13 +59,13 @@ static void rigid_surface_awake(struct component *base) {
     struct rigid_surface *this = (struct rigid_surface *) base;
 
     if (this->layer == NULL) {
-        this->layer = rigid_layer_asset_get(this->layer_name);
+        this->layer = rigid_layers_get(this->layer_name);
     }
     free(this->layer_name);
     this->layer_name = NULL;
 
     if (this->material == NULL) {
-        this->material = rigid_material_asset_get(this->material_name);
+        this->material = rigid_materials_get(this->material_name);
     }
     free(this->material_name);
     this->material_name = NULL;

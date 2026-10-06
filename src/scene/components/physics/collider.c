@@ -12,6 +12,7 @@
 #include "../../../utils/pointer_dictionary.h"
 #include "../../scene.h"
 #include "../../../modules/physics/rigid_material.h"
+#include "../../../modules/physics/rigid_materials.h"
 #include "../../../logging/logger.h"
 #include "../../../utils/action.h"
 #include "../../../utils/fields.h"
@@ -81,7 +82,7 @@ static void collider_on_awake(struct component *base) {
     struct collider *this = (struct collider*)base;
 
     if (this->material_name != NULL) {
-        this->material = rigid_material_asset_get(this->material_name);
+        this->material = rigid_materials_get(this->material_name);
     }
     free(this->material_name);
     this->material_name = NULL;

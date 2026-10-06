@@ -5,11 +5,11 @@
 
 #include "asset_type.h"
 #include "../logging/logger.h"
-#include "../rendering/renderer_layer.h"
-#include "../rendering/texture.h"
-#include "../modules/physics/rigid_layer.h"
-#include "../modules/physics/rigid_material.h"
-#include "../scene/prefabs/prefab.h"
+#include "../rendering/renderer_layers.h"
+#include "../rendering/textures.h"
+#include "../modules/physics/rigid_layers.h"
+#include "../modules/physics/rigid_materials.h"
+#include "../scene/prefabs/prefabs.h"
 #include "../msystems/msystem.h"
 #include "../utils/fields.h"
 #include "../utils/list.h"
@@ -45,11 +45,11 @@ void assets_register(const struct asset_type *type) {
 // Asset types are cleared from the last one to the first one: register a type after the types its assets point to
 static void assets_on_create(void) {
     assets.types = list_create(8);
-    assets_register(&texture_asset_type);
-    assets_register(&renderer_layer_asset_type);
-    assets_register(&rigid_layer_asset_type);
-    assets_register(&rigid_material_asset_type);
-    assets_register(&prefab_asset_type);
+    assets_register(&textures_asset_type);
+    assets_register(&renderer_layers_asset_type);
+    assets_register(&rigid_layers_asset_type);
+    assets_register(&rigid_materials_asset_type);
+    assets_register(&prefabs_asset_type);
 }
 static void assets_on_destroy(void) {
     for (int i = list_count(&assets.types) - 1; i >= 0; i--) {

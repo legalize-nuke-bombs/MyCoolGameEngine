@@ -10,6 +10,7 @@
 #include "../../../logging/logger.h"
 #include "../../../modules/bt/bt_node.h"
 #include "../../../modules/bt/bt_graph.h"
+#include "../../../modules/bt/bt_graphs.h"
 #include "../../../scene/entity.h"
 #include "../../../scene/scene.h"
 #include "../../../scene/components/component_internal.h"
@@ -55,7 +56,7 @@ static void behaviour_agent_on_destroy(struct component *base) {
 static void behaviour_agent_awake(struct component *base) {
     struct behaviour_agent *this = (struct behaviour_agent*)base;
     if (this->bt_graph_name) {
-        this->bt_graph = bt_graph_asset_get(this->bt_graph_name);
+        this->bt_graph = bt_graphs_get(this->bt_graph_name);
         free(this->bt_graph_name);
         this->bt_graph_name = NULL;
     }

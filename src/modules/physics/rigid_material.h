@@ -6,16 +6,14 @@
 #define MYCOOLGAMEENGINE_RIGID_MATERIAL_H
 
 struct rigid_material;
-struct asset_type;
 
 struct rigid_material {
     double _friction;
     double _restitution;
 };
 
-extern const struct asset_type rigid_material_asset_type;
-
-struct rigid_material* rigid_material_asset_get(const char *name);
+struct rigid_material* rigid_material_create(double friction, double restitution);
+void rigid_material_destroy(struct rigid_material *this);
 
 double rigid_material_get_friction(const struct rigid_material *this);
 double rigid_material_get_restitution(const struct rigid_material *this);

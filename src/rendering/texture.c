@@ -9,11 +9,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 
-#include "renderer.h"
-#include "../assets/asset_storage.h"
-#include "../assets/asset_type.h"
 #include "../logging/logger.h"
-#include "../utils/fields.h"
 
 struct texture {
     char* id;
@@ -65,49 +61,6 @@ void texture_destroy(struct texture* this) {
         SDL_DestroyTexture(this->native_texture);
     }
     free(this);
-}
-
-static void texture_destroy_item(void *item) {
-    texture_destroy(item);
-}
-
-static struct asset_storage textures = {
-    ._key = "texture",
-    ._destroy_item = texture_destroy_item
-};
-
-static void texture_asset_on_add(struct fields *fields) {
-    const char *name = fields_get_string(fields, "name", NULL);
-    const struct vector2 tile = fields_get_vector2(fields, "tile", vector2_zero);
-    const int tiles_count = fields_get_int(fields, "count", 1);
-    const char *loading_mode_name = fields_get_string(fields, "load", "lazy");
-
-    enum texture_loading_mode loading_mode = texture_loading_mode_lazy;
-    if (strcmp(loading_mode_name, "eager") == 0) {
-        loading_mode = texture_loading_mode_eager;
-    }
-    else if (strcmp(loading_mode_name, "lazy") != 0) {
-        logger_warn("Unexpected texture loading mode `%s`, `lazy` will be used instead", loading_mode_name);
-    }
-
-    asset_storage_add(&textures, name, texture_create(strdup(name ? name : ""), fields_dup_string(fields, "path", ""), (int)tile.x, (int)tile.y, tiles_count, loading_mode, renderer_get_native_renderer()));
-}
-static void texture_asset_on_clear(void) {
-    asset_storage_clear(&textures);
-}
-static void texture_asset_on_destroy(void) {
-    asset_storage_destroy(&textures);
-}
-
-const struct asset_type texture_asset_type = {
-    .key = "texture",
-    .on_add = texture_asset_on_add,
-    .on_clear = texture_asset_on_clear,
-    .on_destroy = texture_asset_on_destroy
-};
-
-struct texture* texture_asset_get(const char *name) {
-    return asset_storage_get(&textures, name);
 }
 
 const char* texture_get_id(const struct texture* this) {

@@ -248,6 +248,18 @@ add_executable(MyCoolGameEngine main.c
         src/demo/demo.c
         src/scene/entity_factory.h
         src/scene/entity_factory.c
+        src/modules/bt/bt_graphs.h
+        src/modules/bt/bt_graphs.c
+        src/modules/physics/rigid_layers.h
+        src/modules/physics/rigid_materials.h
+        src/modules/physics/rigid_layers.c
+        src/modules/physics/rigid_materials.c
+        src/rendering/renderer_layers.h
+        src/rendering/textures.h
+        src/rendering/renderer_layers.c
+        src/rendering/textures.c
+        src/scene/prefabs/prefabs.h
+        src/scene/prefabs/prefabs.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)

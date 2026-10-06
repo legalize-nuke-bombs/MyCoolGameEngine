@@ -12,11 +12,6 @@ enum texture_loading_mode {
 
 struct texture;
 struct SDL_Renderer;
-struct asset_type;
-
-extern const struct asset_type texture_asset_type;
-
-struct texture* texture_asset_get(const char *name);
 
 struct texture* texture_create(char* id, char* path, int tile_w, int tile_h, int tiles_count, enum texture_loading_mode loading_mode, struct SDL_Renderer* native_renderer);
 void texture_destroy(struct texture* this);
