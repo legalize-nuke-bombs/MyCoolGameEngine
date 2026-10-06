@@ -50,7 +50,7 @@ static void fear_ball_on_create(struct component *base, struct fields *fields) {
 }
 
 
-static void handle_on_trigger_enter(void *listener, void *context);
+static void handle_on_enter(void *listener, void *context);
 
 static void fear_ball_awake(struct component *base) {
     struct fear_ball* this = (struct fear_ball*)base;
@@ -60,8 +60,8 @@ static void fear_ball_awake(struct component *base) {
         entity_mark_destroyed(this->self);
         return;
     }
-    struct action* on_trigger_enter = collider_on_trigger_enter(collider);
-    action_subscribe_no_token(on_trigger_enter, this, handle_on_trigger_enter);
+    struct action* on_enter = collider_on_enter(collider);
+    action_subscribe_no_token(on_enter, this, handle_on_enter);
 }
 
 static void fear_ball_on_update(struct component *base, const struct update_context *context) {
@@ -97,7 +97,7 @@ void fear_ball_launch(const struct entity *launcher, struct fear_ball* this, con
     this->direction = vector_normalize(direction);
 }
 
-static void handle_on_trigger_enter(void *listener, void *context) {
+static void handle_on_enter(void *listener, void *context) {
     struct fear_ball* this = listener;
     const struct entity* entity = context;
     if (this->launcher) // TODO See the first note

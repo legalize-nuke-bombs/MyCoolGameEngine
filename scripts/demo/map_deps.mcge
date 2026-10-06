@@ -11,6 +11,9 @@ once name=map_deps body=[
     rigid_material name=stone friction=0.6 restitution=0.05
     rigid_material name=character friction=0.3 restitution=0.075
 
+    collision_layer name=soul default=overlap
+    collision_rule between=[soul soul] response=ignore
+
     bt_graph name=enemy root=[
         selector nodes=[
             sequence nodes=[
@@ -65,6 +68,6 @@ once name=map_deps body=[
     prefab name=FearBall components=[
         box_renderer layer=effect1 color=[150 0 150 200]
         fear_ball speed=50 acceleration=-100 fear=1.25
-        collider trigger=true
+        collider layer=soul
     ]
 ]

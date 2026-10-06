@@ -7,6 +7,8 @@
 #include "../logging/logger.h"
 #include "../rendering/renderer_layers.h"
 #include "../rendering/textures.h"
+#include "../modules/physics/collision_layers.h"
+#include "../modules/physics/collision_rules.h"
 #include "../modules/physics/rigid_layers.h"
 #include "../modules/physics/rigid_materials.h"
 #include "../scene/prefabs/prefabs.h"
@@ -49,6 +51,8 @@ static void assets_on_create(void) {
     assets_register(&renderer_layers_asset_type);
     assets_register(&rigid_layers_asset_type);
     assets_register(&rigid_materials_asset_type);
+    assets_register(&collision_layers_asset_type);
+    assets_register(&collision_rules_asset_type);
     assets_register(&prefabs_asset_type);
 }
 static void assets_on_destroy(void) {

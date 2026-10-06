@@ -11,6 +11,9 @@
 #include "../../../utils/dictionary.h"
 #include "../../../utils/pointer_dictionary.h"
 #include "../../scene.h"
+#include "../../../modules/physics/collision_layer.h"
+#include "../../../modules/physics/collision_layers.h"
+#include "../../../modules/physics/collision_rules.h"
 #include "../../../modules/physics/rigid_material.h"
 #include "../../../modules/physics/rigid_materials.h"
 #include "../../../logging/logger.h"
@@ -23,13 +26,14 @@ struct collider {
     struct component base;
 
     char *material_name;
-    bool trigger;
+    char *layer_name;
     struct rigid_material *material;
+    const struct collision_layer *layer;
 
     struct dictionary* intersections;
 
-    struct action on_trigger_enter;
-    struct action on_trigger_exit;
+    struct action on_enter;
+    struct action on_exit;
 
     const struct chunks* chunks;
 };
@@ -61,17 +65,18 @@ const struct component_vtable collider_vtable = {
 
 static void collider_on_create(struct component *base, struct fields *fields) {
     struct collider *this = (struct collider*)base;
-    this->trigger = fields_get_bool(fields, "trigger", false);
     this->material_name = fields_dup_string(fields, "material", NULL);
-    this->on_trigger_enter = action_create();
-    this->on_trigger_exit = action_create();
+    this->layer_name = fields_dup_string(fields, "layer", NULL);
+    this->on_enter = action_create();
+    this->on_exit = action_create();
 }
 
 static void collider_on_destroy(struct component *base) {
     struct collider *this = (struct collider*)base;
     if (this->material_name) free(this->material_name);
-    action_destroy(&this->on_trigger_exit);
-    action_destroy(&this->on_trigger_enter);
+    if (this->layer_name) free(this->layer_name);
+    action_destroy(&this->on_exit);
+    action_destroy(&this->on_enter);
     if (this->intersections) {
         dictionary_destroy(this->intersections);
         this->intersections = NULL;
@@ -87,7 +92,24 @@ static void collider_on_awake(struct component *base) {
     free(this->material_name);
     this->material_name = NULL;
 
+    if (this->layer_name != NULL) {
+        this->layer = collision_layers_get(this->layer_name);
+    }
+    free(this->layer_name);
+    this->layer_name = NULL;
+
     this->chunks = scene_get_chunks();
+}
+
+static const struct collision_layer* collider_get_layer(const struct collider *this) {
+    if (this->layer) {
+        return this->layer;
+    }
+    return &collision_layer_default;
+}
+
+static enum collision_response collider_get_response(const struct collider *this, const struct collider *collider) {
+    return collision_rules_get_response(collider_get_layer(this), collider_get_layer(collider));
 }
 
 static void collider_lazy_create_intersections(struct collider *this) {
@@ -96,9 +118,9 @@ static void collider_lazy_create_intersections(struct collider *this) {
     }
 }
 
-static void collider_handle_on_trigger_exit(struct collider *this, struct collider *collider, bool share);
+static void collider_handle_on_exit(struct collider *this, struct collider *collider, bool share);
 
-static void collider_handle_on_trigger_enter(struct collider *this, struct collider *collider, const bool share) {
+static void collider_handle_on_enter(struct collider *this, struct collider *collider, const bool share) {
     // The dead do not enter anybody: their on_disable has already left everyone
     if (!component_is_alive((struct component*)this) || !component_is_alive((struct component*)collider)) {
         return;
@@ -107,27 +129,27 @@ static void collider_handle_on_trigger_enter(struct collider *this, struct colli
     if (!dictionary_try_add(this->intersections, collider, collider)) {
         return;
     }
-    logger_debug("Entity %s on trigger enter %s!", component_get_global_parent_name((struct component*)this), component_get_global_parent_name((struct component*)collider));
-    action_invoke(&this->on_trigger_enter, component_get_global_parent((struct component*)collider));
+    logger_debug("Entity %s on enter %s!", component_get_global_parent_name((struct component*)this), component_get_global_parent_name((struct component*)collider));
+    action_invoke(&this->on_enter, component_get_global_parent((struct component*)collider));
     if (!share) {
         return;
     }
     // A subscriber could have destroyed the other side, and its on_disable did not know about this one yet
     if (!component_is_alive((struct component*)collider)) {
-        collider_handle_on_trigger_exit(this, collider, false);
+        collider_handle_on_exit(this, collider, false);
         return;
     }
-    collider_handle_on_trigger_enter(collider, this, false);
+    collider_handle_on_enter(collider, this, false);
 }
 
-static void collider_handle_on_trigger_exit(struct collider *this, struct collider *collider, const bool share) {
+static void collider_handle_on_exit(struct collider *this, struct collider *collider, const bool share) {
     if (this->intersections == NULL || dictionary_remove(this->intersections, collider) == 0) {
         return;
     }
-    logger_debug("Entity %s on trigger exit %s!", component_get_global_parent_name((struct component*)this), component_get_global_parent_name((struct component*)collider));
-    action_invoke(&this->on_trigger_exit, component_get_global_parent((struct component*)collider));
+    logger_debug("Entity %s on exit %s!", component_get_global_parent_name((struct component*)this), component_get_global_parent_name((struct component*)collider));
+    action_invoke(&this->on_exit, component_get_global_parent((struct component*)collider));
     if (share) {
-        collider_handle_on_trigger_exit(collider, this, false);
+        collider_handle_on_exit(collider, this, false);
     }
 }
 
@@ -136,12 +158,12 @@ static void collider_check_new_intersections(struct collider *this, const struct
     struct dictionary_node node;
     while (dictionary_next(colliders, &iterator, &node)) {
         struct collider *collider = node.value;
-        if (collider == this) {
+        if (collider == this || collider_get_response(this, collider) == collision_response_ignore) {
             continue;
         }
         const struct rect collider_rect = component_get_rect((struct component*)collider);
         if (rects_intersection(rect, collider_rect)) {
-            collider_handle_on_trigger_enter(this, collider, true);
+            collider_handle_on_enter(this, collider, true);
         }
     }
 }
@@ -156,7 +178,7 @@ static void collider_validate_old_intersections(struct collider *this, const str
         struct collider *collider = node.value;
         const struct rect collider_rect = component_get_rect((struct component*)collider);
         if (!rects_intersection(rect, collider_rect)) {
-            collider_handle_on_trigger_exit(this, collider, true);
+            collider_handle_on_exit(this, collider, true);
         }
     }
     if (dictionary_count(this->intersections) == 0) {
@@ -174,7 +196,7 @@ static void collider_on_disable(struct component *base) {
     struct dictionary_iterator intersections_iterator = dictionary_begin(this->intersections);
     struct dictionary_node node;
     while (dictionary_next(this->intersections, &intersections_iterator, &node)) {
-        collider_handle_on_trigger_exit(this, node.value, true);
+        collider_handle_on_exit(this, node.value, true);
     }
 }
 
@@ -209,7 +231,7 @@ static struct entity* collider_try_get_obstacle_among(const struct collider *thi
     struct dictionary_node node;
     while (dictionary_next(colliders, &iterator, &node)) {
         const struct collider *collider = node.value;
-        if (collider_is_trigger(collider) || component_get_global_parent((const struct component*)collider) == current_parent) {
+        if (collider_get_response(this, collider) != collision_response_block || component_get_global_parent((const struct component*)collider) == current_parent) {
             continue;
         }
         const struct rect collider_rect = component_get_rect((const struct component*)collider);
@@ -251,12 +273,9 @@ const struct rigid_material* collider_get_rigid_material(const struct collider *
     }
     return &rigid_material_default;
 }
-bool collider_is_trigger(const struct collider *this) {
-    return this->trigger;
+struct action* collider_on_enter(struct collider *this) {
+    return &this->on_enter;
 }
-struct action* collider_on_trigger_enter(struct collider *this) {
-    return &this->on_trigger_enter;
-}
-struct action* collider_on_trigger_exit(struct collider *this) {
-    return &this->on_trigger_exit;
+struct action* collider_on_exit(struct collider *this) {
+    return &this->on_exit;
 }

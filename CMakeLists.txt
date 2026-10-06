@@ -260,6 +260,14 @@ add_executable(MyCoolGameEngine main.c
         src/rendering/textures.c
         src/scene/prefabs/prefabs.h
         src/scene/prefabs/prefabs.c
+        src/modules/physics/collision_layer.h
+        src/modules/physics/collision_layers.h
+        src/modules/physics/collision_response.h
+        src/modules/physics/collision_rules.h
+        src/modules/physics/collision_layer.c
+        src/modules/physics/collision_layers.c
+        src/modules/physics/collision_response.c
+        src/modules/physics/collision_rules.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)
