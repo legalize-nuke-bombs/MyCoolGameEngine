@@ -62,6 +62,7 @@ FetchContent_MakeAvailable(SDL3 SDL3_image)
 
 add_library(mcge SHARED
         mcge/api.h
+        mcge/mcge.h
         mcge/scene/entity.h
         mcge/scene/entity.c
         mcge/utils/vector2.h

@@ -7,14 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <mcge/logging/logger.h>
-#include <mcge/modules/bt/bt_node.h>
-#include <mcge/modules/bt/bt_graph.h>
-#include <mcge/modules/bt/bt_graphs.h>
-#include <mcge/scene/entity.h>
-#include <mcge/scene/scene.h>
-#include <mcge/scene/components/component_internal.h>
-#include <mcge/utils/fields.h>
+#include <mcge/mcge.h>
 #include "../bt/blackboard.h"
 
 

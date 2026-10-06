@@ -5,7 +5,7 @@
 #ifndef MYCOOLGAMEENGINE_FEAR_BALL_H
 #define MYCOOLGAMEENGINE_FEAR_BALL_H
 
-#include <mcge/utils/vector2.h>
+#include <mcge/mcge.h>
 
 struct entity;
 struct component_vtable;

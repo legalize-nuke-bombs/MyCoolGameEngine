@@ -8,8 +8,7 @@
 #include <string.h>
 
 #include "skill_internal.h"
-#include <mcge/logging/logger.h>
-#include <mcge/utils/fields.h>
+#include <mcge/mcge.h>
 #include "custom/fear_balls/fear_balls.h"
 #include "custom/printer.h"
 

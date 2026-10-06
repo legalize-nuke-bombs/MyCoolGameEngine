@@ -6,14 +6,8 @@
 
 #include <stdlib.h>
 
-#include <mcge/modules/bt/bt_node_internal.h>
-#include <mcge/modules/bt/bt_node.h>
+#include <mcge/mcge.h>
 #include "blackboard.h"
-#include <mcge/scene/entity.h>
-#include <mcge/scene/scene.h>
-#include <mcge/utils/dictionary.h>
-#include <mcge/utils/fields.h>
-#include <mcge/utils/vector2_math.h>
 
 struct player_is_near {
     struct bt_node base;

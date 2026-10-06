@@ -3,10 +3,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include <mcge/scene/components/component_internal.h>
-#include <mcge/scene/entity.h>
-#include <mcge/utils/fields.h>
-#include <mcge/utils/vector2_math.h>
+#include <mcge/mcge.h>
 
 
 struct pulsator {

@@ -6,11 +6,9 @@
 
 #include <stdlib.h>
 
-#include <mcge/modules/bt/bt_node.h>
-#include <mcge/modules/bt/bt_node_internal.h>
+#include <mcge/mcge.h>
 #include "blackboard.h"
 #include "../effects.h"
-#include <mcge/scene/entity.h>
 
 struct is_scared {
     struct bt_node base;

@@ -7,13 +7,7 @@
 #include <stdlib.h>
 
 #include "../../../effects.h"
-#include <mcge/logging/logger.h>
-#include <mcge/scene/entity.h>
-#include <mcge/scene/components/component_internal.h>
-#include <mcge/scene/components/physics/collider.h>
-#include <mcge/utils/action.h>
-#include <mcge/utils/fields.h>
-#include <mcge/utils/vector2_math.h>
+#include <mcge/mcge.h>
 
 struct fear_ball {
     struct component base;

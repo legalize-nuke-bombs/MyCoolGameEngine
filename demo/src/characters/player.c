@@ -7,7 +7,7 @@
 
 
 #include <stdlib.h>
-#include <mcge/scene/components/component_internal.h>
+#include <mcge/mcge.h>
 
 struct player {
     struct component base;

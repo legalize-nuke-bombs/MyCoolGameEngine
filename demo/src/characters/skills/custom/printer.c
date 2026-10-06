@@ -7,8 +7,7 @@
 #include <stdlib.h>
 
 #include "../skill_internal.h"
-#include <mcge/utils/fields.h>
-#include <mcge/utils/system_message_box.h>
+#include <mcge/mcge.h>
 
 struct printer {
     struct skill base;

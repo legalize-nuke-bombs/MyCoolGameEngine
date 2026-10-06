@@ -6,13 +6,8 @@
 
 #include <stdlib.h>
 
-#include <mcge/modules/bt/bt_node_internal.h>
-#include <mcge/utils/fields.h>
-#include <mcge/modules/bt/bt_node.h>
+#include <mcge/mcge.h>
 #include "blackboard.h"
-#include <mcge/scene/entity.h>
-#include <mcge/utils/vector2_math.h>
-#include <mcge/scene/components/physics/rigid_body.h>
 
 
 struct player_run_away {

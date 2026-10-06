@@ -3,16 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <mcge/scene/components/component_internal.h>
-#include <mcge/scene/entity.h>
-#include <mcge/scene/scene.h>
-#include <mcge/logging/logger.h>
-#include <mcge/random/random.h>
-#include <mcge/utils/list.h>
-#include <mcge/utils/fields.h>
-#include <mcge/utils/vector2_math.h>
-#include <mcge/scene/prefabs/prefab.h>
-#include <mcge/scene/prefabs/prefabs.h>
+#include <mcge/mcge.h>
 
 
 struct forest {

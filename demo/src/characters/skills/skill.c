@@ -6,8 +6,7 @@
 
 #include "skill_internal.h"
 #include "../mana.h"
-#include <mcge/logging/logger.h>
-#include <mcge/scene/entity.h>
+#include <mcge/mcge.h>
 
 void skill_base_create(struct skill *this, const struct skill_vtable *vtable, const double manacost, const double cooldown, struct entity *self) {
     this->vtable = vtable;
