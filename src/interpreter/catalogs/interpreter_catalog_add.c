@@ -3,8 +3,7 @@
 #include <stdlib.h>
 
 #include "../interpreter_command_internal.h"
-#include "../../catalogs/catalog.h"
-#include "../../catalogs/catalogs.h"
+#include "../../assets/assets.h"
 #include "../../utils/parser.h"
 
 
@@ -17,11 +16,7 @@ static const char* interpreter_catalog_add_get_key(const struct interpreter_comm
 }
 
 static void interpreter_catalog_add_execute(const struct interpreter_command *this, struct parser *parser) {
-    struct catalog *catalog = catalogs_get(parser_next(parser));
-    if (catalog == NULL) {
-        return;
-    }
-    catalog_add(catalog, parser);
+    assets_add(parser_next(parser), parser);
 }
 
 static const struct interpreter_command_vtable catalog_add_vtable = {

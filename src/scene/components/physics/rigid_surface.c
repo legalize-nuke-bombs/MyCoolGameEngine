@@ -11,7 +11,6 @@
 #include "../../entity.h"
 #include "../../scene.h"
 #include "../../../utils/parser.h"
-#include "../../../catalogs/catalogs.h"
 #include "../../../utils/dictionary.h"
 #include "../../chunks/chunks.h"
 #include "../../../modules/physics/rigid_layer.h"
@@ -78,13 +77,13 @@ static void rigid_surface_awake(struct component *base) {
     struct rigid_surface *this = (struct rigid_surface *) base;
 
     if (this->layer == NULL) {
-        this->layer = catalogs_get_item("rigid_layer", this->layer_name);
+        this->layer = rigid_layer_asset_get(this->layer_name);
     }
     free(this->layer_name);
     this->layer_name = NULL;
 
     if (this->material == NULL) {
-        this->material = catalogs_get_item("rigid_material", this->material_name);
+        this->material = rigid_material_asset_get(this->material_name);
     }
     free(this->material_name);
     this->material_name = NULL;

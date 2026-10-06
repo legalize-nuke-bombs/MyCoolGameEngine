@@ -7,7 +7,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../catalogs/catalog.h"
+#include "../assets/asset_storage.h"
+#include "../assets/asset_type.h"
 #include "../utils/parser.h"
 
 
@@ -17,24 +18,41 @@ struct renderer_layer {
 };
 
 
-static const char* renderer_layer_catalog_key(void) {
-    return "renderer_layer";
-}
-
-static void* renderer_layer_on_create_item(const char *name, struct parser *parser) {
-    uint8_t priority;
-    parser_next_uint8(parser, &priority);
-    return renderer_layer_create(strdup(name), priority);
-}
-static void renderer_layer_on_destroy_item(void *item) {
+static void renderer_layer_destroy_item(void *item) {
     renderer_layer_destroy(item);
 }
 
-const struct catalog_vtable renderer_layer_catalog_vtable = {
-    .key = renderer_layer_catalog_key,
-    .on_create_item = renderer_layer_on_create_item,
-    .on_destroy_item = renderer_layer_on_destroy_item
+static struct asset_storage renderer_layers = {
+    ._key = "renderer_layer",
+    ._destroy_item = renderer_layer_destroy_item
 };
+
+static void renderer_layer_asset_on_add(struct parser *parser) {
+    char *name = asset_storage_parse_name(&renderer_layers, parser);
+    if (name == NULL) {
+        return;
+    }
+    uint8_t priority;
+    parser_next_uint8(parser, &priority);
+    asset_storage_add(&renderer_layers, name, renderer_layer_create(strdup(name), priority));
+}
+static void renderer_layer_asset_on_clear(void) {
+    asset_storage_clear(&renderer_layers);
+}
+static void renderer_layer_asset_on_destroy(void) {
+    asset_storage_destroy(&renderer_layers);
+}
+
+const struct asset_type renderer_layer_asset_type = {
+    .key = "renderer_layer",
+    .on_add = renderer_layer_asset_on_add,
+    .on_clear = renderer_layer_asset_on_clear,
+    .on_destroy = renderer_layer_asset_on_destroy
+};
+
+struct renderer_layer* renderer_layer_asset_try_get(const char *name) {
+    return asset_storage_try_get(&renderer_layers, name);
+}
 
 
 struct renderer_layer* renderer_layer_create(char *name, uint8_t priority) {

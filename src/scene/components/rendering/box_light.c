@@ -16,7 +16,7 @@
 #include "../../../rendering/renderer.h"
 #include "../../../rendering/primitives/custom/light_map.h"
 #include "../../../utils/parser.h"
-#include "../../../catalogs/catalogs.h"
+#include "../../../rendering/texture.h"
 
 struct box_light {
     struct component base;
@@ -100,7 +100,7 @@ static void box_light_awake(struct component *base) {
     this->light_map = renderer_pipeline_get_light_map(renderer_get_pipeline());
 
     if (this->square == NULL) {
-        struct texture* texture = catalogs_get_item("texture", this->texture_name);
+        struct texture* texture = texture_asset_get(this->texture_name);
         if (texture == NULL) {
             this->square = renderer_square_create_from_color(color_white);
         }

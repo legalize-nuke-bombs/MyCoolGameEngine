@@ -7,9 +7,11 @@
 #include <stdint.h>
 
 struct renderer_layer;
-struct catalog_vtable;
+struct asset_type;
 
-extern const struct catalog_vtable renderer_layer_catalog_vtable;
+extern const struct asset_type renderer_layer_asset_type;
+
+struct renderer_layer* renderer_layer_asset_try_get(const char *name);
 
 struct renderer_layer* renderer_layer_create(char *name, uint8_t priority);
 void renderer_layer_destroy(struct renderer_layer *layer);

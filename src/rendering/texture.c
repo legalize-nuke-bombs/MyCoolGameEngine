@@ -10,7 +10,8 @@
 #include <SDL3_image/SDL_image.h>
 
 #include "renderer.h"
-#include "../catalogs/catalog.h"
+#include "../assets/asset_storage.h"
+#include "../assets/asset_type.h"
 #include "../logging/logger.h"
 #include "../utils/parser.h"
 
@@ -66,11 +67,21 @@ void texture_destroy(struct texture* this) {
     free(this);
 }
 
-static const char* texture_catalog_key(void) {
-    return "texture";
+static void texture_destroy_item(void *item) {
+    texture_destroy(item);
 }
 
-static void* texture_on_create_item(const char *name, struct parser *parser) {
+static struct asset_storage textures = {
+    ._key = "texture",
+    ._destroy_item = texture_destroy_item
+};
+
+static void texture_asset_on_add(struct parser *parser) {
+    char *name = asset_storage_parse_name(&textures, parser);
+    if (name == NULL) {
+        return;
+    }
+
     int tile_w, tile_h, tiles_count;
     parser_next_int(parser, &tile_w);
     parser_next_int(parser, &tile_h);
@@ -86,17 +97,25 @@ static void* texture_on_create_item(const char *name, struct parser *parser) {
         logger_warn("Unexpected texture loading mode `%s`, `lazy` will be used instead", loading_mode_name ? loading_mode_name : "<null>");
     }
 
-    return texture_create(strdup(name), path, tile_w, tile_h, tiles_count, loading_mode, renderer_get_native_renderer());
+    asset_storage_add(&textures, name, texture_create(strdup(name), path, tile_w, tile_h, tiles_count, loading_mode, renderer_get_native_renderer()));
 }
-static void texture_on_destroy_item(void *item) {
-    texture_destroy(item);
+static void texture_asset_on_clear(void) {
+    asset_storage_clear(&textures);
+}
+static void texture_asset_on_destroy(void) {
+    asset_storage_destroy(&textures);
 }
 
-const struct catalog_vtable texture_catalog_vtable = {
-    .key = texture_catalog_key,
-    .on_create_item = texture_on_create_item,
-    .on_destroy_item = texture_on_destroy_item
+const struct asset_type texture_asset_type = {
+    .key = "texture",
+    .on_add = texture_asset_on_add,
+    .on_clear = texture_asset_on_clear,
+    .on_destroy = texture_asset_on_destroy
 };
+
+struct texture* texture_asset_get(const char *name) {
+    return asset_storage_get(&textures, name);
+}
 
 const char* texture_get_id(const struct texture* this) {
     return this->id;

@@ -10,9 +10,11 @@
 
 struct prefab;
 struct entity;
-struct catalog_vtable;
+struct asset_type;
 
-extern const struct catalog_vtable prefab_catalog_vtable;
+extern const struct asset_type prefab_asset_type;
+
+struct prefab* prefab_asset_get(const char *name);
 
 struct prefab* prefab_create(char* name, struct entity* entity);
 void prefab_destroy(struct prefab* this);

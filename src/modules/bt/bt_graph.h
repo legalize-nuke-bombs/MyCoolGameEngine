@@ -6,10 +6,12 @@
 #define MYCOOLGAMEENGINE_BT_GRAPH_H
 
 struct bt_graph;
-struct catalog_vtable;
+struct asset_type;
 struct bt_node;
 
-extern const struct catalog_vtable bt_graph_catalog_vtable;
+extern const struct asset_type bt_graph_asset_type;
+
+struct bt_graph* bt_graph_asset_get(const char *name);
 
 struct bt_graph* bt_graph_create(struct bt_node *root);
 void bt_graph_destroy(struct bt_graph *this);

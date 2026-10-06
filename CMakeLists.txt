@@ -207,10 +207,11 @@ add_executable(MyCoolGameEngine main.c
         src/scene/components/physics/rigid_surface.c
         src/scene/components/physics/keyboard_rigid_controller.h
         src/scene/components/physics/keyboard_rigid_controller.c
-        src/catalogs/catalog.h
-        src/catalogs/catalog.c
-        src/catalogs/catalogs.h
-        src/catalogs/catalogs.c
+        src/assets/asset_type.h
+        src/assets/assets.h
+        src/assets/assets.c
+        src/assets/asset_storage.h
+        src/assets/asset_storage.c
         src/interpreter/catalogs/interpreter_catalog.h
         src/interpreter/catalogs/interpreter_catalog.c
         src/interpreter/catalogs/interpreter_catalog_add.h

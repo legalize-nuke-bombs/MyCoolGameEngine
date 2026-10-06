@@ -17,7 +17,7 @@
 #include "lifecycle/engine_lifecycle.h"
 #include "utils/engine_closer.h"
 #include "utils/engine_restarter.h"
-#include "../catalogs/catalogs.h"
+#include "../assets/assets.h"
 #include "../devices/keyboard.h"
 #include "../modules/bt/bt_module.h"
 #include "../profiler/profiler.h"
@@ -80,9 +80,9 @@ void engine_create(void) {
     logger_info("Engine is creating...");
     engine_register_msystem(&engine_lifecycle_msystem);
     engine_register_msystem(&engine_events_msystem);
-    engine_register_msystem(&bt_msystem);
     engine_register_msystem(&keyboard_msystem);
-    engine_register_msystem(&catalogs_msystem);
+    engine_register_msystem(&assets_msystem);
+    engine_register_msystem(&bt_msystem);
     engine_register_msystem(&scene_msystem);
     engine_register_msystem(&renderer_msystem);
     engine_register_msystem(&interpreter_msystem);

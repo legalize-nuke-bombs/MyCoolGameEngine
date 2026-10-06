@@ -7,9 +7,11 @@
 #include <stdint.h>
 
 struct rigid_layer;
-struct catalog_vtable;
+struct asset_type;
 
-extern const struct catalog_vtable rigid_layer_catalog_vtable;
+extern const struct asset_type rigid_layer_asset_type;
+
+struct rigid_layer* rigid_layer_asset_get(const char *name);
 
 uint8_t rigid_layer_get_priority(const struct rigid_layer* this);
 

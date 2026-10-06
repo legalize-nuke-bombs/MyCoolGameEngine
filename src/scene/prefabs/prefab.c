@@ -10,7 +10,8 @@
 
 #include "../entity_parser.h"
 #include "../scene.h"
-#include "../../catalogs/catalog.h"
+#include "../../assets/asset_storage.h"
+#include "../../assets/asset_type.h"
 #include "../../logging/logger.h"
 
 struct prefab {
@@ -33,23 +34,40 @@ void prefab_destroy(struct prefab* this) {
     free(this);
 }
 
-static const char* prefab_catalog_key(void) {
-    return "prefab";
-}
-
-static void* prefab_on_create_item(const char *name, struct parser *parser) {
-    struct entity *entity = entity_parse(parser, strdup(name));
-    return prefab_create(strdup(name), entity);
-}
-static void prefab_on_destroy_item(void *item) {
+static void prefab_destroy_item(void *item) {
     prefab_destroy(item);
 }
 
-const struct catalog_vtable prefab_catalog_vtable = {
-    .key = prefab_catalog_key,
-    .on_create_item = prefab_on_create_item,
-    .on_destroy_item = prefab_on_destroy_item
+static struct asset_storage prefabs = {
+    ._key = "prefab",
+    ._destroy_item = prefab_destroy_item
 };
+
+static void prefab_asset_on_add(struct parser *parser) {
+    char *name = asset_storage_parse_name(&prefabs, parser);
+    if (name == NULL) {
+        return;
+    }
+    struct entity *entity = entity_parse(parser, strdup(name));
+    asset_storage_add(&prefabs, name, prefab_create(strdup(name), entity));
+}
+static void prefab_asset_on_clear(void) {
+    asset_storage_clear(&prefabs);
+}
+static void prefab_asset_on_destroy(void) {
+    asset_storage_destroy(&prefabs);
+}
+
+const struct asset_type prefab_asset_type = {
+    .key = "prefab",
+    .on_add = prefab_asset_on_add,
+    .on_clear = prefab_asset_on_clear,
+    .on_destroy = prefab_asset_on_destroy
+};
+
+struct prefab* prefab_asset_get(const char *name) {
+    return asset_storage_get(&prefabs, name);
+}
 
 struct entity* prefab_instantiate(struct prefab* this) {
     logger_debug("Prefab %s is instancing entity %s...", this->name, entity_get_name(this->entity));
