@@ -12,7 +12,7 @@ entity name=Terrain size=[250 250] components=[
 ]
 
 entity name=Forest size=[250 250] components=[
-    forest count=2000 prefabs=[Tree1 Tree2 Tree3 Tree4 Tree5]
+    forest count=2000 prefabs=[Tree]
 ]
 
 entity name=Forest size=[250 250] components=[
@@ -21,7 +21,7 @@ entity name=Forest size=[250 250] components=[
 
 entity name=Campfire position=[4 2] size=[1.5 1.5]
     components=[
-        box_renderer layer=prop1 texture=campfire1
+        box_renderer layer=prop1 texture=[campfire1 campfire2]
         box_renderer_animated speed=1
     ]
     children=[

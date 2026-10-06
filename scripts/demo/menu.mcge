@@ -24,7 +24,7 @@ entity name=Camera components=[
 
 entity name=Campfire position=[2.5 -1.5] size=[1.5 1.5]
     components=[
-        box_renderer layer=prop1 texture=campfire1
+        box_renderer layer=prop1 texture=[campfire1 campfire2]
         box_renderer_animated speed=1
     ]
     children=[

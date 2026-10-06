@@ -13,6 +13,7 @@
 #include "../../entity.h"
 #include "../../scene.h"
 #include "../../../logging/logger.h"
+#include "../../../random/random.h"
 #include "../../../rendering/renderer.h"
 #include "../../../rendering/renderer_layers.h"
 #include "../../../rendering/texture.h"
@@ -56,7 +57,13 @@ static void box_renderer_on_create(struct component *base, struct fields *fields
     this->renderer_layer_name = fields_dup_string(fields, "layer", NULL);
 
     if (fields_has(fields, "texture")) {
-        this->texture_name = fields_dup_string(fields, "texture", NULL);
+        // texture=[a b c]: every instance takes one of the listed textures at random
+        const struct fields_list *textures = fields_get_list(fields, "texture");
+        const int count = fields_list_count(textures);
+        if (count > 0) {
+            const int index = count > 1 ? random_next_int(0, count) : 0;
+            this->texture_name = strdup(fields_key(fields_list_get(textures, index)));
+        }
         this->texture_frame = fields_get_int(fields, "frame", 0);
     }
     else {

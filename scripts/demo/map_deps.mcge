@@ -28,7 +28,7 @@ once name=map_deps body=[
 
     prefab name=Enemy
         components=[
-            box_renderer layer=prop1 texture=enemy1
+            box_renderer layer=prop1 texture=[enemy1 enemy2]
             box_renderer_animated speed=1
             rigid_body mass=50 friction=10 rolling=0.2
             behaviour_agent graph=enemy
@@ -40,35 +40,15 @@ once name=map_deps body=[
             ]
         ]
 
-    prefab name=Tree1 size=[3 3] components=[
-        box_renderer layer=prop1 texture=tree1
-        box_renderer_animated speed=1
-    ]
-
-    prefab name=Tree2 size=[3 3] components=[
-        box_renderer layer=prop1 texture=tree2
-        box_renderer_animated speed=1
-    ]
-
-    prefab name=Tree3 size=[3 3] components=[
-        box_renderer layer=prop1 texture=tree3
-        box_renderer_animated speed=1
-    ]
-
-    prefab name=Tree4 size=[3 3] components=[
-        box_renderer layer=prop1 texture=tree4
-        box_renderer_animated speed=1
-    ]
-
-    prefab name=Tree5 size=[3 3] components=[
-        box_renderer layer=prop1 texture=tree5
+    prefab name=Tree size=[3 3] components=[
+        box_renderer layer=prop1 texture=[tree1 tree2 tree3 tree4 tree5]
         box_renderer_animated speed=1
     ]
 
     prefab name=FearBall components=[
-        box_renderer layer=effect1 texture=soul1
+        box_renderer layer=effect1 texture=[soul1 soul2 soul3]
         box_renderer_animated speed=2
-        fear_ball speed=5 range=12.5 fear=1
+        fear_ball speed=10 range=10 fear=1
     ]
     children = [
         entity name=Hitbox position=[0 0] size=[0.5 0.5] components=[
