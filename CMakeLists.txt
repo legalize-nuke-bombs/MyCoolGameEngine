@@ -240,10 +240,10 @@ add_executable(MyCoolGameEngine demo/src/main.c
         demo/src/scenes/scene_switcher.c
         demo/src/scenes/game_closer.h
         demo/src/scenes/game_closer.c
-        demo/src/enviornment/clock.h
-        demo/src/enviornment/clock.c
-        demo/src/enviornment/sky.h
-        demo/src/enviornment/sky.c
+        demo/src/environment/clock.h
+        demo/src/environment/clock.c
+        demo/src/environment/sky.h
+        demo/src/environment/sky.c
         demo/src/characters/player.h
         demo/src/characters/player.c
         demo/src/characters/bt/blackboard.h
