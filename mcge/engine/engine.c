@@ -39,7 +39,7 @@ void engine_register_msystem(const struct msystem *msystem) {
         logger_error("Engine failed to register msystem `%s`: there are %d msystems already", msystem->name, engine.msystems_count);
         return;
     }
-    logger_info("Msystem `%s` is creating...", msystem->name);
+    logger_info("MSystem `%s` is creating...", msystem->name);
     if (msystem->on_create) {
         msystem->on_create();
     }
@@ -54,7 +54,7 @@ static void engine_enable_all(const struct engine_arguments args) {
         if (engine.enabled[i]) {
             continue;
         }
-        logger_debug("Msystem `%s` is enabling...", engine.msystems[i]->name);
+        logger_debug("MSystem `%s` is enabling...", engine.msystems[i]->name);
         engine.enabled[i] = true;
         if (engine.msystems[i]->on_enable) {
             engine.msystems[i]->on_enable(args);
@@ -67,7 +67,7 @@ static void engine_disable_all(void) {
         if (!engine.enabled[i]) {
             continue;
         }
-        logger_debug("Msystem `%s` is disabling...", engine.msystems[i]->name);
+        logger_debug("MSystem `%s` is disabling...", engine.msystems[i]->name);
         engine.enabled[i] = false;
         if (engine.msystems[i]->on_disable) {
             engine.msystems[i]->on_disable();
@@ -96,7 +96,7 @@ void engine_destroy(void) {
     logger_info("Engine is destroying...");
     engine_disable_all();
     for (int i = engine.msystems_count - 1; i >= 0; i--) {
-        logger_info("Msystem `%s` is destroying...", engine.msystems[i]->name);
+        logger_info("MSystem `%s` is destroying...", engine.msystems[i]->name);
         if (engine.msystems[i]->on_destroy) {
             engine.msystems[i]->on_destroy();
         }

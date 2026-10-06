@@ -25,7 +25,9 @@ static void parse_arguments(const int argc, char* argv[], const char **out_data_
 int main(const int argc, char *argv[]) {
     int logger_level;
     const char *data_root;
-    struct engine_arguments engine_arguments;
+    struct engine_arguments engine_arguments = {
+        .program_name = "Demo game"
+    };
 
     parse_arguments(argc, argv, &data_root, &engine_arguments, &logger_level);
 

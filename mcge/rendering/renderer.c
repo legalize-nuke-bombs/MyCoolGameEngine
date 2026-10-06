@@ -52,6 +52,7 @@ static void renderer_update(void *listener, void *context) {
 
 static void renderer_on_enable(struct engine_arguments args) {
     renderer_pipeline_enable(renderer.pipeline);
+    if (args.program_name) SDL_SetWindowTitle(renderer.window, args.program_name);
     renderer.on_rendering = engine_events_on_rendering();
     action_subscribe(renderer.on_rendering, NULL, renderer_update, &renderer.on_rendering_subscription_token);
 }
