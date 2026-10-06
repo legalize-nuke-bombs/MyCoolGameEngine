@@ -35,6 +35,12 @@ holder holder_copy(const holder *holder) {
     this._block->refs++;
     return this;
 }
+ref holder_ref(const holder *holder) {
+    ref ref;
+    ref._block = holder->_block;
+    ref._block->refs++;
+    return ref;
+}
 
 void* holder_ptr(const holder *this) {
     return this->_block->ptr;

@@ -6,6 +6,7 @@
 #define MYCOOLGAMEENGINE_HOLDER_H
 
 #include "control_block.h"
+#include "ref.h"
 
 struct holder {
     struct control_block* _block;
@@ -17,6 +18,7 @@ holder holder_create(void *ptr, void (*destructor)(void *ptr));
 void holder_destroy(holder *this);
 
 holder holder_copy(const holder *holder);
+ref holder_ref(const holder *holder);
 
 void* holder_ptr(const holder *this);
 
