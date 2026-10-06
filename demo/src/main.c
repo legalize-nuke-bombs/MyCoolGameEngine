@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include "engine/engine.h"
 #include "engine/engine_arguments.h"
-#include "src/demo.h"
+#include "demo.h"
 #include "logging/logger.h"
 
 
