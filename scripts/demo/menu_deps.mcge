@@ -16,10 +16,5 @@ once name=menu_deps body=[
     texture name=enemy1 tile=[192 192] count=16 path=textures/demo/enemy1.png
     texture name=enemy2 tile=[192 192] count=16 path=textures/demo/enemy2.png
 
-    texture name=gcirc1 tile=[512 512] path=textures/core/gcirc1.png
-    texture name=gcirc2 tile=[512 512] path=textures/core/gcirc2.png
-    texture name=gcirc3 tile=[512 512] path=textures/core/gcirc3.png
-    texture name=gcirc4 tile=[512 512] path=textures/core/gcirc4.png
-    texture name=gcirc5 tile=[512 512] path=textures/core/gcirc5.png
-    texture name=gcirc6 tile=[512 512] path=textures/core/gcirc6.png
+    texture name=light1 tile=[512 512] path=textures/core/light1.png
 ]

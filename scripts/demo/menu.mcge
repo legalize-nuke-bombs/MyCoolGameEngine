@@ -28,8 +28,8 @@ entity name=Campfire position=[2.5 -1.5] size=[1.5 1.5]
         box_renderer_animated speed=2.5
     ]
     children=[
-        entity name=Light size=[5 5] components=[
-            box_light texture=gcirc1
+        entity name=Light size=[6.5 6.5] components=[
+            box_light texture=light1
             pulsator lower=0.99 upper=1.01 speed=10
         ]
     ]
