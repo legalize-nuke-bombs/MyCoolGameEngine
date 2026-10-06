@@ -10,7 +10,6 @@
 
 struct entity* entity_parse(struct parser *parser, char *name) {
     struct entity *entity = entity_create(name, NULL);
-    entity_set_in_scene(entity, true);
 
     struct rect rect;
     parser_next_double(parser, &rect.position.x);
