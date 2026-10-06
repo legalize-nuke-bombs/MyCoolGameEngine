@@ -5,7 +5,7 @@
 #ifndef MYCOOLGAMEENGINE_RIGID_SURFACE_H
 #define MYCOOLGAMEENGINE_RIGID_SURFACE_H
 
-struct parser;
+struct component_vtable;
 struct entity;
 struct chunks;
 
@@ -13,7 +13,7 @@ struct chunks;
 
 const char* rigid_surface_component_key(void);
 
-struct component* rigid_surface_create(struct parser *parser, struct entity *parent);
+extern const struct component_vtable rigid_surface_vtable;
 
 double rigid_surface_get_friction(const struct chunks *chunks, struct rect rect);
 

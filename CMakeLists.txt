@@ -107,29 +107,12 @@ add_executable(MyCoolGameEngine main.c
         src/scene/components/rendering/box_renderer.h
         src/scene/components/rendering/box_renderer.c
         src/utils/color.h
-        src/utils/parser.h
-        src/utils/parser.c
         src/interpreter/interpreter.h
         src/interpreter/interpreter.c
-        src/interpreter/interpreter_command.h
-        src/interpreter/core/interpreter_print.h
-        src/interpreter/core/interpreter_print.c
-        src/interpreter/interpreter_command_register.h
-        src/interpreter/interpreter_command_register.c
         src/engine/engine.h
         src/engine/engine.c
-        src/interpreter/interpreter_command_internal.h
-        src/interpreter/interpreter_command.c
-        src/interpreter/interpreter_command_parent.h
-        src/interpreter/interpreter_command_parent.c
-        src/interpreter/window/interpreter_window.h
-        src/interpreter/window/interpreter_window.c
         src/logging/ansi.h
         src/rendering/renderer_layer.c
-        src/interpreter/scene/interpreter_scene.h
-        src/interpreter/scene/interpreter_scene.c
-        src/interpreter/scene/interpreter_scene_add.h
-        src/interpreter/scene/interpreter_scene_add.c
         src/devices/keyboard.h
         src/devices/keyboard.c
         src/profiler/profiler.h
@@ -160,8 +143,6 @@ add_executable(MyCoolGameEngine main.c
         src/scene/components/rendering/box_light.c
         src/scene/components/rendering/renderer_settings.h
         src/scene/components/rendering/renderer_settings.c
-        src/interpreter/core/interpreter_ignore.h
-        src/interpreter/core/interpreter_ignore.c
         src/rendering/primitives/custom/light_map.h
         src/rendering/primitives/custom/light_map.c
         src/utils/rect.c
@@ -172,8 +153,6 @@ add_executable(MyCoolGameEngine main.c
         src/scene/components/rendering/box_renderer_animated.c
         src/scene/prefabs/prefab.h
         src/scene/prefabs/prefab.c
-        src/scene/entity_parser.h
-        src/scene/entity_parser.c
         src/demo/world/forest.h
         src/demo/world/forest.c
         src/random/random.h
@@ -187,10 +166,6 @@ add_executable(MyCoolGameEngine main.c
         src/scene/chunks/chunk.c
         src/demo/scenes/scene_switcher.h
         src/demo/scenes/scene_switcher.c
-        src/interpreter/core/interpreter_eval.h
-        src/interpreter/core/interpreter_eval.c
-        src/interpreter/core/interpreter_once.h
-        src/interpreter/core/interpreter_once.c
         src/demo/scenes/game_closer.h
         src/demo/scenes/game_closer.c
         src/demo/enviornment/clock.h
@@ -212,10 +187,6 @@ add_executable(MyCoolGameEngine main.c
         src/assets/assets.c
         src/assets/asset_storage.h
         src/assets/asset_storage.c
-        src/interpreter/catalogs/interpreter_catalog.h
-        src/interpreter/catalogs/interpreter_catalog.c
-        src/interpreter/catalogs/interpreter_catalog_add.h
-        src/interpreter/catalogs/interpreter_catalog_add.c
         src/scene/components/core/simulator.h
         src/scene/components/core/simulator.c
         src/scene/components/physics/collider.h
@@ -275,6 +246,8 @@ add_executable(MyCoolGameEngine main.c
         src/modules/bt/bt_module.c
         src/demo/demo.h
         src/demo/demo.c
+        src/scene/entity_factory.h
+        src/scene/entity_factory.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)

@@ -18,14 +18,6 @@ void component_base_create(struct component *this, const struct component_vtable
 
     this->parent = parent;
 }
-struct component* component_clone(const struct component *component) {
-    struct component this = {0};
-    this.vtable = component->vtable;
-    logger_debug("Component %s is cloning...", component_get_key(component));
-    this.awake = false;
-    this.alive = true;
-    return component->vtable->on_clone(this, component);
-}
 
 void component_awake(struct component *this) {
     if (!this->alive) {

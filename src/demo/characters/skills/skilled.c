@@ -11,11 +11,12 @@
 #include "skill.h"
 #include "skill_factory.h"
 #include "../../../devices/keyboard.h"
+#include "../../../logging/logger.h"
 #include "../../../scene/entity.h"
 #include "../../../scene/scene.h"
 #include "../../../scene/components/component_internal.h"
 #include "../../../utils/action.h"
-#include "../../../utils/parser.h"
+#include "../../../utils/fields.h"
 
 #define SKILLS_NUM 1
 
@@ -27,15 +28,16 @@ struct skilled {
     unsigned int hotkey_tokens[SKILLS_NUM];
 };
 
-static struct component* skilled_clone(struct component base, const struct component *component);
+static void skilled_on_create(struct component *base, struct fields *fields);
 static void skilled_destroy(struct component *base);
 static void skilled_awake(struct component *base);
 static void skilled_disable(struct component *base);
 static void skilled_update(struct component *base, const struct update_context *context);
 
-static const struct component_vtable skilled_vtable = {
+const struct component_vtable skilled_vtable = {
     .component_key = skilled_component_key,
-    .on_clone = skilled_clone,
+    .size = sizeof(struct skilled),
+    .on_create = skilled_on_create,
     .on_destroy = skilled_destroy,
     .on_awake = skilled_awake,
     .on_disable = skilled_disable,
@@ -46,21 +48,16 @@ const char* skilled_component_key(void) {
     return "skilled";
 }
 
-struct component* skilled_create(struct parser *parser, struct entity *parent) {
-    struct skilled *this = calloc(1, sizeof(struct skilled));
-    struct component *base = (struct component *) this;
-    component_base_create(base, &skilled_vtable, parent);
-    this->skills[0] = skill_factory_produce(parser_next(parser), parser, parent);
-    return base;
-}
+static void skilled_on_create(struct component *base, struct fields *fields) {
+    struct skilled *this = (struct skilled *) base;
 
-static struct component* skilled_clone(struct component base, const struct component *component) {
-    const struct skilled *skilled = (const struct skilled *) component;
-
-    struct skilled* this = calloc(1, sizeof(struct skilled));
-    this->base = base;
-    // TODO skill cloning
-    return (struct component*)this;
+    const struct fields_list *skills = fields_get_list(fields, "skills");
+    if (fields_list_count(skills) > SKILLS_NUM) {
+        logger_warn("Skilled expected at most %d skills, got %d", SKILLS_NUM, fields_list_count(skills));
+    }
+    for (int i = 0; i < fields_list_count(skills) && i < SKILLS_NUM; i++) {
+        this->skills[i] = skill_factory_produce(fields_list_get(skills, i), component_get_parent(base));
+    }
 }
 
 static void skilled_destroy(struct component *base) {

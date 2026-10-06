@@ -9,7 +9,7 @@
 #include "../../../rendering/renderer_pipeline.h"
 #include "../../chunks/chunks.h"
 #include "../../../utils/dictionary.h"
-#include "../../../utils/parser.h"
+#include "../../../utils/fields.h"
 
 
 struct camera {
@@ -21,14 +21,15 @@ struct camera {
     const struct chunks *chunks;
 };
 
-static struct component* camera_clone(struct component base, const struct component *component);
+static void camera_on_create(struct component *base, struct fields *fields);
 static void camera_awake(struct component *base);
 static void camera_update(struct component *base, const struct update_context *context);
 static void camera_on_disable(struct component *base);
 
-static const struct component_vtable camera_vtable = {
+const struct component_vtable camera_vtable = {
     .component_key = camera_component_key,
-    .on_clone = camera_clone,
+    .size = sizeof(struct camera),
+    .on_create = camera_on_create,
     .on_awake = camera_awake,
     .on_update = camera_update,
     .on_disable = camera_on_disable
@@ -38,23 +39,9 @@ const char* camera_component_key(void) {
     return "camera";
 }
 
-struct component* camera_create(struct parser *parser, struct entity *parent) {
-    struct camera *this = calloc(1, sizeof(struct camera));
-    struct component *base = (struct component *) this;
-    component_base_create(base, &camera_vtable, parent);
-
-    parser_next_double(parser, &this->visible_height);
-
-    return base;
-}
-
-static struct component* camera_clone(struct component base, const struct component *component) {
-    struct camera *camera = (struct camera *) component;
-
-    struct camera* this = calloc(1, sizeof(struct camera));
-    this->base = base;
-    this->visible_height = camera->visible_height;
-    return (struct component*)this;
+static void camera_on_create(struct component *base, struct fields *fields) {
+    struct camera *this = (struct camera *) base;
+    this->visible_height = fields_get_double(fields, "height", 0);
 }
 
 static void camera_awake(struct component *base) {

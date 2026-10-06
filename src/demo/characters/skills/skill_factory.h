@@ -5,10 +5,10 @@
 #ifndef MYCOOLGAMEENGINE_SKILL_FACTORY_H
 #define MYCOOLGAMEENGINE_SKILL_FACTORY_H
 
-struct parser;
+struct fields;
 struct entity;
 struct skill;
 
-struct skill* skill_factory_produce(const char* key, struct parser *parser, struct entity *self);
+struct skill* skill_factory_produce(struct fields *fields, struct entity *self);
 
 #endif //MYCOOLGAMEENGINE_SKILL_FACTORY_H

@@ -5,11 +5,10 @@
 #ifndef MYCOOLGAMEENGINE_IS_SCARED_H
 #define MYCOOLGAMEENGINE_IS_SCARED_H
 
-struct parser;
+struct bt_node_vtable;
 
 #define BT_NODE_IS_SCARED "is_scared"
 
-struct bt_node* is_scared_create();
-struct bt_node* is_scared_parse(struct parser *parser);
+extern const struct bt_node_vtable is_scared_vtable;
 
 #endif //MYCOOLGAMEENGINE_IS_SCARED_H

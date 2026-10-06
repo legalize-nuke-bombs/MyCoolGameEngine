@@ -5,11 +5,10 @@
 #ifndef MYCOOLGAMEENGINE_FEAR_BALLS_H
 #define MYCOOLGAMEENGINE_FEAR_BALLS_H
 
-struct parser;
-struct entity;
+struct skill_vtable;
 
 #define SKILL_FEAR_BALLS_KEY "fear_balls"
 
-struct skill* fear_balls_parse(struct parser *parser, struct entity *self);
+extern const struct skill_vtable fear_balls_vtable;
 
 #endif //MYCOOLGAMEENGINE_FEAR_BALLS_H

@@ -5,13 +5,12 @@
 #include "bt_sequence.h"
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "../bt_node.h"
 #include "../bt_node_internal.h"
 #include "../../../utils/list.h"
 #include "../bt_node_factory.h"
-#include "../../../utils/parser.h"
+#include "../../../utils/fields.h"
 
 
 struct bt_sequence {
@@ -20,38 +19,31 @@ struct bt_sequence {
 };
 
 
+static void bt_sequence_on_create(struct bt_node *base, struct fields *fields);
 static enum bt_status bt_sequence_run(struct bt_node *base, void* bb);
 static void bt_sequence_on_destroy(struct bt_node *base);
 
 
-struct bt_node_vtable bt_sequence_vtable = {
+const struct bt_node_vtable bt_sequence_vtable = {
     .key = BT_NODE_SEQUENCE,
+    .size = sizeof(struct bt_sequence),
+    .on_create = bt_sequence_on_create,
     .run = bt_sequence_run,
     .on_destroy = bt_sequence_on_destroy
 };
 
 
-struct bt_sequence* bt_sequence_create() {
-    struct bt_sequence* this = calloc(1, sizeof(struct bt_sequence));
-    struct bt_node* base = (struct bt_node*)this;
-    bt_node_base_create(base, &bt_sequence_vtable);
+static void bt_sequence_on_create(struct bt_node *base, struct fields *fields) {
+    struct bt_sequence* this = (struct bt_sequence*)base;
     this->nodes = list_create(1);
-    return this;
-}
-struct bt_node* bt_sequence_parse(struct parser *parser) {
-    struct bt_sequence* this = bt_sequence_create();
-    for (; ;) {
-        const char* word = parser_next(parser);
-        if (word == NULL || strcmp(word, "end") == 0) {
-            break;
+
+    const struct fields_list *nodes = fields_get_list(fields, "nodes");
+    for (int i = 0; i < fields_list_count(nodes); i++) {
+        struct bt_node* node = bt_node_factory_produce(fields_list_get(nodes, i));
+        if (node != NULL) {
+            list_add(&this->nodes, node);
         }
-        struct bt_node* node = bt_node_factory_produce(word, parser);
-        if (node == NULL) {
-            break;
-        }
-        bt_sequence_capture_node(this, node);
     }
-    return (struct bt_node*)this;
 }
 
 static void bt_sequence_on_destroy(struct bt_node *base) {
@@ -61,10 +53,6 @@ static void bt_sequence_on_destroy(struct bt_node *base) {
         bt_node_destroy(node);
     }
     list_destroy(&this->nodes);
-}
-
-void bt_sequence_capture_node(struct bt_sequence *this, struct bt_node *node) {
-    list_add(&this->nodes, node);
 }
 
 static enum bt_status bt_sequence_run(struct bt_node *base, void* bb) {

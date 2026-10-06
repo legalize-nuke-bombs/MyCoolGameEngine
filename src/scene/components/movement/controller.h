@@ -8,12 +8,12 @@
 #include "../../../utils/vector2.h"
 
 struct entity;
-struct parser;
+struct component_vtable;
 struct controller;
 
 const char* controller_component_key(void);
 
-struct component* controller_create(struct parser *parser, struct entity *parent);
+extern const struct component_vtable controller_vtable;
 
 void controller_move(const struct controller* this, struct vector2 direction, double dt);
 

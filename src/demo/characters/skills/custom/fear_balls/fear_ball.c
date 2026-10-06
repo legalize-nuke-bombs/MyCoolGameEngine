@@ -12,7 +12,7 @@
 #include "../../../../../scene/components/component_internal.h"
 #include "../../../../../scene/components/physics/collider.h"
 #include "../../../../../utils/action.h"
-#include "../../../../../utils/parser.h"
+#include "../../../../../utils/fields.h"
 #include "../../../../../utils/vector2_math.h"
 
 struct fear_ball {
@@ -29,39 +29,26 @@ struct fear_ball {
 const char* fear_ball_component_key(void) {
     return "fear_ball";
 }
-static struct component* fear_ball_clone(struct component base, const struct component* component);
+static void fear_ball_on_create(struct component *base, struct fields *fields);
 static void fear_ball_awake(struct component *base);
 static void fear_ball_on_simulation_chunk_update(struct component *base, const struct update_context *context);
 
-static const struct component_vtable fear_ball_vtable = {
+const struct component_vtable fear_ball_vtable = {
     .component_key = fear_ball_component_key,
-    .on_clone = fear_ball_clone,
+    .size = sizeof(struct fear_ball),
+    .on_create = fear_ball_on_create,
     .on_awake = fear_ball_awake,
     .on_update = fear_ball_on_simulation_chunk_update
 };
 
-struct component* fear_ball_create(struct parser *parser, struct entity *parent) {
-    struct fear_ball *this = calloc(1, sizeof(struct fear_ball));
-    struct component* base = (struct component*)this;
-    component_base_create(base, &fear_ball_vtable, parent);
-    parser_next_double(parser, &this->v);
-    parser_next_double(parser, &this->a);
-    parser_next_double(parser, &this->lifetime);
-    parser_next_double(parser, &this->fear_length);
-    return base;
+static void fear_ball_on_create(struct component *base, struct fields *fields) {
+    struct fear_ball *this = (struct fear_ball *) base;
+    this->v = fields_get_double(fields, "speed", 0);
+    this->a = fields_get_double(fields, "acceleration", 0);
+    this->lifetime = fields_get_double(fields, "lifetime", 0);
+    this->fear_length = fields_get_double(fields, "fear", 0);
 }
 
-
-static struct component* fear_ball_clone(struct component base, const struct component* component) {
-    const struct fear_ball* fear_ball = (struct fear_ball*)component;
-    struct fear_ball *this = calloc(1, sizeof(struct fear_ball));
-    this->base = base;
-    this->v = fear_ball->v;
-    this->a = fear_ball->a;
-    this->lifetime = fear_ball->lifetime;
-    this->fear_length = fear_ball->fear_length;
-    return (struct component*)this;
-}
 
 static void handle_on_trigger_enter(void *listener, void *context);
 

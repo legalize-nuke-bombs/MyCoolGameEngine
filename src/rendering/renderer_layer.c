@@ -9,7 +9,8 @@
 
 #include "../assets/asset_storage.h"
 #include "../assets/asset_type.h"
-#include "../utils/parser.h"
+#include "../logging/logger.h"
+#include "../utils/fields.h"
 
 
 struct renderer_layer {
@@ -27,14 +28,13 @@ static struct asset_storage renderer_layers = {
     ._destroy_item = renderer_layer_destroy_item
 };
 
-static void renderer_layer_asset_on_add(struct parser *parser) {
-    char *name = asset_storage_parse_name(&renderer_layers, parser);
-    if (name == NULL) {
-        return;
+static void renderer_layer_asset_on_add(struct fields *fields) {
+    const char *name = fields_get_string(fields, "name", NULL);
+    const int priority = fields_get_int(fields, "priority", 0);
+    if (priority < 0 || priority > UINT8_MAX) {
+        logger_warn("Renderer layer %s expected priority from 0 to %d, got %d", name ? name : "<null>", UINT8_MAX, priority);
     }
-    uint8_t priority;
-    parser_next_uint8(parser, &priority);
-    asset_storage_add(&renderer_layers, name, renderer_layer_create(strdup(name), priority));
+    asset_storage_add(&renderer_layers, name, renderer_layer_create(strdup(name ? name : ""), (uint8_t)priority));
 }
 static void renderer_layer_asset_on_clear(void) {
     asset_storage_clear(&renderer_layers);

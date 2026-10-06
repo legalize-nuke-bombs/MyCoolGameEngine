@@ -1,37 +1,40 @@
-eval scripts/demo/menu_deps.mcge
+eval path=scripts/demo/menu_deps.mcge
 
-scene add entity MenuState 0 0 1 1
-    game_closer Escape
-    scene_switcher Return scripts/demo/map.mcge
-    renderer_settings 1 40 40 70 255
-end
+entity name=MenuState components=[
+    game_closer key=Escape
+    scene_switcher key=Return script=scripts/demo/map.mcge
+    renderer_settings darkness=[40 40 70 255]
+]
 
-scene add entity Terrain 0 0 20 20
-    box_renderer bg1 color 30 30 40 255
-end
+entity name=Terrain size=[20 20] components=[
+    box_renderer layer=bg1 color=[30 30 40 255]
+]
 
-scene add entity PlayButton -2.25 2 1.5 0.3
-    box_renderer ui1 color 255 255 255 255
-end
+entity name=PlayButton position=[-2.25 2] size=[1.5 0.3] components=[
+    box_renderer layer=ui1 color=[255 255 255 255]
+]
 
-scene add entity ExitButton -2.25 1.6 1.5 0.3
-    box_renderer ui1 color 255 255 255 255
-end
+entity name=ExitButton position=[-2.25 1.6] size=[1.5 0.3] components=[
+    box_renderer layer=ui1 color=[255 255 255 255]
+]
 
-scene add entity Camera 0 0 1 1
-    camera 5
-end
+entity name=Camera components=[
+    camera height=5
+]
 
-scene add entity Campfire 2.5 -1.5 1.5 1.5
-    box_renderer prop1 texture campfire 0
-    box_renderer_animated 2.5
-    entity Light 0 0 5 5
-        box_light texture gcirc1 0
-        pulsator 0.99 1.01 10
-    end
-end
+entity name=Campfire position=[2.5 -1.5] size=[1.5 1.5]
+    components=[
+        box_renderer layer=prop1 texture=campfire
+        box_renderer_animated speed=2.5
+    ]
+    children=[
+        entity name=Light size=[5 5] components=[
+            box_light texture=gcirc1
+            pulsator lower=0.99 upper=1.01 speed=10
+        ]
+    ]
 
-scene add entity Character 1.25 -1 1.5 3
-    box_renderer prop1 texture character 0
-    box_renderer_animated 1
-end
+entity name=Character position=[1.25 -1] size=[1.5 3] components=[
+    box_renderer layer=prop1 texture=character
+    box_renderer_animated speed=1
+]

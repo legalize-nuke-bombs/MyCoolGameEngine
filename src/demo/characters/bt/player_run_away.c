@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 #include "../../../modules/bt/bt_node_internal.h"
-#include "../../../utils/parser.h"
+#include "../../../utils/fields.h"
 #include "../../../modules/bt/bt_node.h"
 #include "blackboard.h"
 #include "../../../scene/entity.h"
@@ -20,25 +20,19 @@ struct player_run_away {
     double speed;
 };
 
+static void player_run_away_on_create(struct bt_node *base, struct fields *fields);
 static enum bt_status player_run_away_run(struct bt_node *base, void *bb);
 
-static const struct bt_node_vtable player_run_away_vtable = {
+const struct bt_node_vtable player_run_away_vtable = {
     .key = BT_NODE_PLAYER_RUN_AWAY,
+    .size = sizeof(struct player_run_away),
+    .on_create = player_run_away_on_create,
     .run = player_run_away_run
 };
 
-struct bt_node* player_run_away_create(const double speed) {
-    struct player_run_away* this = calloc(1, sizeof(struct player_run_away));
-    struct bt_node* base = (struct bt_node*)this;
-    bt_node_base_create(base, &player_run_away_vtable);
-    this->speed = speed;
-    return base;
-}
-
-struct bt_node* player_run_away_parse(struct parser *parser) {
-    double speed;
-    parser_next_double(parser, &speed);
-    return player_run_away_create(speed);
+static void player_run_away_on_create(struct bt_node *base, struct fields *fields) {
+    struct player_run_away* this = (struct player_run_away*)base;
+    this->speed = fields_get_double(fields, "speed", 0);
 }
 
 static enum bt_status player_run_away_run(struct bt_node *base, void *bb) {

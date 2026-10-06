@@ -7,13 +7,13 @@
 #include <stdbool.h>
 
 struct collider;
-struct parser;
+struct component_vtable;
 struct entity;
 struct rect;
 
 const char* collider_component_key(void);
 
-struct component* collider_create(struct parser *parser, struct entity *parent);
+extern const struct component_vtable collider_vtable;
 
 struct entity* collider_try_get_obstacle(const struct collider *this, struct rect rect);
 

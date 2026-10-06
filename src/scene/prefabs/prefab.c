@@ -8,29 +8,29 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../entity_parser.h"
-#include "../scene.h"
+#include "../entity_factory.h"
 #include "../../assets/asset_storage.h"
 #include "../../assets/asset_type.h"
 #include "../../logging/logger.h"
+#include "../../utils/fields.h"
 
 struct prefab {
-    char* name;
-    struct entity* entity;
+    struct fields* fields;
     int usages;
 };
 
-struct prefab* prefab_create(char* name, struct entity* entity) {
-    logger_debug("Prefab %s is creating...", name);
+// The entity is built once right away: this checks the fields where the prefab is declared, not on its first instance
+struct prefab* prefab_create(struct fields *fields) {
+    entity_destroy(entity_factory_produce(fields));
+
     struct prefab* this = calloc(1, sizeof(struct prefab));
-    this->name = name;
-    this->entity = entity;
+    this->fields = fields_clone(fields);
+    logger_debug("Prefab %s is creating...", prefab_get_name(this));
     return this;
 }
 void prefab_destroy(struct prefab* this) {
-    logger_debug("Prefab %s is destroying (this prefab was instanced %d times!)...", this->name, this->usages);
-    free(this->name);
-    entity_destroy(this->entity);
+    logger_debug("Prefab %s is destroying (this prefab was instanced %d times!)...", prefab_get_name(this), this->usages);
+    fields_destroy(this->fields);
     free(this);
 }
 
@@ -43,13 +43,8 @@ static struct asset_storage prefabs = {
     ._destroy_item = prefab_destroy_item
 };
 
-static void prefab_asset_on_add(struct parser *parser) {
-    char *name = asset_storage_parse_name(&prefabs, parser);
-    if (name == NULL) {
-        return;
-    }
-    struct entity *entity = entity_parse(parser, strdup(name));
-    asset_storage_add(&prefabs, name, prefab_create(strdup(name), entity));
+static void prefab_asset_on_add(struct fields *fields) {
+    asset_storage_add(&prefabs, fields_get_string(fields, "name", NULL), prefab_create(fields));
 }
 static void prefab_asset_on_clear(void) {
     asset_storage_clear(&prefabs);
@@ -70,14 +65,33 @@ struct prefab* prefab_asset_get(const char *name) {
 }
 
 struct entity* prefab_instantiate(struct prefab* this) {
-    logger_debug("Prefab %s is instancing entity %s...", this->name, entity_get_name(this->entity));
+    logger_debug("Prefab %s is instancing...", prefab_get_name(this));
     this->usages++;
-    return entity_clone(this->entity);
+    return entity_factory_produce(this->fields);
 }
 
 const char* prefab_get_name(const struct prefab* this) {
-    return this->name;
+    return fields_get_string(this->fields, "name", "<unnamed>");
 }
+
+static bool prefab_fields_contain_component(struct fields *fields, const char* key, const enum entity_query query) {
+    const struct fields_list *components = fields_get_list(fields, "components");
+    for (int i = 0; i < fields_list_count(components); i++) {
+        if (strcmp(fields_key(fields_list_get(components, i)), key) == 0) {
+            return true;
+        }
+    }
+    if (query == entity_query_recursive) {
+        const struct fields_list *children = fields_get_list(fields, "children");
+        for (int i = 0; i < fields_list_count(children); i++) {
+            if (prefab_fields_contain_component(fields_list_get(children, i), key, query)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 bool prefab_contains_component(const struct prefab* this, const char* key, const enum entity_query query) {
-    return entity_try_get_component(this->entity, key, query);
+    return prefab_fields_contain_component(this->fields, key, query);
 }

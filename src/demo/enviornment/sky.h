@@ -5,11 +5,11 @@
 #ifndef MYCOOLGAMEENGINE_SKY_H
 #define MYCOOLGAMEENGINE_SKY_H
 
-struct parser;
+struct component_vtable;
 struct entity;
 
 const char* sky_component_key(void);
 
-struct component* sky_create(struct parser* parser, struct entity *parent);
+extern const struct component_vtable sky_vtable;
 
 #endif //MYCOOLGAMEENGINE_SKY_H

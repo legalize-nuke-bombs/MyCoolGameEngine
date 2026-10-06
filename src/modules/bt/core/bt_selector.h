@@ -5,15 +5,10 @@
 #ifndef MYCOOLGAMEENGINE_BT_SELECTOR_H
 #define MYCOOLGAMEENGINE_BT_SELECTOR_H
 
-struct bt_selector;
-struct bt_node;
-struct parser;
-
 #define BT_NODE_SELECTOR "selector"
 
-struct bt_selector* bt_selector_create();
-struct bt_node* bt_selector_parse(struct parser *parser);
+struct bt_node_vtable;
 
-void bt_selector_capture_node(struct bt_selector *this, struct bt_node *node);
+extern const struct bt_node_vtable bt_selector_vtable;
 
 #endif //MYCOOLGAMEENGINE_BT_SELECTOR_H

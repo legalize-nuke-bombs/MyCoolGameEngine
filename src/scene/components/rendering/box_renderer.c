@@ -15,7 +15,7 @@
 #include "../../../logging/logger.h"
 #include "../../../rendering/renderer.h"
 #include "../../../rendering/texture.h"
-#include "../../../utils/parser.h"
+#include "../../../utils/fields.h"
 
 struct box_renderer {
     struct component base;
@@ -30,14 +30,15 @@ struct box_renderer {
     struct renderer_primitive* square;
 };
 
-static struct component* box_renderer_clone(struct component base, const struct component *component);
+static void box_renderer_on_create(struct component *base, struct fields *fields);
 static void box_renderer_awake(struct component *base);
 static void box_renderer_visible_chunk_update(struct component *base, const struct update_context *context);
 static void box_renderer_on_destroy(struct component *base);
 
-static const struct component_vtable box_renderer_vtable = {
+const struct component_vtable box_renderer_vtable = {
     .component_key = box_renderer_component_key,
-    .on_clone = box_renderer_clone,
+    .size = sizeof(struct box_renderer),
+    .on_create = box_renderer_on_create,
     .on_awake = box_renderer_awake,
     .on_visible_chunk_update = box_renderer_visible_chunk_update,
     .on_destroy = box_renderer_on_destroy
@@ -47,53 +48,22 @@ const char* box_renderer_component_key(void) {
     return "box_renderer";
 }
 
-struct component* box_renderer_create(struct parser *parser, struct entity *parent) {
-    struct box_renderer *this = calloc(1, sizeof(struct box_renderer));
-    struct component *base = (struct component*) this;
-    component_base_create(base, &box_renderer_vtable, parent);
+static void box_renderer_on_create(struct component *base, struct fields *fields) {
+    struct box_renderer *this = (struct box_renderer*) base;
 
-    this->renderer_layer_name = parser_next_dup(parser);
+    this->renderer_layer_name = fields_dup_string(fields, "layer", NULL);
 
-    const char* type = parser_next(parser);
-    if (strcmp(type, "color") == 0) {
-        struct color color;
-        parser_next_uint8(parser, &color.r);
-        parser_next_uint8(parser, &color.g);
-        parser_next_uint8(parser, &color.b);
-        parser_next_uint8(parser, &color.a);
-        this->square = renderer_square_create_from_color(color);
-    }
-    else if (strcmp(type, "texture") == 0) {
-        this->texture_name = parser_next_dup(parser);
-        parser_next_int(parser, &this->texture_frame);
+    if (fields_has(fields, "texture")) {
+        this->texture_name = fields_dup_string(fields, "texture", NULL);
+        this->texture_frame = fields_get_int(fields, "frame", 0);
     }
     else {
-        logger_warn("Box renderer unexpected type token `%s`", type);
-        this->square = renderer_square_create_from_color(color_black);
+        if (!fields_has(fields, "color")) {
+            logger_warn("Box renderer expected field `texture` or `color`");
+        }
+        this->square = renderer_square_create_from_color(fields_get_color(fields, "color", color_black));
     }
-
-
-    return base;
 }
-static struct component* box_renderer_clone(struct component base, const struct component *component) {
-    const struct box_renderer *box_renderer = (struct box_renderer*)component;
-
-    struct box_renderer *this = calloc(1, sizeof(struct box_renderer));
-    this->base = base;
-    if (box_renderer->renderer_layer_name != NULL) {
-        this->renderer_layer_name = strdup(box_renderer->renderer_layer_name);
-    }
-    this->renderer_layer = box_renderer->renderer_layer;
-    if (box_renderer->texture_name != NULL) {
-        this->texture_name = strdup(box_renderer->texture_name);
-    }
-    this->texture_frame = box_renderer->texture_frame;
-    if (box_renderer->square != NULL) {
-        this->square = renderer_square_clone((struct renderer_square*)box_renderer->square);
-    }
-    return (struct component*)this;
-}
-
 static void box_renderer_on_destroy(struct component *base) {
     const struct box_renderer *this = (struct box_renderer *) base;
     if (this->square != NULL) {

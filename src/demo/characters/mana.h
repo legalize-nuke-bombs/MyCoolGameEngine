@@ -7,12 +7,12 @@
 #include <stdbool.h>
 
 struct entity;
-struct parser;
+struct component_vtable;
 struct mana;
 
 const char* mana_component_key(void);
 
-struct component* mana_create(struct parser *parser, struct entity *parent);
+extern const struct component_vtable mana_vtable;
 
 bool mana_try_take(struct mana *this, double amount);
 double mana_amount(const struct mana *this);

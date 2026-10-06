@@ -9,7 +9,7 @@
 #include "../../logging/logger.h"
 #include "../../random/random.h"
 #include "../../utils/list.h"
-#include "../../utils/parser.h"
+#include "../../utils/fields.h"
 #include "../../utils/vector2_math.h"
 #include "../../scene/prefabs/prefab.h"
 
@@ -21,13 +21,14 @@ struct forest {
     struct list prefabIds;
 };
 
-static struct component* forest_clone(struct component base, const struct component *component);
+static void forest_on_create(struct component *base, struct fields *fields);
 static void forest_awake(struct component *base);
 static void forest_on_destroy(struct component *base);
 
-static const struct component_vtable forest_vtable = {
+const struct component_vtable forest_vtable = {
     .component_key = forest_component_key,
-    .on_clone = forest_clone,
+    .size = sizeof(struct forest),
+    .on_create = forest_on_create,
     .on_awake = forest_awake,
     .on_update = NULL,
     .on_destroy = forest_on_destroy
@@ -37,36 +38,16 @@ const char* forest_component_key(void) {
     return "forest";
 }
 
-struct component* forest_create(struct parser *parser, struct entity *parent) {
-    struct forest *this = calloc(1, sizeof(struct forest));
-    struct component *base = (struct component *) this;
-    component_base_create(base, &forest_vtable, parent);
+static void forest_on_create(struct component *base, struct fields *fields) {
+    struct forest *this = (struct forest *) base;
 
-    parser_next_int(parser, &this->trees_number);
+    this->trees_number = fields_get_int(fields, "count", 0);
 
     this->prefabIds = list_create(1);
-    for (; ;) {
-        const char *word = parser_next(parser);
-        if (word == NULL || strcmp(word, "end") == 0) {
-            break;
-        }
-        list_add(&this->prefabIds, strdup(word));
+    const struct fields_list *prefabs = fields_get_list(fields, "prefabs");
+    for (int i = 0; i < fields_list_count(prefabs); i++) {
+        list_add(&this->prefabIds, strdup(fields_key(fields_list_get(prefabs, i))));
     }
-
-    return base;
-}
-
-static struct component* forest_clone(struct component base, const struct component *component) {
-    struct forest *forest = (struct forest *) component;
-
-    struct forest* this = calloc(1, sizeof(struct forest));
-    this->base = base;
-    this->trees_number = forest->trees_number;
-    this->prefabIds = list_create(list_count(&forest->prefabIds));
-    for (int i = 0; i < list_count(&forest->prefabIds); i++) {
-        list_add(&this->prefabIds, strdup(list_get(&forest->prefabIds, i)));
-    }
-    return (struct component*)this;
 }
 
 static void forest_awake(struct component *base) {

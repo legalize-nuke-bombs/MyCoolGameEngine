@@ -3,10 +3,10 @@
 
 struct pulsator;
 struct entity;
-struct parser;
+struct component_vtable;
 
 const char* pulsator_component_key(void);
 
-struct component* pulsator_create(struct parser *parser, struct entity *parent);
+extern const struct component_vtable pulsator_vtable;
 
 #endif //MYCOOLGAMEENGINE_PULSATOR_H

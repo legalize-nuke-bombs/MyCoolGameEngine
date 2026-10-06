@@ -10,7 +10,8 @@
 #include "bt_node.h"
 #include "../../assets/asset_storage.h"
 #include "../../assets/asset_type.h"
-#include "../../utils/parser.h"
+#include "../../logging/logger.h"
+#include "../../utils/fields.h"
 
 
 struct bt_graph {
@@ -27,13 +28,17 @@ static struct asset_storage bt_graphs = {
     ._destroy_item = bt_graph_destroy_item
 };
 
-static void bt_graph_asset_on_add(struct parser *parser) {
-    char *name = asset_storage_parse_name(&bt_graphs, parser);
-    if (name == NULL) {
-        return;
+static void bt_graph_asset_on_add(struct fields *fields) {
+    const char *name = fields_get_string(fields, "name", NULL);
+
+    const struct fields_list *root = fields_get_list(fields, "root");
+    struct bt_node* node = NULL;
+    if (fields_list_count(root) == 1) {
+        node = bt_node_factory_produce(fields_list_get(root, 0));
     }
-    const char* type = parser_next(parser);
-    struct bt_node* node = bt_node_factory_produce(type, parser);
+    else {
+        logger_warn("Bt graph %s expected one node in field `root`, got %d", name ? name : "<null>", fields_list_count(root));
+    }
     asset_storage_add(&bt_graphs, name, bt_graph_create(node));
 }
 static void bt_graph_asset_on_clear(void) {

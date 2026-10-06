@@ -7,10 +7,10 @@
 
 struct box_light;
 struct entity;
-struct parser;
+struct component_vtable;
 
 const char* box_light_component_key(void);
 
-struct component* box_light_create(struct parser *parser, struct entity *parent);
+extern const struct component_vtable box_light_vtable;
 
 #endif //MYCOOLGAMEENGINE_BOX_LIGHT_H

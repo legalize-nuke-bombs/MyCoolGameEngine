@@ -7,7 +7,7 @@
 #include <stdbool.h>
 
 struct entity;
-struct parser;
+struct component_vtable;
 struct effects;
 
 enum effect {
@@ -17,7 +17,7 @@ enum effect {
 
 const char* effects_component_key(void);
 
-struct component* effects_create(struct parser *parser, struct entity *parent);
+extern const struct component_vtable effects_vtable;
 
 void effects_set_effect(struct effects *this, enum effect effect, double length);
 double effects_get_effect(const struct effects *this, enum effect effect);

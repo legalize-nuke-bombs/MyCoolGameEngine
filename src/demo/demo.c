@@ -20,21 +20,21 @@
 #include "world/forest.h"
 
 void demo_install(void) {
-    component_factory_register(pulsator_component_key(), pulsator_create);
-    component_factory_register(forest_component_key(), forest_create);
-    component_factory_register(scene_switcher_component_key(), scene_switcher_create);
-    component_factory_register(game_closer_component_key(), game_closer_create);
-    component_factory_register(clock_component_key(), clock_create);
-    component_factory_register(sky_component_key(), sky_create);
-    component_factory_register(player_component_key(), player_create);
-    component_factory_register(behaviour_agent_component_key(), behaviour_agent_create);
-    component_factory_register(mana_component_key(), mana_create);
-    component_factory_register(skilled_component_key(), skilled_create);
-    component_factory_register(fear_ball_component_key(), fear_ball_create);
-    component_factory_register(effects_component_key(), effects_create);
+    component_factory_register(&pulsator_vtable);
+    component_factory_register(&forest_vtable);
+    component_factory_register(&scene_switcher_vtable);
+    component_factory_register(&game_closer_vtable);
+    component_factory_register(&clock_vtable);
+    component_factory_register(&sky_vtable);
+    component_factory_register(&player_vtable);
+    component_factory_register(&behaviour_agent_vtable);
+    component_factory_register(&mana_vtable);
+    component_factory_register(&skilled_vtable);
+    component_factory_register(&fear_ball_vtable);
+    component_factory_register(&effects_vtable);
 
-    bt_node_factory_register(BT_NODE_PLAYER_IS_NEAR, player_is_near_parse);
-    bt_node_factory_register(BT_NODE_PLAYER_CHASE, player_chase_parse);
-    bt_node_factory_register(BT_NODE_PLAYER_RUN_AWAY, player_run_away_parse);
-    bt_node_factory_register(BT_NODE_IS_SCARED, is_scared_parse);
+    bt_node_factory_register(&player_is_near_vtable);
+    bt_node_factory_register(&player_chase_vtable);
+    bt_node_factory_register(&player_run_away_vtable);
+    bt_node_factory_register(&is_scared_vtable);
 }

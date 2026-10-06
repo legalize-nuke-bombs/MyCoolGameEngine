@@ -1,25 +1,25 @@
-once menu_deps start
-    catalog add renderer_layer bg1 1
-    catalog add renderer_layer bg2 2
-    catalog add renderer_layer prop1 10
-    catalog add renderer_layer effect1 30
-    catalog add renderer_layer gizmo 255
-    catalog add renderer_layer ui1 101
+once name=menu_deps body=[
+    renderer_layer name=bg1 priority=1
+    renderer_layer name=bg2 priority=2
+    renderer_layer name=prop1 priority=10
+    renderer_layer name=effect1 priority=30
+    renderer_layer name=gizmo priority=255
+    renderer_layer name=ui1 priority=101
 
-    catalog add texture character 256 512 64 textures/demo/character.png lazy
-    catalog add texture campfire 64 64 5 textures/demo/campfire.png lazy
-    catalog add texture tree1 512 512 16 textures/demo/tree1.png lazy
-    catalog add texture tree2 512 512 16 textures/demo/tree2.png lazy
-    catalog add texture tree3 512 512 16 textures/demo/tree3.png lazy
-    catalog add texture tree4 512 512 16 textures/demo/tree4.png lazy
-    catalog add texture tree5 512 512 16 textures/demo/tree5.png lazy
-    catalog add texture enemy1 192 192 16 textures/demo/enemy1.png lazy
-    catalog add texture enemy2 192 192 16 textures/demo/enemy2.png lazy
+    texture name=character tile=[256 512] count=64 path=textures/demo/character.png
+    texture name=campfire tile=[64 64] count=5 path=textures/demo/campfire.png
+    texture name=tree1 tile=[512 512] count=16 path=textures/demo/tree1.png
+    texture name=tree2 tile=[512 512] count=16 path=textures/demo/tree2.png
+    texture name=tree3 tile=[512 512] count=16 path=textures/demo/tree3.png
+    texture name=tree4 tile=[512 512] count=16 path=textures/demo/tree4.png
+    texture name=tree5 tile=[512 512] count=16 path=textures/demo/tree5.png
+    texture name=enemy1 tile=[192 192] count=16 path=textures/demo/enemy1.png
+    texture name=enemy2 tile=[192 192] count=16 path=textures/demo/enemy2.png
 
-    catalog add texture gcirc1 512 512 1 textures/core/gcirc1.png lazy
-    catalog add texture gcirc2 512 512 1 textures/core/gcirc2.png lazy
-    catalog add texture gcirc3 512 512 1 textures/core/gcirc3.png lazy
-    catalog add texture gcirc4 512 512 1 textures/core/gcirc4.png lazy
-    catalog add texture gcirc5 512 512 1 textures/core/gcirc5.png lazy
-    catalog add texture gcirc6 512 512 1 textures/core/gcirc6.png lazy
-once menu_deps end
+    texture name=gcirc1 tile=[512 512] path=textures/core/gcirc1.png
+    texture name=gcirc2 tile=[512 512] path=textures/core/gcirc2.png
+    texture name=gcirc3 tile=[512 512] path=textures/core/gcirc3.png
+    texture name=gcirc4 tile=[512 512] path=textures/core/gcirc4.png
+    texture name=gcirc5 tile=[512 512] path=textures/core/gcirc5.png
+    texture name=gcirc6 tile=[512 512] path=textures/core/gcirc6.png
+]

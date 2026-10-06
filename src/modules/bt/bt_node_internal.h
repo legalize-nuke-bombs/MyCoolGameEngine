@@ -5,8 +5,16 @@
 #ifndef MYCOOLGAMEENGINE_BT_NODE_INTERNAL_H
 #define MYCOOLGAMEENGINE_BT_NODE_INTERNAL_H
 
+#include <stddef.h>
+
+#include "bt_node.h"
+
+struct fields;
+
 struct bt_node_vtable {
     const char* key;
+    size_t size;
+    void (*on_create)(struct bt_node *this, struct fields *fields);
     enum bt_status (*run)(struct bt_node *this, void *bb);
     void (*on_destroy)(struct bt_node *this);
 };

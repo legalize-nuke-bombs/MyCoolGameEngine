@@ -4,9 +4,11 @@
 
 #include "component_factory.h"
 
-#include <stddef.h>
+#include <stdlib.h>
 
+#include "component_internal.h"
 #include "../../utils/factory.h"
+#include "../../utils/fields.h"
 #include "core/camera.h"
 #include "core/idle.h"
 #include "core/simulator.h"
@@ -26,32 +28,38 @@ static struct factory component_factory;
 void component_factory_create(void) {
     component_factory = factory_create("component_factory");
 
-    component_factory_register(idle_component_key(), idle_create);
-    component_factory_register(camera_component_key(), camera_create);
-    component_factory_register(renderer_settings_component_key(), renderer_settings_create);
-    component_factory_register(box_renderer_component_key(), box_renderer_create);
-    component_factory_register(box_renderer_animated_component_key(), box_renderer_animated_create);
-    component_factory_register(box_light_component_key(), box_light_create);
-    component_factory_register(controller_component_key(), controller_create);
-    component_factory_register(keyboard_controller_component_key(), keyboard_controller_create);
-    component_factory_register(simulator_component_key(), simulator_create);
-    component_factory_register(rigid_surface_component_key(), rigid_surface_create);
-    component_factory_register(collider_component_key(), collider_create);
-    component_factory_register(rigid_body_component_key(), rigid_body_create);
-    component_factory_register(keyboard_rigid_controller_component_key(), keyboard_rigid_controller_create);
+    component_factory_register(&idle_vtable);
+    component_factory_register(&camera_vtable);
+    component_factory_register(&renderer_settings_vtable);
+    component_factory_register(&box_renderer_vtable);
+    component_factory_register(&box_renderer_animated_vtable);
+    component_factory_register(&box_light_vtable);
+    component_factory_register(&controller_vtable);
+    component_factory_register(&keyboard_controller_vtable);
+    component_factory_register(&simulator_vtable);
+    component_factory_register(&rigid_surface_vtable);
+    component_factory_register(&collider_vtable);
+    component_factory_register(&rigid_body_vtable);
+    component_factory_register(&keyboard_rigid_controller_vtable);
 }
 void component_factory_destroy(void) {
     factory_destroy(&component_factory);
 }
 
-void component_factory_register(const char *key, struct component* (*create)(struct parser *parser, struct entity *parent)) {
-    factory_register(&component_factory, key, create);
+void component_factory_register(const struct component_vtable *vtable) {
+    factory_register(&component_factory, vtable->component_key(), (void*)vtable);
 }
 
-struct component* component_factory_produce(const char* key, struct parser *parser, struct entity *parent) {
-    struct component*(*create)(struct parser *parser, struct entity *parent) = factory_find(&component_factory, key);
-    if (create) {
-        return create(parser, parent);
+struct component* component_factory_produce(const char* key, struct fields *fields, struct entity *parent) {
+    const struct component_vtable *vtable = factory_find(&component_factory, key);
+    if (vtable == NULL) {
+        return NULL;
     }
-    return NULL;
+    struct component *component = calloc(1, vtable->size);
+    component_base_create(component, vtable, parent);
+    if (vtable->on_create) {
+        vtable->on_create(component, fields);
+    }
+    fields_warn_unknown(fields);
+    return component;
 }

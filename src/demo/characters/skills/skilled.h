@@ -6,10 +6,10 @@
 #define MYCOOLGAMEENGINE_SKILLED_H
 
 struct entity;
-struct parser;
+struct component_vtable;
 
 const char* skilled_component_key(void);
 
-struct component* skilled_create(struct parser *parser, struct entity *parent);
+extern const struct component_vtable skilled_vtable;
 
 #endif //MYCOOLGAMEENGINE_SKILLED_H

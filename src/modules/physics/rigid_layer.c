@@ -8,7 +8,8 @@
 
 #include "../../assets/asset_storage.h"
 #include "../../assets/asset_type.h"
-#include "../../utils/parser.h"
+#include "../../logging/logger.h"
+#include "../../utils/fields.h"
 
 struct rigid_layer {
     uint8_t priority;
@@ -23,13 +24,14 @@ static struct asset_storage rigid_layers = {
     ._destroy_item = rigid_layer_destroy_item
 };
 
-static void rigid_layer_asset_on_add(struct parser *parser) {
-    char *name = asset_storage_parse_name(&rigid_layers, parser);
-    if (name == NULL) {
-        return;
+static void rigid_layer_asset_on_add(struct fields *fields) {
+    const char *name = fields_get_string(fields, "name", NULL);
+    const int priority = fields_get_int(fields, "priority", 0);
+    if (priority < 0 || priority > UINT8_MAX) {
+        logger_warn("Rigid layer %s expected priority from 0 to %d, got %d", name ? name : "<null>", UINT8_MAX, priority);
     }
     struct rigid_layer* this = calloc(1, sizeof(struct rigid_layer));
-    parser_next_uint8(parser, &this->priority);
+    this->priority = (uint8_t)priority;
     asset_storage_add(&rigid_layers, name, this);
 }
 static void rigid_layer_asset_on_clear(void) {

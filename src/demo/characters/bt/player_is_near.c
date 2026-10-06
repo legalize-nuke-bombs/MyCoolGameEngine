@@ -12,7 +12,7 @@
 #include "../../../scene/entity.h"
 #include "../../../scene/scene.h"
 #include "../../../utils/dictionary.h"
-#include "../../../utils/parser.h"
+#include "../../../utils/fields.h"
 #include "../../../utils/vector2_math.h"
 
 struct player_is_near {
@@ -20,25 +20,20 @@ struct player_is_near {
     double radius_sqr;
 };
 
+static void player_is_near_on_create(struct bt_node *base, struct fields *fields);
 static enum bt_status player_is_near_run(struct bt_node *base, void *bb);
 
-static const struct bt_node_vtable player_is_near_vtable = {
+const struct bt_node_vtable player_is_near_vtable = {
     .key = BT_NODE_PLAYER_IS_NEAR,
+    .size = sizeof(struct player_is_near),
+    .on_create = player_is_near_on_create,
     .run = player_is_near_run
 };
 
-struct bt_node* player_is_near_create(const double radius) {
-    struct player_is_near* this = calloc(1, sizeof(struct player_is_near));
-    struct bt_node* base = (struct bt_node*)this;
-    bt_node_base_create(base, &player_is_near_vtable);
+static void player_is_near_on_create(struct bt_node *base, struct fields *fields) {
+    struct player_is_near* this = (struct player_is_near*)base;
+    const double radius = fields_get_double(fields, "radius", 0);
     this->radius_sqr = radius * radius;
-    return base;
-}
-
-struct bt_node* player_is_near_parse(struct parser *parser) {
-    double radius;
-    parser_next_double(parser, &radius);
-    return player_is_near_create(radius);
 }
 
 static enum bt_status player_is_near_run(struct bt_node *base, void *bb) {

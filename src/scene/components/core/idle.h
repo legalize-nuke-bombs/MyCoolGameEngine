@@ -6,10 +6,10 @@
 #define MYCOOLGAMEENGINE_IDLE_H
 
 struct entity;
-struct parser;
+struct component_vtable;
 
 const char* idle_component_key(void);
 
-struct component* idle_create(struct parser *parser, struct entity *parent);
+extern const struct component_vtable idle_vtable;
 
 #endif //MYCOOLGAMEENGINE_IDLE_H

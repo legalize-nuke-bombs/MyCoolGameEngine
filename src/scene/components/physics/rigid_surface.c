@@ -10,7 +10,7 @@
 #include "../component_internal.h"
 #include "../../entity.h"
 #include "../../scene.h"
-#include "../../../utils/parser.h"
+#include "../../../utils/fields.h"
 #include "../../../utils/dictionary.h"
 #include "../../chunks/chunks.h"
 #include "../../../modules/physics/rigid_layer.h"
@@ -27,16 +27,17 @@ struct rigid_surface {
     struct rigid_material* material;
 };
 
-static struct component* rigid_surface_clone(struct component base, const struct component *component);
+static void rigid_surface_on_create(struct component *base, struct fields *fields);
 static void rigid_surface_awake(struct component *base);
 static void rigid_surface_on_destroy(struct component *base);
 static bool rigid_surface_is_chunkable() {
     return true;
 }
 
-static const struct component_vtable rigid_surface_vtable = {
+const struct component_vtable rigid_surface_vtable = {
     .component_key = rigid_surface_component_key,
-    .on_clone = rigid_surface_clone,
+    .size = sizeof(struct rigid_surface),
+    .on_create = rigid_surface_on_create,
     .on_awake = rigid_surface_awake,
     .is_chunkable = rigid_surface_is_chunkable,
     .on_destroy = rigid_surface_on_destroy
@@ -46,31 +47,10 @@ const char* rigid_surface_component_key(void) {
     return "rigid_surface";
 }
 
-struct component* rigid_surface_create(struct parser *parser, struct entity *parent) {
-    struct rigid_surface *this = calloc(1, sizeof(struct rigid_surface));
-    struct component *base = (struct component *) this;
-    component_base_create(base, &rigid_surface_vtable, parent);
-
-    this->layer_name = parser_next_dup(parser);
-    this->material_name = parser_next_dup(parser);
-
-    return base;
-}
-
-static struct component* rigid_surface_clone(struct component base, const struct component *component) {
-    const struct rigid_surface *rigid_surface = (struct rigid_surface *) component;
-
-    struct rigid_surface* this = calloc(1, sizeof(struct rigid_surface));
-    this->base = base;
-    if (rigid_surface->layer_name != NULL) {
-        this->layer_name = strdup(rigid_surface->layer_name);
-    }
-    this->layer = rigid_surface->layer;
-    if (rigid_surface->material_name != NULL) {
-        this->material_name = strdup(rigid_surface->material_name);
-    }
-    this->material = rigid_surface->material;
-    return (struct component*)this;
+static void rigid_surface_on_create(struct component *base, struct fields *fields) {
+    struct rigid_surface *this = (struct rigid_surface *) base;
+    this->layer_name = fields_dup_string(fields, "layer", NULL);
+    this->material_name = fields_dup_string(fields, "material", NULL);
 }
 
 static void rigid_surface_awake(struct component *base) {

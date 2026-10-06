@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 #include "../skill_internal.h"
-#include "../../../../utils/parser.h"
+#include "../../../../utils/fields.h"
 #include "../../../../utils/system_message_box.h"
 
 struct printer {
@@ -16,23 +16,23 @@ struct printer {
     char *body;
 };
 
+static void printer_on_create(struct skill *base, struct fields *fields);
 static void printer_on_destroy(struct skill *base);
 static bool printer_invoke(struct skill* base);
 
-static const struct skill_vtable printer_vtable = {
+const struct skill_vtable printer_vtable = {
     .key = SKILL_PRINTER_KEY,
+    .size = sizeof(struct printer),
+    .on_create = printer_on_create,
     .on_destroy = printer_on_destroy,
     .on_invoke = printer_invoke
 };
 
 
-struct skill* printer_parse(struct parser *parser, struct entity *self) {
-    struct printer* this = calloc(1, sizeof(struct printer));
-    struct skill* base = (struct skill*)this;
-    skill_base_parse(base, &printer_vtable, parser, self);
-    this->title = parser_next_dup(parser);
-    this->body = parser_next_dup(parser);
-    return base;
+static void printer_on_create(struct skill *base, struct fields *fields) {
+    struct printer* this = (struct printer*)base;
+    this->title = fields_dup_string(fields, "title", "");
+    this->body = fields_dup_string(fields, "body", "");
 }
 
 static void printer_on_destroy(struct skill *base) {

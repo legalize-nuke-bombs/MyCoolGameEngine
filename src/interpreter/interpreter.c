@@ -6,89 +6,119 @@
 
 #include <stddef.h>
 #include <stdlib.h>
+#include <string.h>
 
-#include "interpreter_command.h"
-#include "interpreter_command_register.h"
-#include "../utils/parser.h"
-#include "core/interpreter_print.h"
-#include "window/interpreter_window.h"
+#include "../assets/assets.h"
 #include "../logging/logger.h"
-#include "scene/interpreter_scene.h"
 #include "../msystems/msystem.h"
+#include "../scene/entity_factory.h"
+#include "../scene/scene.h"
 #include "../utils/action.h"
-#include "catalogs/interpreter_catalog.h"
-#include "core/interpreter_eval.h"
-#include "core/interpreter_ignore.h"
-#include "core/interpreter_once.h"
+#include "../utils/dictionary.h"
+#include "../utils/fields.h"
+#include "../utils/string_dictionary.h"
 
 
 static struct {
     struct action on_script_evaluated;
 
-    struct interpreter_command_register *command_register;
+    struct dictionary *once_memory;
 } interpreter;
 
 
+static void interpreter_execute_list(const struct fields_list *list);
+
+static void interpreter_eval_execute(struct fields *fields) {
+    interpreter_eval(fields_get_string(fields, "path", NULL));
+}
+
+static void interpreter_print_execute(struct fields *fields) {
+    logger_info("Interpreter: %s", fields_get_string(fields, "text", ""));
+}
+
+static void interpreter_once_execute(struct fields *fields) {
+    const char *name = fields_get_string(fields, "name", NULL);
+    const struct fields_list *body = fields_get_list(fields, "body");
+    if (name == NULL) {
+        logger_warn("Interpreter once (line %d) expected field `name`", fields_line(fields));
+        return;
+    }
+
+    char *block_name = strdup(name);
+    if (!dictionary_try_add(interpreter.once_memory, block_name, block_name)) {
+        free(block_name);
+        return;
+    }
+    interpreter_execute_list(body);
+}
+
+static void interpreter_entity_execute(struct fields *fields) {
+    scene_capture_entity(entity_factory_produce(fields));
+}
+
+// A word that is not a command is an asset type: `texture name=...` adds a texture
+static const struct {
+    const char *word;
+    void (*execute)(struct fields *fields);
+} interpreter_commands[] = {
+    { "eval", interpreter_eval_execute },
+    { "once", interpreter_once_execute },
+    { "print", interpreter_print_execute },
+    { "entity", interpreter_entity_execute },
+};
+
+static void interpreter_execute(struct fields *fields) {
+    const char *word = fields_key(fields);
+    for (size_t i = 0; i < sizeof(interpreter_commands) / sizeof(interpreter_commands[0]); i++) {
+        if (strcmp(interpreter_commands[i].word, word) == 0) {
+            interpreter_commands[i].execute(fields);
+            fields_warn_unknown(fields);
+            return;
+        }
+    }
+    if (assets_add(fields)) {
+        return;
+    }
+    logger_warn("Interpreter does not know `%s` (line %d)", word, fields_line(fields));
+}
+
+static void interpreter_execute_list(const struct fields_list *list) {
+    for (int i = 0; i < fields_list_count(list); i++) {
+        interpreter_execute(fields_list_get(list, i));
+    }
+}
+
+
+static void interpreter_clear_once_memory(void) {
+    struct dictionary_iterator iterator = dictionary_begin(interpreter.once_memory);
+    struct dictionary_node node;
+    while (dictionary_next(interpreter.once_memory, &iterator, &node)) {
+        free(node.value);
+    }
+    dictionary_clear(interpreter.once_memory);
+}
+
 static void interpreter_on_create(void) {
     interpreter.on_script_evaluated = action_create();
-
-    interpreter.command_register = interpreter_command_register_create("Main", 3);
-    interpreter_command_register_capture_command(interpreter.command_register, interpreter_print_as_interpreter_command(interpreter_print_create()));
-    interpreter_command_register_capture_command(interpreter.command_register, interpreter_ignore_as_interpreter_command(interpreter_ignore_create()));
-    interpreter_command_register_capture_command(interpreter.command_register, interpreter_eval_as_interpreter_command(interpreter_eval_create()));
-    interpreter_command_register_capture_command(interpreter.command_register, interpreter_once_as_interpreter_command(interpreter_once_create()));
-    interpreter_command_register_capture_command(interpreter.command_register, interpreter_catalog_create());
-    interpreter_command_register_capture_command(interpreter.command_register, interpreter_window_create());
-    interpreter_command_register_capture_command(interpreter.command_register, interpreter_scene_create());
+    interpreter.once_memory = string_dictionary_build(3);
 }
 static void interpreter_on_destroy(void) {
-    interpreter_command_register_destroy(interpreter.command_register);
+    interpreter_clear_once_memory();
+    dictionary_destroy(interpreter.once_memory);
     action_destroy(&interpreter.on_script_evaluated);
 }
 
-static void interpreter_on_enable(const struct engine_arguments args) {
-    interpreter_command_register_enable(interpreter.command_register, args);
-}
 static void interpreter_on_disable(void) {
-    interpreter_command_register_disable(interpreter.command_register);
+    interpreter_clear_once_memory();
     action_clear(&interpreter.on_script_evaluated);
 }
 
 const struct msystem interpreter_msystem = {
     .name = "interpreter",
     .on_create = interpreter_on_create,
-    .on_enable = interpreter_on_enable,
     .on_disable = interpreter_on_disable,
     .on_destroy = interpreter_on_destroy
 };
-
-static int interpreter_parse(struct parser *parser) {
-    while (1) {
-        const char *word = parser_next(parser);
-        if (word == NULL) {
-            return INTERPRETER_OK;
-        }
-
-        const struct interpreter_command *command = interpreter_command_register_try_get_command(interpreter.command_register, word);
-        if (command == NULL) {
-            continue;
-        }
-
-        interpreter_command_execute(command, parser);
-    }
-}
-
-static int interpreter_eval_quite(const char* script_path) {
-    struct parser* parser = parser_create(script_path);
-    if (parser == NULL) {
-        return INTERPRETER_FAILED_OPEN_SCRIPT;
-    }
-
-    const int result = interpreter_parse(parser);
-    parser_destroy(parser);
-
-    return result;
-}
 
 int interpreter_eval(const char* script_path) {
     if (script_path == NULL) {
@@ -97,16 +127,16 @@ int interpreter_eval(const char* script_path) {
     }
     logger_debug("Interpreter is executing %s...", script_path);
     action_invoke(&interpreter.on_script_evaluated, (void*)script_path);
-    const int code = interpreter_eval_quite(script_path);
 
-    if (code == INTERPRETER_OK) {
-        logger_debug("Interpreter finished with exit code %d", code);
+    struct fields_list *script = fields_parse_file(script_path);
+    if (script == NULL) {
+        return INTERPRETER_FAILED_OPEN_SCRIPT;
     }
-    else {
-        logger_debug("Interpreter finished with exit code %d", code);
-    }
+    interpreter_execute_list(script);
+    fields_list_destroy(script);
 
-    return code;
+    logger_debug("Interpreter finished %s", script_path);
+    return INTERPRETER_OK;
 }
 
 struct action* interpreter_get_action_on_script_evaluated(void) {

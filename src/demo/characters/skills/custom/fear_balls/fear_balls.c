@@ -9,7 +9,7 @@
 
 #include "fear_ball.h"
 #include "../../skill_internal.h"
-#include "../../../../../utils/parser.h"
+#include "../../../../../utils/fields.h"
 #include "../../../../../scene/prefabs/prefab.h"
 #include "../../../../../logging/logger.h"
 #include "../../../../../scene/entity.h"
@@ -22,25 +22,25 @@ struct fear_balls {
     int fear_balls_num;
 };
 
+static void fear_balls_on_create(struct skill* base, struct fields *fields);
 static void fear_balls_on_destroy(struct skill* base);
 static void fear_balls_on_enable(struct skill* base);
 static bool fear_balls_invoke(struct skill* base);
 
-static const struct skill_vtable fear_balls_vtable = {
+const struct skill_vtable fear_balls_vtable = {
     .key = SKILL_FEAR_BALLS_KEY,
+    .size = sizeof(struct fear_balls),
+    .on_create = fear_balls_on_create,
     .on_destroy = fear_balls_on_destroy,
     .on_enable = fear_balls_on_enable,
     .on_invoke = fear_balls_invoke
 };
 
 
-struct skill* fear_balls_parse(struct parser *parser, struct entity *self) {
-    struct fear_balls* this = calloc(1, sizeof(struct fear_balls));
-    struct skill* base = (struct skill*)this;
-    skill_base_parse(base, &fear_balls_vtable, parser, self);
-    this->prefab_name = parser_next_dup(parser);
-    parser_next_int(parser, &this->fear_balls_num);
-    return base;
+static void fear_balls_on_create(struct skill* base, struct fields *fields) {
+    struct fear_balls* this = (struct fear_balls*)base;
+    this->prefab_name = fields_dup_string(fields, "prefab", NULL);
+    this->fear_balls_num = fields_get_int(fields, "count", 0);
 }
 
 static void fear_balls_on_destroy(struct skill* base) {

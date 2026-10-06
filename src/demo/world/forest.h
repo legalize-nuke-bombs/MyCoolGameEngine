@@ -5,11 +5,11 @@
 #ifndef MYCOOLGAMEENGINE_FOREST_H
 #define MYCOOLGAMEENGINE_FOREST_H
 
-struct parser;
+struct component_vtable;
 struct entity;
 
 const char* forest_component_key(void);
 
-struct component* forest_create(struct parser *parser, struct entity *parent);
+extern const struct component_vtable forest_vtable;
 
 #endif //MYCOOLGAMEENGINE_FOREST_H

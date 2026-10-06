@@ -7,13 +7,8 @@
 
 #define BT_NODE_SEQUENCE "sequence"
 
-struct bt_sequence;
-struct bt_node;
-struct parser;
+struct bt_node_vtable;
 
-struct bt_sequence* bt_sequence_create();
-struct bt_node* bt_sequence_parse(struct parser *parser);
-
-void bt_sequence_capture_node(struct bt_sequence *this, struct bt_node *node);
+extern const struct bt_node_vtable bt_sequence_vtable;
 
 #endif //MYCOOLGAMEENGINE_BT_SEQUENCE_H

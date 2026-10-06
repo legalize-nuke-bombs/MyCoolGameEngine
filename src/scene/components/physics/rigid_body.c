@@ -11,8 +11,9 @@
 #include "../component_internal.h"
 #include "../../entity.h"
 #include "../../scene.h"
+#include "../../../logging/logger.h"
 #include "../../../modules/physics/rigid_material.h"
-#include "../../../utils/parser.h"
+#include "../../../utils/fields.h"
 #include "../../../utils/vector2_math.h"
 
 
@@ -38,14 +39,15 @@ struct rigid_body {
     const struct collider* collider;
 };
 
-static struct component* rigid_body_clone(struct component base, const struct component *component);
+static void rigid_body_on_create(struct component *base, struct fields *fields);
 static void rigid_body_awake(struct component *base);
 static void rigid_body_simulation_chunk_update(struct component* base, const struct update_context *context);
 static void rigid_body_on_disable(struct component *base);
 
-static const struct component_vtable rigid_body_vtable = {
+const struct component_vtable rigid_body_vtable = {
     .component_key = rigid_body_component_key,
-    .on_clone = rigid_body_clone,
+    .size = sizeof(struct rigid_body),
+    .on_create = rigid_body_on_create,
     .on_awake = rigid_body_awake,
     .on_simulation_chunk_update = rigid_body_simulation_chunk_update,
     .on_disable = rigid_body_on_disable
@@ -55,30 +57,16 @@ const char* rigid_body_component_key(void) {
     return "rigid_body";
 }
 
-struct component* rigid_body_create(struct parser *parser, struct entity *parent) {
-    struct rigid_body *this = calloc(1, sizeof(struct rigid_body));
-    struct component *base = (struct component *) this;
-    component_base_create(base, &rigid_body_vtable, parent);
+static void rigid_body_on_create(struct component *base, struct fields *fields) {
+    struct rigid_body *this = (struct rigid_body *) base;
 
-    parser_next_double(parser, &this->m);
-    if (this->m < 0) this->m = 1;
-    parser_next_double(parser, &this->base_friction_coefficient);
-    if (this->base_friction_coefficient < 0) this->base_friction_coefficient = 1.f;
-    parser_next_double(parser, &this->rolling_friction_coefficient);
-    if (this->rolling_friction_coefficient < 0) this->rolling_friction_coefficient = 0.1f;
-
-    return base;
-}
-
-static struct component* rigid_body_clone(struct component base, const struct component *component) {
-    const struct rigid_body *rigid_body = (struct rigid_body *) component;
-
-    struct rigid_body* this = calloc(1, sizeof(struct rigid_body));
-    this->base = base;
-    this->m = rigid_body->m;
-    this->base_friction_coefficient = rigid_body->base_friction_coefficient;
-    this->rolling_friction_coefficient = rigid_body->rolling_friction_coefficient;
-    return (struct component*)this;
+    this->m = fields_get_double(fields, "mass", 1);
+    if (this->m <= 0) {
+        logger_warn("Rigid body expected positive mass, got %f, 1 will be used instead", this->m);
+        this->m = 1;
+    }
+    this->base_friction_coefficient = fields_get_double(fields, "friction", 1);
+    this->rolling_friction_coefficient = fields_get_double(fields, "rolling", 0.1);
 }
 
 static void rigid_body_awake(struct component *base) {

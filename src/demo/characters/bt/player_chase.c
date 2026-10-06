@@ -12,7 +12,7 @@
 #include "../../../scene/entity.h"
 #include "../../../scene/scene.h"
 #include "../../../scene/components/physics/rigid_body.h"
-#include "../../../utils/parser.h"
+#include "../../../utils/fields.h"
 #include "../../../utils/vector2_math.h"
 
 
@@ -21,25 +21,19 @@ struct player_chase {
     double speed;
 };
 
+static void player_chase_on_create(struct bt_node *base, struct fields *fields);
 static enum bt_status player_chase_run(struct bt_node *base, void *bb);
 
-static const struct bt_node_vtable player_chase_vtable = {
+const struct bt_node_vtable player_chase_vtable = {
     .key = BT_NODE_PLAYER_CHASE,
+    .size = sizeof(struct player_chase),
+    .on_create = player_chase_on_create,
     .run = player_chase_run
 };
 
-struct bt_node* player_chase_create(const double speed) {
-    struct player_chase* this = calloc(1, sizeof(struct player_chase));
-    struct bt_node* base = (struct bt_node*)this;
-    bt_node_base_create(base, &player_chase_vtable);
-    this->speed = speed;
-    return base;
-}
-
-struct bt_node* player_chase_parse(struct parser *parser) {
-    double speed;
-    parser_next_double(parser, &speed);
-    return player_chase_create(speed);
+static void player_chase_on_create(struct bt_node *base, struct fields *fields) {
+    struct player_chase* this = (struct player_chase*)base;
+    this->speed = fields_get_double(fields, "speed", 0);
 }
 
 static enum bt_status player_chase_run(struct bt_node *base, void *bb) {

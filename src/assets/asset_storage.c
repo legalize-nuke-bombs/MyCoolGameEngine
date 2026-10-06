@@ -1,34 +1,28 @@
 #include "asset_storage.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 #include "../logging/logger.h"
 #include "../utils/dictionary.h"
-#include "../utils/parser.h"
 #include "../utils/string_dictionary.h"
 
 
-char* asset_storage_parse_name(const struct asset_storage *this, struct parser *parser) {
-    char *name = parser_next_dup(parser);
-    if (name == NULL) {
-        logger_warn("Asset %s expected name, got end of file", this->_key);
-    }
-    return name;
-}
-
-void asset_storage_add(struct asset_storage *this, char *name, void *item) {
+// The item belongs to the storage from here on, even when the storage declines it
+void asset_storage_add(struct asset_storage *this, const char *name, void *item) {
     if (this->_items == NULL) {
         this->_items = string_dictionary_build(4);
     }
-    if (item != NULL && dictionary_try_add(this->_items, name, item)) {
-        logger_debug("Asset %s captured %s", this->_key, name);
+    char *key = name != NULL ? strdup(name) : NULL;
+    if (key != NULL && item != NULL && dictionary_try_add(this->_items, key, item)) {
+        logger_debug("Asset %s captured %s", this->_key, key);
         return;
     }
-    logger_warn("Asset %s failed to capture %s", this->_key, name);
+    logger_warn("Asset %s failed to capture %s", this->_key, key ? key : "an asset without a name");
     if (item != NULL) {
         this->_destroy_item(item);
     }
-    free(name);
+    free(key);
 }
 
 void* asset_storage_try_get(const struct asset_storage *this, const char *name) {

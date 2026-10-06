@@ -6,10 +6,10 @@
 #define MYCOOLGAMEENGINE_BEHAVIOUR_AGENT_H
 
 struct entity;
-struct parser;
+struct component_vtable;
 
 const char* behaviour_agent_component_key(void);
 
-struct component* behaviour_agent_create(struct parser *parser, struct entity *parent);
+extern const struct component_vtable behaviour_agent_vtable;
 
 #endif //MYCOOLGAMEENGINE_BEHAVIOUR_AGENT_H

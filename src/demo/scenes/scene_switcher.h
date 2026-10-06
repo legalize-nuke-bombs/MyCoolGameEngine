@@ -6,10 +6,10 @@
 #define MYCOOLGAMEENGINE_SCENE_SWITCHER_H
 
 struct entity;
-struct parser;
+struct component_vtable;
 
 const char* scene_switcher_component_key(void);
 
-struct component* scene_switcher_create(struct parser *parser, struct entity *parent);
+extern const struct component_vtable scene_switcher_vtable;
 
 #endif //MYCOOLGAMEENGINE_SCENE_SWITCHER_H

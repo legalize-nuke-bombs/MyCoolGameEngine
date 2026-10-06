@@ -5,11 +5,10 @@
 #ifndef MYCOOLGAMEENGINE_PRINTER_H
 #define MYCOOLGAMEENGINE_PRINTER_H
 
-struct parser;
-struct entity;
+struct skill_vtable;
 
 #define SKILL_PRINTER_KEY "printer"
 
-struct skill* printer_parse(struct parser *parser, struct entity *self);
+extern const struct skill_vtable printer_vtable;
 
 #endif //MYCOOLGAMEENGINE_PRINTER_H

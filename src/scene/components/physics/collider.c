@@ -14,7 +14,7 @@
 #include "../../../modules/physics/rigid_material.h"
 #include "../../../logging/logger.h"
 #include "../../../utils/action.h"
-#include "../../../utils/parser.h"
+#include "../../../utils/fields.h"
 #include "../../chunks/chunks.h"
 
 
@@ -37,7 +37,7 @@ const char* collider_component_key(void) {
     return "collider";
 }
 
-static struct component* collider_clone(struct component base, const struct component *component);
+static void collider_on_create(struct component *base, struct fields *fields);
 static bool collider_is_chunkable() {
     return true;
 }
@@ -47,9 +47,10 @@ static void collider_on_movement(struct component *base);
 static void collider_on_disable(struct component *base);
 static void collider_on_destroy(struct component *base);
 
-static const struct component_vtable collider_vtable = {
+const struct component_vtable collider_vtable = {
     .component_key = collider_component_key,
-    .on_clone = collider_clone,
+    .size = sizeof(struct collider),
+    .on_create = collider_on_create,
     .on_destroy = collider_on_destroy,
     .on_awake = collider_on_awake,
     .is_chunkable = collider_is_chunkable,
@@ -57,15 +58,12 @@ static const struct component_vtable collider_vtable = {
     .on_disable = collider_on_disable
 };
 
-struct component* collider_create(struct parser *parser, struct entity *parent) {
-    struct collider *this = calloc(1, sizeof(struct collider));
-    struct component* base = (struct component*)this;
-    component_base_create(base, &collider_vtable, parent);
-    this->material_name = parser_next_dup(parser);
-    if (strcmp(this->material_name, "trigger") == 0) this->trigger = true;
+static void collider_on_create(struct component *base, struct fields *fields) {
+    struct collider *this = (struct collider*)base;
+    this->trigger = fields_get_bool(fields, "trigger", false);
+    this->material_name = fields_dup_string(fields, "material", NULL);
     this->on_trigger_enter = action_create();
     this->on_trigger_exit = action_create();
-    return base;
 }
 
 static void collider_on_destroy(struct component *base) {
@@ -79,25 +77,10 @@ static void collider_on_destroy(struct component *base) {
     }
 }
 
-struct component* collider_clone(struct component base, const struct component *component) {
-    const struct collider* collider = (struct collider*)component;
-
-    struct collider *this = calloc(1, sizeof(struct collider));
-    this->base = base;
-    if (collider->material_name != NULL) {
-        this->material_name = strdup(collider->material_name);
-    }
-    this->material = collider->material;
-    this->trigger = collider->trigger;
-    this->on_trigger_enter = action_create();
-    this->on_trigger_exit = action_create();
-    return (struct component*)this;
-}
-
 static void collider_on_awake(struct component *base) {
     struct collider *this = (struct collider*)base;
 
-    if (strcmp(this->material_name, "trigger") != 0) {
+    if (this->material_name != NULL) {
         this->material = rigid_material_asset_get(this->material_name);
     }
     free(this->material_name);

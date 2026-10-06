@@ -5,11 +5,10 @@
 #ifndef MYCOOLGAMEENGINE_PLAYER_IS_NEAR_H
 #define MYCOOLGAMEENGINE_PLAYER_IS_NEAR_H
 
-struct parser;
+struct bt_node_vtable;
 
 #define BT_NODE_PLAYER_IS_NEAR "player_is_near"
 
-struct bt_node* player_is_near_create(double radius);
-struct bt_node* player_is_near_parse(struct parser *parser);
+extern const struct bt_node_vtable player_is_near_vtable;
 
 #endif //MYCOOLGAMEENGINE_PLAYER_IS_NEAR_H

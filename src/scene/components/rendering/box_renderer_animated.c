@@ -5,7 +5,7 @@
 #include "box_renderer.h"
 #include "../component_internal.h"
 #include "../../entity.h"
-#include "../../../utils/parser.h"
+#include "../../../utils/fields.h"
 
 
 struct box_renderer_animated {
@@ -17,13 +17,14 @@ struct box_renderer_animated {
     struct box_renderer *box_renderer;
 };
 
-static struct component* box_renderer_animated_clone(struct component base, const struct component *component);
+static void box_renderer_animated_on_create(struct component *base, struct fields *fields);
 static void box_renderer_animated_awake(struct component *base);
 static void box_renderer_animated_visible_chunk_update(struct component *base, const struct update_context *context);
 
-static const struct component_vtable box_renderer_animated_vtable = {
+const struct component_vtable box_renderer_animated_vtable = {
     .component_key = box_renderer_animated_component_key,
-    .on_clone = box_renderer_animated_clone,
+    .size = sizeof(struct box_renderer_animated),
+    .on_create = box_renderer_animated_on_create,
     .on_awake = box_renderer_animated_awake,
     .on_visible_chunk_update = box_renderer_animated_visible_chunk_update
 };
@@ -32,23 +33,9 @@ const char* box_renderer_animated_component_key(void) {
     return "box_renderer_animated";
 }
 
-struct component* box_renderer_animated_create(struct parser *parser, struct entity *parent) {
-    struct box_renderer_animated *this = calloc(1, sizeof(struct box_renderer_animated));
-    struct component *base = (struct component *) this;
-    component_base_create(base, &box_renderer_animated_vtable, parent);
-
-    parser_next_double(parser, &this->cycles_per_second);
-
-    return base;
-}
-
-static struct component* box_renderer_animated_clone(struct component base, const struct component *component) {
-    struct box_renderer_animated *box_renderer_animated = (struct box_renderer_animated *) component;
-
-    struct box_renderer_animated* this = calloc(1, sizeof(struct box_renderer_animated));
-    this->base = base;
-    this->cycles_per_second = box_renderer_animated->cycles_per_second;
-    return (struct component*)this;
+static void box_renderer_animated_on_create(struct component *base, struct fields *fields) {
+    struct box_renderer_animated *this = (struct box_renderer_animated *) base;
+    this->cycles_per_second = fields_get_double(fields, "speed", 1);
 }
 
 static void box_renderer_animated_awake(struct component *base) {

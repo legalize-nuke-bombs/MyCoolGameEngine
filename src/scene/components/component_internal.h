@@ -2,12 +2,16 @@
 #define MYCOOLGAMEENGINE_COMPONENT_INTERNAL_H
 
 #include <stdbool.h>
+#include <stddef.h>
 #include "component.h"
+
+struct fields;
 
 
 struct component_vtable {
     const char* (*component_key)(void);
-    struct component* (*on_clone)(struct component base, const struct component *component);
+    size_t size;
+    void (*on_create)(struct component *this, struct fields *fields);
 
     void (*on_awake)(struct component *this);
     void (*on_update)(struct component *this, const struct update_context *context);

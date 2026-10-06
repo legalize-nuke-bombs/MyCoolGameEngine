@@ -1,6 +1,0 @@
-#ifndef MYCOOLGAMEENGINE_INTERPRETER_CATALOG_H
-#define MYCOOLGAMEENGINE_INTERPRETER_CATALOG_H
-
-struct interpreter_command* interpreter_catalog_create();
-
-#endif //MYCOOLGAMEENGINE_INTERPRETER_CATALOG_H

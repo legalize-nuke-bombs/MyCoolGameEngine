@@ -7,7 +7,7 @@
 #include "../../scene/entity.h"
 #include "../../devices/keyboard.h"
 #include "../../scene/scene.h"
-#include "../../utils/parser.h"
+#include "../../utils/fields.h"
 #include "../../utils/action.h"
 
 
@@ -21,14 +21,15 @@ struct scene_switcher {
     unsigned int on_hotkey_pressed_token;
 };
 
-static struct component* scene_switcher_clone(struct component base, const struct component *component);
+static void scene_switcher_on_create(struct component *base, struct fields *fields);
 static void scene_switcher_awake(struct component *base);
 static void scene_switched_on_disable(struct component *base);
 static void scene_switcher_on_destroy(struct component *base);
 
-static const struct component_vtable scene_switcher_vtable = {
+const struct component_vtable scene_switcher_vtable = {
     .component_key = scene_switcher_component_key,
-    .on_clone = scene_switcher_clone,
+    .size = sizeof(struct scene_switcher),
+    .on_create = scene_switcher_on_create,
     .on_awake = scene_switcher_awake,
     .on_disable = scene_switched_on_disable,
     .on_destroy = scene_switcher_on_destroy
@@ -38,25 +39,10 @@ const char* scene_switcher_component_key(void) {
     return "scene_switcher";
 }
 
-struct component* scene_switcher_create(struct parser *parser, struct entity *parent) {
-    struct scene_switcher *this = calloc(1, sizeof(struct scene_switcher));
-    struct component *base = (struct component *) this;
-    component_base_create(base, &scene_switcher_vtable, parent);
-
-    this->hotkey = parser_next_dup(parser);
-    this->map_path = parser_next_dup(parser);
-
-    return base;
-}
-
-static struct component* scene_switcher_clone(struct component base, const struct component *component) {
-    const struct scene_switcher *scene_switcher = (struct scene_switcher *) component;
-
-    struct scene_switcher* this = calloc(1, sizeof(struct scene_switcher));
-    this->base = base;
-    this->hotkey = strdup(scene_switcher->hotkey);
-    this->map_path = strdup(scene_switcher->map_path);
-    return (struct component*)this;
+static void scene_switcher_on_create(struct component *base, struct fields *fields) {
+    struct scene_switcher *this = (struct scene_switcher *) base;
+    this->hotkey = fields_dup_string(fields, "key", "");
+    this->map_path = fields_dup_string(fields, "script", "");
 }
 
 static void scene_switcher_execute(void* listener, void *context) {

@@ -9,7 +9,6 @@
 struct entity;
 
 struct entity* entity_create(char *name, struct entity *parent);
-struct entity* entity_clone(const struct entity* entity);
 void entity_awake(struct entity *this);
 void entity_destroy(struct entity *this);
 void entity_mark_destroyed(struct entity *this);

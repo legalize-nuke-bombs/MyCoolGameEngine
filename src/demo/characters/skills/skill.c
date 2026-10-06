@@ -8,7 +8,6 @@
 #include "../mana.h"
 #include "../../../logging/logger.h"
 #include "../../../scene/entity.h"
-#include "../../../utils/parser.h"
 
 void skill_base_create(struct skill *this, const struct skill_vtable *vtable, const double manacost, const double cooldown, struct entity *self) {
     this->vtable = vtable;
@@ -16,12 +15,6 @@ void skill_base_create(struct skill *this, const struct skill_vtable *vtable, co
     this->cool_timer = 1e+9;
     this->cooldown = cooldown;
     this->self = self;
-}
-void skill_base_parse(struct skill *this, const struct skill_vtable *vtable, struct parser *parser, struct entity *self) {
-    double manacost, cooldown;
-    parser_next_double(parser, &manacost);
-    parser_next_double(parser, &cooldown);
-    skill_base_create(this, vtable, manacost, cooldown, self);
 }
 
 struct entity* skill_self(const struct skill* this) {

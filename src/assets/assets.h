@@ -1,14 +1,16 @@
 #ifndef MYCOOLGAMEENGINE_ASSETS_H
 #define MYCOOLGAMEENGINE_ASSETS_H
 
+#include <stdbool.h>
+
 struct msystem;
 struct asset_type;
-struct parser;
+struct fields;
 
 extern const struct msystem assets_msystem;
 
 void assets_register(const struct asset_type *type);
 
-void assets_add(const char *key, struct parser *parser);
+bool assets_add(struct fields *fields);
 
 #endif //MYCOOLGAMEENGINE_ASSETS_H

@@ -14,7 +14,7 @@
 #include "../../logging/logger.h"
 #include "../../utils/dictionary.h"
 #include "../../utils/color.h"
-#include "../../utils/parser.h"
+#include "../../utils/fields.h"
 #include "../../rendering/renderer.h"
 #include "../../rendering/renderer_pipeline.h"
 #include "../../rendering/primitives/custom/light_map.h"
@@ -29,14 +29,15 @@ struct sky {
     struct light_map *light_map;
 };
 
-static struct component* sky_clone(struct component base, const struct component *component);
+static void sky_on_create(struct component *base, struct fields *fields);
 static void sky_awake(struct component *base);
 static void sky_on_disable(struct component *base);
 static void sky_update(struct component* base, const struct update_context *context);
 
-static const struct component_vtable sky_vtable = {
+const struct component_vtable sky_vtable = {
     .component_key = sky_component_key,
-    .on_clone = sky_clone,
+    .size = sizeof(struct sky),
+    .on_create = sky_on_create,
     .on_awake = sky_awake,
     .on_disable = sky_on_disable,
     .on_update = sky_update
@@ -46,29 +47,10 @@ const char* sky_component_key(void) {
     return "sky";
 }
 
-struct component* sky_create(struct parser *parser, struct entity *parent) {
-    struct sky *this = calloc(1, sizeof(struct sky));
-    struct component *base = (struct component *) this;
-    component_base_create(base, &sky_vtable, parent);
-    parser_next_uint8(parser, &this->day_color.r);
-    parser_next_uint8(parser, &this->day_color.g);
-    parser_next_uint8(parser, &this->day_color.b);
-    parser_next_uint8(parser, &this->day_color.a);
-    parser_next_uint8(parser, &this->night_color.r);
-    parser_next_uint8(parser, &this->night_color.g);
-    parser_next_uint8(parser, &this->night_color.b);
-    parser_next_uint8(parser, &this->night_color.a);
-    return base;
-}
-
-static struct component* sky_clone(struct component base, const struct component *component) {
-    const struct sky *sky = (struct sky *) component;
-
-    struct sky* this = calloc(1, sizeof(struct sky));
-    this->base = base;
-    this->day_color = sky->day_color;
-    this->night_color = sky->night_color;
-    return (struct component*)this;
+static void sky_on_create(struct component *base, struct fields *fields) {
+    struct sky *this = (struct sky *) base;
+    this->day_color = fields_get_color(fields, "day", color_white);
+    this->night_color = fields_get_color(fields, "night", color_black);
 }
 
 static void sky_awake(struct component *base) {

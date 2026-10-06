@@ -75,29 +75,6 @@ struct entity* entity_create(char *name, struct entity *parent) {
 
     return this;
 }
-struct entity* entity_clone(const struct entity* entity) {
-    logger_debug("Entity %s is cloning...", entity->name);
-    struct entity* this = calloc(1, sizeof(struct entity));
-    this->name = strdup(entity->name);
-    this->awake = false;
-    this->alive = true;
-
-    this->local_rect = entity->local_rect;
-    this->rect = entity->local_rect;
-
-    this->entities = list_create(list_count(&entity->entities));
-    this->components = list_create(list_count(&entity->components));
-    for (int i = 0; i < list_count(&entity->entities); i++) {
-        const struct entity *child_entity = list_get(&entity->entities, i);
-        entity_capture_entity(this, entity_clone(child_entity));
-    }
-    for (int i = 0; i < list_count(&entity->components); i++) {
-        const struct component *component = list_get(&entity->components, i);
-        entity_capture_component(this, component_clone(component));
-    }
-
-    return this;
-}
 void entity_awake(struct entity *this) {
     if (this->awake) {
         return;

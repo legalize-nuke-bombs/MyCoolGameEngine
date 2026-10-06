@@ -12,7 +12,7 @@
 #include "../../../scene/scene.h"
 #include "../../../rendering/renderer.h"
 #include "../../../rendering/renderer_pipeline.h"
-#include "../../../utils/parser.h"
+#include "../../../utils/fields.h"
 #include "../../../utils/color.h"
 #include "../../../rendering/primitives/custom/light_map.h"
 
@@ -25,13 +25,14 @@ struct renderer_settings {
     struct light_map *light_map;
 };
 
-static struct component* renderer_settings_clone(struct component base, const struct component *component);
+static void renderer_settings_on_create(struct component *base, struct fields *fields);
 static void renderer_settings_awake(struct component *base);
 static void renderer_settings_on_disable(struct component *base);
 
-static const struct component_vtable renderer_settings_vtable = {
+const struct component_vtable renderer_settings_vtable = {
     .component_key = renderer_settings_component_key,
-    .on_clone = renderer_settings_clone,
+    .size = sizeof(struct renderer_settings),
+    .on_create = renderer_settings_on_create,
     .on_awake = renderer_settings_awake,
     .on_update = NULL,
     .on_disable = renderer_settings_on_disable
@@ -41,30 +42,10 @@ const char* renderer_settings_component_key(void) {
     return "renderer_settings";
 }
 
-struct component* renderer_settings_create(struct parser *parser, struct entity *parent) {
-    struct renderer_settings *this = calloc(1, sizeof(struct renderer_settings));
-    struct component *base = (struct component *) this;
-    component_base_create(base, &renderer_settings_vtable, parent);
-
-    parser_next_uint8(parser, &this->light_map_enabled);
-    if (this->light_map_enabled) {
-        parser_next_uint8(parser, &this->light_map_darkness_color.r);
-        parser_next_uint8(parser, &this->light_map_darkness_color.g);
-        parser_next_uint8(parser, &this->light_map_darkness_color.b);
-        parser_next_uint8(parser, &this->light_map_darkness_color.a);
-    }
-
-    return base;
-}
-
-static struct component* renderer_settings_clone(struct component base, const struct component *component) {
-    const struct renderer_settings *renderer_settings = (struct renderer_settings *) component;
-
-    struct renderer_settings* this = calloc(1, sizeof(struct renderer_settings));
-    this->base = base;
-    this->light_map_enabled = renderer_settings->light_map_enabled;
-    this->light_map_darkness_color = renderer_settings->light_map_darkness_color;
-    return (struct component*)this;
+static void renderer_settings_on_create(struct component *base, struct fields *fields) {
+    struct renderer_settings *this = (struct renderer_settings *) base;
+    this->light_map_enabled = fields_has(fields, "darkness");
+    this->light_map_darkness_color = fields_get_color(fields, "darkness", color_black);
 }
 
 static void renderer_settings_awake(struct component *base) {

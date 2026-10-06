@@ -6,7 +6,7 @@
 #include "../../scene.h"
 #include "../../entity.h"
 #include "../../../devices/keyboard.h"
-#include "../../../utils/parser.h"
+#include "../../../utils/fields.h"
 #include "../../../utils/vector2_math.h"
 #include "rigid_body.h"
 
@@ -24,15 +24,16 @@ struct keyboard_rigid_controller {
     struct rigid_body* rigid_body;
 };
 
-static struct component* keyboard_rigid_controller_clone(struct component base, const struct component *component);
+static void keyboard_rigid_controller_on_create(struct component *base, struct fields *fields);
 static void keyboard_rigid_controller_on_awake(struct component* base);
 static void keyboard_rigid_controller_on_update(struct component* base, const struct update_context *context);
 static void keyboard_rigid_controller_on_disable(struct component* base);
 static void keyboard_rigid_controller_on_destroy(struct component* base);
 
-static const struct component_vtable keyboard_rigid_controller_vtable = {
+const struct component_vtable keyboard_rigid_controller_vtable = {
     .component_key = keyboard_rigid_controller_component_key,
-    .on_clone = keyboard_rigid_controller_clone,
+    .size = sizeof(struct keyboard_rigid_controller),
+    .on_create = keyboard_rigid_controller_on_create,
     .on_awake = keyboard_rigid_controller_on_awake,
     .on_update = keyboard_rigid_controller_on_update,
     .on_disable = keyboard_rigid_controller_on_disable,
@@ -79,18 +80,13 @@ static void keyboard_rigid_controller_on_disable(struct component* base) {
     this->rigid_body = NULL;
 }
 
-struct component* keyboard_rigid_controller_create(struct parser *parser, struct entity *parent) {
-    struct keyboard_rigid_controller *this = calloc(1, sizeof(struct keyboard_rigid_controller));
-    struct component *base = (struct component *) this;
-    component_base_create(base, &keyboard_rigid_controller_vtable, parent);
-
-    parser_next_double(parser, &this->speed);
-    this->up = parser_next_dup(parser);
-    this->down = parser_next_dup(parser);
-    this->left = parser_next_dup(parser);
-    this->right = parser_next_dup(parser);
-
-    return base;
+static void keyboard_rigid_controller_on_create(struct component *base, struct fields *fields) {
+    struct keyboard_rigid_controller *this = (struct keyboard_rigid_controller *) base;
+    this->speed = fields_get_double(fields, "speed", 0);
+    this->up = fields_dup_string(fields, "up", NULL);
+    this->down = fields_dup_string(fields, "down", NULL);
+    this->left = fields_dup_string(fields, "left", NULL);
+    this->right = fields_dup_string(fields, "right", NULL);
 }
 
 static void keyboard_rigid_controller_on_destroy(struct component* base) {
@@ -101,11 +97,3 @@ static void keyboard_rigid_controller_on_destroy(struct component* base) {
     if (this->right) free(this->right);
 }
 
-static struct component* keyboard_rigid_controller_clone(struct component base, const struct component *component) {
-    const struct keyboard_rigid_controller *keyboard_rigid_controller = (struct keyboard_rigid_controller *) component;
-
-    struct keyboard_rigid_controller* this = calloc(1, sizeof(struct keyboard_rigid_controller));
-    this->base = base;
-    this->speed = keyboard_rigid_controller->speed;
-    return (struct component*)this;
-}

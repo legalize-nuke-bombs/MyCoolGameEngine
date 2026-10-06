@@ -8,7 +8,7 @@
 
 #include <stdlib.h>
 #include "../../scene/components/component_internal.h"
-#include "../../utils/parser.h"
+#include "../../utils/fields.h"
 
 struct mana {
     struct component base;
@@ -16,32 +16,22 @@ struct mana {
     double max_amount;
 };
 
-static struct component* mana_clone(struct component base, const struct component *component);
+static void mana_on_create(struct component *base, struct fields *fields);
 
-static const struct component_vtable mana_vtable = {
+const struct component_vtable mana_vtable = {
     .component_key = mana_component_key,
-    .on_clone = mana_clone
+    .size = sizeof(struct mana),
+    .on_create = mana_on_create
 };
 
 const char* mana_component_key(void) {
     return "mana";
 }
 
-struct component* mana_create(struct parser *parser, struct entity *parent) {
-    struct mana *this = calloc(1, sizeof(struct mana));
-    struct component *base = (struct component *) this;
-    component_base_create(base, &mana_vtable, parent);
-    parser_next_double(parser, &this->max_amount);
+static void mana_on_create(struct component *base, struct fields *fields) {
+    struct mana *this = (struct mana *) base;
+    this->max_amount = fields_get_double(fields, "max", 0);
     this->amount = this->max_amount;
-    return base;
-}
-
-static struct component* mana_clone(struct component base, const struct component *component) {
-    const struct mana *mana = (const struct mana *) component;
-
-    struct mana* this = calloc(1, sizeof(struct mana));
-    this->base = base;
-    return (struct component*)this;
 }
 
 bool mana_try_take(struct mana *this, double amount) {

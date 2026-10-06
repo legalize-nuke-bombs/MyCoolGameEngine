@@ -13,7 +13,7 @@
 #include "../assets/asset_storage.h"
 #include "../assets/asset_type.h"
 #include "../logging/logger.h"
-#include "../utils/parser.h"
+#include "../utils/fields.h"
 
 struct texture {
     char* id;
@@ -76,28 +76,21 @@ static struct asset_storage textures = {
     ._destroy_item = texture_destroy_item
 };
 
-static void texture_asset_on_add(struct parser *parser) {
-    char *name = asset_storage_parse_name(&textures, parser);
-    if (name == NULL) {
-        return;
-    }
-
-    int tile_w, tile_h, tiles_count;
-    parser_next_int(parser, &tile_w);
-    parser_next_int(parser, &tile_h);
-    parser_next_int(parser, &tiles_count);
-    char* path = parser_next_dup(parser);
-    const char* loading_mode_name = parser_next(parser);
+static void texture_asset_on_add(struct fields *fields) {
+    const char *name = fields_get_string(fields, "name", NULL);
+    const struct vector2 tile = fields_get_vector2(fields, "tile", vector2_zero);
+    const int tiles_count = fields_get_int(fields, "count", 1);
+    const char *loading_mode_name = fields_get_string(fields, "load", "lazy");
 
     enum texture_loading_mode loading_mode = texture_loading_mode_lazy;
-    if (loading_mode_name != NULL && strcmp(loading_mode_name, "eager") == 0) {
+    if (strcmp(loading_mode_name, "eager") == 0) {
         loading_mode = texture_loading_mode_eager;
     }
-    else if (loading_mode_name == NULL || strcmp(loading_mode_name, "lazy") != 0) {
-        logger_warn("Unexpected texture loading mode `%s`, `lazy` will be used instead", loading_mode_name ? loading_mode_name : "<null>");
+    else if (strcmp(loading_mode_name, "lazy") != 0) {
+        logger_warn("Unexpected texture loading mode `%s`, `lazy` will be used instead", loading_mode_name);
     }
 
-    asset_storage_add(&textures, name, texture_create(strdup(name), path, tile_w, tile_h, tiles_count, loading_mode, renderer_get_native_renderer()));
+    asset_storage_add(&textures, name, texture_create(strdup(name ? name : ""), fields_dup_string(fields, "path", ""), (int)tile.x, (int)tile.y, tiles_count, loading_mode, renderer_get_native_renderer()));
 }
 static void texture_asset_on_clear(void) {
     asset_storage_clear(&textures);

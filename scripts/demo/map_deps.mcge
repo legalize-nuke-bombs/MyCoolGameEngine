@@ -1,65 +1,70 @@
-eval scripts/demo/menu_deps.mcge
+eval path=scripts/demo/menu_deps.mcge
 
-once map_deps start
-    catalog add rigid_layer bg1 1
-    catalog add rigid_layer bg2 2
+once name=map_deps body=[
+    rigid_layer name=bg1 priority=1
+    rigid_layer name=bg2 priority=2
 
-    catalog add rigid_material ground 0.5 0.15
-    catalog add rigid_material ice 0.075 0.55
-    catalog add rigid_material rubber 0.7 0.8
-    catalog add rigid_material wood 0.4 0.3
-    catalog add rigid_material stone 0.6 0.05
-    catalog add rigid_material character 0.3 0.075
+    rigid_material name=ground friction=0.5 restitution=0.15
+    rigid_material name=ice friction=0.075 restitution=0.55
+    rigid_material name=rubber friction=0.7 restitution=0.8
+    rigid_material name=wood friction=0.4 restitution=0.3
+    rigid_material name=stone friction=0.6 restitution=0.05
+    rigid_material name=character friction=0.3 restitution=0.075
 
-    catalog add bt_graph enemy selector
-    sequence player_is_near 50
-    selector
-    sequence is_scared player_run_away 4 end
-    sequence player_chase 4 end
-    end
-    end
-    end
+    bt_graph name=enemy root=[
+        selector nodes=[
+            sequence nodes=[
+                player_is_near radius=50
+                selector nodes=[
+                    sequence nodes=[is_scared  player_run_away speed=4]
+                    sequence nodes=[player_chase speed=4]
+                ]
+            ]
+        ]
+    ]
 
-    catalog add prefab Enemy 0 0 1 1
-        entity Hitbox 0 0 0.5 0.5
-            collider character
-        end
-        box_renderer prop1 texture enemy1 0
-        box_renderer_animated 1
-        rigid_body 50 10 0.2
-        behaviour_agent enemy
-        effects
-    end
+    prefab name=Enemy
+        components=[
+            box_renderer layer=prop1 texture=enemy1
+            box_renderer_animated speed=1
+            rigid_body mass=50 friction=10 rolling=0.2
+            behaviour_agent graph=enemy
+            effects
+        ]
+        children=[
+            entity name=Hitbox size=[0.5 0.5] components=[
+                collider material=character
+            ]
+        ]
 
-    catalog add prefab Tree1 0 0 3 3
-                box_renderer prop1 texture tree1 0
-                box_renderer_animated 1
-    end
+    prefab name=Tree1 size=[3 3] components=[
+        box_renderer layer=prop1 texture=tree1
+        box_renderer_animated speed=1
+    ]
 
-        catalog add prefab Tree2 0 0 3 3
-                   box_renderer prop1 texture tree2 0
-                   box_renderer_animated 1
-       end
+    prefab name=Tree2 size=[3 3] components=[
+        box_renderer layer=prop1 texture=tree2
+        box_renderer_animated speed=1
+    ]
 
-       catalog add prefab Tree3 0 0 3 3
-                   box_renderer prop1 texture tree3 0
-                   box_renderer_animated 1
-       end
+    prefab name=Tree3 size=[3 3] components=[
+        box_renderer layer=prop1 texture=tree3
+        box_renderer_animated speed=1
+    ]
 
-       catalog add prefab Tree4 0 0 3 3
-                   box_renderer prop1 texture tree4 0
-                   box_renderer_animated 1
-       end
+    prefab name=Tree4 size=[3 3] components=[
+        box_renderer layer=prop1 texture=tree4
+        box_renderer_animated speed=1
+    ]
 
-       catalog add prefab Tree5 0 0 3 3
-                   box_renderer prop1 texture tree5 0
-                   box_renderer_animated 1
-       end
+    prefab name=Tree5 size=[3 3] components=[
+        box_renderer layer=prop1 texture=tree5
+        box_renderer_animated speed=1
+    ]
 
-    catalog add prefab FearBall 0 0 1 1
-        box_renderer effect1 color 150 0 150 200
-        fear_ball 50 -50 1 1.25
-        collider trigger
-    end
-
-once map_deps end
+    prefab name=FearBall components=[
+        box_renderer layer=effect1 color=[150 0 150 200]
+        fear_ball speed=50 acceleration=-50 lifetime=1 fear=1.25
+        collider trigger=true
+    ]
+]

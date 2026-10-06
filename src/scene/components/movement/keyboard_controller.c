@@ -11,7 +11,7 @@
 #include "../../entity.h"
 #include "../../../devices/keyboard.h"
 #include "controller.h"
-#include "../../../utils/parser.h"
+#include "../../../utils/fields.h"
 
 
 struct keyboard_controller {
@@ -25,15 +25,16 @@ struct keyboard_controller {
     struct controller* controller;
 };
 
-static struct component* keyboard_controller_clone(struct component base, const struct component *component);
+static void keyboard_controller_on_create(struct component *base, struct fields *fields);
 static void keyboard_controller_on_awake(struct component* base);
 static void keyboard_controller_on_update(struct component* base, const struct update_context *context);
 static void keyboard_controller_on_disable(struct component* base);
 static void keyboard_controller_on_destroy(struct component* base);
 
-static const struct component_vtable keyboard_controller_vtable = {
+const struct component_vtable keyboard_controller_vtable = {
     .component_key = keyboard_controller_component_key,
-    .on_clone = keyboard_controller_clone,
+    .size = sizeof(struct keyboard_controller),
+    .on_create = keyboard_controller_on_create,
     .on_awake = keyboard_controller_on_awake,
     .on_update = keyboard_controller_on_update,
     .on_disable = keyboard_controller_on_disable,
@@ -78,17 +79,12 @@ static void keyboard_controller_on_disable(struct component* base) {
     this->controller = NULL;
 }
 
-struct component* keyboard_controller_create(struct parser *parser, struct entity *parent) {
-    struct keyboard_controller *this = calloc(1, sizeof(struct keyboard_controller));
-    struct component *base = (struct component *) this;
-    component_base_create(base, &keyboard_controller_vtable, parent);
-
-    this->up = parser_next_dup(parser);
-    this->down = parser_next_dup(parser);
-    this->left = parser_next_dup(parser);
-    this->right = parser_next_dup(parser);
-
-    return base;
+static void keyboard_controller_on_create(struct component *base, struct fields *fields) {
+    struct keyboard_controller *this = (struct keyboard_controller *) base;
+    this->up = fields_dup_string(fields, "up", NULL);
+    this->down = fields_dup_string(fields, "down", NULL);
+    this->left = fields_dup_string(fields, "left", NULL);
+    this->right = fields_dup_string(fields, "right", NULL);
 }
 
 static void keyboard_controller_on_destroy(struct component* base) {
@@ -99,10 +95,3 @@ static void keyboard_controller_on_destroy(struct component* base) {
     if (this->right) free(this->right);
 }
 
-static struct component* keyboard_controller_clone(struct component base, const struct component *component) {
-    const struct keyboard_controller *keyboard_controller = (struct keyboard_controller *) component;
-
-    struct keyboard_controller* this = calloc(1, sizeof(struct keyboard_controller));
-    this->base = base;
-    return (struct component*)this;
-}

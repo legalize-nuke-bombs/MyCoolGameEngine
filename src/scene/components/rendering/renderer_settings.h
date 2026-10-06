@@ -6,10 +6,10 @@
 #define MYCOOLGAMEENGINE_RENDERER_SETTINGS_H
 
 struct entity;
-struct parser;
+struct component_vtable;
 
 const char* renderer_settings_component_key(void);
 
-struct component* renderer_settings_create(struct parser *parser, struct entity *parent);
+extern const struct component_vtable renderer_settings_vtable;
 
 #endif //MYCOOLGAMEENGINE_RENDERER_SETTINGS_H

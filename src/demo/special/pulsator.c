@@ -5,7 +5,7 @@
 
 #include "../../scene/components/component_internal.h"
 #include "../../scene/entity.h"
-#include "../../utils/parser.h"
+#include "../../utils/fields.h"
 #include "../../utils/vector2_math.h"
 
 
@@ -20,13 +20,14 @@ struct pulsator {
     struct vector2 origin_size;
 };
 
-static struct component* pulsator_clone(struct component base, const struct component *component);
+static void pulsator_on_create(struct component *base, struct fields *fields);
 static void pulsator_awake(struct component *base);
 static void pulsator_visible_chunk_update(struct component *base, const struct update_context *context);
 
-static const struct component_vtable pulsator_vtable = {
+const struct component_vtable pulsator_vtable = {
     .component_key = pulsator_component_key,
-    .on_clone = pulsator_clone,
+    .size = sizeof(struct pulsator),
+    .on_create = pulsator_on_create,
     .on_awake = pulsator_awake,
     .on_visible_chunk_update = pulsator_visible_chunk_update,
 };
@@ -35,27 +36,11 @@ const char* pulsator_component_key(void) {
     return "pulsator";
 }
 
-struct component* pulsator_create(struct parser *parser, struct entity *parent) {
-    struct pulsator *this = calloc(1, sizeof(struct pulsator));
-    struct component *base = (struct component *) this;
-    component_base_create(base, &pulsator_vtable, parent);
-
-    parser_next_double(parser, &this->lower_coefficient);
-    parser_next_double(parser, &this->upper_coefficient);
-    parser_next_double(parser, &this->speed);
-
-    return base;
-}
-
-static struct component* pulsator_clone(struct component base, const struct component *component) {
-    const struct pulsator *pulsator = (const struct pulsator *) component;
-
-    struct pulsator* this = calloc(1, sizeof(struct pulsator));
-    this->base = base;
-    this->lower_coefficient = pulsator->lower_coefficient;
-    this->upper_coefficient = pulsator->upper_coefficient;
-    this->speed = pulsator->speed;
-    return (struct component*)this;
+static void pulsator_on_create(struct component *base, struct fields *fields) {
+    struct pulsator *this = (struct pulsator *) base;
+    this->lower_coefficient = fields_get_double(fields, "lower", 1);
+    this->upper_coefficient = fields_get_double(fields, "upper", 1);
+    this->speed = fields_get_double(fields, "speed", 1);
 }
 
 static void pulsator_awake(struct component *base) {

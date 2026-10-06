@@ -11,6 +11,7 @@
 #include "../modules/physics/rigid_material.h"
 #include "../scene/prefabs/prefab.h"
 #include "../msystems/msystem.h"
+#include "../utils/fields.h"
 #include "../utils/list.h"
 
 
@@ -76,11 +77,12 @@ const struct msystem assets_msystem = {
     .on_destroy = assets_on_destroy
 };
 
-void assets_add(const char *key, struct parser *parser) {
-    const struct asset_type *type = assets_find(key);
+bool assets_add(struct fields *fields) {
+    const struct asset_type *type = assets_find(fields_key(fields));
     if (type == NULL) {
-        logger_warn("Assets do not know asset type `%s`", key ? key : "<null>");
-        return;
+        return false;
     }
-    type->on_add(parser);
+    type->on_add(fields);
+    fields_warn_unknown(fields);
+    return true;
 }

@@ -6,11 +6,11 @@
 #define MYCOOLGAMEENGINE_SIMULATOR_H
 
 
-struct parser;
+struct component_vtable;
 struct entity;
 
 const char* simulator_component_key();
 
-struct component* simulator_create(struct parser *parser, struct entity *parent);
+extern const struct component_vtable simulator_vtable;
 
 #endif //MYCOOLGAMEENGINE_SIMULATOR_H

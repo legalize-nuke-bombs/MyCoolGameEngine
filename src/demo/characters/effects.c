@@ -18,28 +18,14 @@ struct effects {
 const char* effects_component_key(void) {
     return "effects";
 }
-static struct component* effects_clone(struct component base, const struct component* component);
 static void effects_simulation_chunk_update(struct component *base, const struct update_context *context);
 
-static const struct component_vtable effects_vtable = {
+const struct component_vtable effects_vtable = {
     .component_key = effects_component_key,
-    .on_clone = effects_clone,
+    .size = sizeof(struct effects),
     .on_simulation_chunk_update = effects_simulation_chunk_update
 };
 
-struct component* effects_create(struct parser *parser, struct entity *parent) {
-    struct effects* this = calloc(1, sizeof(struct effects));
-    struct component* base = (struct component*)this;
-    component_base_create(base, &effects_vtable, parent);
-    return base;
-}
-
-static struct component* effects_clone(struct component base, const struct component* component) {
-    struct effects* effects = (struct effects*)component;
-    struct effects* this = calloc(1, sizeof(struct effects));
-    this->base = base;
-    return (struct component*)this;
-}
 
 static void effects_simulation_chunk_update(struct component *base, const struct update_context *context) {
     struct effects* this = (struct effects*)base;

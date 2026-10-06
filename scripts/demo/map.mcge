@@ -1,47 +1,53 @@
-eval scripts/demo/map_deps.mcge
+eval path=scripts/demo/map_deps.mcge
 
-scene add entity GameState 0 0 1 1
-    clock 0 3600
-    sky 125 125 150 255 40 40 70 255
-    scene_switcher Escape scripts/demo/menu.mcge
-end
+entity name=GameState components=[
+    clock seconds=0 speed=3600
+    sky day=[125 125 150 255] night=[40 40 70 255]
+    scene_switcher key=Escape script=scripts/demo/menu.mcge
+]
 
-scene add entity Terrain 0 0 250 250
-    box_renderer bg1 color 30 30 40 255
-    rigid_surface bg1 ground
-end
+entity name=Terrain size=[250 250] components=[
+    box_renderer layer=bg1 color=[30 30 40 255]
+    rigid_surface layer=bg1 material=ground
+]
 
-scene add entity Forest 0 0 250 250
-    forest 2000 Tree1 Tree2 Tree3 Tree4 Tree5 end
-end
+entity name=Forest size=[250 250] components=[
+    forest count=2000 prefabs=[Tree1 Tree2 Tree3 Tree4 Tree5]
+]
 
-scene add entity Forest 0 0 250 250
-    forest 500 Enemy end
-end
+entity name=Forest size=[250 250] components=[
+    forest count=500 prefabs=[Enemy]
+]
 
-scene add entity Campfire 4 2 1.5 1.5
-    box_renderer prop1 texture campfire 0
-    box_renderer_animated 2.5
-    entity Light 0 0 5 5
-        box_light texture gcirc1 0
-        pulsator 0.99 1.01 10
-    end
-    entity Collider 0 -0.25 0.5 0.5
-        collider ground
-    end
-end
+entity name=Campfire position=[4 2] size=[1.5 1.5]
+    components=[
+        box_renderer layer=prop1 texture=campfire
+        box_renderer_animated speed=2.5
+    ]
+    children=[
+        entity name=Light size=[5 5] components=[
+            box_light texture=gcirc1
+            pulsator lower=0.99 upper=1.01 speed=10
+        ]
+        entity name=Collider position=[0 -0.25] size=[0.5 0.5] components=[
+            collider material=ground
+        ]
+    ]
 
-scene add entity Character 2.5 1.5 1.5 3
-    entity Hitbox 0 0 0.45 0.6
-        collider character
-    end
-    box_renderer prop1 texture character 0
-    box_renderer_animated 1
-    rigid_body 250 10 0.2
-    keyboard_rigid_controller 6.25 W S A D
-    camera 17.5
-    simulator 50
-    player
-    mana 800
-    skilled fear_balls 100 1 FearBall 50
-end
+entity name=Character position=[2.5 1.5] size=[1.5 3]
+    components=[
+        box_renderer layer=prop1 texture=character
+        box_renderer_animated speed=1
+        rigid_body mass=250 friction=10 rolling=0.2
+        keyboard_rigid_controller speed=6.25 up=W down=S left=A right=D
+        camera height=17.5
+        simulator distance=50
+        player
+        mana max=800
+        skilled skills=[fear_balls manacost=100 cooldown=1 prefab=FearBall count=50]
+    ]
+    children=[
+        entity name=Hitbox size=[0.45 0.6] components=[
+            collider material=character
+        ]
+    ]

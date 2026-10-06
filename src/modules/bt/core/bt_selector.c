@@ -5,13 +5,12 @@
 #include "bt_selector.h"
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "../bt_node.h"
 #include "../bt_node_factory.h"
 #include "../bt_node_internal.h"
 #include "../../../utils/list.h"
-#include "../../../utils/parser.h"
+#include "../../../utils/fields.h"
 
 
 struct bt_selector {
@@ -20,38 +19,31 @@ struct bt_selector {
 };
 
 
+static void bt_selector_on_create(struct bt_node *base, struct fields *fields);
 static enum bt_status bt_selector_run(struct bt_node *base, void* bb);
 static void bt_selector_on_destroy(struct bt_node *base);
 
 
-struct bt_node_vtable bt_selector_vtable = {
+const struct bt_node_vtable bt_selector_vtable = {
     .key = BT_NODE_SELECTOR,
+    .size = sizeof(struct bt_selector),
+    .on_create = bt_selector_on_create,
     .run = bt_selector_run,
     .on_destroy = bt_selector_on_destroy
 };
 
 
-struct bt_selector* bt_selector_create() {
-    struct bt_selector* this = calloc(1, sizeof(struct bt_selector));
-    struct bt_node* base = (struct bt_node*)this;
-    bt_node_base_create(base, &bt_selector_vtable);
+static void bt_selector_on_create(struct bt_node *base, struct fields *fields) {
+    struct bt_selector* this = (struct bt_selector*)base;
     this->nodes = list_create(1);
-    return this;
-}
-struct bt_node* bt_selector_parse(struct parser *parser) {
-    struct bt_selector* this = bt_selector_create();
-    for (; ;) {
-        const char* word = parser_next(parser);
-        if (word == NULL || strcmp(word, "end") == 0) {
-            break;
+
+    const struct fields_list *nodes = fields_get_list(fields, "nodes");
+    for (int i = 0; i < fields_list_count(nodes); i++) {
+        struct bt_node* node = bt_node_factory_produce(fields_list_get(nodes, i));
+        if (node != NULL) {
+            list_add(&this->nodes, node);
         }
-        struct bt_node* node = bt_node_factory_produce(word, parser);
-        if (node == NULL) {
-            break;
-        }
-        bt_selector_capture_node(this, node);
     }
-    return (struct bt_node*)this;
 }
 
 static void bt_selector_on_destroy(struct bt_node *base) {
@@ -61,10 +53,6 @@ static void bt_selector_on_destroy(struct bt_node *base) {
         bt_node_destroy(node);
     }
     list_destroy(&this->nodes);
-}
-
-void bt_selector_capture_node(struct bt_selector *this, struct bt_node *node) {
-    list_add(&this->nodes, node);
 }
 
 static enum bt_status bt_selector_run(struct bt_node *base, void* bb) {

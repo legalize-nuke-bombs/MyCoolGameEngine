@@ -6,11 +6,11 @@
 #define MYCOOLGAMEENGINE_CAMERA_H
 
 
-struct parser;
+struct component_vtable;
 struct entity;
 
 const char* camera_component_key(void);
 
-struct component* camera_create(struct parser *parser, struct entity *parent);
+extern const struct component_vtable camera_vtable;
 
 #endif //MYCOOLGAMEENGINE_CAMERA_H

@@ -6,13 +6,16 @@
 #define MYCOOLGAMEENGINE_SKILL_INTERNAL_H
 
 #include <stdbool.h>
+#include <stddef.h>
 
 #include "skill.h"
 
-struct parser;
+struct fields;
 
 struct skill_vtable {
     const char* key;
+    size_t size;
+    void (*on_create)(struct skill *this, struct fields *fields);
     void (*on_destroy)(struct skill *this);
     void (*on_enable)(struct skill *this);
     bool (*on_invoke)(struct skill *this);
@@ -28,7 +31,6 @@ struct skill {
 };
 
 void skill_base_create(struct skill *this, const struct skill_vtable *vtable, double manacost, double cooldown, struct entity *self);
-void skill_base_parse(struct skill *this, const struct skill_vtable *vtable, struct parser *parser, struct entity *self);
 
 struct entity* skill_self(const struct skill *this);
 

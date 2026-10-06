@@ -10,13 +10,14 @@
 
 struct prefab;
 struct entity;
+struct fields;
 struct asset_type;
 
 extern const struct asset_type prefab_asset_type;
 
 struct prefab* prefab_asset_get(const char *name);
 
-struct prefab* prefab_create(char* name, struct entity* entity);
+struct prefab* prefab_create(struct fields *fields);
 void prefab_destroy(struct prefab* this);
 
 struct entity* prefab_instantiate(struct prefab* this);

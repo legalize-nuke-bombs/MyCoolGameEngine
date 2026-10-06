@@ -6,10 +6,10 @@
 #define MYCOOLGAMEENGINE_GAME_CLOSER_H
 
 struct entity;
-struct parser;
+struct component_vtable;
 
 const char* game_closer_component_key(void);
 
-struct component* game_closer_create(struct parser *parser, struct entity *parent);
+extern const struct component_vtable game_closer_vtable;
 
 #endif //MYCOOLGAMEENGINE_GAME_CLOSER_H

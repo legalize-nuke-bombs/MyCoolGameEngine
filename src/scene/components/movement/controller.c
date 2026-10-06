@@ -8,7 +8,7 @@
 
 #include "../component_internal.h"
 #include "../../entity.h"
-#include "../../../utils/parser.h"
+#include "../../../utils/fields.h"
 #include "../../../utils/vector2_math.h"
 
 
@@ -17,11 +17,12 @@ struct controller {
     double v;
 };
 
-static struct component* controller_clone(struct component base, const struct component *component);
+static void controller_on_create(struct component *base, struct fields *fields);
 
-static const struct component_vtable controller_vtable = {
+const struct component_vtable controller_vtable = {
     .component_key = controller_component_key,
-    .on_clone = controller_clone,
+    .size = sizeof(struct controller),
+    .on_create = controller_on_create,
     .on_update = NULL
 };
 
@@ -29,23 +30,9 @@ const char* controller_component_key(void) {
     return "controller";
 }
 
-struct component* controller_create(struct parser *parser, struct entity *parent) {
-    struct controller *this = calloc(1, sizeof(struct controller));
-    struct component *base = (struct component *) this;
-    component_base_create(base, &controller_vtable, parent);
-
-    parser_next_double(parser, &this->v);
-
-    return base;
-}
-
-static struct component* controller_clone(struct component base, const struct component *component) {
-    const struct controller *controller = (struct controller *) component;
-
-    struct controller* this = calloc(1, sizeof(struct controller));
-    this->base = base;
-    this->v = controller->v;
-    return (struct component*)this;
+static void controller_on_create(struct component *base, struct fields *fields) {
+    struct controller *this = (struct controller *) base;
+    this->v = fields_get_double(fields, "speed", 0);
 }
 
 void controller_move(const struct controller* this, struct vector2 direction, const double dt) {

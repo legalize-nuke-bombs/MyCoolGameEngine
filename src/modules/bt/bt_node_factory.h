@@ -6,12 +6,13 @@
 #define MYCOOLGAMEENGINE_BT_NODE_FACTORY_H
 
 struct bt_node;
-struct parser;
+struct bt_node_vtable;
+struct fields;
 
 void bt_node_factory_create(void);
 void bt_node_factory_destroy(void);
 
-void bt_node_factory_register(const char *key, struct bt_node* (*parse)(struct parser *parser));
-struct bt_node* bt_node_factory_produce(const char *key, struct parser *parser);
+void bt_node_factory_register(const struct bt_node_vtable *vtable);
+struct bt_node* bt_node_factory_produce(struct fields *fields);
 
 #endif //MYCOOLGAMEENGINE_BT_NODE_FACTORY_H

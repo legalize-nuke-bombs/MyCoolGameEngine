@@ -15,7 +15,7 @@
 #include "../../../logging/logger.h"
 #include "../../../rendering/renderer.h"
 #include "../../../rendering/primitives/custom/light_map.h"
-#include "../../../utils/parser.h"
+#include "../../../utils/fields.h"
 #include "../../../rendering/texture.h"
 
 struct box_light {
@@ -28,14 +28,15 @@ struct box_light {
     struct renderer_primitive* square;
 };
 
-static struct component* box_light_clone(struct component base, const struct component *component);
+static void box_light_on_create(struct component *base, struct fields *fields);
 static void box_light_awake(struct component *base);
 static void box_light_visible_chunk_update(struct component *base, const struct update_context *context);
 static void box_light_on_destroy(struct component *base);
 
-static const struct component_vtable box_light_vtable = {
+const struct component_vtable box_light_vtable = {
     .component_key = box_light_component_key,
-    .on_clone = box_light_clone,
+    .size = sizeof(struct box_light),
+    .on_create = box_light_on_create,
     .on_awake = box_light_awake,
     .on_visible_chunk_update = box_light_visible_chunk_update,
     .on_destroy = box_light_on_destroy
@@ -45,45 +46,19 @@ const char* box_light_component_key(void) {
     return "box_light";
 }
 
-struct component* box_light_create(struct parser *parser, struct entity *parent) {
-    struct box_light *this = calloc(1, sizeof(struct box_light));
-    struct component *base = (struct component*) this;
-    component_base_create(base, &box_light_vtable, parent);
+static void box_light_on_create(struct component *base, struct fields *fields) {
+    struct box_light *this = (struct box_light*) base;
 
-    const char* type = parser_next(parser);
-    if (strcmp(type, "color") == 0) {
-        struct color color;
-        parser_next_uint8(parser, &color.r);
-        parser_next_uint8(parser, &color.g);
-        parser_next_uint8(parser, &color.b);
-        parser_next_uint8(parser, &color.a);
-        this->square = renderer_square_create_from_color(color);
-    }
-    else if (strcmp(type, "texture") == 0) {
-        this->texture_name = parser_next_dup(parser);
-        parser_next_int(parser, &this->texture_frame);
+    if (fields_has(fields, "texture")) {
+        this->texture_name = fields_dup_string(fields, "texture", NULL);
+        this->texture_frame = fields_get_int(fields, "frame", 0);
     }
     else {
-        logger_warn("Box light unexpected type `%s`", type);
-        this->square = renderer_square_create_from_color(color_white);
+        if (!fields_has(fields, "color")) {
+            logger_warn("Box light expected field `texture` or `color`");
+        }
+        this->square = renderer_square_create_from_color(fields_get_color(fields, "color", color_white));
     }
-
-    return base;
-}
-
-static struct component* box_light_clone(struct component base, const struct component *component) {
-    const struct box_light *box_light = (struct box_light*)component;
-
-    struct box_light *this = calloc(1, sizeof(struct box_light));
-    this->base = base;
-    if (box_light->texture_name != NULL) {
-        this->texture_name = strdup(box_light->texture_name);
-    }
-    this->texture_frame = box_light->texture_frame;
-    if (box_light->square != NULL) {
-        this->square = renderer_square_clone((struct renderer_square*)box_light->square);
-    }
-    return (struct component*)this;
 }
 
 static void box_light_on_destroy(struct component *base) {

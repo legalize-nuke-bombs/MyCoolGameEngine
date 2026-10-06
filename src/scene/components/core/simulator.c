@@ -7,7 +7,7 @@
 #include "../../scene.h"
 #include "../../chunks/chunks.h"
 #include "../../../utils/dictionary.h"
-#include "../../../utils/parser.h"
+#include "../../../utils/fields.h"
 
 
 struct simulator {
@@ -18,13 +18,14 @@ struct simulator {
     const struct chunks *chunks;
 };
 
-static struct component* simulator_clone(struct component base, const struct component *component);
+static void simulator_on_create(struct component *base, struct fields *fields);
 static void simulator_awake(struct component *base);
 static void simulator_update(struct component *base, const struct update_context *context);
 
-static const struct component_vtable simulator_vtable = {
+const struct component_vtable simulator_vtable = {
     .component_key = simulator_component_key,
-    .on_clone = simulator_clone,
+    .size = sizeof(struct simulator),
+    .on_create = simulator_on_create,
     .on_awake = simulator_awake,
     .on_update = simulator_update
 };
@@ -33,23 +34,9 @@ const char* simulator_component_key(void) {
     return "simulator";
 }
 
-struct component* simulator_create(struct parser *parser, struct entity *parent) {
-    struct simulator *this = calloc(1, sizeof(struct simulator));
-    struct component *base = (struct component *) this;
-    component_base_create(base, &simulator_vtable, parent);
-
-    parser_next_double(parser, &this->simulation_distance);
-
-    return base;
-}
-
-static struct component* simulator_clone(struct component base, const struct component *component) {
-    const struct simulator *simulator = (struct simulator *) component;
-
-    struct simulator* this = calloc(1, sizeof(struct simulator));
-    this->base = base;
-    this->simulation_distance = simulator->simulation_distance;
-    return (struct component*)this;
+static void simulator_on_create(struct component *base, struct fields *fields) {
+    struct simulator *this = (struct simulator *) base;
+    this->simulation_distance = fields_get_double(fields, "distance", 0);
 }
 
 static void simulator_awake(struct component *base) {
