@@ -8,16 +8,16 @@
 #include <stdlib.h>
 
 #include "clock.h"
-#include "scene/components/component_internal.h"
-#include "scene/scene.h"
-#include "scene/entity.h"
-#include "logging/logger.h"
-#include "utils/dictionary.h"
-#include "utils/color.h"
-#include "utils/fields.h"
-#include "rendering/renderer.h"
-#include "rendering/renderer_pipeline.h"
-#include "rendering/primitives/custom/light_map.h"
+#include <mcge/scene/components/component_internal.h>
+#include <mcge/scene/scene.h>
+#include <mcge/scene/entity.h>
+#include <mcge/logging/logger.h>
+#include <mcge/utils/dictionary.h>
+#include <mcge/utils/color.h>
+#include <mcge/utils/fields.h>
+#include <mcge/rendering/renderer.h>
+#include <mcge/rendering/renderer_pipeline.h>
+#include <mcge/rendering/primitives/custom/light_map.h>
 
 struct sky {
     struct component base;

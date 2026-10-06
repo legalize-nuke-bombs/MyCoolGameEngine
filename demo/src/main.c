@@ -3,10 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include "engine/engine.h"
-#include "engine/engine_arguments.h"
+#include <mcge/engine/engine.h>
+#include <mcge/engine/engine_arguments.h>
 #include "demo.h"
-#include "logging/logger.h"
+#include <mcge/logging/logger.h>
 
 
 static void parse_arguments(const int argc, char* argv[], const char **out_data_root, struct engine_arguments *out_args, int *out_logger_level) {

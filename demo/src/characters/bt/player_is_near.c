@@ -6,14 +6,14 @@
 
 #include <stdlib.h>
 
-#include "modules/bt/bt_node_internal.h"
-#include "modules/bt/bt_node.h"
+#include <mcge/modules/bt/bt_node_internal.h>
+#include <mcge/modules/bt/bt_node.h>
 #include "blackboard.h"
-#include "scene/entity.h"
-#include "scene/scene.h"
-#include "utils/dictionary.h"
-#include "utils/fields.h"
-#include "utils/vector2_math.h"
+#include <mcge/scene/entity.h>
+#include <mcge/scene/scene.h>
+#include <mcge/utils/dictionary.h>
+#include <mcge/utils/fields.h>
+#include <mcge/utils/vector2_math.h>
 
 struct player_is_near {
     struct bt_node base;

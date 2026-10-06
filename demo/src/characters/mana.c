@@ -7,8 +7,8 @@
 
 
 #include <stdlib.h>
-#include "scene/components/component_internal.h"
-#include "utils/fields.h"
+#include <mcge/scene/components/component_internal.h>
+#include <mcge/utils/fields.h>
 
 struct mana {
     struct component base;

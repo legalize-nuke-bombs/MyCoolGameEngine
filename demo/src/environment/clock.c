@@ -2,8 +2,8 @@
 
 #include <stdlib.h>
 
-#include "scene/components/component_internal.h"
-#include "utils/fields.h"
+#include <mcge/scene/components/component_internal.h>
+#include <mcge/utils/fields.h>
 
 
 static const int DAY_DURATION = 24 * 3600;

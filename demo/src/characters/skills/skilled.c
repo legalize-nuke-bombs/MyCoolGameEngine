@@ -10,13 +10,13 @@
 
 #include "skill.h"
 #include "skill_factory.h"
-#include "devices/keyboard.h"
-#include "logging/logger.h"
-#include "scene/entity.h"
-#include "scene/scene.h"
-#include "scene/components/component_internal.h"
-#include "utils/action.h"
-#include "utils/fields.h"
+#include <mcge/devices/keyboard.h>
+#include <mcge/logging/logger.h>
+#include <mcge/scene/entity.h>
+#include <mcge/scene/scene.h>
+#include <mcge/scene/components/component_internal.h>
+#include <mcge/utils/action.h>
+#include <mcge/utils/fields.h>
 
 #define SKILLS_NUM 9
 

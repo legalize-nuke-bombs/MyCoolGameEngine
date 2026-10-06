@@ -1,7 +1,7 @@
 #include "demo.h"
 
-#include "modules/bt/bt_node_factory.h"
-#include "scene/components/component_factory.h"
+#include <mcge/modules/bt/bt_node_factory.h>
+#include <mcge/scene/components/component_factory.h>
 #include "characters/bt/behaviour_agent.h"
 #include "characters/bt/is_scared.h"
 #include "characters/bt/player_chase.h"

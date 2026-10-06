@@ -3,13 +3,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "scene/components/component_internal.h"
-#include "scene/entity.h"
-#include "devices/keyboard.h"
-#include "scene/scene.h"
-#include "engine/lifecycle/engine_lifecycle.h"
-#include "utils/fields.h"
-#include "utils/action.h"
+#include <mcge/scene/components/component_internal.h>
+#include <mcge/scene/entity.h>
+#include <mcge/devices/keyboard.h>
+#include <mcge/scene/scene.h>
+#include <mcge/engine/lifecycle/engine_lifecycle.h>
+#include <mcge/utils/fields.h>
+#include <mcge/utils/action.h>
 
 
 struct game_closer {

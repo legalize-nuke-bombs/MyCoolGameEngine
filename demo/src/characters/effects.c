@@ -6,7 +6,7 @@
 
 #include <stdlib.h>
 
-#include "scene/components/component_internal.h"
+#include <mcge/scene/components/component_internal.h>
 
 
 struct effects {

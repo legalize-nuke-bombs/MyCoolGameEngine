@@ -9,12 +9,12 @@
 
 #include "fear_ball.h"
 #include "../../skill_internal.h"
-#include "utils/fields.h"
-#include "scene/prefabs/prefab.h"
-#include "scene/prefabs/prefabs.h"
-#include "logging/logger.h"
-#include "scene/entity.h"
-#include "scene/scene.h"
+#include <mcge/utils/fields.h>
+#include <mcge/scene/prefabs/prefab.h>
+#include <mcge/scene/prefabs/prefabs.h>
+#include <mcge/logging/logger.h>
+#include <mcge/scene/entity.h>
+#include <mcge/scene/scene.h>
 
 struct fear_balls {
     struct skill base;
