@@ -2,13 +2,12 @@
 
 #include <stddef.h>
 #include <stdlib.h>
-#include <time.h>
 
 #include "../msystems/msystem.h"
 
 
 static void random_on_enable(struct engine_arguments arguments) {
-    srand((unsigned int)time(NULL));
+    srand(12345);
 }
 
 const struct msystem random_msystem = {
