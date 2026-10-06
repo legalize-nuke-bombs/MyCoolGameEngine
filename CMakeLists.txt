@@ -232,7 +232,6 @@ target_include_directories(mcge PUBLIC src)
 target_link_libraries(mcge PUBLIC SDL3::SDL3 SDL3_image::SDL3_image)
 
 add_executable(MyCoolGameEngine demo/src/main.c
-        demo/example.c
         demo/src/world/forest.h
         demo/src/world/forest.c
         demo/src/special/pulsator.h
