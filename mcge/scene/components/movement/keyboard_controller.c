@@ -22,13 +22,12 @@ struct keyboard_controller {
     char* left;
     char* right;
 
-    struct controller* controller;
+    uint128_t controller_id;
 };
 
 static void keyboard_controller_on_create(struct component *base, struct fields *fields);
 static void keyboard_controller_on_awake(struct component* base);
 static void keyboard_controller_on_update(struct component* base, const struct update_context *context);
-static void keyboard_controller_on_disable(struct component* base);
 static void keyboard_controller_on_destroy(struct component* base);
 
 const struct component_vtable keyboard_controller_vtable = {
@@ -37,7 +36,6 @@ const struct component_vtable keyboard_controller_vtable = {
     .on_create = keyboard_controller_on_create,
     .on_awake = keyboard_controller_on_awake,
     .on_update = keyboard_controller_on_update,
-    .on_disable = keyboard_controller_on_disable,
     .on_destroy = keyboard_controller_on_destroy
 };
 
@@ -47,6 +45,12 @@ const char* keyboard_controller_component_key(void) {
 
 static void keyboard_controller_on_update(struct component* base, const struct update_context *context) {
     const struct keyboard_controller* this = (struct keyboard_controller*)base;
+
+    // The controller can be marked destroyed and freed while this component lives on, so it is found by id
+    const struct controller *controller = (struct controller*)scene_try_get_component(this->controller_id);
+    if (controller == NULL) {
+        return;
+    }
 
     struct vector2 direction = vector2_zero;
 
@@ -63,20 +67,17 @@ static void keyboard_controller_on_update(struct component* base, const struct u
         direction.x += 1.0;
     }
 
-    controller_move(this->controller, direction, context->dt);
+    controller_move(controller, direction, context->dt);
 }
 
 static void keyboard_controller_on_awake(struct component* base) {
     struct keyboard_controller* this = (struct keyboard_controller*)base;
-    this->controller = (struct controller*)entity_get_component(component_get_parent(base), "controller", entity_query_local);
-    if (this->controller == NULL) {
+    const struct component *controller = entity_get_component(component_get_parent(base), "controller", entity_query_local);
+    if (controller == NULL) {
         entity_mark_destroyed(component_get_parent(base));
+        return;
     }
-}
-
-static void keyboard_controller_on_disable(struct component* base) {
-    struct keyboard_controller* this = (struct keyboard_controller*)base;
-    this->controller = NULL;
+    this->controller_id = component_get_id(controller);
 }
 
 static void keyboard_controller_on_create(struct component *base, struct fields *fields) {
