@@ -1,7 +1,6 @@
 #include "component_internal.h"
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "../entity.h"
 #include "../../logging/logger.h"
@@ -40,7 +39,6 @@ void component_destroy(struct component *this) {
     if (this->vtable->on_destroy) {
         this->vtable->on_destroy(this);
     }
-    memset(this, (int)0xbedabedabedabeda, this->vtable->size);
     free(this);
 }
 void component_mark_destroyed(struct component *this) {

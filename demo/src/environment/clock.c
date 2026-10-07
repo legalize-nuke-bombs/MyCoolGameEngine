@@ -38,10 +38,6 @@ static void clock_on_create(struct component *base, struct fields *fields) {
 static void clock_update(struct component* base, const struct update_context *context) {
     struct clock* this = (struct clock*)base;
     this->seconds += this->speed * context->dt;
-    if (this->seconds >= 10 * this->speed) { // TODO remove this shit after the test
-        logger_info("Clock is destroying. The process will probably go unstable");
-        component_mark_destroyed(base);
-    }
 }
 
 double clock_get_cycle_progress(const struct clock *this) {

@@ -45,11 +45,10 @@ once name=map_deps body=[
         box_renderer_animated speed=1
     ]
 
-    /* TODO Revert speed to 20 after the test */
     prefab name=FearBall components=[
         box_renderer layer=effect1 texture=[soul1 soul2 soul3]
         box_renderer_animated speed=2
-        fear_ball speed=2 range=10 fear=1
+        fear_ball speed=20 range=10 fear=1
     ]
     children = [
         entity name=Hitbox position=[0 0] size=[0.5 0.5] components=[

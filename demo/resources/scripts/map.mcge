@@ -1,6 +1,5 @@
 eval path=scripts/map_deps.mcge
 
-
 entity name=GameState components=[
     clock seconds=0 speed=3600
     sky day=[125 125 150 255] night=[40 40 70 255]
@@ -35,22 +34,14 @@ entity name=Campfire position=[4 2] size=[1.5 1.5]
         ]
     ]
 
-
-
-
-/* TODO Place back camera after the test */
-entity name=Camera position=[2.5 1.5] size=[1 1]
-    components=[
-        camera height=17.5
-        simulator distance=50
-    ]
-
 entity name=Character position=[2.5 1.5] size=[1.5 3]
     components=[
         box_renderer layer=prop1 texture=character
         box_renderer_animated speed=1
         rigid_body mass=250 friction=10 rolling=0.2
         keyboard_rigid_controller speed=6.25 up=W down=S left=A right=D
+        camera height=17.5
+        simulator distance=50
         player
         mana max=800
         skilled skills=[printer manacost=100 cooldown=1 title=Math.exe body=1000-7? fear_balls manacost=100 cooldown=1 prefab=FearBall count=50]
