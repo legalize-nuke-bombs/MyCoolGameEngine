@@ -19,4 +19,6 @@ MCGE_API extern const uint128_t uint128_zero;
 
 int uint128_cmp(uint128_t a, uint128_t b);
 
+int uint128_hash(const void *base);
+
 #endif //MYCOOLGAMEENGINE_UINT128_T_H
