@@ -19,7 +19,7 @@ struct fear_ball {
     struct vector2 direction;
     struct entity* self;
 
-    struct collider* collider;
+    uint128_t collider_id;
     unsigned int collider_token;
 
     uint128_t launcher_id;
@@ -55,17 +55,20 @@ static void handle_on_enter(void *listener, void *context);
 static void fear_ball_awake(struct component *base) {
     struct fear_ball* this = (struct fear_ball*)base;
     this->self = component_get_parent(base);
-    this->collider = (struct collider*)entity_get_component(this->self, "collider", entity_query_recursive);
-    if (this->collider == NULL) {
+    struct collider *collider = (struct collider*)entity_get_component(this->self, "collider", entity_query_recursive);
+    if (collider == NULL) {
         entity_mark_destroyed(this->self);
         return;
     }
-    action_subscribe(collider_on_enter(this->collider), this, handle_on_enter, &this->collider_token);
+    this->collider_id = component_get_id((struct component*)collider);
+    action_subscribe(collider_on_enter(collider), this, handle_on_enter, &this->collider_token);
 }
 
 static void fear_ball_disable(struct component *base) {
     const struct fear_ball* this = (struct fear_ball*)base;
-    if (this->collider) action_unsubscribe(collider_on_enter(this->collider), this->collider_token);
+    // A collider that is gone already has taken its subscribers with it, there is nothing to unsubscribe from
+    struct collider *collider = (struct collider*)scene_try_get_component(this->collider_id);
+    if (collider) action_unsubscribe(collider_on_enter(collider), this->collider_token);
 }
 
 void fear_ball_launch(const struct entity *launcher, struct fear_ball* this, const struct vector2 direction) {
