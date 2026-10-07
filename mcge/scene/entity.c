@@ -104,6 +104,7 @@ void entity_destroy(struct entity *this) {
     list_destroy(&this->components);
     list_destroy(&this->entities);
     free(this->name);
+    memset(this, (int)0xbedabedabedabeda, sizeof(struct entity)); // TODO Remove this line after the test
     free(this);
 }
 void entity_mark_destroyed(struct entity *this) {
