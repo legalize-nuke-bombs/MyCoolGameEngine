@@ -78,6 +78,12 @@ int random_next_int(const int l, const int r) {
     return l + (entropy % (r - l));
 }
 
+MCGE_API uint128_t random_next_uint128() {
+    uint128_t entropy;
+    random_random_bytes(&entropy, sizeof(entropy));
+    return entropy;
+}
+
 double random_next_double(const double l, const double r) {
     if (l >= r) {
         return l;

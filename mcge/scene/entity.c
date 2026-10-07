@@ -48,9 +48,7 @@ struct entity* entity_create(char *name, struct entity *parent) {
     struct entity *this = calloc(1, sizeof(struct entity));
     this->_name = name;
     logger_debug("Entity %s is initializing...", this->_name);
-    uint128_t id = {}; // TODO proper random number generator
-    id.h = random_next_int(0, 1000000000);
-    this->_id = id;
+    this->_id = random_next_uint128();
     this->_awake = false;
     this->_alive = true;
 
