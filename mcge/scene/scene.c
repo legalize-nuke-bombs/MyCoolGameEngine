@@ -160,7 +160,7 @@ const struct chunks* scene_get_chunks(void) {
 
 struct entity* scene_try_get_entity(const uint128_t id) {
     struct entity *entity = entity_collection_try_get(scene.entities, id);
-    return entity_is_alive(entity) ? entity : NULL;
+    return entity ? (entity_is_alive(entity) ? entity : NULL) : NULL;
 }
 void scene_capture_entity(struct entity *entity) {
     entity_set_in_scene(entity, true);

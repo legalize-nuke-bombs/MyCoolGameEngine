@@ -61,7 +61,7 @@ void entity_collection_capture(struct entity_collection *this, struct entity *en
     dictionary_try_add(this->entities, &entity->_id, entity);
 }
 void entity_collection_move_to_dead(struct entity_collection *this, struct entity *entity) {
-    if (dictionary_remove(this->entities, entity)) {
+    if (dictionary_remove(this->entities, &entity->_id)) {
         list_add(&this->dead, entity);
     }
 }
