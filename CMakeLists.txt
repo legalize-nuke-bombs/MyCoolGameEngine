@@ -293,6 +293,9 @@ add_executable(MyCoolGameEngine demo/src/main.c
         demo/src/characters/bt/is_scared.c
         demo/src/demo.h
         demo/src/demo.c
+        demo/src/characters/health.h
+        demo/src/characters/health.c
+        demo/src/characters/damage.h
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE mcge)
