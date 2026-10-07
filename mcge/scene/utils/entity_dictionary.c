@@ -8,7 +8,6 @@
 #include <stdint.h>
 
 #include "mcge/scene/entity.h"
-#include "../../utils/dictionary.h"
 
 
 static int entity_dictionary_key_hash(const void *key) {

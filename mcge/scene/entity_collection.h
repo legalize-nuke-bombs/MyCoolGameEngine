@@ -16,7 +16,7 @@ MCGE_API void entity_collection_destroy(struct entity_collection *this);
 
 MCGE_API void entity_collection_clear(struct entity_collection *this);
 
-MCGE_API void entity_collection_add(struct entity_collection *this, struct entity *entity);
+MCGE_API void entity_collection_capture(struct entity_collection *this, struct entity *entity);
 MCGE_API void entity_collection_move_to_dead(struct entity_collection *this, struct entity *entity);
 
 MCGE_API void entity_collection_pre_update(struct entity_collection *this);

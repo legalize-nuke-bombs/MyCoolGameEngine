@@ -162,7 +162,7 @@ void scene_capture_entity(struct entity *entity) {
     entity_set_in_scene(entity, true);
     logger_debug("Scene %s is capturing entity %s", scene.name, entity_get_name(entity));
 
-    entity_collection_add(scene.entities, entity);
+    entity_collection_capture(scene.entities, entity);
 
     entity_recapture_components(entity);
 

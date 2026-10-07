@@ -6,6 +6,7 @@
 #define MYCOOLGAMEENGINE_ENTITY_DICTIONARY_H
 
 #include "../../api.h"
+#include "../../utils/dictionary.h"
 
 MCGE_API struct dictionary* entity_dictionary_build(int dim);
 
