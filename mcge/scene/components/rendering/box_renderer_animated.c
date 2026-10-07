@@ -5,6 +5,7 @@
 #include "box_renderer.h"
 #include "../component_internal.h"
 #include "../../entity.h"
+#include "../../scene.h"
 #include "../../../utils/fields.h"
 
 
@@ -14,7 +15,7 @@ struct box_renderer_animated {
     double cycles_per_second;
     double frame_timer;
 
-    struct box_renderer *box_renderer;
+    uint128_t box_renderer_id;
 };
 
 static void box_renderer_animated_on_create(struct component *base, struct fields *fields);
@@ -42,21 +43,28 @@ static void box_renderer_animated_awake(struct component *base) {
     struct box_renderer_animated *this = (struct box_renderer_animated *) base;
     struct entity *parent = component_get_parent(base);
 
-    this->box_renderer = (struct box_renderer*)entity_get_component(parent, "box_renderer", entity_query_local);
-    if (this->box_renderer == NULL) {
+    const struct component *box_renderer = entity_get_component(parent, "box_renderer", entity_query_local);
+    if (box_renderer == NULL) {
         entity_mark_destroyed(parent);
         return;
     }
+    this->box_renderer_id = component_get_id(box_renderer);
 }
 
 static void box_renderer_animated_visible_chunk_update(struct component *base, const struct update_context *context) {
     struct box_renderer_animated *this = (struct box_renderer_animated *) base;
 
-    const double frame_time = 1 / (this->cycles_per_second * box_renderer_get_texture_frames(this->box_renderer));
+    // The renderer can be marked destroyed and freed while the animation lives on, so it is found by id
+    struct box_renderer *box_renderer = (struct box_renderer*)scene_try_get_component(this->box_renderer_id);
+    if (box_renderer == NULL) {
+        return;
+    }
+
+    const double frame_time = 1 / (this->cycles_per_second * box_renderer_get_texture_frames(box_renderer));
 
     this->frame_timer += context->dt;
     if (this->frame_timer >= frame_time) {
         this->frame_timer -= frame_time;
-        box_renderer_bump_texture_frame(this->box_renderer);
+        box_renderer_bump_texture_frame(box_renderer);
     }
 }
