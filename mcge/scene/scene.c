@@ -11,6 +11,7 @@
 #include "entity.h"
 #include "entity_collection.h"
 #include "entity_ids/entity_ids.h"
+#include "component_ids/component_ids.h"
 #include "../engine/events/engine_events.h"
 #include "../utils/action.h"
 #include "../msystems/msystem.h"
@@ -32,6 +33,7 @@ static struct {
 
     struct entity_collection* entities;
     struct entity_ids* entity_ids;
+    struct component_ids* component_ids;
     struct tmap *tmap;
     struct chunks* chunks;
 
@@ -52,6 +54,7 @@ static void scene_on_create(void) {
 
     scene.entities = entity_collection_create();
     scene.entity_ids = entity_ids_create();
+    scene.component_ids = component_ids_create();
     scene.tmap = tmap_create();
     scene.chunks = chunks_create();
 }
@@ -62,6 +65,7 @@ static void scene_on_destroy(void) {
     chunks_destroy(scene.chunks);
     entity_collection_destroy(scene.entities);
     entity_ids_destroy(scene.entity_ids);
+    component_ids_destroy(scene.component_ids);
     tmap_destroy(scene.tmap);
     if (scene.switch_flag != NULL) free(scene.switch_flag);
     scene.switch_flag = NULL;
@@ -88,6 +92,7 @@ static void scene_on_disable(void) {
     scene.on_physics = NULL;
     entity_collection_clear(scene.entities);
     entity_ids_clear(scene.entity_ids);
+    component_ids_clear(scene.component_ids);
     tmap_clear(scene.tmap);
     chunks_clear(scene.chunks);
 }
@@ -110,6 +115,7 @@ static void scene_handle_switch(void) {
     chunks_clear(scene.chunks);
     entity_collection_clear(scene.entities);
     entity_ids_clear(scene.entity_ids);
+    component_ids_clear(scene.component_ids);
     tmap_clear(scene.tmap);
     interpreter_eval(scene.switch_flag);
     if (scene.switch_flag != NULL) free(scene.switch_flag);
@@ -188,6 +194,9 @@ const struct chunks* scene_get_chunks(void) {
 
 struct entity* scene_try_get_entity(const uint128_t id) {
     return entity_ids_try_get(scene.entity_ids, id);
+}
+struct component* scene_try_get_component(const uint128_t id) {
+    return component_ids_try_get(scene.component_ids, id);
 }
 void scene_capture_entity(struct entity *entity) {
     entity_set_in_scene(entity, true);

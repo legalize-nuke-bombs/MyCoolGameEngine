@@ -93,5 +93,6 @@
 #include "utils/pointer_hasher.h"
 #include "utils/uint128_dictionary.h"
 #include "utils/uint128_t.h"
+#include "scene/component_ids/component_ids.h"
 
 #endif //MYCOOLGAMEENGINE_MCGE_H

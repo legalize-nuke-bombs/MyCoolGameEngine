@@ -6,11 +6,13 @@
 #include "../entity.h"
 #include "../../logging/logger.h"
 #include "../scene.h"
+#include "../../random/random.h"
 #include "../../utils/rect_pair.h"
 
 void component_base_create(struct component *this, const struct component_vtable *vtable, struct entity *parent) {
     this->vtable = vtable;
     logger_debug("Component %s is creating...", component_get_key(this));
+    this->id = random_next_uint128();
     this->awake = false;
     this->alive = true;
 
@@ -53,6 +55,10 @@ void component_mark_destroyed(struct component *this) {
     if (component_is_in_scene(this)) {
         scene_notify_component_marked_destroyed(this);
     }
+}
+
+uint128_t component_get_id(const struct component *this) {
+    return this->id;
 }
 
 bool component_is_awake(const struct component *this) {

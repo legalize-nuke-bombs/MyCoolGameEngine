@@ -5,6 +5,7 @@
 #include "../../engine/update_context.h"
 #include "../../utils/rect.h"
 #include "../../utils/rect_pair.h"
+#include "../../utils/uint128_t.h"
 #include "../../api.h"
 
 struct component;
@@ -13,6 +14,8 @@ struct entity;
 MCGE_API void component_awake(struct component *this);
 MCGE_API void component_destroy(struct component *this);
 MCGE_API void component_mark_destroyed(struct component *this);
+
+MCGE_API uint128_t component_get_id(const struct component *this);
 
 MCGE_API bool component_is_awake(const struct component *this);
 MCGE_API bool component_is_alive(const struct component *this);

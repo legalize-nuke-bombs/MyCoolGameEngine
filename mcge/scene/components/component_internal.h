@@ -28,6 +28,7 @@ struct component_vtable {
 
 struct component {
     const struct component_vtable *vtable;
+    uint128_t id;
     bool awake;
     bool alive;
 

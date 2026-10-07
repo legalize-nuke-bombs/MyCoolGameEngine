@@ -33,6 +33,7 @@ MCGE_API const struct tmap* scene_get_tmap(void);
 MCGE_API const struct chunks* scene_get_chunks(void);
 
 MCGE_API struct entity* scene_try_get_entity(uint128_t id);
+MCGE_API struct component* scene_try_get_component(uint128_t id);
 MCGE_API void scene_capture_entity(struct entity *entity);
 
 #endif //MYCOOLGAMEENGINE_SCENE_H
