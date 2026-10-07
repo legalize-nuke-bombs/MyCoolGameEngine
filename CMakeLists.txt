@@ -227,11 +227,6 @@ add_library(mcge SHARED
         mcge/modules/physics/collision_layers.c
         mcge/modules/physics/collision_response.c
         mcge/modules/physics/collision_rules.c
-        mcge/utils/memory/control_block.h
-        mcge/utils/memory/holder.h
-        mcge/utils/memory/ref.h
-        mcge/utils/memory/holder.c
-        mcge/utils/memory/ref.c
         mcge/utils/uint128_t.h
         mcge/scene/utils/entity_dictionary.h
         mcge/scene/utils/entity_dictionary.c
