@@ -266,19 +266,19 @@ add_executable(MyCoolGameEngine demo/src/main.c
         demo/src/version.h
         demo/src/characters/mana.h
         demo/src/characters/mana.c
-        demo/src/characters/skills/skill.h
-        demo/src/characters/skills/skill.c
-        demo/src/characters/skills/skill_internal.h
-        demo/src/characters/skills/custom/printer.h
-        demo/src/characters/skills/custom/printer.c
-        demo/src/characters/skills/skilled.h
-        demo/src/characters/skills/skilled.c
-        demo/src/characters/skills/skill_factory.h
-        demo/src/characters/skills/skill_factory.c
-        demo/src/characters/skills/custom/fear_balls/fear_balls.h
-        demo/src/characters/skills/custom/fear_balls/fear_balls.c
-        demo/src/characters/skills/custom/fear_balls/fear_ball.h
-        demo/src/characters/skills/custom/fear_balls/fear_ball.c
+        demo/src/skills/skill.h
+        demo/src/skills/skill.c
+        demo/src/skills/skill_internal.h
+        demo/src/skills/custom/printer.h
+        demo/src/skills/custom/printer.c
+        demo/src/skills/skilled.h
+        demo/src/skills/skilled.c
+        demo/src/skills/skill_factory.h
+        demo/src/skills/skill_factory.c
+        demo/src/skills/custom/fear_balls/fear_balls.h
+        demo/src/skills/custom/fear_balls/fear_balls.c
+        demo/src/skills/custom/fear_balls/fear_ball.h
+        demo/src/skills/custom/fear_balls/fear_ball.c
         demo/src/characters/effects.h
         demo/src/characters/effects.c
         demo/src/characters/bt/player_run_away.h

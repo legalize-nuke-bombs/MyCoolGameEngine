@@ -6,7 +6,7 @@
 
 #include <stdlib.h>
 
-#include "../../../effects.h"
+#include "../../../characters/effects.h"
 #include <mcge/mcge.h>
 
 struct fear_ball {
