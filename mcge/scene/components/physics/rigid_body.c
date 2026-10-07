@@ -36,7 +36,7 @@ struct rigid_body {
     struct vector2 impulse_drive_sum;
 
     const struct chunks* chunks;
-    const struct collider* collider;
+    uint128_t collider_id;
 };
 
 static void rigid_body_on_create(struct component *base, struct fields *fields);
@@ -74,16 +74,22 @@ static void rigid_body_awake(struct component *base) {
     struct entity *parent = component_get_parent(base);
 
     this->chunks = scene_get_chunks();
-    this->collider = (struct collider*)entity_get_component(parent, collider_component_key(), entity_query_recursive);
-    if (this->collider == NULL) {
+    const struct component *collider = entity_get_component(parent, collider_component_key(), entity_query_recursive);
+    if (collider == NULL) {
         entity_mark_destroyed(parent);
+        return;
     }
+    this->collider_id = component_get_id(collider);
 }
 
 static void rigid_body_on_disable(struct component *base) {
     struct rigid_body *this = (struct rigid_body *) base;
     this->chunks = NULL;
-    this->collider = NULL;
+}
+
+// The collider can be marked destroyed and freed while the body lives on, so the body keeps its id and not a pointer
+static const struct collider* rigid_body_collider(const struct rigid_body *this) {
+    return (const struct collider*)scene_try_get_component(this->collider_id);
 }
 
 static void rigid_body_apply_impulses(struct rigid_body *this, const double impulse_drive_max_scalar) {
@@ -115,11 +121,11 @@ static struct vector2 rigid_body_get_pushed_velocity(const struct rigid_body *th
     return vector_sum(this->v, vector_multiply_scalar(this->impulse_sum, 1.0 / this->m));
 }
 
-static void rigid_body_hit(struct rigid_body *this, const struct entity *obstacle, const struct vector2 direction) {
+static void rigid_body_hit(struct rigid_body *this, const struct collider *collider, const struct entity *obstacle, const struct vector2 direction) {
     struct rigid_body *other = (struct rigid_body*)entity_try_get_component(obstacle, rigid_body_component_key(), entity_query_recursive);
 
     const struct collider *other_collider = (struct collider*)entity_get_component(obstacle, "collider", entity_query_recursive);
-    const double elasticity = rigid_material_get_restitution(collider_get_rigid_material(this->collider)) * rigid_material_get_restitution(collider_get_rigid_material(other_collider));
+    const double elasticity = rigid_material_get_restitution(collider_get_rigid_material(collider)) * rigid_material_get_restitution(collider_get_rigid_material(other_collider));
 
     const struct vector2 other_v = other ? rigid_body_get_pushed_velocity(other) : vector2_zero;
     const double approach_speed = vector_dot(vector_sub(rigid_body_get_pushed_velocity(this), other_v), direction);
@@ -137,18 +143,18 @@ static void rigid_body_hit(struct rigid_body *this, const struct entity *obstacl
     }
 }
 
-static void rigid_body_move_along(struct rigid_body *this, const struct vector2 axis, const double dt) {
+static void rigid_body_move_along(struct rigid_body *this, const struct collider *collider, const struct vector2 axis, const double dt) {
     const double distance = vector_dot(this->v, axis) * dt;
     if (distance == 0) {
         return;
     }
     const struct vector2 d_pos = vector_multiply_scalar(axis, distance);
 
-    struct rect rect = component_get_rect((struct component*)this->collider);
+    struct rect rect = component_get_rect((const struct component*)collider);
     rect.position = vector_sum(rect.position, d_pos);
-    const struct entity *obstacle = collider_try_get_obstacle(this->collider, rect);
+    const struct entity *obstacle = collider_try_get_obstacle(collider, rect);
     if (obstacle != NULL) {
-        rigid_body_hit(this, obstacle, vector_multiply_scalar(axis, distance > 0 ? 1.0 : -1.0));
+        rigid_body_hit(this, collider, obstacle, vector_multiply_scalar(axis, distance > 0 ? 1.0 : -1.0));
         return;
     }
 
@@ -159,9 +165,9 @@ static void rigid_body_move_along(struct rigid_body *this, const struct vector2 
 }
 
 // The body only moves into free space. The axes go one by one, so a body slides along what it hits
-static void rigid_body_move(struct rigid_body *this, const double dt) {
-    rigid_body_move_along(this, axis_x, dt);
-    rigid_body_move_along(this, axis_y, dt);
+static void rigid_body_move(struct rigid_body *this, const struct collider *collider, const double dt) {
+    rigid_body_move_along(this, collider, axis_x, dt);
+    rigid_body_move_along(this, collider, axis_y, dt);
 }
 
 static void rigid_body_simulation_chunk_update(struct component* base, const struct update_context *context) {
@@ -172,7 +178,12 @@ static void rigid_body_simulation_chunk_update(struct component* base, const str
 
     rigid_body_apply_impulses(this, friction_impulse_max_scalar);
     rigid_body_apply_rolling_friction(this, friction_impulse_max_scalar * this->rolling_friction_coefficient);
-    rigid_body_move(this, dt);
+
+    // One lookup per update. Without a collider there is nothing to move and the body stands still
+    const struct collider *collider = rigid_body_collider(this);
+    if (collider != NULL) {
+        rigid_body_move(this, collider, dt);
+    }
 }
 
 void rigid_body_push(struct rigid_body *this, const struct vector2 impulse) {
