@@ -56,7 +56,7 @@ static void handle_on_enter(void *listener, void *context);
 static void fear_ball_awake(struct component *base) {
     struct fear_ball* this = (struct fear_ball*)base;
     this->self = component_get_parent(base);
-    struct collider *collider = (struct collider*)entity_get_component(this->self, "collider", entity_query_recursive);
+    struct collider *collider = (struct collider*)entity_get_component(this->self, "collider", entity_query_in_children);
     if (collider == NULL) {
         entity_mark_destroyed(this->self);
         return;

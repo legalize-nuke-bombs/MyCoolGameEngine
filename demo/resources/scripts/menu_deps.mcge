@@ -5,6 +5,7 @@ once name=menu_deps body=[
     renderer_layer name=effect1 priority=30
     renderer_layer name=gizmo priority=255
     renderer_layer name=ui1 priority=101
+    renderer_layer name=ui2 priority=102
 
     texture name=character tile=[256 512] count=64 path=textures/character.png
     texture name=campfire1 tile=[384 384] count=16 path=textures/campfire1.png

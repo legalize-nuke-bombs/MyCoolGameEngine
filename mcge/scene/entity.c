@@ -232,7 +232,7 @@ struct component* entity_try_get_component(const struct entity *this, const char
             return component;
         }
     }
-    if (query == entity_query_recursive) {
+    if (query == entity_query_in_children) {
         for (int i = 0; i < list_count(&this->_entities); i++) {
             const struct entity *child = list_get(&this->_entities, i);
             if (entity_is_alive(child)) {
@@ -243,16 +243,25 @@ struct component* entity_try_get_component(const struct entity *this, const char
             }
         }
     }
+    if (query == entity_query_in_parent && this->_parent) {
+        return entity_try_get_component(this->_parent, name, query);
+    }
     return NULL;
 }
 struct component* entity_get_component(const struct entity *this, const char *name, const enum entity_query query) {
     struct component *component = entity_try_get_component(this, name, query);
     if (component == NULL) {
-        if (query == entity_query_recursive) {
+        if (query == entity_query_local) {
+            logger_error("Entity %s does not locally contain required component %s", this->_name, name);
+        }
+        else if (query == entity_query_in_children) {
             logger_error("Entity %s does not contain in children required component %s", this->_name, name);
         }
+        else if (query == entity_query_in_parent) {
+            logger_error("Entity %s does not contain in parent required component %s", this->_name, name);
+        }
         else {
-            logger_error("Entity %s does not locally contain required component %s", this->_name, name);
+            logger_error("Entity %s get component %s failed with unexpected query type %d", this->_name, name, query);
         }
     }
     return component;

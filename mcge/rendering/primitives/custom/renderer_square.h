@@ -17,6 +17,8 @@ struct texture;
 MCGE_API struct renderer_primitive* renderer_square_create_from_color(struct color color);
 MCGE_API struct renderer_primitive* renderer_square_create_from_texture(struct texture* texture, int frame);
 
+MCGE_API void renderer_square_set_color(struct renderer_square* this, struct color color);
+
 MCGE_API void renderer_square_bump_texture_frame(struct renderer_square* this);
 MCGE_API int renderer_square_get_texture_frames(const struct renderer_square* this);
 

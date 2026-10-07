@@ -77,6 +77,10 @@ struct renderer_primitive* renderer_square_create_from_texture(struct texture* t
     return (struct renderer_primitive*)this;
 }
 
+MCGE_API void renderer_square_set_color(struct renderer_square* this, const struct color color) {
+    this->color = color;
+}
+
 void renderer_square_bump_texture_frame(struct renderer_square* this) {
     this->texture_frame++;
 }

@@ -10,6 +10,7 @@
 #include "characters/bt/player_run_away.h"
 #include "characters/effects.h"
 #include "characters/health.h"
+#include "characters/health_bar.h"
 #include "characters/mana.h"
 #include "characters/player.h"
 #include "skills/custom/fear_balls/fear_ball.h"
@@ -36,6 +37,7 @@ void demo_install(void) {
     component_factory_register(&effects_vtable);
     component_factory_register(&health_vtable);
     component_factory_register(&destroy_on_death_vtable);
+    component_factory_register(&health_bar_vtable);
 
     bt_node_factory_register(&player_is_near_vtable);
     bt_node_factory_register(&player_chase_vtable);

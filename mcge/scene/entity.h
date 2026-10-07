@@ -54,7 +54,8 @@ MCGE_API void entity_recapture(struct entity *this);
 
 enum entity_query {
     entity_query_local,
-    entity_query_recursive
+    entity_query_in_children,
+    entity_query_in_parent
 };
 MCGE_API struct component* entity_try_get_component(const struct entity *this, const char *name, enum entity_query query);
 MCGE_API struct component* entity_get_component(const struct entity *this, const char *name, enum entity_query query);

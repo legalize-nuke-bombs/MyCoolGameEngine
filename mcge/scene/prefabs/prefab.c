@@ -48,7 +48,7 @@ static bool prefab_fields_contain_component(struct fields *fields, const char* k
             return true;
         }
     }
-    if (query == entity_query_recursive) {
+    if (query == entity_query_in_children) {
         const struct fields_list *children = fields_get_list(fields, "children");
         for (int i = 0; i < fields_list_count(children); i++) {
             if (prefab_fields_contain_component(fields_list_get(children, i), key, query)) {

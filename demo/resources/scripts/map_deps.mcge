@@ -41,6 +41,9 @@ once name=map_deps body=[
             entity name=Hitbox size=[0.5 0.5] components=[
                 collider material=character
             ]
+            entity name=HealthBar position=[0 0.3] size=[0.5 0.08] components=[
+                health_bar layer=ui1 visibility_interval=5
+            ]
         ]
 
     prefab name=Tree size=[3 3] components=[

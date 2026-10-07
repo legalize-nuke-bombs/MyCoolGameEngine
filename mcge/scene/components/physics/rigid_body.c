@@ -87,7 +87,7 @@ static void rigid_body_awake(struct component *base) {
     struct entity *parent = component_get_parent(base);
 
     this->chunks = scene_get_chunks();
-    const struct component *collider = entity_get_component(parent, collider_component_key(), entity_query_recursive);
+    const struct component *collider = entity_get_component(parent, collider_component_key(), entity_query_in_children);
     if (collider == NULL) {
         entity_mark_destroyed(parent);
         return;
@@ -136,9 +136,9 @@ static struct vector2 rigid_body_get_pushed_velocity(const struct rigid_body *th
 }
 
 static void rigid_body_hit(struct rigid_body *this, const struct collider *collider, const struct entity *obstacle, const struct vector2 direction) {
-    struct rigid_body *other = (struct rigid_body*)entity_try_get_component(obstacle, rigid_body_component_key(), entity_query_recursive);
+    struct rigid_body *other = (struct rigid_body*)entity_try_get_component(obstacle, rigid_body_component_key(), entity_query_in_children);
 
-    const struct collider *other_collider = (struct collider*)entity_get_component(obstacle, "collider", entity_query_recursive);
+    const struct collider *other_collider = (struct collider*)entity_get_component(obstacle, "collider", entity_query_in_children);
     const double elasticity = rigid_material_get_restitution(collider_get_rigid_material(collider)) * rigid_material_get_restitution(collider_get_rigid_material(other_collider));
 
     const struct vector2 other_v = other ? rigid_body_get_pushed_velocity(other) : vector2_zero;
