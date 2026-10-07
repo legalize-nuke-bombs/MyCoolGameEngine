@@ -17,7 +17,6 @@ MCGE_API void collision_layer_destroy(struct collision_layer *this);
 MCGE_API uint8_t collision_layer_get_index(const struct collision_layer *this);
 MCGE_API enum collision_response collision_layer_get_default_response(const struct collision_layer *this);
 
-// The layer of the colliders that name no layer: index 0, blocks
 MCGE_API extern const struct collision_layer collision_layer_default;
 
 #endif //MYCOOLGAMEENGINE_COLLISION_LAYER_H

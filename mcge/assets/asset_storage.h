@@ -5,7 +5,6 @@
 
 struct dictionary;
 
-// A helper for the asset types whose id is a single string. An asset type is free to keep its assets any other way.
 struct asset_storage {
     const char *_key;
     void (*_destroy_item)(void *item);

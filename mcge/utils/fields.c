@@ -11,9 +11,6 @@
 #include "../logging/logger.h"
 
 
-// node  := word { field }
-// field := word '=' value
-// value := word | '[' { node } ']'
 
 
 struct fields_list {
@@ -465,7 +462,6 @@ const struct fields_list* fields_get_list(struct fields *this, const char *name)
     return &field->value;
 }
 
-// A field is reported once: the tree of a prefab is asked again for every instance
 void fields_warn_unknown(struct fields *this) {
     for (int i = 0; i < list_count(&this->fields); i++) {
         struct fields_field *field = list_get(&this->fields, i);

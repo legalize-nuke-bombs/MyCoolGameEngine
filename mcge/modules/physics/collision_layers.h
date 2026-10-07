@@ -6,7 +6,6 @@
 struct collision_layer;
 struct asset_type;
 
-// Together with collision_layer_default, which is always there under the name `default`
 #define COLLISION_LAYERS_MAX 32
 
 MCGE_API extern const struct asset_type collision_layers_asset_type;

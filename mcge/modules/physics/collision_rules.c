@@ -9,9 +9,7 @@
 #include "../../logging/logger.h"
 #include "../../utils/fields.h"
 
-// The id of a rule is an unordered pair of layers, so a rule lives in two cells: [layer1][layer2] and [layer2][layer1]
 static struct {
-    // 0 - the pair has no rule, otherwise the response of the rule + 1
     uint8_t cells[COLLISION_LAYERS_MAX][COLLISION_LAYERS_MAX];
 } collision_rules;
 

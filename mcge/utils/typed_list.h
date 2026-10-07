@@ -1,7 +1,3 @@
-// Example:
-// #define LIST_NAME action_method_list
-// #define LIST_TYPE struct action_method
-// #include "typed_list.h"
 
 #include <stdlib.h>
 

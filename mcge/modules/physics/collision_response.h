@@ -4,7 +4,6 @@
 #include <stdbool.h>
 #include "../../api.h"
 
-// From the weakest to the strongest: a pair of layers without a rule takes the weaker of their two defaults
 enum collision_response {
     collision_response_ignore,
     collision_response_overlap,

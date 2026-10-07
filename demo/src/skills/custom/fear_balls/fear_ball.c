@@ -82,7 +82,6 @@ static struct entity* fear_ball_launcher(const struct fear_ball *this) {
 static void fear_ball_on_update(struct component *base, const struct update_context *context) {
     struct fear_ball* this = (struct fear_ball*)base;
 
-    // The speed is constant: the ball flies out for range metres and then turns back at once
     const double step = this->speed * context->dt;
     this->travelled += step;
     if (this->travelled >= this->range) {

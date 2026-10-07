@@ -56,7 +56,6 @@ static void interpreter_entity_execute(struct fields *fields) {
     scene_capture_entity(entity_factory_produce(fields));
 }
 
-// A word that is not a command is an asset type: `texture name=...` adds a texture
 static const struct {
     const char *word;
     void (*execute)(struct fields *fields);

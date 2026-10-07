@@ -8,7 +8,6 @@
 #include "../utils/string_dictionary.h"
 
 
-// The item belongs to the storage from here on, even when the storage declines it
 void asset_storage_add(struct asset_storage *this, const char *name, void *item) {
     if (this->_items == NULL) {
         this->_items = string_dictionary_build(4);

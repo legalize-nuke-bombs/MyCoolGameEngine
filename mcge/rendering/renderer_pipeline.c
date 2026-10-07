@@ -78,7 +78,6 @@ void renderer_pipeline_draw_primitive(struct renderer_pipeline *this, struct ren
     if (!renderer_primitive_is_visible(draw_call.primitive, draw_call.rect, this->viewport)) {
         return;
     }
-    // The last slot is reserved for the light map
     if (this->draw_calls_count >= DRAW_CALLS_BUFFER_SIZE - 1) {
         this->dropped_draw_calls_count++;
         return;

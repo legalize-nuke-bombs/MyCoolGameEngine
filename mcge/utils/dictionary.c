@@ -13,7 +13,6 @@ struct dictionary_entry {
     int next_free;
 };
 
-// Entries and index share one block: entries_capacity entries, then the index with 2 * entries_capacity slots
 struct dictionary {
     struct dictionary_entry *entries;
     int *index;

@@ -14,7 +14,6 @@
 
 #define SKILLS_NUM 9
 
-// The skill in the slot number i is invoked by the key number i
 static const char *const skilled_hotkeys[SKILLS_NUM] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
 struct skilled_slot {

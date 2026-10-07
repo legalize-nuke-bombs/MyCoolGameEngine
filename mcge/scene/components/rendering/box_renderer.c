@@ -57,7 +57,6 @@ static void box_renderer_on_create(struct component *base, struct fields *fields
     this->renderer_layer_name = fields_dup_string(fields, "layer", NULL);
 
     if (fields_has(fields, "texture")) {
-        // texture=[a b c]: every instance takes one of the listed textures at random
         const struct fields_list *textures = fields_get_list(fields, "texture");
         const int count = fields_list_count(textures);
         if (count > 0) {

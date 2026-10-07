@@ -28,7 +28,6 @@ struct entity_collection *entity_collection_create(void) {
 }
 
 static void entity_collection_destroy_everyone(const struct entity_collection *this) {
-    // Everyone is disabled before anyone is freed, so on_disable can still reach other components
     struct dictionary_iterator iterator = dictionary_begin(this->entities);
     struct dictionary_node node;
     while (dictionary_next(this->entities, &iterator, &node)) {

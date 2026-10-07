@@ -17,7 +17,6 @@ struct prefab {
     int usages;
 };
 
-// The entity is built once right away: this checks the fields where the prefab is declared, not on its first instance
 struct prefab* prefab_create(struct fields *fields) {
     entity_destroy(entity_factory_produce(fields));
 

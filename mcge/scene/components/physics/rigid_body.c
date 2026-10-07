@@ -115,7 +115,6 @@ static void rigid_body_apply_rolling_friction(struct rigid_body *this, const dou
     }
 }
 
-// Velocity the body will have once the pushes it has already got are applied
 static struct vector2 rigid_body_get_pushed_velocity(const struct rigid_body *this) {
     return vector_sum(this->v, vector_multiply_scalar(this->impulse_sum, 1.0 / this->m));
 }
@@ -132,7 +131,6 @@ static void rigid_body_hit(struct rigid_body *this, const struct collider *colli
         return;
     }
 
-    // An obstacle without rigid_body has infinite mass
     const double reduced_mass = other ? this->m * other->m / (this->m + other->m) : this->m;
     const struct vector2 impulse = vector_multiply_scalar(direction, (1.0 + elasticity) * reduced_mass * approach_speed);
 
@@ -163,7 +161,6 @@ static void rigid_body_move_along(struct rigid_body *this, const struct collider
     entity_set_local_rect(parent, local_rect);
 }
 
-// The body only moves into free space. The axes go one by one, so a body slides along what it hits
 static void rigid_body_move(struct rigid_body *this, const struct collider *collider, const double dt) {
     rigid_body_move_along(this, collider, axis_x, dt);
     rigid_body_move_along(this, collider, axis_y, dt);

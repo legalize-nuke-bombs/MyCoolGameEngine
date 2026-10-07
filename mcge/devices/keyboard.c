@@ -64,7 +64,6 @@ static void keyboard_register_native_event(void* listener, void* context) {
         action_invoke(&keyboard.on_key_released[scancode], NULL);
     }
     else if (event->type == SDL_EVENT_WINDOW_FOCUS_LOST) {
-        // The key up events of a window without the keyboard focus go to somebody else
         logger_debug("Keyboard lost focus");
         keyboard_release_all();
     }

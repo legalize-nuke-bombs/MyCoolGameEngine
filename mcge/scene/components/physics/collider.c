@@ -121,7 +121,6 @@ static void collider_lazy_create_intersections(struct collider *this) {
 static void collider_handle_on_exit(struct collider *this, struct collider *collider, bool share);
 
 static void collider_handle_on_enter(struct collider *this, struct collider *collider, const bool share) {
-    // The dead do not enter anybody: their on_disable has already left everyone
     if (!component_is_alive((struct component*)this) || !component_is_alive((struct component*)collider)) {
         return;
     }
@@ -134,7 +133,6 @@ static void collider_handle_on_enter(struct collider *this, struct collider *col
     if (!share) {
         return;
     }
-    // A subscriber could have destroyed the other side, and its on_disable did not know about this one yet
     if (!component_is_alive((struct component*)collider)) {
         collider_handle_on_exit(this, collider, false);
         return;
@@ -235,7 +233,6 @@ static struct entity* collider_try_get_obstacle_among(const struct collider *thi
             continue;
         }
         const struct rect collider_rect = component_get_rect((const struct component*)collider);
-        // A collider we already intersect does not block, otherwise there would be no way out of it
         if (rects_intersection(rect, collider_rect) && !rects_intersection(current_rect, collider_rect)) {
             return component_get_global_parent((const struct component*)collider);
         }

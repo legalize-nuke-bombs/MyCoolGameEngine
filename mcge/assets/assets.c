@@ -44,7 +44,6 @@ void assets_register(const struct asset_type *type) {
     logger_debug("Assets know asset type %s", type->key);
 }
 
-// Asset types are cleared from the last one to the first one: register a type after the types its assets point to
 static void assets_on_create(void) {
     assets.types = list_create(8);
     assets_register(&textures_asset_type);
