@@ -73,23 +73,24 @@ int random_next_int(const int l, const int r) {
     if (l >= r) {
         return l;
     }
-    uint32_t entropy;
-    random_random_bytes(&entropy, sizeof(entropy));
-    return l + (entropy % (r - l));
+    return l + (int)(random_next_normalized() * (r - l));
 }
 
-MCGE_API uint128_t random_next_uint128() {
+uint128_t random_next_uint128() {
     uint128_t entropy;
     random_random_bytes(&entropy, sizeof(entropy));
     return entropy;
+}
+
+double random_next_normalized() {
+    uint32_t entropy;
+    random_random_bytes(&entropy, sizeof(entropy));
+    return (double)entropy / (double)UINT32_MAX;
 }
 
 double random_next_double(const double l, const double r) {
     if (l >= r) {
         return l;
     }
-    uint32_t entropy;
-    random_random_bytes(&entropy, sizeof(entropy));
-    const double scale = (double)entropy / UINT32_MAX;
-    return l + scale * (r - l);
+    return l + random_next_normalized() * (r - l);
 }
