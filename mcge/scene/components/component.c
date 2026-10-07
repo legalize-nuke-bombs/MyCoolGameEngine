@@ -1,3 +1,5 @@
+#include <intrin.h>
+
 #include "component_internal.h"
 
 #include <stdlib.h>
@@ -37,6 +39,7 @@ void component_destroy(struct component *this) {
     if (this->vtable->on_destroy) {
         this->vtable->on_destroy(this);
     }
+    memset(this, (int)0xbedabedabedabeda, this->vtable->size);
     free(this);
 }
 void component_mark_destroyed(struct component *this) {

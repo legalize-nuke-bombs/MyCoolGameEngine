@@ -75,7 +75,12 @@ static void sky_on_disable(struct component *base) {
 static void sky_update(struct component* base, const struct update_context *context) {
     const struct sky* this = (struct sky*)base;
 
+    if (this->clock == NULL) return; // TODO This safeguard will not work without smart referencing
+
     const double cycle_progress = clock_get_cycle_progress(this->clock);
+    if (!component_is_alive((struct component*)this->clock)) { // TODO Remove this shit after the test
+        logger_warn("Sky clock garbage access");
+    }
     const double day_factor = 1.0 - fabsl((cycle_progress - 0.5) * 2.0);
     const double night_factor = 1 - day_factor;
     const struct color output_color = {

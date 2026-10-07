@@ -1,5 +1,6 @@
 eval path=scripts/map_deps.mcge
 
+
 entity name=GameState components=[
     clock seconds=0 speed=3600
     sky day=[125 125 150 255] night=[40 40 70 255]
