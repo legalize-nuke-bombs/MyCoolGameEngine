@@ -1,6 +1,8 @@
 #include "demo.h"
 
 #include <mcge/mcge.h>
+
+#include "characters/destroy_on_death.h"
 #include "characters/bt/behaviour_agent.h"
 #include "characters/bt/is_scared.h"
 #include "characters/bt/player_chase.h"
@@ -33,6 +35,7 @@ void demo_install(void) {
     component_factory_register(&fear_ball_vtable);
     component_factory_register(&effects_vtable);
     component_factory_register(&health_vtable);
+    component_factory_register(&destroy_on_death_vtable);
 
     bt_node_factory_register(&player_is_near_vtable);
     bt_node_factory_register(&player_chase_vtable);

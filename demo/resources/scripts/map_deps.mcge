@@ -35,6 +35,7 @@ once name=map_deps body=[
             behaviour_agent graph=enemy
             effects
             health max=50
+            destroy_on_death
         ]
         children=[
             entity name=Hitbox size=[0.5 0.5] components=[
@@ -50,7 +51,7 @@ once name=map_deps body=[
     prefab name=FearBall components=[
         box_renderer layer=effect1 texture=[soul1 soul2 soul3]
         box_renderer_animated speed=2
-        fear_ball speed=20 range=10 damage=25 fear=1
+        fear_ball speed=20 range=10 damage=10 fear=1
     ]
     children = [
         entity name=Hitbox position=[0 0] size=[0.5 0.5] components=[

@@ -296,6 +296,8 @@ add_executable(MyCoolGameEngine demo/src/main.c
         demo/src/characters/health.h
         demo/src/characters/health.c
         demo/src/characters/damage.h
+        demo/src/characters/destroy_on_death.h
+        demo/src/characters/destroy_on_death.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE mcge)
