@@ -23,4 +23,4 @@ You can view a demo game created with this engine [here](demo).
 * Rigid bodies (physical based movement, friction, law of conversion of momentum, restitution)
 ## Other
 * A development mode supporting hot reloading via a hotkey or upon changes to the scene file on disk
-* a simple profiler for measuring frame time components
+* A simple profiler for measuring frame time components
