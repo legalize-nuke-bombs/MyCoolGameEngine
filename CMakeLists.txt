@@ -231,6 +231,8 @@ add_library(mcge SHARED
         mcge/scene/utils/entity_dictionary.h
         mcge/scene/utils/entity_dictionary.c
         mcge/utils/uint128_t.c
+        mcge/random/system_random.h
+        mcge/random/system_random.c
 )
 set_target_properties(mcge PROPERTIES DEFINE_SYMBOL MCGE_EXPORT)
 if(WIN32)
@@ -289,6 +291,10 @@ add_executable(MyCoolGameEngine demo/src/main.c
 
 target_link_libraries(MyCoolGameEngine PRIVATE mcge)
 target_link_options(MyCoolGameEngine PRIVATE $<$<CONFIG:Release>:-s -Wl,--gc-sections>)
+
+if(WIN32)
+    target_link_libraries(mcge PRIVATE bcrypt)
+endif()
 
 include(CheckIPOSupported)
 check_ipo_supported(RESULT ipo_supported OUTPUT ipo_error LANGUAGES C)
