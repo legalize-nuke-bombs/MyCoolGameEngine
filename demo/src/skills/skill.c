@@ -28,7 +28,8 @@ void skill_destroy(struct skill *this) {
 }
 
 void skill_enable(struct skill *this) {
-    this->mana = (struct mana*)entity_get_component(this->self, "mana", entity_query_local);
+    const struct component *mana = entity_get_component(this->self, "mana", entity_query_local);
+    if (mana) this->mana_id = component_get_id(mana);
     if (this->vtable->on_enable) {
         this->vtable->on_enable(this);
     }
@@ -54,7 +55,9 @@ enum skill_invoke_result skill_invoke(struct skill *this) {
         logger_debug("Failed to invoke skill %s: cooldown", this->vtable->key);
         return skill_invoke_cooldown;
     }
-    if (this->mana == NULL || this->manacost > mana_amount(this->mana)) {
+    // The mana can be marked destroyed and freed while the skill lives on, so it is found by id
+    struct mana *mana = (struct mana*)scene_try_get_component(this->mana_id);
+    if (mana == NULL || this->manacost > mana_amount(mana)) {
         logger_debug("Failed to invoke skill %s: insufficient mana", this->vtable->key);
         return skill_invoke_insufficient_mana;
     }
@@ -65,7 +68,7 @@ enum skill_invoke_result skill_invoke(struct skill *this) {
     if (this->vtable->on_invoke(this)) {
         logger_debug("Skill %s invoked", this->vtable->key);
         this->cool_timer = 0;
-        mana_try_take(this->mana, this->manacost);
+        mana_try_take(mana, this->manacost);
         return skill_invoke_ok;
     }
     logger_debug("Failed to invoke skill %s: child class declined", this->vtable->key);

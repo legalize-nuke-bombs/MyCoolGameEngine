@@ -9,6 +9,7 @@
 #include <stddef.h>
 
 #include "skill.h"
+#include <mcge/mcge.h>
 
 struct fields;
 
@@ -27,7 +28,7 @@ struct skill {
     double cool_timer;
     double cooldown;
     struct entity *self;
-    struct mana *mana;
+    uint128_t mana_id;
 };
 
 void skill_base_create(struct skill *this, const struct skill_vtable *vtable, double manacost, double cooldown, struct entity *self);
