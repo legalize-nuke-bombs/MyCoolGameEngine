@@ -164,6 +164,9 @@ void entity_capture_entity(struct entity *this, struct entity *entity) {
     logger_debug("Entity %s is capturing entity %s...", this->_name, entity->_name);
     entity_set_parent(entity, this);
     entity_update_rect(entity);
+    if (this->_awake) {
+        entity_awake(entity);
+    }
     list_add(&this->_entities, entity);
     entity_set_in_scene(entity, this->_in_scene);
     entity_recapture_components(entity);
