@@ -231,6 +231,8 @@ add_library(mcge SHARED
         mcge/scene/utils/entity_dictionary.h
         mcge/scene/utils/entity_dictionary.c
         mcge/utils/uint128_t.c
+        mcge/utils/pointer_hasher.h
+        mcge/utils/pointer_hasher.c
 )
 set_target_properties(mcge PROPERTIES DEFINE_SYMBOL MCGE_EXPORT)
 if(WIN32)
