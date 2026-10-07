@@ -16,7 +16,7 @@ struct sky {
     struct color day_color;
     struct color night_color;
 
-    struct clock *clock;
+    uint128_t clock_id;
     struct light_map *light_map;
 };
 
@@ -56,7 +56,7 @@ static void sky_awake(struct component *base) {
     struct dictionary_iterator iterator = dictionary_begin(clocks);
     struct dictionary_node node;
     if (dictionary_next(clocks, &iterator, &node)) {
-        this->clock = node.value;
+        this->clock_id = component_get_id(node.value);
     }
     else {
         logger_error("Entity %s failed to find clock", component_get_global_parent_name(base));
@@ -68,19 +68,17 @@ static void sky_awake(struct component *base) {
 }
 static void sky_on_disable(struct component *base) {
     struct sky* this = (struct sky*)base;
-    this->clock = NULL;
     this->light_map = NULL;
 }
 
 static void sky_update(struct component* base, const struct update_context *context) {
     const struct sky* this = (struct sky*)base;
 
-    if (this->clock == NULL) return; // TODO This safeguard will not work without smart referencing
+    // The clock belongs to another component and can be gone at any moment, so it is found by id
+    const struct clock *clock = (struct clock*)scene_try_get_component(this->clock_id);
+    if (clock == NULL) return;
 
-    const double cycle_progress = clock_get_cycle_progress(this->clock);
-    if (!component_is_alive((struct component*)this->clock)) { // TODO Remove this shit after the test
-        logger_warn("Sky clock garbage access");
-    }
+    const double cycle_progress = clock_get_cycle_progress(clock);
     const double day_factor = 1.0 - fabsl((cycle_progress - 0.5) * 2.0);
     const double night_factor = 1 - day_factor;
     const struct color output_color = {
