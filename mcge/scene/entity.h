@@ -6,6 +6,7 @@
 #include "components/component.h"
 #include "../utils/rect.h"
 #include "../api.h"
+#include "../utils/uint128_t.h"
 
 struct entity;
 
@@ -15,6 +16,9 @@ MCGE_API void entity_destroy(struct entity *this);
 MCGE_API void entity_mark_destroyed(struct entity *this);
 
 MCGE_API const char *entity_get_name(const struct entity *this);
+
+MCGE_API uint128_t entity_get_id(const struct entity *this);
+MCGE_API void entity_set_id(struct entity *this, uint128_t new_id);
 
 MCGE_API bool entity_is_awake(const struct entity *this);
 MCGE_API bool entity_is_alive(const struct entity *this);

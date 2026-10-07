@@ -12,6 +12,7 @@
 
 struct entity {
     char *name;
+    uint128_t id;
     bool awake;
     bool alive;
 
@@ -126,6 +127,13 @@ void entity_mark_destroyed(struct entity *this) {
 
 const char* entity_get_name(const struct entity *this) {
     return this->name;
+}
+
+uint128_t entity_get_id(const struct entity *this) {
+    return this->id;
+}
+void entity_set_id(struct entity *this, const uint128_t new_id) {
+    this->id = new_id;
 }
 
 bool entity_is_awake(const struct entity *this) {

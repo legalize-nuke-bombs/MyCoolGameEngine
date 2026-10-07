@@ -233,6 +233,9 @@ add_library(mcge SHARED
         mcge/utils/memory/holder.c
         mcge/utils/memory/ref.c
         mcge/utils/uint128_t.h
+        mcge/scene/utils/entity_dictionary.h
+        mcge/scene/utils/entity_dictionary.c
+        mcge/utils/uint128_t.c
 )
 set_target_properties(mcge PROPERTIES DEFINE_SYMBOL MCGE_EXPORT)
 if(WIN32)
