@@ -55,7 +55,6 @@ enum skill_invoke_result skill_invoke(struct skill *this) {
         logger_debug("Failed to invoke skill %s: cooldown", this->vtable->key);
         return skill_invoke_cooldown;
     }
-    // The mana can be marked destroyed and freed while the skill lives on, so it is found by id
     struct mana *mana = (struct mana*)scene_try_get_component(this->mana_id);
     if (mana == NULL || this->manacost > mana_amount(mana)) {
         logger_debug("Failed to invoke skill %s: insufficient mana", this->vtable->key);

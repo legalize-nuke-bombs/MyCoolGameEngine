@@ -146,7 +146,6 @@ const char* scene_get_name(void) {
 }
 
 
-// The scene hears about every entity. Owning is a direct call and only for a root, everyone else listens to the actions
 void scene_notify_entity_captured(struct entity *entity) {
     if (entity_get_parent(entity) == NULL) {
         entity_collection_capture(scene.entities, entity);

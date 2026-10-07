@@ -46,7 +46,6 @@ const char* keyboard_controller_component_key(void) {
 static void keyboard_controller_on_update(struct component* base, const struct update_context *context) {
     const struct keyboard_controller* this = (struct keyboard_controller*)base;
 
-    // The controller can be marked destroyed and freed while this component lives on, so it is found by id
     const struct controller *controller = (struct controller*)scene_try_get_component(this->controller_id);
     if (controller == NULL) {
         return;

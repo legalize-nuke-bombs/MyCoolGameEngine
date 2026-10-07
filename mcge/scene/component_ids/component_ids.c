@@ -10,7 +10,6 @@
 #include "../../logging/logger.h"
 
 
-// Every living component of the scene by its id. It owns nothing: a component belongs to its entity
 struct component_ids {
     struct dictionary *components;
 
@@ -56,7 +55,6 @@ static void handle_component_captured(void *listener, void *context) {
     if (!component_is_alive(component)) {
         return;
     }
-    // The key is the id inside the component itself: it is valid until the component is marked destroyed, and that is when it leaves
     if (!dictionary_try_add(this->components, &component->id, component) && dictionary_get(this->components, &component->id) != component) {
         logger_warn("Component %s of entity %s has an id that is already taken, it will not be found by its id", component_get_key(component), component_get_parent_name(component));
     }
@@ -66,7 +64,6 @@ static void handle_component_marked_destroyed(void *listener, void *context) {
     const struct component_ids *this = listener;
     struct component *component = context;
 
-    // Only the component itself leaves: under a repeated id there is another component, and it stays
     if (dictionary_get(this->components, &component->id) == component) {
         dictionary_remove(this->components, &component->id);
     }

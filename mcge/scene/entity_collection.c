@@ -11,16 +11,13 @@
 #include "../utils/list.h"
 #include "../utils/pointer_dictionary.h"
 
-// Owns the roots of the scene: the living ones sit in the dictionary, the ones marked destroyed wait in the list to be freed.
-// The children and the components belong to their entities
 struct entity_collection {
     struct dictionary *entities;
     struct list dead;
-    struct dictionary_iterator roots_iterator;
+    struct dictionary_iterator gc_iterator;
 };
 
-// How many living roots one frame looks through for the children and components marked destroyed on their own
-#define ENTITY_COLLECTION_ROOTS_PER_FRAME 100
+#define ENTITY_COLLECTION_GC_ROOTS_PER_FRAME 100
 
 struct entity_collection *entity_collection_create(void) {
     logger_info("Entity_collection is creating...");
@@ -54,7 +51,7 @@ void entity_collection_clear(struct entity_collection *this) {
     entity_collection_destroy_everyone(this);
     dictionary_clear(this->entities);
     list_clear(&this->dead);
-    this->roots_iterator = dictionary_begin(this->entities);
+    this->gc_iterator = dictionary_begin(this->entities);
 }
 
 void entity_collection_capture(struct entity_collection *this, struct entity *entity) {
@@ -76,14 +73,12 @@ void entity_collection_pre_update(struct entity_collection *this) {
     }
     list_clear(&this->dead);
 
-    // A child or a component marked destroyed on its own is freed by its root. Every frame a few living roots do it,
-    // and the next frame goes on from where this one stopped: the dictionary lets the roots come and go in between
-    for (int i = 0; i < ENTITY_COLLECTION_ROOTS_PER_FRAME; i++) {
+    for (int i = 0; i < ENTITY_COLLECTION_GC_ROOTS_PER_FRAME; i++) {
         struct dictionary_node node;
-        if (!dictionary_next(this->entities, &this->roots_iterator, &node)) {
-            this->roots_iterator = dictionary_begin(this->entities);
+        if (!dictionary_next(this->entities, &this->gc_iterator, &node)) {
+            this->gc_iterator = dictionary_begin(this->entities);
             break;
         }
-        entity_destroy_marked(node.value);
+        entity_collect_garbage(node.value);
     }
 }

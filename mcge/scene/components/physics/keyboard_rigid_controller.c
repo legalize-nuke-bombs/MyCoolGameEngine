@@ -45,7 +45,6 @@ const char* keyboard_rigid_controller_component_key(void) {
 static void keyboard_rigid_controller_on_update(struct component* base, const struct update_context *context) {
     const struct keyboard_rigid_controller* this = (struct keyboard_rigid_controller*)base;
 
-    // The body can be marked destroyed and freed while the controller lives on, so it is found by id
     struct rigid_body *rigid_body = (struct rigid_body*)scene_try_get_component(this->rigid_body_id);
     if (rigid_body == NULL) {
         return;

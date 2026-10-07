@@ -10,8 +10,6 @@
 #include "../../logging/logger.h"
 
 
-// Every living entity of the scene by its id, the roots and the children alike.
-// It owns nothing: a child belongs to its parent and a root to entity_collection
 struct entity_ids {
     struct dictionary *entities;
 
@@ -57,7 +55,6 @@ static void handle_entity_captured(void *listener, void *context) {
     if (!entity_is_alive(entity)) {
         return;
     }
-    // The key is the id inside the entity itself: it is valid until the entity is marked destroyed, and that is when it leaves
     if (!dictionary_try_add(this->entities, &entity->_id, entity) && dictionary_get(this->entities, &entity->_id) != entity) {
         logger_warn("Entity %s has an id that is already taken, it will not be found by its id", entity_get_name(entity));
     }
@@ -67,7 +64,6 @@ static void handle_entity_marked_destroyed(void *listener, void *context) {
     const struct entity_ids *this = listener;
     struct entity *entity = context;
 
-    // Only the entity itself leaves: under a repeated id there is another entity, and it stays
     if (dictionary_get(this->entities, &entity->_id) == entity) {
         dictionary_remove(this->entities, &entity->_id);
     }

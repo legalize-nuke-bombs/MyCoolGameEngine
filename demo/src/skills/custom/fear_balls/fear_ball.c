@@ -66,7 +66,6 @@ static void fear_ball_awake(struct component *base) {
 
 static void fear_ball_disable(struct component *base) {
     const struct fear_ball* this = (struct fear_ball*)base;
-    // A collider that is gone already has taken its subscribers with it, there is nothing to unsubscribe from
     struct collider *collider = (struct collider*)scene_try_get_component(this->collider_id);
     if (collider) action_unsubscribe(collider_on_enter(collider), this->collider_token);
 }

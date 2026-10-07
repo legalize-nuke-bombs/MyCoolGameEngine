@@ -87,7 +87,6 @@ static void rigid_body_on_disable(struct component *base) {
     this->chunks = NULL;
 }
 
-// The collider can be marked destroyed and freed while the body lives on, so the body keeps its id and not a pointer
 static const struct collider* rigid_body_collider(const struct rigid_body *this) {
     return (const struct collider*)scene_try_get_component(this->collider_id);
 }
@@ -179,7 +178,6 @@ static void rigid_body_simulation_chunk_update(struct component* base, const str
     rigid_body_apply_impulses(this, friction_impulse_max_scalar);
     rigid_body_apply_rolling_friction(this, friction_impulse_max_scalar * this->rolling_friction_coefficient);
 
-    // One lookup per update. Without a collider there is nothing to move and the body stands still
     const struct collider *collider = rigid_body_collider(this);
     if (collider != NULL) {
         rigid_body_move(this, collider, dt);

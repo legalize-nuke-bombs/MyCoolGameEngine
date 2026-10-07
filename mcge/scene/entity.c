@@ -112,13 +112,12 @@ void entity_mark_destroyed(struct entity *this) {
         scene_notify_entity_marked_destroyed(this);
     }
 }
-// Frees the children and the components that were marked destroyed while this entity stayed alive, here and below
-void entity_destroy_marked(struct entity *this) {
+void entity_collect_garbage(struct entity *this) {
     bool removed = false;
     for (int i = list_count(&this->_entities) - 1; i >= 0; i--) {
         struct entity *child_entity = list_get(&this->_entities, i);
         if (entity_is_alive(child_entity)) {
-            entity_destroy_marked(child_entity);
+            entity_collect_garbage(child_entity);
         }
         else {
             entity_destroy(child_entity);
@@ -198,7 +197,6 @@ void entity_capture_entity(struct entity *this, struct entity *entity) {
     list_add(&this->_entities, entity);
     entity_set_in_scene(entity, this->_in_scene);
     entity_recapture(entity);
-    // The scene learns about the newcomer first and it wakes up last, the same order as in scene_capture_entity
     if (this->_awake) {
         entity_awake(entity);
     }
@@ -214,7 +212,6 @@ void entity_capture_component(struct entity *this, struct component *component) 
         component_awake(component);
     }
 }
-// Tells the scene about the entity itself, about its components and about everyone below it. Does nothing outside of the scene
 void entity_recapture(struct entity *this) {
     logger_debug("Entity %s is recapturing...", this->_name);
     if (!this->_in_scene) return;
@@ -232,7 +229,6 @@ void entity_recapture(struct entity *this) {
 struct component* entity_try_get_component(const struct entity *this, const char *name, enum entity_query query) {
     for (int i = 0; i < list_count(&this->_components); i++) {
         struct component *component = list_get(&this->_components, i);
-        // A component marked destroyed has left the world, though it stays in the list until it is freed
         if (component_is_alive(component) && strcmp(component_get_key(component), name) == 0) {
             return component;
         }

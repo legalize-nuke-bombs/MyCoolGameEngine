@@ -54,7 +54,6 @@ static void box_renderer_animated_awake(struct component *base) {
 static void box_renderer_animated_visible_chunk_update(struct component *base, const struct update_context *context) {
     struct box_renderer_animated *this = (struct box_renderer_animated *) base;
 
-    // The renderer can be marked destroyed and freed while the animation lives on, so it is found by id
     struct box_renderer *box_renderer = (struct box_renderer*)scene_try_get_component(this->box_renderer_id);
     if (box_renderer == NULL) {
         return;

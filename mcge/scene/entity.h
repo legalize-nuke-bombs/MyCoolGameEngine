@@ -29,7 +29,7 @@ MCGE_API struct entity* entity_create(char *name, struct entity *parent);
 MCGE_API void entity_awake(struct entity *this);
 MCGE_API void entity_destroy(struct entity *this);
 MCGE_API void entity_mark_destroyed(struct entity *this);
-MCGE_API void entity_destroy_marked(struct entity *this);
+MCGE_API void entity_collect_garbage(struct entity *this);
 
 MCGE_API const char *entity_get_name(const struct entity *this);
 

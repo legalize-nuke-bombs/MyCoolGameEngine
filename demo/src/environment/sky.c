@@ -74,7 +74,6 @@ static void sky_on_disable(struct component *base) {
 static void sky_update(struct component* base, const struct update_context *context) {
     const struct sky* this = (struct sky*)base;
 
-    // The clock belongs to another component and can be gone at any moment, so it is found by id
     const struct clock *clock = (struct clock*)scene_try_get_component(this->clock_id);
     if (clock == NULL) return;
 
