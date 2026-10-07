@@ -16,9 +16,13 @@ struct fear_ball {
     double travelled;
     bool coming_back;
     double fear_length;
-    uint128_t launcher_id;
     struct vector2 direction;
     struct entity* self;
+
+    struct collider* collider;
+    unsigned int collider_token;
+
+    uint128_t launcher_id;
 };
 
 const char* fear_ball_component_key(void) {
@@ -26,6 +30,7 @@ const char* fear_ball_component_key(void) {
 }
 static void fear_ball_on_create(struct component *base, struct fields *fields);
 static void fear_ball_awake(struct component *base);
+static void fear_ball_disable(struct component *base);
 static void fear_ball_on_update(struct component *base, const struct update_context *context);
 
 const struct component_vtable fear_ball_vtable = {
@@ -33,6 +38,7 @@ const struct component_vtable fear_ball_vtable = {
     .size = sizeof(struct fear_ball),
     .on_create = fear_ball_on_create,
     .on_awake = fear_ball_awake,
+    .on_disable = fear_ball_disable,
     .on_update = fear_ball_on_update
 };
 
@@ -49,13 +55,17 @@ static void handle_on_enter(void *listener, void *context);
 static void fear_ball_awake(struct component *base) {
     struct fear_ball* this = (struct fear_ball*)base;
     this->self = component_get_parent(base);
-    struct collider *collider = (struct collider*)entity_get_component(this->self, "collider", entity_query_recursive);
-    if (collider == NULL) {
+    this->collider = (struct collider*)entity_get_component(this->self, "collider", entity_query_recursive);
+    if (this->collider == NULL) {
         entity_mark_destroyed(this->self);
         return;
     }
-    struct action* on_enter = collider_on_enter(collider);
-    action_subscribe_no_token(on_enter, this, handle_on_enter);
+    action_subscribe(collider_on_enter(this->collider), this, handle_on_enter, &this->collider_token);
+}
+
+static void fear_ball_disable(struct component *base) {
+    const struct fear_ball* this = (struct fear_ball*)base;
+    if (this->collider) action_unsubscribe(collider_on_enter(this->collider), this->collider_token);
 }
 
 void fear_ball_launch(const struct entity *launcher, struct fear_ball* this, const struct vector2 direction) {
