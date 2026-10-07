@@ -11,6 +11,7 @@
 #include "../../utils/fields.h"
 #include "core/bt_selector.h"
 #include "core/bt_sequence.h"
+#include "mcge/logging/logger.h"
 
 static struct factory bt_node_factory;
 
@@ -25,6 +26,7 @@ void bt_node_factory_destroy(void) {
 }
 
 void bt_node_factory_register(const struct bt_node_vtable *vtable) {
+    logger_info("Bt node factory knows node `%s`", vtable->key);
     factory_register(&bt_node_factory, vtable->key, (void*)vtable);
 }
 

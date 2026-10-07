@@ -12,6 +12,7 @@
 #include "core/camera.h"
 #include "core/idle.h"
 #include "core/simulator.h"
+#include "mcge/logging/logger.h"
 #include "movement/controller.h"
 #include "movement/keyboard_controller.h"
 #include "physics/collider.h"
@@ -49,6 +50,7 @@ void component_factory_destroy(void) {
 }
 
 void component_factory_register(const struct component_vtable *vtable) {
+    logger_info("Component factory knows component `%s`", vtable->component_key());
     factory_register(&component_factory, vtable->component_key(), (void*)vtable);
 }
 
