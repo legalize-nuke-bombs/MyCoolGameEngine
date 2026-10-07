@@ -284,13 +284,13 @@ def render(seed, tile, frames, palette_name):
 
 
 def pack(images, columns):
-    tile = images[0].shape[0]
+    height, width = images[0].shape[:2]
     rows = math.ceil(len(images) / columns)
-    sheet = np.zeros((rows * tile, columns * tile, 4), np.uint8)
+    sheet = np.zeros((rows * height, columns * width, 4), np.uint8)
     sheet[..., :3] = images[0][0, 0, :3]
     for i, image in enumerate(images):
-        y, x = (i // columns) * tile, (i % columns) * tile
-        sheet[y:y + tile, x:x + tile] = image
+        y, x = (i // columns) * height, (i % columns) * width
+        sheet[y:y + height, x:x + width] = image
     return Image.fromarray(sheet, "RGBA")
 
 
