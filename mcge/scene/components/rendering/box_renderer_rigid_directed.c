@@ -84,7 +84,7 @@ static void handle_rigid_body_drive(void *listener, void *context) {
     }
 
     const bool flip = box_renderer_get_flip_x(box_renderer);
-    const bool new_flip = impulse->x > 0;
+    const bool new_flip = impulse->x < 0;
     if (new_flip != flip) {
         logger_debug("Entity %s x-flipped to %d via box_renderer_rigid_directed", component_get_global_parent_name((const struct component*)this), new_flip);
         box_renderer_set_flip_x(box_renderer, new_flip);

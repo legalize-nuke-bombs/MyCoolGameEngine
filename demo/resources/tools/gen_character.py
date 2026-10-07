@@ -37,7 +37,7 @@ def render(seed, tile, frames, turn=0.0):
     base = np.random.default_rng(seed)
     body, hair = threads(base, s), tufts(base, s)
     eye_w, eye_h = 8.5 * s, 4 * s
-    look, trail = -14 * s * turn, 26 * s * turn
+    look, trail = 14 * s * turn, -26 * s * turn
     width = max(1, round(s))
 
     images = []
@@ -59,7 +59,7 @@ def render(seed, tile, frames, turn=0.0):
             draw.line(list(zip(xs, ys)), fill=(0, 0, 0, 255), width=width)
         for side in (-1, 1):
             cx, cy = tile / 2 + side * 17.5 * s + look, 143 * s
-            w = eye_w * (1 - 0.45 * turn) if side < 0 else eye_w
+            w = eye_w * (1 - 0.45 * turn) if side > 0 else eye_w
             draw.polygon([(cx - w, cy), (cx, cy - eye_h), (cx + w, cy), (cx, cy + eye_h)], fill=(255, 255, 255, 255))
         images.append(bleed_colors(np.asarray(image)))
     return images
@@ -72,7 +72,7 @@ if __name__ == "__main__":
     parser.add_argument("--tile", type=int, default=256, help="tile width, the height is twice as big")
     parser.add_argument("--frames", type=int, default=64)
     parser.add_argument("--columns", type=int, default=8)
-    parser.add_argument("--turn", type=float, default=0, help="0 looks at the camera, 1 is turned to the left")
+    parser.add_argument("--turn", type=float, default=0, help="0 looks at the camera, 1 is turned to the right")
     args = parser.parse_args()
     frames = render(args.seed, args.tile, args.frames, args.turn)
     pack(frames, args.columns).save(args.out)
