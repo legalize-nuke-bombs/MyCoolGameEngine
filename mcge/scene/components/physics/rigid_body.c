@@ -34,7 +34,8 @@ struct rigid_body {
 
     struct vector2 v;
     struct vector2 impulse_sum;
-    struct vector2 impulse_drive_sum;
+    struct vector2 target_velocity;
+    bool driven;
 
     struct action on_drive;
 
@@ -104,16 +105,19 @@ static const struct collider* rigid_body_collider(const struct rigid_body *this)
 }
 
 static void rigid_body_apply_impulses(struct rigid_body *this, const double impulse_drive_max_scalar) {
-    const double impulse_drive_scalar = vector_mod(this->impulse_drive_sum);
-    if (impulse_drive_scalar > impulse_drive_max_scalar) {
-        this->impulse_drive_sum = vector_multiply_scalar(this->impulse_drive_sum, impulse_drive_max_scalar / impulse_drive_scalar);
+    struct vector2 impulse = this->impulse_sum;
+    if (this->driven) {
+        struct vector2 impulse_drive = vector_multiply_scalar(vector_sub(this->target_velocity, this->v), this->m);
+        const double impulse_drive_scalar = vector_mod(impulse_drive);
+        if (impulse_drive_scalar > impulse_drive_max_scalar) {
+            impulse_drive = vector_multiply_scalar(impulse_drive, impulse_drive_max_scalar / impulse_drive_scalar);
+        }
+        impulse = vector_sum(impulse, impulse_drive);
     }
-
-    const struct vector2 impulse = vector_sum(this->impulse_sum, this->impulse_drive_sum);
     this->v = vector_sum(this->v, vector_multiply_scalar(impulse, 1.0 / this->m));
 
     this->impulse_sum = vector2_zero;
-    this->impulse_drive_sum = vector2_zero;
+    this->driven = false;
 }
 
 static void rigid_body_apply_rolling_friction(struct rigid_body *this, const double impulse_max_scalar) {
@@ -197,9 +201,10 @@ void rigid_body_push(struct rigid_body *this, const struct vector2 impulse) {
     this->impulse_sum = vector_sum(this->impulse_sum, impulse);
 }
 
-void rigid_body_drive(struct rigid_body *this, const struct vector2 impulse) {
-    this->impulse_drive_sum = vector_sum(this->impulse_drive_sum, impulse);
-    action_invoke(&this->on_drive, (void*)&impulse);
+void rigid_body_drive(struct rigid_body *this, const struct vector2 target_velocity) {
+    this->target_velocity = target_velocity;
+    this->driven = true;
+    action_invoke(&this->on_drive, (void*)&target_velocity);
 }
 
 struct vector2 rigid_body_get_velocity(const struct rigid_body *this) {

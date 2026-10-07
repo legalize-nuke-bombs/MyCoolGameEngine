@@ -50,8 +50,6 @@ static enum bt_status player_chase_run(struct bt_node *base, void *bb) {
 
     const struct vector2 direction = vector_sub(target_position, self_position);
 
-    const struct vector2 v_target = vector_multiply_scalar(vector_normalize(direction), this->speed);
-    const struct vector2 delta_v = vector_sub(v_target, rigid_body_get_velocity(rigid_body));
-    rigid_body_drive(rigid_body, vector_multiply_scalar(delta_v, rigid_body_get_mass(rigid_body)));
+    rigid_body_drive(rigid_body, vector_multiply_scalar(vector_normalize(direction), this->speed));
     return bt_in_progress;
 }

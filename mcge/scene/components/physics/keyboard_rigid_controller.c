@@ -65,9 +65,7 @@ static void keyboard_rigid_controller_on_update(struct component* base, const st
         direction.x += 1.0;
     }
 
-    const struct vector2 v_target = vector_multiply_scalar(vector_normalize(direction), this->speed);
-    const struct vector2 delta_v = vector_sub(v_target, rigid_body_get_velocity(rigid_body));
-    rigid_body_drive(rigid_body, vector_multiply_scalar(delta_v, rigid_body_get_mass(rigid_body)));
+    rigid_body_drive(rigid_body, vector_multiply_scalar(vector_normalize(direction), this->speed));
 }
 
 static void keyboard_rigid_controller_on_awake(struct component* base) {

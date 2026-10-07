@@ -24,6 +24,8 @@ struct box_renderer_rigid_directed {
     unsigned int rigid_body_on_drive_token;
 };
 
+#define BOX_RENDERER_RIGID_DIRECTED_MIN_SPEED_TO_TURN 0.5
+
 static void box_renderer_rigid_directed_on_create(struct component *base, struct fields *fields);
 static void box_renderer_rigid_directed_awake(struct component *base);
 static void box_renderer_rigid_directed_on_disable(struct component *base);
@@ -76,7 +78,11 @@ static void box_renderer_rigid_directed_on_disable(struct component *base) {
 
 static void handle_rigid_body_drive(void *listener, void *context) {
     struct box_renderer_rigid_directed* this = listener;
-    const struct vector2 *impulse = context;
+    const struct vector2 *target_velocity = context;
+
+    if (fabs(target_velocity->x) < BOX_RENDERER_RIGID_DIRECTED_MIN_SPEED_TO_TURN) {
+        return;
+    }
 
     const struct box_renderer* box_renderer = (struct box_renderer*)scene_try_get_component(this->box_renderer_id);
     if (box_renderer == NULL) {
@@ -84,7 +90,7 @@ static void handle_rigid_body_drive(void *listener, void *context) {
     }
 
     const bool flip = box_renderer_get_flip_x(box_renderer);
-    const bool new_flip = impulse->x < 0;
+    const bool new_flip = target_velocity->x < 0;
     if (new_flip != flip) {
         logger_debug("Entity %s x-flipped to %d via box_renderer_rigid_directed", component_get_global_parent_name((const struct component*)this), new_flip);
         box_renderer_set_flip_x(box_renderer, new_flip);
