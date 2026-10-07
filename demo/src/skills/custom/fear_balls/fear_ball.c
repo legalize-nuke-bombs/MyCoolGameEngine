@@ -3,6 +3,9 @@
 //
 
 #include "fear_ball.h"
+
+#include <math.h>
+
 #include "../../../characters/effects.h"
 #include <mcge/mcge.h>
 #include "demo/src/characters/damage.h"
@@ -13,11 +16,12 @@ struct fear_ball {
     double speed;
     double range;
     double travelled;
-    bool coming_back;
     struct damage damage;
     double fear_length;
     struct vector2 direction;
     struct entity* self;
+
+    struct vector2 base_scale;
 
     uint128_t collider_id;
     unsigned int collider_token;
@@ -61,6 +65,7 @@ static void fear_ball_awake(struct component *base) {
         entity_mark_destroyed(this->self);
         return;
     }
+    this->base_scale = entity_get_local_rect(this->self).size;
     this->collider_id = component_get_id((struct component*)collider);
     action_subscribe(collider_on_enter(collider), this, handle_on_enter, &this->collider_token);
 }
@@ -85,12 +90,9 @@ static void fear_ball_on_update(struct component *base, const struct update_cont
 
     const double step = this->speed * context->dt;
     this->travelled += step;
-    if (this->travelled >= this->range) {
-        this->coming_back = true;
-    }
 
     struct vector2 direction;
-    if (this->coming_back) {
+    if (this->travelled >= this->range) {
         const struct entity *launcher = fear_ball_launcher(this);
         if (launcher == NULL) {
             direction = vector2_zero;
@@ -107,6 +109,8 @@ static void fear_ball_on_update(struct component *base, const struct update_cont
 
     struct rect rect = entity_get_local_rect(this->self);
     rect.position = vector_sum(rect.position, vector_multiply_scalar(direction, step));
+    const double distance_coefficient = this->travelled >= this->range ? powl(2 - fminl((this->travelled - this->range) / this->range, 1), 2) : powl(1 + this->travelled / this->range, 2);
+    rect.size = vector_multiply_scalar(this->base_scale, distance_coefficient);
     entity_set_local_rect(this->self, rect);
 }
 
@@ -117,7 +121,7 @@ static void handle_on_enter(void *listener, void *context) {
     if (launcher)
     {
         if (launcher == entity) {
-            if (this->coming_back) {
+            if (this->travelled >= this->range) {
                 entity_mark_destroyed(component_get_parent((struct component*)this));
             }
             return;

@@ -51,10 +51,10 @@ once name=map_deps body=[
         box_renderer_animated speed=1
     ]
 
-    prefab name=FearBall components=[
+    prefab name=FearBall size=[0.5 0.5] components=[
         box_renderer layer=effect1 texture=[soul1 soul2 soul3]
         box_renderer_animated speed=2
-        fear_ball speed=20 range=10 damage=5 fear=1
+        fear_ball speed=10 range=10 damage=5 fear=1
     ]
     children = [
         entity name=Hitbox position=[0 0] size=[0.5 0.5] components=[
