@@ -6,7 +6,6 @@
 #define MYCOOLGAMEENGINE_ENTITY_COLLECTION_H
 
 #include "../api.h"
-#include "../utils/uint128_t.h"
 
 struct entity;
 struct entity_collection;
@@ -17,7 +16,6 @@ MCGE_API void entity_collection_destroy(struct entity_collection *this);
 
 MCGE_API void entity_collection_clear(struct entity_collection *this);
 
-MCGE_API struct entity* entity_collection_try_get(const struct entity_collection *this, uint128_t id);
 MCGE_API void entity_collection_capture(struct entity_collection *this, struct entity *entity);
 MCGE_API void entity_collection_move_to_dead(struct entity_collection *this, struct entity *entity);
 

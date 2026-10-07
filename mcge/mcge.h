@@ -89,5 +89,9 @@
 #include "utils/system_message_box.h"
 #include "utils/vector2.h"
 #include "utils/vector2_math.h"
+#include "scene/entity_ids/entity_ids.h"
+#include "utils/pointer_hasher.h"
+#include "utils/uint128_dictionary.h"
+#include "utils/uint128_t.h"
 
 #endif //MYCOOLGAMEENGINE_MCGE_H

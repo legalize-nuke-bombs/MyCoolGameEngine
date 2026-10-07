@@ -18,10 +18,13 @@ MCGE_API void scene_mark_switch(const char *script_path);
 
 MCGE_API const char* scene_get_name(void);
 
+MCGE_API void scene_notify_entity_captured(struct entity *entity);
+MCGE_API void scene_notify_entity_marked_destroyed(struct entity *entity);
 MCGE_API void scene_notify_component_captured(struct component *component);
 MCGE_API void scene_notify_component_marked_destroyed(struct component *component);
-MCGE_API void scene_notify_entity_marked_destroyed(struct entity *entity);
 MCGE_API void scene_notify_component_resize(struct component_on_rect_changed_callback_data *data);
+MCGE_API struct action* scene_get_on_entity_captured(void);
+MCGE_API struct action* scene_get_on_entity_marked_destroyed(void);
 MCGE_API struct action* scene_get_on_component_captured(void);
 MCGE_API struct action* scene_get_on_component_marked_destroyed(void);
 MCGE_API struct action* scene_get_on_component_resize(void);

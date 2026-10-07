@@ -9,8 +9,10 @@
 #include "entity.h"
 #include "../logging/logger.h"
 #include "../utils/list.h"
-#include "utils/entity_dictionary.h"
+#include "../utils/pointer_dictionary.h"
 
+// Owns the roots of the scene: the living ones sit in the dictionary, the ones marked destroyed wait in the list to be freed.
+// The children and the components belong to their entities
 struct entity_collection {
     struct dictionary *entities;
     struct list dead;
@@ -19,7 +21,7 @@ struct entity_collection {
 struct entity_collection *entity_collection_create(void) {
     logger_info("Entity_collection is creating...");
     struct entity_collection *this = calloc(1, sizeof(struct entity_collection));
-    this->entities = entity_dictionary_build(10);
+    this->entities = pointer_dictionary_build(4);
     this->dead = list_create(16);
     return this;
 }
@@ -50,18 +52,15 @@ void entity_collection_clear(struct entity_collection *this) {
     list_clear(&this->dead);
 }
 
-struct entity* entity_collection_try_get(const struct entity_collection *this, uint128_t id) {
-    return dictionary_get(this->entities, &id);
-}
 void entity_collection_capture(struct entity_collection *this, struct entity *entity) {
     if (!entity_is_alive(entity)) {
         list_add(&this->dead, entity);
         return;
     }
-    dictionary_try_add(this->entities, &entity->_id, entity);
+    dictionary_try_add(this->entities, entity, entity);
 }
 void entity_collection_move_to_dead(struct entity_collection *this, struct entity *entity) {
-    if (dictionary_remove(this->entities, &entity->_id)) {
+    if (dictionary_remove(this->entities, entity)) {
         list_add(&this->dead, entity);
     }
 }

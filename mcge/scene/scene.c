@@ -10,6 +10,7 @@
 
 #include "entity.h"
 #include "entity_collection.h"
+#include "entity_ids/entity_ids.h"
 #include "../engine/events/engine_events.h"
 #include "../utils/action.h"
 #include "../msystems/msystem.h"
@@ -21,6 +22,8 @@
 static struct {
     const char* name;
 
+    struct action on_entity_captured;
+    struct action on_entity_marked_destroyed;
     struct action on_component_captured;
     struct action on_component_marked_destroyed;
     struct action on_component_resize;
@@ -28,6 +31,7 @@ static struct {
     char* switch_flag;
 
     struct entity_collection* entities;
+    struct entity_ids* entity_ids;
     struct tmap *tmap;
     struct chunks* chunks;
 
@@ -38,6 +42,8 @@ static struct {
 static void scene_on_create(void) {
     scene.name = "Default scene";
 
+    scene.on_entity_captured = action_create();
+    scene.on_entity_marked_destroyed = action_create();
     scene.on_component_captured = action_create();
     scene.on_component_marked_destroyed = action_create();
     scene.on_component_resize = action_create();
@@ -45,6 +51,7 @@ static void scene_on_create(void) {
     component_factory_create();
 
     scene.entities = entity_collection_create();
+    scene.entity_ids = entity_ids_create();
     scene.tmap = tmap_create();
     scene.chunks = chunks_create();
 }
@@ -54,12 +61,15 @@ static void scene_on_destroy(void) {
 
     chunks_destroy(scene.chunks);
     entity_collection_destroy(scene.entities);
+    entity_ids_destroy(scene.entity_ids);
     tmap_destroy(scene.tmap);
     if (scene.switch_flag != NULL) free(scene.switch_flag);
     scene.switch_flag = NULL;
     action_destroy(&scene.on_component_resize);
     action_destroy(&scene.on_component_marked_destroyed);
     action_destroy(&scene.on_component_captured);
+    action_destroy(&scene.on_entity_marked_destroyed);
+    action_destroy(&scene.on_entity_captured);
 
     component_factory_destroy();
 }
@@ -77,6 +87,7 @@ static void scene_on_disable(void) {
     action_unsubscribe(scene.on_physics, scene.on_physics_subscription_token);
     scene.on_physics = NULL;
     entity_collection_clear(scene.entities);
+    entity_ids_clear(scene.entity_ids);
     tmap_clear(scene.tmap);
     chunks_clear(scene.chunks);
 }
@@ -98,6 +109,7 @@ static void scene_handle_switch(void) {
     logger_info("Scene is switching...");
     chunks_clear(scene.chunks);
     entity_collection_clear(scene.entities);
+    entity_ids_clear(scene.entity_ids);
     tmap_clear(scene.tmap);
     interpreter_eval(scene.switch_flag);
     if (scene.switch_flag != NULL) free(scene.switch_flag);
@@ -128,17 +140,33 @@ const char* scene_get_name(void) {
 }
 
 
+// The scene hears about every entity. Owning is a direct call and only for a root, everyone else listens to the actions
+void scene_notify_entity_captured(struct entity *entity) {
+    if (entity_get_parent(entity) == NULL) {
+        entity_collection_capture(scene.entities, entity);
+    }
+    action_invoke(&scene.on_entity_captured, entity);
+}
+void scene_notify_entity_marked_destroyed(struct entity *entity) {
+    if (entity_get_parent(entity) == NULL) {
+        entity_collection_move_to_dead(scene.entities, entity);
+    }
+    action_invoke(&scene.on_entity_marked_destroyed, entity);
+}
 void scene_notify_component_captured(struct component *component) {
     return action_invoke(&scene.on_component_captured, component);
 }
 void scene_notify_component_marked_destroyed(struct component *component) {
     return action_invoke(&scene.on_component_marked_destroyed, component);
 }
-void scene_notify_entity_marked_destroyed(struct entity *entity) {
-    entity_collection_move_to_dead(scene.entities, entity);
-}
 void scene_notify_component_resize(struct component_on_rect_changed_callback_data *data) {
     return action_invoke(&scene.on_component_resize, data);
+}
+struct action* scene_get_on_entity_captured(void) {
+    return &scene.on_entity_captured;
+}
+struct action* scene_get_on_entity_marked_destroyed(void) {
+    return &scene.on_entity_marked_destroyed;
 }
 struct action* scene_get_on_component_captured(void) {
     return &scene.on_component_captured;
@@ -159,16 +187,13 @@ const struct chunks* scene_get_chunks(void) {
 }
 
 struct entity* scene_try_get_entity(const uint128_t id) {
-    struct entity *entity = entity_collection_try_get(scene.entities, id);
-    return entity ? (entity_is_alive(entity) ? entity : NULL) : NULL;
+    return entity_ids_try_get(scene.entity_ids, id);
 }
 void scene_capture_entity(struct entity *entity) {
     entity_set_in_scene(entity, true);
     logger_debug("Scene %s is capturing entity %s", scene.name, entity_get_name(entity));
 
-    entity_collection_capture(scene.entities, entity);
-
-    entity_recapture_components(entity);
+    entity_recapture(entity);
 
     entity_awake(entity);
 }

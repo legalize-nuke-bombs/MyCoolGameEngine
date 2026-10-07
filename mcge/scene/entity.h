@@ -49,7 +49,7 @@ MCGE_API struct rect entity_get_rect(const struct entity *this);
 
 MCGE_API void entity_capture_entity(struct entity *this, struct entity *entity);
 MCGE_API void entity_capture_component(struct entity *this, struct component *component);
-MCGE_API void entity_recapture_components(const struct entity *this);
+MCGE_API void entity_recapture(struct entity *this);
 
 enum entity_query {
     entity_query_local,

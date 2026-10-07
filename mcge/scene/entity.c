@@ -164,34 +164,37 @@ void entity_capture_entity(struct entity *this, struct entity *entity) {
     logger_debug("Entity %s is capturing entity %s...", this->_name, entity->_name);
     entity_set_parent(entity, this);
     entity_update_rect(entity);
+    list_add(&this->_entities, entity);
+    entity_set_in_scene(entity, this->_in_scene);
+    entity_recapture(entity);
+    // The scene learns about the newcomer first and it wakes up last, the same order as in scene_capture_entity
     if (this->_awake) {
         entity_awake(entity);
     }
-    list_add(&this->_entities, entity);
-    entity_set_in_scene(entity, this->_in_scene);
-    entity_recapture_components(entity);
 }
 void entity_capture_component(struct entity *this, struct component *component) {
     logger_debug("Entity %s is capturing component %s...", this->_name, component_get_key(component));
     component_set_parent(component, this);
-    if (this->_awake) {
-        component_awake(component);
-    }
     list_add(&this->_components, component);
     if (this->_in_scene) {
         scene_notify_component_captured(component);
     }
+    if (this->_awake) {
+        component_awake(component);
+    }
 }
-void entity_recapture_components(const struct entity *this) {
-    logger_debug("Entity %s is recapturing all components...", this->_name);
+// Tells the scene about the entity itself, about its components and about everyone below it. Does nothing outside of the scene
+void entity_recapture(struct entity *this) {
+    logger_debug("Entity %s is recapturing...", this->_name);
     if (!this->_in_scene) return;
+    scene_notify_entity_captured(this);
     for (int i = 0; i < list_count(&this->_components); i++) {
         struct component *component = list_get(&this->_components, i);
         scene_notify_component_captured(component);
     }
     for (int i = 0; i < list_count(&this->_entities); i++) {
-        const struct entity *child_entity = list_get(&this->_entities, i);
-        entity_recapture_components(child_entity);
+        struct entity *child_entity = list_get(&this->_entities, i);
+        entity_recapture(child_entity);
     }
 }
 
