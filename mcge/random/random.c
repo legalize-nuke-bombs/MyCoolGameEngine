@@ -85,7 +85,8 @@ uint128_t random_next_uint128() {
 double random_next_normalized() {
     uint32_t entropy;
     random_random_bytes(&entropy, sizeof(entropy));
-    return (double)entropy / (double)UINT32_MAX;
+    // Divided by 2^32, not by UINT32_MAX: the result never reaches 1, so random_next_int never returns r
+    return (double)entropy / ((double)UINT32_MAX + 1.0);
 }
 
 double random_next_double(const double l, const double r) {
