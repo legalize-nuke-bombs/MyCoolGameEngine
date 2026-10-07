@@ -21,6 +21,7 @@
 #include "rendering/box_light.h"
 #include "rendering/box_renderer.h"
 #include "rendering/box_renderer_animated.h"
+#include "rendering/box_renderer_rigid_directed.h"
 #include "rendering/renderer_settings.h"
 
 static struct factory component_factory;
@@ -40,6 +41,7 @@ void component_factory_create(void) {
     component_factory_register(&rigid_surface_vtable);
     component_factory_register(&collider_vtable);
     component_factory_register(&rigid_body_vtable);
+    component_factory_register(&box_renderer_rigid_directed_vtable);
     component_factory_register(&keyboard_rigid_controller_vtable);
 }
 void component_factory_destroy(void) {

@@ -11,12 +11,10 @@
 #include "../../../rendering/renderer_pipeline.h"
 #include "../../../rendering/primitives/custom/renderer_square.h"
 #include "../../entity.h"
-#include "../../scene.h"
 #include "../../../logging/logger.h"
 #include "../../../random/random.h"
 #include "../../../rendering/renderer.h"
 #include "../../../rendering/renderer_layers.h"
-#include "../../../rendering/texture.h"
 #include "../../../rendering/textures.h"
 #include "../../../utils/fields.h"
 
@@ -121,4 +119,17 @@ void box_renderer_bump_texture_frame(const struct box_renderer *this) {
 }
 int box_renderer_get_texture_frames(const struct box_renderer *this) {
     return renderer_square_get_texture_frames((struct renderer_square*)this->square);
+}
+
+bool box_renderer_get_flip_x(const struct box_renderer *this) {
+    return renderer_square_get_flip_x((struct renderer_square*)this->square);
+}
+bool box_renderer_get_flip_y(const struct box_renderer *this) {
+    return renderer_square_get_flip_y((struct renderer_square*)this->square);
+}
+void box_renderer_set_flip_x(const struct box_renderer *this, const bool value) {
+    renderer_square_set_flip_x((struct renderer_square*)this->square, value);
+}
+void box_renderer_set_flip_y(const struct box_renderer *this, const bool value) {
+    renderer_square_set_flip_y((struct renderer_square*)this->square, value);
 }

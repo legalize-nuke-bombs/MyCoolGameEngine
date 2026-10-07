@@ -61,3 +61,9 @@ struct vector2 vector_relu(const struct vector2 *vector) {
     };
     return output;
 }
+
+MCGE_API struct vector2 vector_abs(struct vector2 vector) {
+    vector.x = fabs(vector.x);
+    vector.y = fabs(vector.y);
+    return vector;
+}

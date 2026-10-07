@@ -31,6 +31,7 @@ once name=map_deps body=[
             box_renderer layer=prop1 texture=[enemy1 enemy2]
             box_renderer_animated speed=1
             rigid_body mass=50 friction=10 rolling=0.2
+            box_renderer_rigid_directed
             behaviour_agent graph=enemy
             effects
         ]

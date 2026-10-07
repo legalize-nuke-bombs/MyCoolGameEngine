@@ -17,6 +17,8 @@ struct renderer_square {
 
     struct texture* texture;
     unsigned long long texture_frame;
+
+    bool flip_x, flip_y;
 };
 
 static void renderer_square_draw(struct renderer_primitive* base, const struct rect rect, const struct rect viewport, const struct vector2 output_size, SDL_Renderer* renderer) {
@@ -38,7 +40,10 @@ static void renderer_square_draw(struct renderer_primitive* base, const struct r
         SDL_GetRenderDrawBlendMode(renderer, &current_blend_mode);
         SDL_SetTextureBlendMode(texture_get_native_texture(this->texture), current_blend_mode);
 
-        SDL_RenderTexture(renderer, texture_get_native_texture(this->texture), &src_rect, &sdl_target_rect);
+        SDL_RenderTextureRotated(renderer, texture_get_native_texture(this->texture), &src_rect, &sdl_target_rect,
+            0, NULL,
+            this->flip_x && this->flip_y ? SDL_FLIP_HORIZONTAL_AND_VERTICAL : (this->flip_x ? SDL_FLIP_HORIZONTAL : (this->flip_y ? SDL_FLIP_VERTICAL : SDL_FLIP_NONE))
+            );
     }
     else {
         SDL_SetRenderDrawColor(renderer, this->color.r, this->color.g, this->color.b, this->color.a);
@@ -80,4 +85,17 @@ int renderer_square_get_texture_frames(const struct renderer_square* this) {
         return 0;
     }
     return texture_get_tiles_count(this->texture);
+}
+
+bool renderer_square_get_flip_x(const struct renderer_square* this) {
+    return this->flip_x;
+}
+bool renderer_square_get_flip_y(const struct renderer_square* this) {
+    return this->flip_y;
+}
+void renderer_square_set_flip_x(struct renderer_square* this, const bool value) {
+    this->flip_x = value;
+}
+void renderer_square_set_flip_y(struct renderer_square* this, const bool value) {
+    this->flip_y = value;
 }

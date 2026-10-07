@@ -225,7 +225,7 @@ void entity_recapture(struct entity *this) {
     }
 }
 
-struct component* entity_try_get_component(const struct entity *this, const char *name, enum entity_query query) {
+struct component* entity_try_get_component(const struct entity *this, const char *name, const enum entity_query query) {
     for (int i = 0; i < list_count(&this->_components); i++) {
         struct component *component = list_get(&this->_components, i);
         if (component_is_alive(component) && strcmp(component_get_key(component), name) == 0) {
@@ -245,10 +245,15 @@ struct component* entity_try_get_component(const struct entity *this, const char
     }
     return NULL;
 }
-struct component* entity_get_component(const struct entity *this, const char *name, enum entity_query query) {
+struct component* entity_get_component(const struct entity *this, const char *name, const enum entity_query query) {
     struct component *component = entity_try_get_component(this, name, query);
     if (component == NULL) {
-        logger_error("Entity %s does not contain required component %s", this->_name, name);
+        if (query == entity_query_recursive) {
+            logger_error("Entity %s does not contain in children required component %s", this->_name, name);
+        }
+        else {
+            logger_error("Entity %s does not locally contain required component %s", this->_name, name);
+        }
     }
     return component;
 }

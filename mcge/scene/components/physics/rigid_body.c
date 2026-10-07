@@ -15,6 +15,7 @@
 #include "../../../modules/physics/rigid_material.h"
 #include "../../../utils/fields.h"
 #include "../../../utils/vector2_math.h"
+#include "../../../utils/action.h"
 
 
 #define FRICTION_DEFAULT 0.5f
@@ -35,6 +36,8 @@ struct rigid_body {
     struct vector2 impulse_sum;
     struct vector2 impulse_drive_sum;
 
+    struct action on_drive;
+
     const struct chunks* chunks;
     uint128_t collider_id;
 };
@@ -43,6 +46,7 @@ static void rigid_body_on_create(struct component *base, struct fields *fields);
 static void rigid_body_awake(struct component *base);
 static void rigid_body_simulation_chunk_update(struct component* base, const struct update_context *context);
 static void rigid_body_on_disable(struct component *base);
+static void rigid_body_on_destroy(struct component *base);
 
 const struct component_vtable rigid_body_vtable = {
     .component_key = rigid_body_component_key,
@@ -50,7 +54,8 @@ const struct component_vtable rigid_body_vtable = {
     .on_create = rigid_body_on_create,
     .on_awake = rigid_body_awake,
     .on_simulation_chunk_update = rigid_body_simulation_chunk_update,
-    .on_disable = rigid_body_on_disable
+    .on_disable = rigid_body_on_disable,
+    .on_destroy = rigid_body_on_destroy
 };
 
 const char* rigid_body_component_key(void) {
@@ -67,6 +72,13 @@ static void rigid_body_on_create(struct component *base, struct fields *fields) 
     }
     this->base_friction_coefficient = fields_get_double(fields, "friction", 1);
     this->rolling_friction_coefficient = fields_get_double(fields, "rolling", 0.1);
+
+    this->on_drive = action_create();
+}
+
+static void rigid_body_on_destroy(struct component *base) {
+    struct rigid_body *this = (struct rigid_body *) base;
+    action_destroy(&this->on_drive);
 }
 
 static void rigid_body_awake(struct component *base) {
@@ -187,12 +199,16 @@ void rigid_body_push(struct rigid_body *this, const struct vector2 impulse) {
 
 void rigid_body_drive(struct rigid_body *this, const struct vector2 impulse) {
     this->impulse_drive_sum = vector_sum(this->impulse_drive_sum, impulse);
+    action_invoke(&this->on_drive, (void*)&impulse);
 }
 
 struct vector2 rigid_body_get_velocity(const struct rigid_body *this) {
     return this->v;
 }
-
 double rigid_body_get_mass(const struct rigid_body *this) {
     return this->m;
+}
+
+MCGE_API struct action* rigid_body_get_on_drive(struct rigid_body *this) {
+    return &this->on_drive;
 }

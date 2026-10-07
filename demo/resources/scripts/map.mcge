@@ -39,6 +39,7 @@ entity name=Character position=[2.5 1.5] size=[1.5 3]
         box_renderer layer=prop1 texture=character
         box_renderer_animated speed=1
         rigid_body mass=250 friction=10 rolling=0.2
+        box_renderer_rigid_directed
         keyboard_rigid_controller speed=6.25 up=W down=S left=A right=D
         camera height=17.5
         simulator distance=50

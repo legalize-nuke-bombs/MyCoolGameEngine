@@ -20,4 +20,6 @@ MCGE_API double vector_sqr_distance(const struct vector2 *point1, const struct v
 
 MCGE_API struct vector2 vector_relu(const struct vector2 *vector);
 
+MCGE_API struct vector2 vector_abs(struct vector2 vector);
+
 #endif

@@ -4,12 +4,9 @@
 
 #include "renderer_settings.h"
 
-#include <stddef.h>
 #include <stdlib.h>
 
 #include "../component_internal.h"
-#include "../../entity.h"
-#include "../../../scene/scene.h"
 #include "../../../rendering/renderer.h"
 #include "../../../rendering/renderer_pipeline.h"
 #include "../../../utils/fields.h"
