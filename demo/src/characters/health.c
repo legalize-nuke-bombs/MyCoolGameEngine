@@ -73,6 +73,7 @@ void health_take_damage(struct health* this, struct damage damage) {
     if (damage.amount > this->amount) {
         damage.amount = this->amount;
     }
+    logger_debug("Entity %s hp %f got %f damage", component_get_global_parent_name((struct component*)this), this->amount, damage.amount);
     this->amount -= damage.amount;
     action_invoke(&this->on_changed, NULL);
     action_invoke(&this->on_take_damage, &damage);

@@ -3,11 +3,10 @@
 //
 
 #include "fear_ball.h"
-
-#include <stdlib.h>
-
 #include "../../../characters/effects.h"
 #include <mcge/mcge.h>
+#include "demo/src/characters/damage.h"
+#include "demo/src/characters/health.h"
 
 struct fear_ball {
     struct component base;
@@ -15,6 +14,7 @@ struct fear_ball {
     double range;
     double travelled;
     bool coming_back;
+    struct damage damage;
     double fear_length;
     struct vector2 direction;
     struct entity* self;
@@ -46,6 +46,7 @@ static void fear_ball_on_create(struct component *base, struct fields *fields) {
     struct fear_ball *this = (struct fear_ball *) base;
     this->speed = fields_get_double(fields, "speed", 0);
     this->range = fields_get_double(fields, "range", 0);
+    this->damage.amount = fields_get_double(fields, "damage", 25);
     this->fear_length = fields_get_double(fields, "fear", 0);
 }
 
@@ -123,8 +124,11 @@ static void handle_on_enter(void *listener, void *context) {
         }
     }
     struct effects* effects = (struct effects*)entity_try_get_component(entity, "effects", entity_query_local);
-    if (effects == NULL) {
-        return;
+    if (effects) {
+        effects_set_effect(effects, effect_fear, effects_get_effect(effects, effect_fear) + this->fear_length);
     }
-    effects_set_effect(effects, effect_fear, effects_get_effect(effects, effect_fear) + this->fear_length);
+    struct health* health = (struct health*)entity_try_get_component(entity, "health", entity_query_local);
+    if (health) {
+        health_take_damage(health, this->damage);
+    }
 }
