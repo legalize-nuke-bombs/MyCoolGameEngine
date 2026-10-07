@@ -50,7 +50,6 @@ void component_factory_destroy(void) {
 }
 
 void component_factory_register(const struct component_vtable *vtable) {
-    logger_info("Component factory knows component `%s`", vtable->component_key());
     factory_register(&component_factory, vtable->component_key(), (void*)vtable);
 }
 

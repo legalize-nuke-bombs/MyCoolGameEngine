@@ -21,7 +21,7 @@ void factory_destroy(struct factory *this) {
 
 void factory_register(struct factory *this, const char *key, void *item) {
     if (dictionary_try_add(this->_items, (void*)key, item)) {
-        logger_debug("Factory %s registered %s", this->_name, key);
+        logger_info("Factory `%s` knows `%s`", this->_name, key);
     }
     else {
         logger_error("Factory %s failed to register %s", this->_name, key);

@@ -26,7 +26,6 @@ void bt_node_factory_destroy(void) {
 }
 
 void bt_node_factory_register(const struct bt_node_vtable *vtable) {
-    logger_info("Bt node factory knows node `%s`", vtable->key);
     factory_register(&bt_node_factory, vtable->key, (void*)vtable);
 }
 
