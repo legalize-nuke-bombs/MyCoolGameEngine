@@ -51,6 +51,10 @@ void entity_collection_clear(struct entity_collection *this) {
     list_clear(&this->dead);
 }
 
+MCGE_API struct entity* entity_collection_try_get(struct entity_collection *this, uint128_t id) {
+    // TODO блядь
+    return dictionary_get(this->entities, NULL);
+}
 void entity_collection_capture(struct entity_collection *this, struct entity *entity) {
     if (uint128_cmp(entity_get_id(entity), uint128_zero) == 0) {
         uint128_t id = {}; // TODO proper random number generator

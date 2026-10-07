@@ -158,6 +158,9 @@ const struct chunks* scene_get_chunks(void) {
     return scene.chunks;
 }
 
+struct entity* scene_try_get_entity(uint128_t id) {
+
+}
 void scene_capture_entity(struct entity *entity) {
     entity_set_in_scene(entity, true);
     logger_debug("Scene %s is capturing entity %s", scene.name, entity_get_name(entity));
