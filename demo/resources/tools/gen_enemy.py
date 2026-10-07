@@ -78,7 +78,7 @@ def ball(rng, s, palette):
 KINDS = {"mop": mop, "ball": ball}
 
 
-def render(kind, seed, tile, frames, palette_name, eye_color):
+def render(kind, seed, tile, frames, palette_name, eye_color, turn=0.0):
     s = tile / 192
     rng = np.random.default_rng(seed)
     palette = palette_by_name(palette_name)
@@ -89,6 +89,7 @@ def render(kind, seed, tile, frames, palette_name, eye_color):
     origin = np.array([tile / 2, tile / 2])
     width = max(1, round(s))
     eye_w, eye_h = 13 * s, 8 * s
+    look, trail = -16 * s * turn, 14 * s * turn
 
     images = []
     for frame in range(frames):
@@ -100,12 +101,13 @@ def render(kind, seed, tile, frames, palette_name, eye_color):
         draw = ImageDraw.Draw(image)
         for _, verts, color, weight, sway, sway_phase in strands:
             moved = anchor + (verts - anchor) * breath
-            moved[:, 0] += weight * sway * math.sin(phase + sway_phase)
+            moved[:, 0] += weight * (sway * math.sin(phase + sway_phase) + trail)
             moved += boil.normal(0, 0.45 * s, moved.shape) + bob + origin
             draw.line([tuple(v) for v in moved], fill=color + (255,), width=width)
         for ex, ey in eyes:
-            cx, cy = ex + bob[0] + origin[0], ey + bob[1] + origin[1]
-            draw.polygon([(cx - eye_w, cy), (cx, cy - eye_h), (cx + eye_w, cy), (cx, cy + eye_h)], fill=eye_color + (255,))
+            cx, cy = ex + look + bob[0] + origin[0], ey + bob[1] + origin[1]
+            w = eye_w * (1 - 0.45 * turn) if ex < 0 else eye_w
+            draw.polygon([(cx - w, cy), (cx, cy - eye_h), (cx + w, cy), (cx, cy + eye_h)], fill=eye_color + (255,))
         images.append(bleed_colors(np.asarray(image)))
     return images
 
@@ -120,8 +122,9 @@ if __name__ == "__main__":
     parser.add_argument("--columns", type=int, default=4)
     parser.add_argument("--palette", default="bone", help="same names as gen_tree.py, or a hue in degrees (0-360)")
     parser.add_argument("--eyes", default=None, help="r,g,b; by default black on a light body and white on a dark one")
+    parser.add_argument("--turn", type=float, default=0, help="0 looks at the camera, 1 is turned to the left")
     args = parser.parse_args()
     eye_color = tuple(int(c) for c in args.eyes.split(",")) if args.eyes else None
-    frames = render(args.kind, args.seed, args.tile, args.frames, args.palette, eye_color)
+    frames = render(args.kind, args.seed, args.tile, args.frames, args.palette, eye_color, args.turn)
     pack(frames, args.columns).save(args.out)
     print(f"{args.out}: tile {args.tile}x{args.tile}, {args.frames} tiles, {args.columns} per row")
