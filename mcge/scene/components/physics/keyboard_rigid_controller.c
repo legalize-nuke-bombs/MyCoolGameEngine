@@ -21,13 +21,12 @@ struct keyboard_rigid_controller {
     char* left;
     char* right;
 
-    struct rigid_body* rigid_body;
+    uint128_t rigid_body_id;
 };
 
 static void keyboard_rigid_controller_on_create(struct component *base, struct fields *fields);
 static void keyboard_rigid_controller_on_awake(struct component* base);
 static void keyboard_rigid_controller_on_update(struct component* base, const struct update_context *context);
-static void keyboard_rigid_controller_on_disable(struct component* base);
 static void keyboard_rigid_controller_on_destroy(struct component* base);
 
 const struct component_vtable keyboard_rigid_controller_vtable = {
@@ -36,7 +35,6 @@ const struct component_vtable keyboard_rigid_controller_vtable = {
     .on_create = keyboard_rigid_controller_on_create,
     .on_awake = keyboard_rigid_controller_on_awake,
     .on_update = keyboard_rigid_controller_on_update,
-    .on_disable = keyboard_rigid_controller_on_disable,
     .on_destroy = keyboard_rigid_controller_on_destroy
 };
 
@@ -46,6 +44,12 @@ const char* keyboard_rigid_controller_component_key(void) {
 
 static void keyboard_rigid_controller_on_update(struct component* base, const struct update_context *context) {
     const struct keyboard_rigid_controller* this = (struct keyboard_rigid_controller*)base;
+
+    // The body can be marked destroyed and freed while the controller lives on, so it is found by id
+    struct rigid_body *rigid_body = (struct rigid_body*)scene_try_get_component(this->rigid_body_id);
+    if (rigid_body == NULL) {
+        return;
+    }
 
     struct vector2 direction = {0.0, 0.0};
 
@@ -63,21 +67,18 @@ static void keyboard_rigid_controller_on_update(struct component* base, const st
     }
 
     const struct vector2 v_target = vector_multiply_scalar(vector_normalize(direction), this->speed);
-    const struct vector2 delta_v = vector_sub(v_target, rigid_body_get_velocity(this->rigid_body));
-    rigid_body_drive(this->rigid_body, vector_multiply_scalar(delta_v, rigid_body_get_mass(this->rigid_body)));
+    const struct vector2 delta_v = vector_sub(v_target, rigid_body_get_velocity(rigid_body));
+    rigid_body_drive(rigid_body, vector_multiply_scalar(delta_v, rigid_body_get_mass(rigid_body)));
 }
 
 static void keyboard_rigid_controller_on_awake(struct component* base) {
     struct keyboard_rigid_controller* this = (struct keyboard_rigid_controller*)base;
-    this->rigid_body = (struct rigid_body*)entity_get_component(component_get_parent(base), "rigid_body", entity_query_local);
-    if (this->rigid_body == NULL) {
+    const struct component *rigid_body = entity_get_component(component_get_parent(base), "rigid_body", entity_query_local);
+    if (rigid_body == NULL) {
         entity_mark_destroyed(component_get_parent(base));
+        return;
     }
-}
-
-static void keyboard_rigid_controller_on_disable(struct component* base) {
-    struct keyboard_rigid_controller* this = (struct keyboard_rigid_controller*)base;
-    this->rigid_body = NULL;
+    this->rigid_body_id = component_get_id(rigid_body);
 }
 
 static void keyboard_rigid_controller_on_create(struct component *base, struct fields *fields) {
