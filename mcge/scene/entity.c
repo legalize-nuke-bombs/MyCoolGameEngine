@@ -112,6 +112,37 @@ void entity_mark_destroyed(struct entity *this) {
         scene_notify_entity_marked_destroyed(this);
     }
 }
+// Frees the children and the components that were marked destroyed while this entity stayed alive, here and below
+void entity_destroy_marked(struct entity *this) {
+    bool removed = false;
+    for (int i = list_count(&this->_entities) - 1; i >= 0; i--) {
+        struct entity *child_entity = list_get(&this->_entities, i);
+        if (entity_is_alive(child_entity)) {
+            entity_destroy_marked(child_entity);
+        }
+        else {
+            entity_destroy(child_entity);
+            list_set(&this->_entities, i, NULL);
+            removed = true;
+        }
+    }
+    if (removed) {
+        list_remove_nulls(&this->_entities);
+    }
+
+    removed = false;
+    for (int i = list_count(&this->_components) - 1; i >= 0; i--) {
+        struct component *component = list_get(&this->_components, i);
+        if (!component_is_alive(component)) {
+            component_destroy(component);
+            list_set(&this->_components, i, NULL);
+            removed = true;
+        }
+    }
+    if (removed) {
+        list_remove_nulls(&this->_components);
+    }
+}
 
 const char* entity_get_name(const struct entity *this) {
     return this->_name;
