@@ -7,8 +7,23 @@
 #include "../utils/rect.h"
 #include "../api.h"
 #include "../utils/uint128_t.h"
+#include "../utils/list.h"
 
-struct entity;
+struct entity {
+    char *_name;
+    uint128_t _id;
+    bool _awake;
+    bool _alive;
+
+    struct list _entities;
+    struct list _components;
+
+    struct rect _local_rect;
+    struct rect _rect;
+
+    struct entity *_parent;
+    bool _in_scene;
+};
 
 MCGE_API struct entity* entity_create(char *name, struct entity *parent);
 MCGE_API void entity_awake(struct entity *this);
@@ -18,7 +33,6 @@ MCGE_API void entity_mark_destroyed(struct entity *this);
 MCGE_API const char *entity_get_name(const struct entity *this);
 
 MCGE_API uint128_t entity_get_id(const struct entity *this);
-MCGE_API void entity_set_id(struct entity *this, uint128_t new_id);
 
 MCGE_API bool entity_is_awake(const struct entity *this);
 MCGE_API bool entity_is_alive(const struct entity *this);

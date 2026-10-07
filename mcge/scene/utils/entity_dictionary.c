@@ -11,11 +11,10 @@
 
 
 static int entity_dictionary_key_hash(const void *key) {
-    const struct entity *e = key;
-    const uint128_t id = entity_get_id(e);
+    const uint128_t *id = key;
 
-    const uint32_t low32  = (uint32_t)(id.l ^ (id.l >> 32));
-    const uint32_t high32 = (uint32_t)(id.h ^ (id.h >> 32));
+    const uint32_t low32  = (uint32_t)(id->l ^ (id->l >> 32));
+    const uint32_t high32 = (uint32_t)(id->h ^ (id->h >> 32));
 
     const uint32_t hash = low32 ^ (high32 + 0x9e3779b9 + (low32 << 6) + (low32 >> 2));
 
@@ -23,9 +22,9 @@ static int entity_dictionary_key_hash(const void *key) {
 }
 
 static bool entity_dictionary_key_equals(const void *p1, const void *p2) {
-    const struct entity *e1 = p1;
-    const struct entity *e2 = p2;
-    return uint128_cmp(entity_get_id(e1), entity_get_id(e2)) == 0;
+    const uint128_t *id1 = p1;
+    const uint128_t *id2 = p2;
+    return uint128_cmp(*id1, *id2) == 0;
 }
 
 

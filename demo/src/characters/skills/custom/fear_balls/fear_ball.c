@@ -16,7 +16,7 @@ struct fear_ball {
     double travelled;
     bool coming_back;
     double fear_length;
-    const struct entity *launcher;
+    uint128_t launcher_id;
     struct vector2 direction;
     struct entity* self;
 };
@@ -58,6 +58,15 @@ static void fear_ball_awake(struct component *base) {
     action_subscribe_no_token(on_enter, this, handle_on_enter);
 }
 
+void fear_ball_launch(const struct entity *launcher, struct fear_ball* this, const struct vector2 direction) {
+    this->launcher_id = entity_get_id(launcher);
+    this->direction = vector_normalize(direction);
+}
+
+static struct entity* fear_ball_launcher(const struct fear_ball *this) {
+    return scene_try_get_entity(this->launcher_id);
+}
+
 static void fear_ball_on_update(struct component *base, const struct update_context *context) {
     struct fear_ball* this = (struct fear_ball*)base;
 
@@ -70,12 +79,13 @@ static void fear_ball_on_update(struct component *base, const struct update_cont
 
     struct vector2 direction;
     if (this->coming_back) {
-        if (this->launcher == NULL) { // TODO This safeguard will not work without smart refs and will crash program if launcher was destroyed
+        const struct entity *launcher = fear_ball_launcher(this);
+        if (launcher == NULL) {
             direction = vector2_zero;
             entity_mark_destroyed(component_get_parent(base));
         }
         else {
-            const struct rect launcher_rect = entity_get_local_rect(this->launcher);
+            const struct rect launcher_rect = entity_get_local_rect(launcher);
             direction = vector_normalize(vector_sub(launcher_rect.position, component_get_rect(base).position));
         }
     }
@@ -88,17 +98,13 @@ static void fear_ball_on_update(struct component *base, const struct update_cont
     entity_set_local_rect(this->self, rect);
 }
 
-void fear_ball_launch(const struct entity *launcher, struct fear_ball* this, const struct vector2 direction) {
-    this->launcher = launcher;
-    this->direction = vector_normalize(direction);
-}
-
 static void handle_on_enter(void *listener, void *context) {
     struct fear_ball* this = listener;
     const struct entity* entity = context;
-    if (this->launcher) // TODO See the first note
+    const struct entity* launcher = fear_ball_launcher(this);
+    if (launcher)
     {
-        if (this->launcher == entity) {
+        if (launcher == entity) {
             if (this->coming_back) {
                 entity_mark_destroyed(component_get_parent((struct component*)this));
             }

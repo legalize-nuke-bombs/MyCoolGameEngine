@@ -9,7 +9,6 @@
 #include "entity.h"
 #include "../logging/logger.h"
 #include "../utils/list.h"
-#include "mcge/random/random.h"
 #include "utils/entity_dictionary.h"
 
 struct entity_collection {
@@ -51,21 +50,15 @@ void entity_collection_clear(struct entity_collection *this) {
     list_clear(&this->dead);
 }
 
-MCGE_API struct entity* entity_collection_try_get(struct entity_collection *this, uint128_t id) {
-    // TODO блядь
-    return dictionary_get(this->entities, NULL);
+struct entity* entity_collection_try_get(const struct entity_collection *this, uint128_t id) {
+    return dictionary_get(this->entities, &id);
 }
 void entity_collection_capture(struct entity_collection *this, struct entity *entity) {
-    if (uint128_cmp(entity_get_id(entity), uint128_zero) == 0) {
-        uint128_t id = {}; // TODO proper random number generator
-        id.h = random_next_int(0, 1000000000);
-        entity_set_id(entity, id);
-    }
     if (!entity_is_alive(entity)) {
         list_add(&this->dead, entity);
         return;
     }
-    dictionary_try_add(this->entities, entity, entity);
+    dictionary_try_add(this->entities, &entity->_id, entity);
 }
 void entity_collection_move_to_dead(struct entity_collection *this, struct entity *entity) {
     if (dictionary_remove(this->entities, entity)) {
