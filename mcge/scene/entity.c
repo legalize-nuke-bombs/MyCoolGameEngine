@@ -201,7 +201,8 @@ void entity_recapture(struct entity *this) {
 struct component* entity_try_get_component(const struct entity *this, const char *name, enum entity_query query) {
     for (int i = 0; i < list_count(&this->_components); i++) {
         struct component *component = list_get(&this->_components, i);
-        if (strcmp(component_get_key(component), name) == 0) {
+        // A component marked destroyed has left the world, though it stays in the list until it is freed
+        if (component_is_alive(component) && strcmp(component_get_key(component), name) == 0) {
             return component;
         }
     }
