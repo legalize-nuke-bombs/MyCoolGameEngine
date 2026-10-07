@@ -1,8 +1,7 @@
-#include <intrin.h>
-
 #include "component_internal.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 #include "../entity.h"
 #include "../../logging/logger.h"
