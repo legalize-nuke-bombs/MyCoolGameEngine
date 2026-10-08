@@ -5,6 +5,7 @@
 #include "bow.h"
 #include <mcge/mcge.h>
 
+#include "arrow.h"
 #include "demo/src/characters/character.h"
 #include "demo/src/characters/character_group.h"
 #include "demo/src/characters/hands/hands.h"
@@ -84,13 +85,18 @@ static void bow_execute_attack(void *executor, void *context) {
         return;
     }
 
-    logger_info("Attack");
+    if (!prefab_contains_component(this->arrow, "arrow", entity_query_local)) {
+        return;
+    }
 
     struct entity* arrow_entity = prefab_instantiate(this->arrow);
 
     struct rect arrow_rect = entity_get_local_rect(arrow_entity);
     arrow_rect.position = component_get_rect((struct component*)this).position;
     entity_set_local_rect(arrow_entity, arrow_rect);
+
+    struct arrow* arrow = (struct arrow*)entity_get_component(arrow_entity, "arrow", entity_query_local);
+    arrow_launch(arrow, target);
 
     scene_capture_entity(arrow_entity);
 }

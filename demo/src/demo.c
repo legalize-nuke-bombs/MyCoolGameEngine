@@ -14,6 +14,7 @@
 #include "characters/health/health_bar.h"
 #include "characters/mana/mana.h"
 #include "characters/player.h"
+#include "characters/bow/arrow.h"
 #include "characters/bow/bow.h"
 #include "characters/hands/hands.h"
 #include "characters/hands/hands_bar.h"
@@ -49,6 +50,7 @@ void demo_install(void) {
     component_factory_register(&keyboard_movement_vtable);
     component_factory_register(&hands_bar_vtable);
     component_factory_register(&bow_vtable);
+    component_factory_register(&arrow_vtable);
     component_factory_register(&character_vtable);
 
     bt_node_factory_register(&player_is_near_vtable);

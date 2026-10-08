@@ -60,5 +60,9 @@ static bool prefab_fields_contain_component(struct fields *fields, const char* k
 }
 
 bool prefab_contains_component(const struct prefab* this, const char* key, const enum entity_query query) {
-    return prefab_fields_contain_component(this->fields, key, query);
+    if (prefab_fields_contain_component(this->fields, key, query)) {
+        return true;
+    }
+    logger_warn("Prefab %s does not contain component %s", prefab_get_name(this), key);
+    return false;
 }
