@@ -239,6 +239,8 @@ add_library(mcge SHARED
         mcge/scene/component_ids/component_ids.c
         mcge/scene/components/rendering/box_renderer_rigid_directed.h
         mcge/scene/components/rendering/box_renderer_rigid_directed.c
+        demo/src/characters/bow/bow.h
+        demo/src/characters/bow/bow.c
 )
 set_target_properties(mcge PROPERTIES DEFINE_SYMBOL MCGE_EXPORT)
 if(WIN32)
