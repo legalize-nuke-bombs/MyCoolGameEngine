@@ -8,7 +8,8 @@
 
 struct hands_action_method {
     void *executor;
-    void (*func)(void *executor);
+    void *context;
+    void (*func)(void *executor, void *context);
 };
 
 struct hands_action {

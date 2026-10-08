@@ -6,6 +6,7 @@
 #define MYCOOLGAMEENGINE_HANDS_H
 
 #include "hands_action.h"
+#include "hands_action_priorities.h"
 
 struct hands;
 

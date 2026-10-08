@@ -304,6 +304,8 @@ add_executable(MyCoolGameEngine demo/src/main.c
         demo/src/characters/hands/hands.h
         demo/src/characters/hands/hands.c
         demo/src/characters/hands/hands_action_priorities.h
+        demo/src/characters/movement/movement.h
+        demo/src/characters/movement/movement.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE mcge)

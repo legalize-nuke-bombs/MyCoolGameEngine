@@ -51,5 +51,5 @@ bool hands_try_put(struct hands* this, const struct hands_action action) {
 static void hands_execute_active_action(struct hands* this) {
     logger_debug("Entity %s executed hands action %s", component_get_global_parent_name((struct component*)this), this->action.name);
     this->action.duration = 0;
-    this->action.method.func(this->action.method.executor);
+    this->action.method.func(this->action.method.executor, this->action.method.context);
 }
