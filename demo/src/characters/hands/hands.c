@@ -9,7 +9,11 @@
 
 struct hands {
     struct component component;
+
     struct hands_action action;
+    bool action_active;
+
+    double since_new_action;
 
     struct action on_changed;
 };
@@ -31,11 +35,11 @@ static void hands_execute_active_action(struct hands *this);
 
 static void hands_simulation_chunk_update(struct component* base, const struct update_context *context) {
     struct hands *this = (struct hands*)base;
-    if (this->action.duration == 0) {
+    if (!this->action_active) {
         return;
     }
-    this->action.duration = this->action.duration - context->dt;
-    if (this->action.duration <= 0) {
+    this->since_new_action += context->dt;
+    if (this->since_new_action >= this->action.duration) {
         hands_execute_active_action(this);
     }
     action_invoke(&this->on_changed, NULL);
@@ -50,12 +54,14 @@ const struct component_vtable hands_vtable = {
 };
 
 bool hands_try_put(struct hands* this, const struct hands_action action) {
-    if (this->action.duration > 0 && this->action.priority >= action.priority) {
+    if (this->action_active && this->action.priority >= action.priority) {
         logger_debug("Entity %s failed to put in hands queue action %s because action %s with higher priority is active", component_get_global_parent_name((struct component*)this), action.name, this->action.name);
         return false;
     }
     logger_debug("Entity %s put in hands queue action %s", component_get_global_parent_name((struct component*)this), action.name);
     this->action = action;
+    this->action_active = true;
+    this->since_new_action = 0;
     if (this->action.duration == 0) {
         hands_execute_active_action(this);
     }
@@ -65,6 +71,20 @@ bool hands_try_put(struct hands* this, const struct hands_action action) {
 
 static void hands_execute_active_action(struct hands* this) {
     logger_debug("Entity %s executed hands action %s", component_get_global_parent_name((struct component*)this), this->action.name);
-    this->action.duration = 0;
+    this->action_active = false;
     this->action.method.func(this->action.method.executor, this->action.method.context);
+}
+
+double hands_get_current_action_timer(const struct hands *this) {
+    return this->action_active ? this->since_new_action : 0;
+}
+double hands_get_current_action_cooldown(const struct hands *this) {
+    return this->action_active ? this->action.duration : 0;
+}
+double hands_get_current_action_scale(const struct hands *this) {
+    return this->action_active ? this->since_new_action / this->action.duration : 0;
+}
+
+struct action* hands_on_changed(struct hands* this) {
+    return &this->on_changed;
 }

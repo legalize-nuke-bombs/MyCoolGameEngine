@@ -16,4 +16,10 @@ extern const struct component_vtable hands_vtable;
 
 bool hands_try_put(struct hands* this, struct hands_action action);
 
+double hands_get_current_action_timer(const struct hands *this);
+double hands_get_current_action_cooldown(const struct hands *this);
+double hands_get_current_action_scale(const struct hands *this);
+
+struct action* hands_on_changed(struct hands* this);
+
 #endif //MYCOOLGAMEENGINE_HANDS_H

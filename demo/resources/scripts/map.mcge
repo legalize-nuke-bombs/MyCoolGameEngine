@@ -48,10 +48,16 @@ entity name=Character position=[2.5 1.5] size=[1.5 3]
         mana max=800
         health max=1000
         hands
-        skilled skills=[printer manacost=100 cooldown=1 title=Math.exe body=1000-7? fear_balls manacost=100 cooldown=1 execution_time=1 interruptable=0 prefab=FearBall count=50]
+        skilled skills=[
+            printer manacost=100 cooldown=1 execution_time=1 interruptable=1 title=Math.exe body=1000-7?
+            fear_balls manacost=100 cooldown=1 execution_time=1 interruptable=0 prefab=FearBall count=50
+        ]
     ]
     children=[
         entity name=Hitbox size=[0.45 0.6] components=[
             collider material=character
+        ]
+        entity name=HandsBar position=[-0.5 0.35] size=[1 0.04] components=[
+            hands_bar layer1=ui1 layer2=ui2 color1=[10 10 10 255] color2=[255 255 255 255]
         ]
     ]
