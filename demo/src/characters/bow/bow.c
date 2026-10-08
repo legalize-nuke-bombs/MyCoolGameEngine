@@ -16,7 +16,7 @@ struct bow {
 
     double radius;
 
-    double speed;
+    double attack_interval;
     double attack_timer;
 
     struct prefab* arrow;
@@ -32,7 +32,7 @@ const char* bow_component_key(void) {
 static void bow_on_create(struct component *base, struct fields *fields) {
     struct bow *this = (struct bow*)base;
     this->radius = fields_get_double(fields, "radius", 10);
-    this->speed = fields_get_double(fields, "speed", 1);
+    this->attack_interval = fields_get_double(fields, "interval", 1);
     this->arrow = prefabs_get(fields_get_string(fields, "arrow", "default"));
 }
 
@@ -61,9 +61,9 @@ static void bow_simulation_chunk_update(struct component *base, const struct upd
     struct bow *this = (struct bow*)base;
 
     this->attack_timer += context->dt;
-    if (this->attack_timer >= this->speed){
+    if (this->attack_timer >= this->attack_interval){
         if (bow_try_schedule_attack(this)) {
-            this->attack_timer -= this->speed;
+            this->attack_timer -= this->attack_interval;
         }
     }
 }
@@ -139,7 +139,7 @@ struct character* bow_try_find_target(struct bow* this) {
     int x_start, x_end, y_start, y_end;
     chunks_get_rect_indexes(chunks, rect, &x_start, &x_end, &y_start, &y_end);
     struct character* result_character = NULL;
-    double min_sqr_distance = 1e+9;
+    double min_sqr_distance = this->radius * this->radius;
     for (int x = x_start; x <= x_end; x++) {
         for (int y = y_start; y <= y_end; y++) {
             const struct dictionary* characters = chunks_chunk_get_components_by_type(chunks, x, y, "character");
