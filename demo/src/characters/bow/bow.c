@@ -9,6 +9,7 @@
 #include "demo/src/characters/character.h"
 #include "demo/src/characters/character_group.h"
 #include "demo/src/characters/hands/hands.h"
+#include "demo/src/characters/health/health.h"
 
 
 struct bow {
@@ -142,7 +143,8 @@ struct character* bow_try_find_target(struct bow* this) {
     int x_start, x_end, y_start, y_end;
     chunks_get_rect_indexes(chunks, rect, &x_start, &x_end, &y_start, &y_end);
     struct character* result_character = NULL;
-    double min_sqr_distance = this->radius * this->radius;
+    const double sqr_radius = this->radius * this->radius;
+    double min_health = 1e+9;
     for (int x = x_start; x <= x_end; x++) {
         for (int y = y_start; y <= y_end; y++) {
             const struct dictionary* characters = chunks_chunk_get_components_by_type(chunks, x, y, "character");
@@ -157,9 +159,13 @@ struct character* bow_try_find_target(struct bow* this) {
                 struct vector2 target_character_position = component_get_rect((struct component*)target_character).position;
                 if (group != target_character_group) {
                     const double distance_sqr = vector_sqr_distance(&position, &target_character_position);
-                    if (min_sqr_distance > distance_sqr) {
-                        min_sqr_distance = distance_sqr;
-                        result_character = target_character;
+                    if (sqr_radius > distance_sqr) {
+                        const struct health* target_health = (struct health*)entity_try_get_component(component_get_parent((struct component*)target_character), "health", entity_query_local);
+                        const double target_health_amount = target_health ? health_amount(target_health) : min_health - 1;
+                        if (min_health > target_health_amount) {
+                            result_character = target_character;
+                            min_health = target_health_amount;
+                        }
                     }
                 }
             }
