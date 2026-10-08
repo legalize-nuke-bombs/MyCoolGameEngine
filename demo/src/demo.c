@@ -14,6 +14,7 @@
 #include "characters/mana/mana.h"
 #include "characters/player.h"
 #include "characters/hands/hands.h"
+#include "characters/movement/keyboard_movement.h"
 #include "characters/movement/movement.h"
 #include "skills/custom/fear_balls/fear_ball.h"
 #include "skills/skilled.h"
@@ -42,6 +43,7 @@ void demo_install(void) {
     component_factory_register(&health_bar_vtable);
     component_factory_register(&hands_vtable);
     component_factory_register(&movement_vtable);
+    component_factory_register(&keyboard_movement_vtable);
 
     bt_node_factory_register(&player_is_near_vtable);
     bt_node_factory_register(&player_chase_vtable);

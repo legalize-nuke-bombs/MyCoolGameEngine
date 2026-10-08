@@ -41,6 +41,7 @@ entity name=Character position=[2.5 1.5] size=[1.5 3]
         rigid_body mass=250 friction=10 rolling=0.2
         box_renderer_rigid_directed
         movement speed=6.25
+        keyboard_movement up=W down=S left=A right=D
         camera height=17.5
         simulator distance=50
         player
