@@ -48,7 +48,7 @@ entity name=Character position=[2.5 1.5] size=[1.5 3]
         mana max=800
         health max=1000
         hands
-        skilled skills=[printer manacost=100 cooldown=1 title=Math.exe body=1000-7? fear_balls manacost=100 cooldown=1 prefab=FearBall count=50]
+        skilled skills=[printer manacost=100 cooldown=1 title=Math.exe body=1000-7? fear_balls manacost=100 cooldown=1 execution_time=1 interruptable=0 prefab=FearBall count=50]
     ]
     children=[
         entity name=Hitbox size=[0.45 0.6] components=[

@@ -69,9 +69,9 @@ static void skilled_destroy(struct component *base) {
     }
 }
 
-static void skilled_invoke_skill(void *listener, void *context) {
+static void skilled_schedule_skill_invoke(void *listener, void *context) {
     const struct skilled_slot *slot = listener;
-    skill_invoke(slot->skill);
+    skill_schedule_invoke(slot->skill);
 }
 
 static void skilled_awake(struct component *base) {
@@ -83,7 +83,7 @@ static void skilled_awake(struct component *base) {
         }
         skill_enable(slot->skill);
         slot->hotkey_action = keyboard_require_action_on_key_pressed(skilled_hotkeys[i]);
-        action_subscribe(slot->hotkey_action, slot, skilled_invoke_skill, &slot->hotkey_token);
+        action_subscribe(slot->hotkey_action, slot, skilled_schedule_skill_invoke, &slot->hotkey_token);
     }
 }
 

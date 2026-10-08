@@ -25,7 +25,15 @@ struct skill* skill_factory_produce(struct fields *fields, struct entity *self) 
             continue;
         }
         struct skill *skill = calloc(1, vtable->size);
-        skill_base_create(skill, vtable, fields_get_double(fields, "manacost", 0), fields_get_double(fields, "cooldown", 0), self);
+        skill_base_create(
+            skill,
+            vtable,
+            fields_get_double(fields, "manacost", 0),
+            fields_get_double(fields, "cooldown", 0),
+            fields_get_double(fields, "execution_time", 0),
+            fields_get_bool(fields, "interruptable", 1),
+            self
+            );
         if (vtable->on_create) {
             vtable->on_create(skill, fields);
         }

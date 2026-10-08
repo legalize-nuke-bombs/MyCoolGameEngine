@@ -85,5 +85,9 @@ static void keyboard_movement_simulation_chunk_update(struct component* base, co
         direction.x += 1.0;
     }
 
+    if (vectors_equal(direction, vector2_zero)) {
+        return;
+    }
+
     movement_try_move(movement, direction);
 }

@@ -24,14 +24,21 @@ struct skill_vtable {
 
 struct skill {
     const struct skill_vtable* vtable;
+
     double manacost;
+
     double cool_timer;
     double cooldown;
+
+    double execution_time;
+    bool interruptable;
+
     struct entity *self;
+    uint128_t hands_id;
     uint128_t mana_id;
 };
 
-void skill_base_create(struct skill *this, const struct skill_vtable *vtable, double manacost, double cooldown, struct entity *self);
+void skill_base_create(struct skill *this, const struct skill_vtable *vtable, double manacost, double cooldown, double execution_time, bool interruptable, struct entity *self);
 
 struct entity* skill_self(const struct skill *this);
 
