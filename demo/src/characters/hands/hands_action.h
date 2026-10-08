@@ -13,9 +13,8 @@ struct hands_action_method {
 
 struct hands_action {
     const char *name;
-    bool instant;
     double duration;
-    bool force;
+    unsigned char priority;
     struct hands_action_method method;
 };
 
