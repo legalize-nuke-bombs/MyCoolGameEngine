@@ -317,6 +317,8 @@ add_executable(MyCoolGameEngine demo/src/main.c
         demo/src/characters/bow/bow.c
         demo/src/characters/bow/arrow.h
         demo/src/characters/bow/arrow.c
+        demo/src/characters/bow/arrow_damager.h
+        demo/src/characters/bow/arrow_damager.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE mcge)

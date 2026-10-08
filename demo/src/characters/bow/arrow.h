@@ -14,4 +14,6 @@ extern const struct component_vtable arrow_vtable;
 
 void arrow_launch(struct arrow *this, struct character *target);
 
+struct action* arrow_on_hit(struct arrow *this);
+
 #endif //MYCOOLGAMEENGINE_ARROW_H

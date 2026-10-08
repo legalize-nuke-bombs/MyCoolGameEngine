@@ -11,6 +11,8 @@ struct arrow {
 
     double speed;
 
+    struct action on_hit;
+
     uint128_t collider_id;
     unsigned int collider_on_enter_token;
 
@@ -25,6 +27,11 @@ const char* arrow_component_key(void) {
 static void arrow_create(struct component* base, struct fields *fields) {
     struct arrow* this = (struct arrow*)base;
     this->speed = fields_get_double(fields, "speed", 10);
+    this->on_hit = action_create();
+}
+static void arrow_destroy(struct component* base) {
+    struct arrow* this = (struct arrow*)base;
+    action_destroy(&this->on_hit);
 }
 
 static void handle_collider_trigger_enter(void *listener, void *context);
@@ -56,6 +63,7 @@ const struct component_vtable arrow_vtable = {
     .component_key = arrow_component_key,
     .size = sizeof(struct arrow),
     .on_create = arrow_create,
+    .on_destroy = arrow_destroy,
     .on_awake = arrow_awake,
     .on_disable = arrow_on_disable,
     .on_update = arrow_update
@@ -97,6 +105,10 @@ static void handle_collider_trigger_enter(void *listener, void *context) {
         return;
     }
 
-    // Target been hit!
+    action_invoke(&this->on_hit, target);
     entity_mark_destroyed(component_get_parent((struct component*)this));
+}
+
+struct action* arrow_on_hit(struct arrow *this) {
+    return &this->on_hit;
 }

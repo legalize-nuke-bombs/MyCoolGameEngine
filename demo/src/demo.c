@@ -15,6 +15,7 @@
 #include "characters/mana/mana.h"
 #include "characters/player.h"
 #include "characters/bow/arrow.h"
+#include "characters/bow/arrow_damager.h"
 #include "characters/bow/bow.h"
 #include "characters/hands/hands.h"
 #include "characters/hands/hands_bar.h"
@@ -52,6 +53,7 @@ void demo_install(void) {
     component_factory_register(&bow_vtable);
     component_factory_register(&arrow_vtable);
     component_factory_register(&character_vtable);
+    component_factory_register(&arrow_damager_vtable);
 
     bt_node_factory_register(&player_is_near_vtable);
     bt_node_factory_register(&player_chase_vtable);
