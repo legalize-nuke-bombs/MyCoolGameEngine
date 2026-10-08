@@ -7,6 +7,7 @@
 
 #include "demo/src/characters/character.h"
 #include "demo/src/characters/character_group.h"
+#include "demo/src/characters/hands/hands.h"
 
 
 struct bow {
@@ -50,17 +51,17 @@ static void bow_awake(struct component *base) {
     }
 
     this->character_id = component_get_id(character);
-    this->hands_id = component_get_id(character);
+    this->hands_id = component_get_id(hands);
 }
 
-static bool bow_try_attack(struct bow *this);
+static bool bow_try_schedule_attack(struct bow *this);
 
 static void bow_simulation_chunk_update(struct component *base, const struct update_context *context) {
     struct bow *this = (struct bow*)base;
 
     this->attack_timer += context->dt;
     if (this->attack_timer >= this->speed){
-        if (bow_try_attack(this)) {
+        if (bow_try_schedule_attack(this)) {
             this->attack_timer -= this->speed;
         }
     }
@@ -75,20 +76,12 @@ const struct component_vtable bow_vtable = {
     .on_simulation_chunk_update = bow_simulation_chunk_update
 };
 
-static bool bow_try_attack(struct bow *this) {
+static void bow_execute_attack(void *executor, void *context) {
+    struct bow* this = executor;
+    struct character* target = context;
+
     if (this->arrow == NULL) {
-        return false;
-    }
-
-    const struct character *character = (struct character*)scene_try_get_component(this->character_id);
-    const struct hands *hands = (struct hands*)scene_try_get_component(this->hands_id);
-    if (character == NULL || hands == NULL) {
-        return false;
-    }
-
-    struct character *target = bow_try_find_target(this);
-    if (target == NULL) {
-        return false;
+        return;
     }
 
     logger_info("Attack");
@@ -100,8 +93,28 @@ static bool bow_try_attack(struct bow *this) {
     entity_set_local_rect(arrow_entity, arrow_rect);
 
     scene_capture_entity(arrow_entity);
+}
 
-    return true;
+static bool bow_try_schedule_attack(struct bow *this) {
+    struct character *target = bow_try_find_target(this);
+    if (target == NULL) {
+        return false;
+    }
+
+    struct hands *hands = (struct hands*)scene_try_get_component(this->hands_id);
+    if (hands == NULL) {
+        return false;
+    }
+
+    const struct hands_action hands_action = {
+        .name = "bow_attack",
+        .duration = 0,
+        .priority = HANDS_ACTION_PRIORITY_PHYS_ATTACK,
+        .method.executor = this,
+        .method.context = target,
+        .method.func = bow_execute_attack,
+    };
+    return hands_try_put(hands, hands_action);
 }
 
 struct character* bow_try_find_target(struct bow* this) {
