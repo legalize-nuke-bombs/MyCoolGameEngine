@@ -58,6 +58,6 @@ entity name=Character position=[2.5 1.5] size=[1.5 3]
             collider material=character
         ]
         entity name=HandsBar position=[-0.5 0.35] size=[1 0.04] components=[
-            hands_bar layer1=ui1 layer2=ui2 color1=[10 10 10 255] color2=[255 255 255 255]
+            hands_bar layer1=ui1 layer2=ui2 color1=[10 10 10 255] color2=[255 0 0 255]
         ]
     ]
