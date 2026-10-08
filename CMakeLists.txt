@@ -58,7 +58,23 @@ FetchContent_Declare(
         SYSTEM
 )
 
-FetchContent_MakeAvailable(SDL3 SDL3_image)
+set(SDLMIXER_VENDORED OFF)
+set(SDLMIXER_DEPS_SHARED OFF)
+set(SDLMIXER_TESTS OFF)
+set(SDLMIXER_EXAMPLES OFF)
+foreach(fmt AIFF VOC AU FLAC GME MOD MP3 MIDI OPUS WAVPACK VORBIS_VORBISFILE)
+    set(SDLMIXER_${fmt} OFF)
+endforeach()
+
+FetchContent_Declare(
+        SDL3_mixer
+        URL https://github.com/libsdl-org/SDL_mixer/releases/download/release-3.2.4/SDL3_mixer-3.2.4.tar.gz
+        URL_HASH SHA256=182a07c745375e113dc740d43964ff21b0be29f29f59876c4dbc4db3d32f6901
+        EXCLUDE_FROM_ALL
+        SYSTEM
+)
+
+FetchContent_MakeAvailable(SDL3 SDL3_image SDL3_mixer)
 
 add_library(mcge SHARED
         mcge/api.h
@@ -245,7 +261,7 @@ if(WIN32)
     set_target_properties(mcge PROPERTIES PREFIX "")
 endif()
 target_include_directories(mcge PUBLIC .)
-target_link_libraries(mcge PUBLIC SDL3::SDL3 SDL3_image::SDL3_image)
+target_link_libraries(mcge PUBLIC SDL3::SDL3 SDL3_image::SDL3_image SDL3_mixer::SDL3_mixer)
 
 add_executable(MyCoolGameEngine demo/src/main.c
         demo/src/world/forest.h
