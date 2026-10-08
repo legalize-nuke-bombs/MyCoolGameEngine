@@ -11,6 +11,9 @@ struct arrow {
 
     double speed;
 
+    uint128_t collider_id;
+    unsigned int collider_on_enter_token;
+
     uint128_t target_id;
 };
 
@@ -24,12 +27,37 @@ static void arrow_create(struct component* base, struct fields *fields) {
     this->speed = fields_get_double(fields, "speed", 10);
 }
 
+static void handle_collider_trigger_enter(void *listener, void *context);
+
+static void arrow_awake(struct component* base) {
+    struct arrow* this = (struct arrow*)base;
+    struct entity* entity = component_get_parent(base);
+
+    struct collider* collider = (struct collider*)entity_get_component(entity, "collider", entity_query_in_children);
+    if (collider == NULL) {
+        entity_mark_destroyed(entity);
+        return;
+    }
+    action_subscribe(collider_on_enter(collider), this, handle_collider_trigger_enter, &this->collider_on_enter_token);
+    this->collider_id = component_get_id((struct component*)collider);
+}
+static void arrow_on_disable(struct component* base) {
+    struct arrow* this = (struct arrow*)base;
+
+    struct collider* collider = (struct collider*)scene_try_get_component(this->collider_id);
+    if (collider) {
+        action_unsubscribe(collider_on_enter(collider), this->collider_on_enter_token);
+    }
+}
+
 static void arrow_update(struct component* base, const struct update_context *context);
 
 const struct component_vtable arrow_vtable = {
     .component_key = arrow_component_key,
     .size = sizeof(struct arrow),
     .on_create = arrow_create,
+    .on_awake = arrow_awake,
+    .on_disable = arrow_on_disable,
     .on_update = arrow_update
 };
 
@@ -56,4 +84,19 @@ static void arrow_update(struct component* base, const struct update_context *co
     struct rect rect = entity_get_local_rect(component_get_parent(base));
     rect.position = vector_sum(rect.position, offset);
     entity_set_local_rect(component_get_parent(base), rect);
+}
+
+
+static void handle_collider_trigger_enter(void *listener, void *context) {
+    struct arrow* this = listener;
+    struct entity* target = context;
+
+    struct component* character = entity_try_get_component(target, "character", entity_query_local);
+
+    if (character == NULL || uint128_cmp(component_get_id(character), this->target_id) != 0) {
+        return;
+    }
+
+    // Target been hit!
+    entity_mark_destroyed(component_get_parent((struct component*)this));
 }
