@@ -53,6 +53,7 @@ entity name=Character position=[2.5 1.5] size=[1.5 3]
             fear_balls manacost=100 cooldown=1 execution_time=1 interruptable=0 prefab=FearBall count=50
         ]
         bow radius=10 speed=1
+        character group=player
     ]
     children=[
         entity name=Hitbox size=[0.45 0.6] components=[

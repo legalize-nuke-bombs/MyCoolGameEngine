@@ -36,6 +36,7 @@ once name=map_deps body=[
             effects
             health max=50
             destroy_on_death
+            character group=creep
         ]
         children=[
             entity name=Hitbox size=[0.5 0.5] components=[

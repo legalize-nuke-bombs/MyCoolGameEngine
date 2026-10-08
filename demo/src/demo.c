@@ -2,6 +2,7 @@
 
 #include <mcge/mcge.h>
 
+#include "characters/character.h"
 #include "characters/health/destroy_on_death.h"
 #include "characters/bt/behaviour_agent.h"
 #include "characters/bt/is_scared.h"
@@ -48,6 +49,7 @@ void demo_install(void) {
     component_factory_register(&keyboard_movement_vtable);
     component_factory_register(&hands_bar_vtable);
     component_factory_register(&bow_vtable);
+    component_factory_register(&character_vtable);
 
     bt_node_factory_register(&player_is_near_vtable);
     bt_node_factory_register(&player_chase_vtable);
