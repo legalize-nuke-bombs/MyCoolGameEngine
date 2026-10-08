@@ -52,7 +52,7 @@ entity name=Character position=[2.5 1.5] size=[1.5 3]
             printer manacost=100 cooldown=1 execution_time=1 interruptable=1 title=Math.exe body=1000-7?
             fear_balls manacost=100 cooldown=1 execution_time=1 interruptable=0 prefab=FearBall count=50
         ]
-        bow radius=10 speed=1
+        bow radius=10 speed=1 arrow=Arrow
         character group=player
     ]
     children=[
