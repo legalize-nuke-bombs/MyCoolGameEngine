@@ -16,6 +16,10 @@ const char* character_component_key(void) {
     return "character";
 }
 
+bool character_is_chunkable() {
+    return true;
+}
+
 static void character_on_create(struct component* base, struct fields *fields) {
     struct character* this = (struct character*)base;
     const char* group_name = fields_get_string(fields, "group", "creep");
@@ -34,6 +38,7 @@ static void character_on_create(struct component* base, struct fields *fields) {
 const struct component_vtable character_vtable = {
     .component_key = character_component_key,
     .size = sizeof(struct character),
+    .is_chunkable = character_is_chunkable,
     .on_create = character_on_create
 };
 
