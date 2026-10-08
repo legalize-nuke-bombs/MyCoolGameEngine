@@ -239,10 +239,6 @@ add_library(mcge SHARED
         mcge/scene/component_ids/component_ids.c
         mcge/scene/components/rendering/box_renderer_rigid_directed.h
         mcge/scene/components/rendering/box_renderer_rigid_directed.c
-        demo/src/characters/hands/hands_action.h
-        demo/src/characters/hands/hands.h
-        demo/src/characters/hands/hands.c
-        demo/src/characters/hands/hands_action_priorities.h
 )
 set_target_properties(mcge PROPERTIES DEFINE_SYMBOL MCGE_EXPORT)
 if(WIN32)
@@ -304,6 +300,10 @@ add_executable(MyCoolGameEngine demo/src/main.c
         demo/src/characters/health/destroy_on_death.c
         demo/src/characters/health/health_bar.h
         demo/src/characters/health/health_bar.c
+        demo/src/characters/hands/hands_action.h
+        demo/src/characters/hands/hands.h
+        demo/src/characters/hands/hands.c
+        demo/src/characters/hands/hands_action_priorities.h
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE mcge)
