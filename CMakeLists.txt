@@ -270,8 +270,8 @@ add_executable(MyCoolGameEngine demo/src/main.c
         demo/src/characters/bt/player_chase.h
         demo/src/characters/bt/player_chase.c
         demo/src/version.h
-        demo/src/characters/mana.h
-        demo/src/characters/mana.c
+        demo/src/characters/mana/mana.h
+        demo/src/characters/mana/mana.c
         demo/src/skills/skill.h
         demo/src/skills/skill.c
         demo/src/skills/skill_internal.h
@@ -293,13 +293,13 @@ add_executable(MyCoolGameEngine demo/src/main.c
         demo/src/characters/bt/is_scared.c
         demo/src/demo.h
         demo/src/demo.c
-        demo/src/characters/health.h
-        demo/src/characters/health.c
-        demo/src/characters/damage.h
-        demo/src/characters/destroy_on_death.h
-        demo/src/characters/destroy_on_death.c
-        demo/src/characters/health_bar.h
-        demo/src/characters/health_bar.c
+        demo/src/characters/health/health.h
+        demo/src/characters/health/health.c
+        demo/src/characters/health/damage.h
+        demo/src/characters/health/destroy_on_death.h
+        demo/src/characters/health/destroy_on_death.c
+        demo/src/characters/health/health_bar.h
+        demo/src/characters/health/health_bar.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE mcge)

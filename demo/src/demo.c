@@ -2,16 +2,16 @@
 
 #include <mcge/mcge.h>
 
-#include "characters/destroy_on_death.h"
+#include "characters/health/destroy_on_death.h"
 #include "characters/bt/behaviour_agent.h"
 #include "characters/bt/is_scared.h"
 #include "characters/bt/player_chase.h"
 #include "characters/bt/player_is_near.h"
 #include "characters/bt/player_run_away.h"
 #include "characters/effects.h"
-#include "characters/health.h"
-#include "characters/health_bar.h"
-#include "characters/mana.h"
+#include "characters/health/health.h"
+#include "characters/health/health_bar.h"
+#include "characters/mana/mana.h"
 #include "characters/player.h"
 #include "skills/custom/fear_balls/fear_ball.h"
 #include "skills/skilled.h"
