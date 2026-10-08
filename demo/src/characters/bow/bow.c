@@ -127,7 +127,9 @@ struct character* bow_try_find_target(struct bow* this) {
     const enum character_group group = character_get_group(character);
 
     const struct chunks *chunks = scene_get_chunks();
-    const struct rect rect = component_get_rect((struct component*)this);
+    struct rect rect = component_get_rect((struct component*)this);
+    rect.size.x = 2 * this->radius;
+    rect.size.y = 2 * this->radius;
     int x_start, x_end, y_start, y_end;
     chunks_get_rect_indexes(chunks, rect, &x_start, &x_end, &y_start, &y_end);
     struct character* result_character = NULL;
