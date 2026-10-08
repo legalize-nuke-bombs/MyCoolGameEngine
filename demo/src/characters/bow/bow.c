@@ -65,6 +65,9 @@ static void bow_simulation_chunk_update(struct component *base, const struct upd
         if (bow_try_schedule_attack(this)) {
             this->attack_timer -= this->attack_interval;
         }
+        else {
+            this->attack_timer = this->attack_interval;
+        }
     }
 }
 
