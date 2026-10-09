@@ -301,8 +301,6 @@ add_executable(MyCoolGameEngine demo/src/main.c
         demo/src/skills/custom/fear_balls/fear_balls.c
         demo/src/skills/custom/fear_balls/fear_ball.h
         demo/src/skills/custom/fear_balls/fear_ball.c
-        demo/src/characters/effects.h
-        demo/src/characters/effects.c
         demo/src/characters/bt/player_run_away.h
         demo/src/characters/bt/player_run_away.c
         demo/src/characters/bt/is_scared.h

@@ -9,7 +9,7 @@
 #include "characters/bt/player_chase.h"
 #include "characters/bt/player_is_near.h"
 #include "characters/bt/player_run_away.h"
-#include "characters/effects.h"
+#include "effects/effects.h"
 #include "characters/health/health.h"
 #include "characters/health/health_bar.h"
 #include "characters/mana/mana.h"

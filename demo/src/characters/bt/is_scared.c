@@ -8,7 +8,8 @@
 
 #include <mcge/mcge.h>
 #include "blackboard.h"
-#include "../effects.h"
+#include "../../effects/effects.h"
+#include "../../effects/custom/fear.h"
 
 struct is_scared {
     struct bt_node base;
@@ -32,5 +33,5 @@ static enum bt_status is_scared_run(struct bt_node *base, void *bb) {
         return bt_failed;
     }
 
-    return effects_has_effect(effects, effect_fear) ? bt_ok : bt_failed;
+    return effects_has(effects, EFFECT_FEAR_KEY) ? bt_ok : bt_failed;
 }

@@ -6,7 +6,8 @@
 
 #include <math.h>
 
-#include "../../../characters/effects.h"
+#include "../../../effects/effects.h"
+#include "../../../effects/effect_factory.h"
 #include <mcge/mcge.h>
 #include "../../../characters/health/damage.h"
 #include "../../../characters/health/health.h"
@@ -17,7 +18,7 @@ struct fear_ball {
     double range;
     double travelled;
     struct damage damage;
-    double fear_length;
+    struct list effect_fields;
     struct vector2 direction;
     struct entity* self;
 
@@ -33,6 +34,7 @@ const char* fear_ball_component_key(void) {
     return "fear_ball";
 }
 static void fear_ball_on_create(struct component *base, struct fields *fields);
+static void fear_ball_on_destroy(struct component *base);
 static void fear_ball_awake(struct component *base);
 static void fear_ball_disable(struct component *base);
 static void fear_ball_on_update(struct component *base, const struct update_context *context);
@@ -41,6 +43,7 @@ const struct component_vtable fear_ball_vtable = {
     .component_key = fear_ball_component_key,
     .size = sizeof(struct fear_ball),
     .on_create = fear_ball_on_create,
+    .on_destroy = fear_ball_on_destroy,
     .on_awake = fear_ball_awake,
     .on_disable = fear_ball_disable,
     .on_update = fear_ball_on_update
@@ -51,7 +54,20 @@ static void fear_ball_on_create(struct component *base, struct fields *fields) {
     this->speed = fields_get_double(fields, "speed", 0);
     this->range = fields_get_double(fields, "range", 0);
     this->damage.amount = fields_get_double(fields, "damage", 25);
-    this->fear_length = fields_get_double(fields, "fear", 0);
+
+    const struct fields_list *effects = fields_get_list(fields, "effects");
+    this->effect_fields = list_create(fields_list_count(effects));
+    for (int i = 0; i < fields_list_count(effects); i++) {
+        list_add(&this->effect_fields, fields_clone(fields_list_get(effects, i)));
+    }
+}
+
+static void fear_ball_on_destroy(struct component *base) {
+    struct fear_ball *this = (struct fear_ball *) base;
+    for (int i = 0; i < list_count(&this->effect_fields); i++) {
+        fields_destroy(list_get(&this->effect_fields, i));
+    }
+    list_destroy(&this->effect_fields);
 }
 
 
@@ -116,7 +132,7 @@ static void fear_ball_on_update(struct component *base, const struct update_cont
 
 static void handle_on_enter(void *listener, void *context) {
     struct fear_ball* this = listener;
-    const struct entity* entity = context;
+    struct entity* entity = context;
     const struct entity* launcher = fear_ball_launcher(this);
     if (launcher)
     {
@@ -129,7 +145,9 @@ static void handle_on_enter(void *listener, void *context) {
     }
     struct effects* effects = (struct effects*)entity_try_get_component(entity, "effects", entity_query_local);
     if (effects) {
-        effects_set_effect(effects, effect_fear, effects_get_effect(effects, effect_fear) + this->fear_length);
+        for (int i = 0; i < list_count(&this->effect_fields); i++) {
+            effects_apply(effects, effect_factory_produce(list_get(&this->effect_fields, i), entity));
+        }
     }
     struct health* health = (struct health*)entity_try_get_component(entity, "health", entity_query_local);
     if (health) {
