@@ -17,6 +17,7 @@
 #include "bow/arrow.h"
 #include "bow/arrow_damager.h"
 #include "bow/bow.h"
+#include "bow/bower.h"
 #include "hands/hands.h"
 #include "hands/hands_bar.h"
 #include "movement/keyboard_movement.h"
@@ -54,6 +55,7 @@ void demo_install(void) {
     component_factory_register(&arrow_vtable);
     component_factory_register(&character_vtable);
     component_factory_register(&arrow_damager_vtable);
+    component_factory_register(&bower_vtable);
 
     bt_node_factory_register(&player_is_near_vtable);
     bt_node_factory_register(&player_chase_vtable);

@@ -12,8 +12,6 @@
 struct arrow_damager {
     struct component base;
 
-    double amount;
-
     uint128_t arrow_id;
     unsigned int arrow_on_hit_token;
 };
@@ -26,7 +24,6 @@ const char* arrow_damager_component_key(void) {
 
 static void arrow_damager_on_create(struct component* base, struct fields *fields) {
     struct arrow_damager *this = (struct arrow_damager*)base;
-    this->amount = fields_get_double(fields, "amount", 10);
 }
 
 
@@ -65,13 +62,16 @@ static void handle_arrow_hit(void *listener, void *context) {
     struct arrow_damager *this = listener;
     struct entity *target = context;
 
+    const struct arrow* arrow = (const struct arrow*)scene_try_get_component(this->arrow_id);
+    if (arrow == NULL) {
+        return;
+    }
+
     struct health *health = (struct health*)entity_try_get_component(target, "health", entity_query_local);
     if (health == NULL) {
         return;
     }
 
-    const struct damage damage = {
-        .amount = this->amount
-    };
+    const struct damage damage = arrow_stats(arrow).damage;
     health_take_damage(health, damage);
 }

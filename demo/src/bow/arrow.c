@@ -9,7 +9,7 @@
 struct arrow {
     struct component base;
 
-    double speed;
+    struct bower_stats stats;
 
     struct action on_hit;
 
@@ -26,7 +26,6 @@ const char* arrow_component_key(void) {
 
 static void arrow_create(struct component* base, struct fields *fields) {
     struct arrow* this = (struct arrow*)base;
-    this->speed = fields_get_double(fields, "speed", 10);
     this->on_hit = action_create();
 }
 static void arrow_destroy(struct component* base) {
@@ -69,8 +68,9 @@ const struct component_vtable arrow_vtable = {
     .on_update = arrow_update
 };
 
-void arrow_launch(struct arrow *this, struct character *target) {
+void arrow_launch(struct arrow *this, struct character *target, const struct bower_stats stats) {
     this->target_id = component_get_id((struct component*)target);
+    this->stats = stats;
 }
 
 
@@ -87,7 +87,7 @@ static void arrow_update(struct component* base, const struct update_context *co
     const struct vector2 target_position = component_get_rect(target).position;
 
     const struct vector2 direction = vector_normalize(vector_sub(target_position, position));
-    const struct vector2 offset = vector_multiply_scalar(direction, this->speed * context->dt);
+    const struct vector2 offset = vector_multiply_scalar(direction, this->stats.speed * context->dt);
 
     struct rect rect = entity_get_local_rect(component_get_parent(base));
     rect.position = vector_sum(rect.position, offset);
@@ -107,6 +107,10 @@ static void handle_collider_trigger_enter(void *listener, void *context) {
 
     action_invoke(&this->on_hit, target);
     entity_mark_destroyed(component_get_parent((struct component*)this));
+}
+
+struct bower_stats arrow_stats(const struct arrow *this) {
+    return this->stats;
 }
 
 struct action* arrow_on_hit(struct arrow *this) {

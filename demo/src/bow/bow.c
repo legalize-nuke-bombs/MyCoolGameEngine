@@ -15,12 +15,10 @@
 struct bow {
     struct component base;
 
-    double radius;
-
-    double attack_interval;
-    double attack_timer;
-
+    struct bower_stats stats;
     struct prefab* arrow;
+
+    double attack_timer;
 
     uint128_t character_id;
     uint128_t hands_id;
@@ -32,8 +30,6 @@ const char* bow_component_key(void) {
 
 static void bow_on_create(struct component *base, struct fields *fields) {
     struct bow *this = (struct bow*)base;
-    this->radius = fields_get_double(fields, "radius", 10);
-    this->attack_interval = fields_get_double(fields, "interval", 1);
     this->arrow = prefabs_get(fields_get_string(fields, "arrow", "default"));
 }
 
@@ -62,12 +58,12 @@ static void bow_simulation_chunk_update(struct component *base, const struct upd
     struct bow *this = (struct bow*)base;
 
     this->attack_timer += context->dt;
-    if (this->attack_timer >= this->attack_interval){
+    if (this->attack_timer >= this->stats.interval){
         if (bow_try_schedule_attack(this)) {
-            this->attack_timer -= this->attack_interval;
+            this->attack_timer -= this->stats.interval;
         }
         else {
-            this->attack_timer = this->attack_interval;
+            this->attack_timer = this->stats.interval;
         }
     }
 }
@@ -100,7 +96,7 @@ static void bow_execute_attack(void *executor, void *context) {
     entity_set_local_rect(arrow_entity, arrow_rect);
 
     struct arrow* arrow = (struct arrow*)entity_get_component(arrow_entity, "arrow", entity_query_local);
-    arrow_launch(arrow, target);
+    arrow_launch(arrow, target, this->stats);
 
     scene_capture_entity(arrow_entity);
 }
@@ -127,6 +123,10 @@ static bool bow_try_schedule_attack(struct bow *this) {
     return hands_try_put(hands, hands_action);
 }
 
+void bow_set_stats(struct bow* this, struct bower_stats stats) {
+    this->stats = stats;
+}
+
 struct character* bow_try_find_target(struct bow* this) {
     const struct character *character = (struct character*)scene_try_get_component(this->character_id);
     if (character == NULL) {
@@ -138,12 +138,12 @@ struct character* bow_try_find_target(struct bow* this) {
 
     const struct chunks *chunks = scene_get_chunks();
     struct rect rect = component_get_rect((struct component*)this);
-    rect.size.x = 2 * this->radius;
-    rect.size.y = 2 * this->radius;
+    rect.size.x = 2 * this->stats.range;
+    rect.size.y = 2 * this->stats.range;
     int x_start, x_end, y_start, y_end;
     chunks_get_rect_indexes(chunks, rect, &x_start, &x_end, &y_start, &y_end);
     struct character* result_character = NULL;
-    const double sqr_radius = this->radius * this->radius;
+    const double sqr_radius = this->stats.range * this->stats.range;
     double min_health = 1e+9;
     for (int x = x_start; x <= x_end; x++) {
         for (int y = y_start; y <= y_end; y++) {
