@@ -94,5 +94,6 @@
 #include "utils/uint128_dictionary.h"
 #include "utils/uint128_t.h"
 #include "scene/component_ids/component_ids.h"
+#include "scene/components/rendering/box_renderer_rigid_directed.h"
 
 #endif //MYCOOLGAMEENGINE_MCGE_H
