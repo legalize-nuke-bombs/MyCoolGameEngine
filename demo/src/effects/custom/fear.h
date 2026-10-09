@@ -1,0 +1,8 @@
+//
+// Created by nikita on 09.10.2026.
+//
+
+#ifndef MYCOOLGAMEENGINE_FEAR_H
+#define MYCOOLGAMEENGINE_FEAR_H
+
+#endif //MYCOOLGAMEENGINE_FEAR_H

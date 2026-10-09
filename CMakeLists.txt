@@ -335,6 +335,15 @@ add_executable(MyCoolGameEngine demo/src/main.c
         demo/src/characters/bow/arrow.c
         demo/src/characters/bow/arrow_damager.h
         demo/src/characters/bow/arrow_damager.c
+        demo/src/effects/effect_internal.h
+        demo/src/effects/effects.h
+        demo/src/effects/effects.c
+        demo/src/effects/effect.h
+        demo/src/effects/effect.c
+        demo/src/effects/custom/fear.h
+        demo/src/effects/custom/fear.c
+        demo/src/effects/effect_factory.h
+        demo/src/effects/effect_factory.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE mcge)

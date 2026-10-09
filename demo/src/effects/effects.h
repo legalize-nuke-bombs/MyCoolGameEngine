@@ -1,0 +1,10 @@
+//
+// Created by nikita on 09.10.2026.
+//
+
+#ifndef MYCOOLGAMEENGINE_EFFECTS_H
+#define MYCOOLGAMEENGINE_EFFECTS_H
+
+
+
+#endif //MYCOOLGAMEENGINE_EFFECTS_H
