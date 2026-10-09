@@ -24,7 +24,6 @@ const struct bt_node_vtable is_scared_vtable = {
 };
 
 static enum bt_status is_scared_run(struct bt_node *base, void *bb) {
-    const struct player_run_away* this = (struct player_run_away*)base;
     const struct blackboard* blackboard = bb;
 
     const struct entity *self = blackboard->self;
