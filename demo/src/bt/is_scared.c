@@ -8,8 +8,8 @@
 
 #include <mcge/mcge.h>
 #include "blackboard.h"
-#include "../../effects/effects.h"
-#include "../../effects/custom/fear.h"
+#include "../effects/effects.h"
+#include "../effects/custom/fear.h"
 
 struct is_scared {
     struct bt_node base;

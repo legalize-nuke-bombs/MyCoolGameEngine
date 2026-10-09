@@ -6,7 +6,7 @@
 #include <mcge/mcge.h>
 
 #include "arrow.h"
-#include "demo/src/characters/health/health.h"
+#include "demo/src/health/health.h"
 
 
 struct arrow_damager {

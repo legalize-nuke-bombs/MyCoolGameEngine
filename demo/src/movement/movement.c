@@ -3,7 +3,7 @@
 //
 
 #include "movement.h"
-#include "demo/src/characters/hands/hands.h"
+#include "demo/src/hands/hands.h"
 
 
 struct movement {

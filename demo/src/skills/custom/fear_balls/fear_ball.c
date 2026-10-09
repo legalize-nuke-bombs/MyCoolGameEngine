@@ -9,8 +9,8 @@
 #include "../../../effects/effects.h"
 #include "../../../effects/effect_factory.h"
 #include <mcge/mcge.h>
-#include "../../../characters/health/damage.h"
-#include "../../../characters/health/health.h"
+#include "../../../health/damage.h"
+#include "../../../health/health.h"
 
 struct fear_ball {
     struct component base;

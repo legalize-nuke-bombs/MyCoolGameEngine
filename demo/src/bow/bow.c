@@ -6,10 +6,10 @@
 #include <mcge/mcge.h>
 
 #include "arrow.h"
-#include "demo/src/characters/character.h"
-#include "demo/src/characters/character_group.h"
-#include "demo/src/characters/hands/hands.h"
-#include "demo/src/characters/health/health.h"
+#include "demo/src/character/character.h"
+#include "demo/src/character/character_group.h"
+#include "demo/src/hands/hands.h"
+#include "demo/src/health/health.h"
 
 
 struct bow {

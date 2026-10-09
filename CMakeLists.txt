@@ -266,8 +266,8 @@ target_link_libraries(mcge PUBLIC SDL3::SDL3 SDL3_image::SDL3_image SDL3_mixer::
 add_executable(MyCoolGameEngine demo/src/main.c
         demo/src/world/forest.h
         demo/src/world/forest.c
-        demo/src/special/pulsator.h
-        demo/src/special/pulsator.c
+        demo/src/world/pulsator.h
+        demo/src/world/pulsator.c
         demo/src/scenes/scene_switcher.h
         demo/src/scenes/scene_switcher.c
         demo/src/scenes/game_closer.h
@@ -276,18 +276,18 @@ add_executable(MyCoolGameEngine demo/src/main.c
         demo/src/environment/clock.c
         demo/src/environment/sky.h
         demo/src/environment/sky.c
-        demo/src/characters/player.h
-        demo/src/characters/player.c
-        demo/src/characters/bt/blackboard.h
-        demo/src/characters/bt/player_is_near.h
-        demo/src/characters/bt/player_is_near.c
-        demo/src/characters/bt/behaviour_agent.h
-        demo/src/characters/bt/behaviour_agent.c
-        demo/src/characters/bt/player_chase.h
-        demo/src/characters/bt/player_chase.c
+        demo/src/character/player.h
+        demo/src/character/player.c
+        demo/src/bt/blackboard.h
+        demo/src/bt/player_is_near.h
+        demo/src/bt/player_is_near.c
+        demo/src/bt/behaviour_agent.h
+        demo/src/bt/behaviour_agent.c
+        demo/src/bt/player_chase.h
+        demo/src/bt/player_chase.c
         demo/src/version.h
-        demo/src/characters/mana/mana.h
-        demo/src/characters/mana/mana.c
+        demo/src/mana/mana.h
+        demo/src/mana/mana.c
         demo/src/skills/skill.h
         demo/src/skills/skill.c
         demo/src/skills/skill_internal.h
@@ -301,38 +301,38 @@ add_executable(MyCoolGameEngine demo/src/main.c
         demo/src/skills/custom/fear_balls/fear_balls.c
         demo/src/skills/custom/fear_balls/fear_ball.h
         demo/src/skills/custom/fear_balls/fear_ball.c
-        demo/src/characters/bt/player_run_away.h
-        demo/src/characters/bt/player_run_away.c
-        demo/src/characters/bt/is_scared.h
-        demo/src/characters/bt/is_scared.c
+        demo/src/bt/player_run_away.h
+        demo/src/bt/player_run_away.c
+        demo/src/bt/is_scared.h
+        demo/src/bt/is_scared.c
         demo/src/demo.h
         demo/src/demo.c
-        demo/src/characters/health/health.h
-        demo/src/characters/health/health.c
-        demo/src/characters/health/damage.h
-        demo/src/characters/health/destroy_on_death.h
-        demo/src/characters/health/destroy_on_death.c
-        demo/src/characters/health/health_bar.h
-        demo/src/characters/health/health_bar.c
-        demo/src/characters/hands/hands_action.h
-        demo/src/characters/hands/hands.h
-        demo/src/characters/hands/hands.c
-        demo/src/characters/hands/hands_action_priorities.h
-        demo/src/characters/movement/movement.h
-        demo/src/characters/movement/movement.c
-        demo/src/characters/movement/keyboard_movement.c
-        demo/src/characters/movement/keyboard_movement.h
-        demo/src/characters/hands/hands_bar.h
-        demo/src/characters/hands/hands_bar.c
-        demo/src/characters/character.h
-        demo/src/characters/character.c
-        demo/src/characters/character_group.h
-        demo/src/characters/bow/bow.h
-        demo/src/characters/bow/bow.c
-        demo/src/characters/bow/arrow.h
-        demo/src/characters/bow/arrow.c
-        demo/src/characters/bow/arrow_damager.h
-        demo/src/characters/bow/arrow_damager.c
+        demo/src/health/health.h
+        demo/src/health/health.c
+        demo/src/health/damage.h
+        demo/src/health/destroy_on_death.h
+        demo/src/health/destroy_on_death.c
+        demo/src/health/health_bar.h
+        demo/src/health/health_bar.c
+        demo/src/hands/hands_action.h
+        demo/src/hands/hands.h
+        demo/src/hands/hands.c
+        demo/src/hands/hands_action_priorities.h
+        demo/src/movement/movement.h
+        demo/src/movement/movement.c
+        demo/src/movement/keyboard_movement.c
+        demo/src/movement/keyboard_movement.h
+        demo/src/hands/hands_bar.h
+        demo/src/hands/hands_bar.c
+        demo/src/character/character.h
+        demo/src/character/character.c
+        demo/src/character/character_group.h
+        demo/src/bow/bow.h
+        demo/src/bow/bow.c
+        demo/src/bow/arrow.h
+        demo/src/bow/arrow.c
+        demo/src/bow/arrow_damager.h
+        demo/src/bow/arrow_damager.c
         demo/src/effects/effect_internal.h
         demo/src/effects/effects.h
         demo/src/effects/effects.c
