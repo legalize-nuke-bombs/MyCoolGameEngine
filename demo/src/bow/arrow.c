@@ -9,7 +9,7 @@
 struct arrow {
     struct component base;
 
-    struct bower_stats stats;
+    struct bowman_stats stats;
 
     struct action on_hit;
 
@@ -68,7 +68,7 @@ const struct component_vtable arrow_vtable = {
     .on_update = arrow_update
 };
 
-void arrow_launch(struct arrow *this, struct character *target, const struct bower_stats stats) {
+void arrow_launch(struct arrow *this, struct character *target, const struct bowman_stats stats) {
     this->target_id = component_get_id((struct component*)target);
     this->stats = stats;
 }
@@ -109,7 +109,7 @@ static void handle_collider_trigger_enter(void *listener, void *context) {
     entity_mark_destroyed(component_get_parent((struct component*)this));
 }
 
-struct bower_stats arrow_stats(const struct arrow *this) {
+struct bowman_stats arrow_stats(const struct arrow *this) {
     return this->stats;
 }
 

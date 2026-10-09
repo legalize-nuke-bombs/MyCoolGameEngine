@@ -53,7 +53,7 @@ entity name=Character position=[2.5 1.5] size=[1.5 3]
             fear_balls manacost=100 cooldown=1 execution_time=1 interruptable=0 prefab=FearBall count=50
         ]
         bow arrow=Arrow
-        bower damage_amount=5 interval=0.25 speed=10 range=7.5
+        bowman damage_amount=5 interval=0.25 speed=10 range=7.5
         character group=player
     ]
     children=[

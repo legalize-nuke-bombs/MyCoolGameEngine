@@ -342,9 +342,9 @@ add_executable(MyCoolGameEngine demo/src/main.c
         demo/src/effects/custom/fear.c
         demo/src/effects/effect_factory.h
         demo/src/effects/effect_factory.c
-        demo/src/bow/bower_stats.h
-        demo/src/bow/bower.h
-        demo/src/bow/bower.c
+        demo/src/bow/bowman_stats.h
+        demo/src/bow/bowman.h
+        demo/src/bow/bowman.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE mcge)

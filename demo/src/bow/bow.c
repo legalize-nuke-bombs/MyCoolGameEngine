@@ -15,7 +15,7 @@
 struct bow {
     struct component base;
 
-    struct bower_stats stats;
+    struct bowman_stats stats;
     struct prefab* arrow;
 
     double attack_timer;
@@ -123,7 +123,7 @@ static bool bow_try_schedule_attack(struct bow *this) {
     return hands_try_put(hands, hands_action);
 }
 
-void bow_set_stats(struct bow* this, struct bower_stats stats) {
+void bow_set_stats(struct bow* this, struct bowman_stats stats) {
     this->stats = stats;
 }
 
