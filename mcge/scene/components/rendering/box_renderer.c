@@ -133,3 +133,7 @@ void box_renderer_set_flip_x(const struct box_renderer *this, const bool value) 
 void box_renderer_set_flip_y(const struct box_renderer *this, const bool value) {
     renderer_square_set_flip_y((struct renderer_square*)this->square, value);
 }
+
+MCGE_API void box_renderer_set_color(const struct box_renderer *this, const struct color color) {
+    renderer_square_set_color((struct renderer_square*)this->square, color);
+}

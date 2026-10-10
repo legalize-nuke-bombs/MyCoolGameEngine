@@ -6,6 +6,7 @@
 #define MYCOOLGAMEENGINE_EFFECT_H
 
 #include <stdbool.h>
+#include <mcge/mcge.h>
 
 struct effect;
 
@@ -22,5 +23,7 @@ bool effect_try_refresh(struct effect *this, const struct effect *incoming);
 
 double effect_get_time_left(const struct effect *this);
 double effect_get_time_full(const struct effect *this);
+
+bool effect_try_get_color(const struct effect *this, struct color *color);
 
 #endif //MYCOOLGAMEENGINE_EFFECT_H

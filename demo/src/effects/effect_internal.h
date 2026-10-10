@@ -16,6 +16,7 @@ struct fields;
 struct effect_vtable {
     const char* key;
     size_t size;
+    struct color (*get_color)();
     void (*on_create)(struct effect *this, struct fields *fields);
     void (*on_destroy)(struct effect *this);
     void (*on_update)(struct effect *this, double dt);

@@ -6,6 +6,7 @@
 #define MYCOOLGAMEENGINE_BOX_RENDERER_H
 
 #include <stdbool.h>
+#include "../../../utils/color.h"
 
 #include "../../../api.h"
 
@@ -25,5 +26,7 @@ MCGE_API bool box_renderer_get_flip_x(const struct box_renderer *this);
 MCGE_API bool box_renderer_get_flip_y(const struct box_renderer *this);
 MCGE_API void box_renderer_set_flip_x(const struct box_renderer *this, bool value);
 MCGE_API void box_renderer_set_flip_y(const struct box_renderer *this, bool value);
+
+MCGE_API void box_renderer_set_color(const struct box_renderer *this, struct color color);
 
 #endif //MYCOOLGAMEENGINE_BOX_RENDERER_H

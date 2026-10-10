@@ -16,8 +16,13 @@ struct color {
 };
 
 MCGE_API extern const struct color color_black;
+
 MCGE_API extern const struct color color_white;
+
 MCGE_API extern const struct color color_green;
+
 MCGE_API extern const struct color color_red;
+MCGE_API extern const struct color color_red_light;
+
 
 #endif //MYCOOLGAMEENGINE_COLOR_H

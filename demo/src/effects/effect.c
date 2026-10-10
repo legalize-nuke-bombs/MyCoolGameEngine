@@ -5,7 +5,6 @@
 #include <stdlib.h>
 
 #include "effect_internal.h"
-#include <mcge/mcge.h>
 
 void effect_base_create(struct effect *this, const struct effect_vtable *vtable, const double duration, struct entity *self) {
     this->vtable = vtable;
@@ -63,4 +62,12 @@ double effect_get_time_left(const struct effect *this) {
 }
 double effect_get_time_full(const struct effect *this) {
     return this->duration;
+}
+
+bool effect_try_get_color(const struct effect *this, struct color *color) {
+    if (this->vtable->get_color == NULL) {
+        return false;
+    }
+    *color = this->vtable->get_color();
+    return true;
 }

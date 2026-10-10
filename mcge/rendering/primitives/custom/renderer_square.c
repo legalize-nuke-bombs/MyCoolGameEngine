@@ -36,14 +36,19 @@ static void renderer_square_draw(struct renderer_primitive* base, const struct r
         SDL_FRect src_rect;
         texture_get_tile_rect(this->texture, this->texture_frame, &src_rect.x, &src_rect.y, &src_rect.w, &src_rect.h);
 
+        SDL_Texture* texture = texture_get_native_texture(this->texture);
+
         SDL_BlendMode current_blend_mode;
         SDL_GetRenderDrawBlendMode(renderer, &current_blend_mode);
-        SDL_SetTextureBlendMode(texture_get_native_texture(this->texture), current_blend_mode);
+        SDL_SetTextureBlendMode(texture, current_blend_mode);
+        SDL_SetTextureColorMod(texture, this->color.r, this->color.g, this->color.b);
 
         SDL_RenderTextureRotated(renderer, texture_get_native_texture(this->texture), &src_rect, &sdl_target_rect,
             0, NULL,
             this->flip_x && this->flip_y ? SDL_FLIP_HORIZONTAL_AND_VERTICAL : (this->flip_x ? SDL_FLIP_HORIZONTAL : (this->flip_y ? SDL_FLIP_VERTICAL : SDL_FLIP_NONE))
             );
+
+        SDL_SetTextureColorMod(texture, 255, 255, 255);
     }
     else {
         SDL_SetRenderDrawColor(renderer, this->color.r, this->color.g, this->color.b, this->color.a);
@@ -74,6 +79,7 @@ struct renderer_primitive* renderer_square_create_from_texture(struct texture* t
     this->base.vtable = &renderer_square_vtable;
     this->texture = texture;
     this->texture_frame = frame;
+    this->color = color_white;
     return (struct renderer_primitive*)this;
 }
 

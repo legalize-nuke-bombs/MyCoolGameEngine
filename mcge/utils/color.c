@@ -11,21 +11,30 @@ const struct color color_black = {
     .b = 0,
     .a = 255
 };
+
 const struct color color_white = {
     .r = 255,
     .g = 255,
     .b = 255,
     .a = 255
 };
+
 const struct color color_green = {
     .r = 0,
     .g = 255,
     .b = 0,
     .a = 255
 };
+
 const struct color color_red = {
     .r = 255,
     .g = 0,
     .b = 0,
+    .a = 255
+};
+const struct color color_red_light = {
+    .r = 255,
+    .g = 150,
+    .b = 150,
     .a = 255
 };
