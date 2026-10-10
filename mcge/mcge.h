@@ -50,6 +50,7 @@
 #include "rendering/textures.h"
 #include "scene/chunks/chunk.h"
 #include "scene/chunks/chunks.h"
+#include "scene/chunks/chunks_algorithms.h"
 #include "scene/components/component.h"
 #include "scene/components/component_factory.h"
 #include "scene/components/component_internal.h"

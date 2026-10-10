@@ -140,96 +140,111 @@ void bow_set_stats(struct bow* this, struct bowman_stats stats) {
     this->stats = stats;
 }
 
+struct bow_find_most_injured_enemy_context {
+    struct vector2 self_position;
+    enum character_group self_group;
+    double sqr_radius;
+    struct character* result_character;
+    double min_health;
+};
+static void bow_find_most_injured_enemy_step(struct component *component, void *context) {
+    struct character *character = (struct character*)component;
+    struct bow_find_most_injured_enemy_context *cnt = context;
+
+    const enum character_group group = character_get_group(character);
+    const struct vector2 position = component_get_rect(component).position;
+    const double distance_sqr = vector_sqr_distance(&cnt->self_position, &position);
+
+    if (cnt->self_group == group || distance_sqr > cnt->sqr_radius) {
+        return;
+    }
+
+    const struct health *health = (struct health*)entity_try_get_component(component_get_parent(component), "health", entity_query_local);
+    if (health == NULL) {
+        return;
+    }
+    const double h_amount = health_amount(health);
+
+    if (cnt->min_health > h_amount) {
+        cnt->min_health = h_amount;
+        cnt->result_character = character;
+    }
+}
+struct bow_find_closest_enemy_context {
+    struct vector2 self_position;
+    enum character_group self_group;
+    double sqr_radius;
+    struct vector2 most_injured_position;
+    struct dictionary* exclude_dict;
+    struct character* result_character;
+    double min_distance_sqr;
+};
+static void bow_find_closest_enemy_step(struct component *component, void *context) {
+    struct character *character = (struct character*)component;
+    struct bow_find_closest_enemy_context *cnt = context;
+
+    const enum character_group group = character_get_group(character);
+    const struct vector2 position = component_get_rect(component).position;
+    const double self_distance_sqr = vector_sqr_distance(&cnt->self_position, &position);
+
+    if (cnt->self_group == group || self_distance_sqr > cnt->sqr_radius) {
+        return;
+    }
+
+    const double most_injured_distance_sqr = vector_sqr_distance(&cnt->most_injured_position, &position);
+    if (most_injured_distance_sqr > cnt->min_distance_sqr) {
+        return;
+    }
+
+    if (dictionary_present(cnt->exclude_dict, character)) {
+        return;
+    }
+
+    cnt->min_distance_sqr = most_injured_distance_sqr;
+    cnt->result_character = character;
+}
 struct dictionary* bow_try_find_targets(struct bow* this) {
     const struct character *character = (struct character*)scene_try_get_component(this->character_id);
     if (character == NULL) {
         return NULL;
     }
 
-    const struct vector2 position = component_get_rect((struct component*)character).position;
-    const enum character_group group = character_get_group(character);
-
-    const struct chunks *chunks = scene_get_chunks();
     struct rect rect = component_get_rect((struct component*)this);
     rect.size.x = 2 * this->stats.range;
     rect.size.y = 2 * this->stats.range;
-    int x_start, x_end, y_start, y_end;
-    chunks_get_rect_indexes(chunks, rect, &x_start, &x_end, &y_start, &y_end);
-    struct character* result_character = NULL;
-    const double sqr_radius = this->stats.range * this->stats.range;
-    double min_health = 1e+9;
-    for (int x = x_start; x <= x_end; x++) {
-        for (int y = y_start; y <= y_end; y++) {
-            const struct dictionary* characters = chunks_chunk_get_components_by_type(chunks, x, y, "character");
-            if (characters == NULL) {
-                continue;
-            }
-            struct dictionary_iterator iterator = dictionary_begin(characters);
-            struct dictionary_node node;
-            while (dictionary_next(characters, &iterator, &node)) {
-                struct character *target_character = node.value;
-                const enum character_group target_character_group = character_get_group(target_character);
-                struct vector2 target_character_position = component_get_rect((struct component*)target_character).position;
-                if (group != target_character_group) {
-                    const double distance_sqr = vector_sqr_distance(&position, &target_character_position);
-                    if (sqr_radius > distance_sqr) {
-                        const struct health* target_health = (struct health*)entity_try_get_component(component_get_parent((struct component*)target_character), "health", entity_query_local);
-                        const double target_health_amount = target_health ? health_amount(target_health) : min_health - 1;
-                        if (min_health > target_health_amount) {
-                            result_character = target_character;
-                            min_health = target_health_amount;
-                        }
-                    }
-                }
-            }
-        }
-    }
 
-    if (result_character == NULL) {
+    struct bow_find_most_injured_enemy_context find_most_injured_enemy_context = {
+        .self_position = component_get_rect((struct component*)character).position,
+        .self_group = character_get_group(character),
+        .sqr_radius = this->stats.range * this->stats.range,
+        .result_character = NULL,
+        .min_health = 1e+9
+    };
+    chunks_algorithms_for_each_typed(rect, "character", bow_find_most_injured_enemy_step, &find_most_injured_enemy_context);
+    struct character* most_injured_enemy = find_most_injured_enemy_context.result_character;
+    if (most_injured_enemy == NULL) {
         return NULL;
     }
 
     dictionary_clear(this->targets);
+    dictionary_try_add(this->targets, most_injured_enemy, most_injured_enemy);
+    // Number of arrows is usually very small (1 - 3) so probably it's the fastest approach
+    for (int i = 0; i < this->stats.arrows - 1; i++) {
+        struct bow_find_closest_enemy_context find_closest_enemy_context = {
+            .self_position = find_most_injured_enemy_context.self_position,
+            .self_group = find_most_injured_enemy_context.self_group,
+            .sqr_radius = find_most_injured_enemy_context.sqr_radius,
+            .most_injured_position = component_get_rect((struct component*)most_injured_enemy).position,
+            .exclude_dict = this->targets,
+            .result_character = NULL,
+            .min_distance_sqr = 1e+9
+        };
 
-    dictionary_try_add(this->targets, result_character, result_character);
-    const struct vector2 result_character_position = component_get_rect((struct component*)result_character).position;
-
-    for (int i = 0; i < this->stats.arrows - 1; i++) { // Number of arrows is usually small so probably it's the most efficient approach
-
-        double distance_to_main_sqr_min = 1e+9;
-        struct character* secondary_target = NULL;
-
-        for (int x = x_start; x <= x_end; x++) {
-            for (int y = y_start; y <= y_end; y++) {
-                const struct dictionary* characters = chunks_chunk_get_components_by_type(chunks, x, y, "character");
-                if (characters == NULL) {
-                    continue;
-                }
-                struct dictionary_iterator iterator = dictionary_begin(characters);
-                struct dictionary_node node;
-                while (dictionary_next(characters, &iterator, &node)) {
-                    struct character *target_character = node.value;
-                    const enum character_group target_character_group = character_get_group(target_character);
-                    struct vector2 target_character_position = component_get_rect((struct component*)target_character).position;
-                    if (group != target_character_group && dictionary_absent(this->targets, target_character)) {
-                        const double distance_sqr = vector_sqr_distance(&position, &target_character_position);
-                        if (sqr_radius > distance_sqr) {
-                            const double distance_to_main_sqr = vector_sqr_distance(&position, &result_character_position);
-                            if (distance_to_main_sqr_min > distance_to_main_sqr) {
-                                distance_to_main_sqr_min = distance_to_main_sqr;
-                                secondary_target = target_character;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        if (secondary_target == NULL) {
+        chunks_algorithms_for_each_typed(rect, "character", bow_find_closest_enemy_step, &find_closest_enemy_context);
+        if (find_closest_enemy_context.result_character == NULL) {
             break;
         }
-        dictionary_try_add(this->targets, secondary_target, secondary_target);
+        dictionary_try_add(this->targets, this->targets, find_closest_enemy_context.result_character);
     }
-
     return this->targets;
 }
