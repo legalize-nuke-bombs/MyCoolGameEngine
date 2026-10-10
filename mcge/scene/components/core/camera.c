@@ -7,7 +7,7 @@
 #include "../../scene.h"
 #include "../../../rendering/renderer.h"
 #include "../../../rendering/renderer_pipeline.h"
-#include "../../chunks/chunks.h"
+#include "../../chunks/chunks_algorithms.h"
 #include "../../../utils/dictionary.h"
 #include "../../../utils/fields.h"
 
@@ -66,34 +66,13 @@ static void camera_update_renderer_pipeline_viewport(const struct camera *this) 
     renderer_pipeline_set_viewport(this->renderer, viewport);
 }
 
-static void camera_update_visible_chunks(const struct camera *this, const struct update_context *context) {
-    int x_start, x_end, y_start, y_end;
-    chunks_get_rect_indexes(this->chunks, renderer_pipeline_get_viewport(this->renderer), &x_start, &x_end, &y_start, &y_end);
-    for (int x = x_start; x <= x_end; x++) {
-        for (int y = y_start; y <= y_end; y++) {
-            const struct dictionary *types = chunks_chunk_get_types(this->chunks, x, y);
-            if (types == NULL) {
-                continue;
-            }
-            struct dictionary_iterator types_iterator = dictionary_begin(types);
-            struct dictionary_node node;
-            while (dictionary_next(types, &types_iterator, &node)) {
-                const struct dictionary* typed_components = node.value;
+static void camera_update_visible_component(struct component* component, void *context) {
+    const struct update_context *update_context = context;
+    component_visible_chunk_update(component, update_context);
+}
 
-                struct dictionary_iterator typed_components_iterator = dictionary_begin(typed_components);
-                while (dictionary_next(typed_components, &typed_components_iterator, &node)) {
-                    struct component* component = node.value;
-                    if (!component_is_visible_chunkable(component)) {
-                        break;
-                    }
-                    if (!component_is_awake(component)) {
-                        continue;
-                    }
-                    component_visible_chunk_update(component, context);
-                }
-            }
-        }
-    }
+static void camera_update_visible_chunks(const struct camera *this, const struct update_context *context) {
+    chunks_algorithms_for_each(renderer_pipeline_get_viewport(this->renderer), component_is_visible_chunkable, camera_update_visible_component, (void*)context);
 }
 
 static void camera_update(struct component *base, const struct update_context *context) {
