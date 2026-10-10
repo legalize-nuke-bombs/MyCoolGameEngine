@@ -39,7 +39,6 @@ struct rigid_body {
 
     struct action on_drive;
 
-    const struct chunks* chunks;
     uint128_t collider_id;
 };
 
@@ -86,7 +85,6 @@ static void rigid_body_awake(struct component *base) {
     struct rigid_body *this = (struct rigid_body *) base;
     struct entity *parent = component_get_parent(base);
 
-    this->chunks = scene_get_chunks();
     const struct component *collider = entity_get_component(parent, collider_component_key(), entity_query_in_children);
     if (collider == NULL) {
         entity_mark_destroyed(parent);
@@ -97,7 +95,6 @@ static void rigid_body_awake(struct component *base) {
 
 static void rigid_body_on_disable(struct component *base) {
     struct rigid_body *this = (struct rigid_body *) base;
-    this->chunks = NULL;
 }
 
 static const struct collider* rigid_body_collider(const struct rigid_body *this) {
@@ -186,7 +183,7 @@ static void rigid_body_simulation_chunk_update(struct component* base, const str
     struct rigid_body *this = (struct rigid_body *) base;
     const double dt = context->dt;
 
-    const double friction_impulse_max_scalar = this->m * GRAVITY * this->base_friction_coefficient * rigid_surface_get_friction(this->chunks, component_get_rect(base)) * dt;
+    const double friction_impulse_max_scalar = this->m * GRAVITY * this->base_friction_coefficient * rigid_surface_get_friction(component_get_rect(base)) * dt;
 
     rigid_body_apply_impulses(this, friction_impulse_max_scalar);
     rigid_body_apply_rolling_friction(this, friction_impulse_max_scalar * this->rolling_friction_coefficient);
