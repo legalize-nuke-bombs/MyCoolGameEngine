@@ -45,7 +45,6 @@ struct rigid_body {
 static void rigid_body_on_create(struct component *base, struct fields *fields);
 static void rigid_body_awake(struct component *base);
 static void rigid_body_simulation_chunk_update(struct component* base, const struct update_context *context);
-static void rigid_body_on_disable(struct component *base);
 static void rigid_body_on_destroy(struct component *base);
 
 const struct component_vtable rigid_body_vtable = {
@@ -54,7 +53,6 @@ const struct component_vtable rigid_body_vtable = {
     .on_create = rigid_body_on_create,
     .on_awake = rigid_body_awake,
     .on_simulation_chunk_update = rigid_body_simulation_chunk_update,
-    .on_disable = rigid_body_on_disable,
     .on_destroy = rigid_body_on_destroy
 };
 
@@ -91,10 +89,6 @@ static void rigid_body_awake(struct component *base) {
         return;
     }
     this->collider_id = component_get_id(collider);
-}
-
-static void rigid_body_on_disable(struct component *base) {
-    struct rigid_body *this = (struct rigid_body *) base;
 }
 
 static const struct collider* rigid_body_collider(const struct rigid_body *this) {
