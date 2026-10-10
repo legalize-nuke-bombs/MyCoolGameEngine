@@ -120,7 +120,6 @@ static bool bow_try_schedule_attack(struct bow *this) {
         return false;
     }
     if (dictionary_count(targets) == 0) {
-        dictionary_destroy(targets);
         return false;
     }
 
