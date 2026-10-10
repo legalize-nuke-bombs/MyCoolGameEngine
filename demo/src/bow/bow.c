@@ -240,10 +240,11 @@ struct dictionary* bow_try_find_targets(struct bow* this) {
         };
 
         chunks_algorithms_for_each_typed(rect, "character", bow_find_closest_enemy_step, &find_closest_enemy_context);
-        if (find_closest_enemy_context.result_character == NULL) {
+        struct character* result_character = find_closest_enemy_context.result_character;
+        if (result_character == NULL) {
             break;
         }
-        dictionary_try_add(this->targets, this->targets, find_closest_enemy_context.result_character);
+        dictionary_try_add(this->targets, result_character, result_character);
     }
     return this->targets;
 }
