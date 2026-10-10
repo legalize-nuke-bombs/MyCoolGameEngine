@@ -229,12 +229,16 @@ static struct entity* collider_try_get_obstacle_among(const struct collider *thi
     struct dictionary_node node;
     while (dictionary_next(colliders, &iterator, &node)) {
         const struct collider *collider = node.value;
-        if (collider_get_response(this, collider) != collision_response_block || component_get_global_parent((const struct component*)collider) == current_parent) {
+        const struct rect collider_rect = component_get_rect((const struct component*)collider);
+        if (!rects_intersection(rect, collider_rect) || rects_intersection(current_rect, collider_rect)) {
             continue;
         }
-        const struct rect collider_rect = component_get_rect((const struct component*)collider);
-        if (rects_intersection(rect, collider_rect) && !rects_intersection(current_rect, collider_rect)) {
-            return component_get_global_parent((const struct component*)collider);
+        if (collider_get_response(this, collider) != collision_response_block) {
+            continue;
+        }
+        struct entity *collider_parent = component_get_global_parent((const struct component*)collider);
+        if (collider_parent != current_parent) {
+            return collider_parent;
         }
     }
     return NULL;
