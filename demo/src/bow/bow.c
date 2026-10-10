@@ -20,6 +20,8 @@ struct bow {
 
     double attack_timer;
 
+    struct dictionary* targets; // Targets dictionary is pre allocated to avoid allocations on hot path
+
     uint128_t character_id;
     uint128_t hands_id;
 };
@@ -31,10 +33,12 @@ const char* bow_component_key(void) {
 static void bow_on_create(struct component *base, struct fields *fields) {
     struct bow *this = (struct bow*)base;
     this->arrow = prefabs_get(fields_get_string(fields, "arrow", "default"));
+    this->targets = pointer_dictionary_build(8);
 }
 
 static void bow_on_destroy(struct component *base) {
     struct bow *this = (struct bow*)base;
+    dictionary_destroy(this->targets);
 }
 
 static void bow_awake(struct component *base) {
@@ -79,7 +83,7 @@ const struct component_vtable bow_vtable = {
 
 static void bow_execute_attack(void *executor, void *context) {
     struct bow* this = executor;
-    struct character* target = context;
+    struct dictionary* targets = context;
 
     if (this->arrow == NULL) {
         return;
@@ -89,26 +93,34 @@ static void bow_execute_attack(void *executor, void *context) {
         return;
     }
 
-    struct entity* arrow_entity = prefab_instantiate(this->arrow);
+    struct dictionary_node node;
+    struct dictionary_iterator iterator = dictionary_begin(targets);
+    while (dictionary_next(targets, &iterator, &node)) {
+        struct entity* arrow_entity = prefab_instantiate(this->arrow);
 
-    struct rect arrow_rect = entity_get_local_rect(arrow_entity);
-    arrow_rect.position = component_get_rect((struct component*)this).position;
-    entity_set_local_rect(arrow_entity, arrow_rect);
+        struct rect arrow_rect = entity_get_local_rect(arrow_entity);
+        arrow_rect.position = component_get_rect((struct component*)this).position;
+        entity_set_local_rect(arrow_entity, arrow_rect);
 
-    struct arrow* arrow = (struct arrow*)entity_get_component(arrow_entity, "arrow", entity_query_local);
-    arrow_launch(arrow, target, this->stats);
+        struct arrow* arrow = (struct arrow*)entity_get_component(arrow_entity, "arrow", entity_query_local);
+        arrow_launch(arrow, node.value, this->stats);
 
-    scene_capture_entity(arrow_entity);
+        scene_capture_entity(arrow_entity);
+    }
 }
 
 static bool bow_try_schedule_attack(struct bow *this) {
-    struct character *target = bow_try_find_target(this);
-    if (target == NULL) {
+    struct hands *hands = (struct hands*)scene_try_get_component(this->hands_id);
+    if (hands == NULL) {
         return false;
     }
 
-    struct hands *hands = (struct hands*)scene_try_get_component(this->hands_id);
-    if (hands == NULL) {
+    struct dictionary *targets = bow_try_find_targets(this);
+    if (targets == NULL) {
+        return false;
+    }
+    if (dictionary_count(targets) == 0) {
+        dictionary_destroy(targets);
         return false;
     }
 
@@ -117,17 +129,18 @@ static bool bow_try_schedule_attack(struct bow *this) {
         .duration = 0,
         .priority = HANDS_ACTION_PRIORITY_PHYS_ATTACK,
         .method.executor = this,
-        .method.context = target,
+        .method.context = targets,
         .method.func = bow_execute_attack,
     };
-    return hands_try_put(hands, hands_action);
+    const bool result = hands_try_put(hands, hands_action);
+    return result;
 }
 
 void bow_set_stats(struct bow* this, struct bowman_stats stats) {
     this->stats = stats;
 }
 
-struct character* bow_try_find_target(struct bow* this) {
+struct dictionary* bow_try_find_targets(struct bow* this) {
     const struct character *character = (struct character*)scene_try_get_component(this->character_id);
     if (character == NULL) {
         return NULL;
@@ -172,5 +185,51 @@ struct character* bow_try_find_target(struct bow* this) {
         }
     }
 
-    return result_character;
+    if (result_character == NULL) {
+        return NULL;
+    }
+
+    dictionary_clear(this->targets);
+
+    dictionary_try_add(this->targets, result_character, result_character);
+    const struct vector2 result_character_position = component_get_rect((struct component*)result_character).position;
+
+    for (int i = 0; i < this->stats.arrows - 1; i++) { // Number of arrows is usually small so probably it's the most efficient approach
+
+        double distance_to_main_sqr_min = 1e+9;
+        struct character* secondary_target = NULL;
+
+        for (int x = x_start; x <= x_end; x++) {
+            for (int y = y_start; y <= y_end; y++) {
+                const struct dictionary* characters = chunks_chunk_get_components_by_type(chunks, x, y, "character");
+                if (characters == NULL) {
+                    continue;
+                }
+                struct dictionary_iterator iterator = dictionary_begin(characters);
+                struct dictionary_node node;
+                while (dictionary_next(characters, &iterator, &node)) {
+                    struct character *target_character = node.value;
+                    const enum character_group target_character_group = character_get_group(target_character);
+                    struct vector2 target_character_position = component_get_rect((struct component*)target_character).position;
+                    if (group != target_character_group && dictionary_absent(this->targets, target_character)) {
+                        const double distance_sqr = vector_sqr_distance(&position, &target_character_position);
+                        if (sqr_radius > distance_sqr) {
+                            const double distance_to_main_sqr = vector_sqr_distance(&position, &result_character_position);
+                            if (distance_to_main_sqr_min > distance_to_main_sqr) {
+                                distance_to_main_sqr_min = distance_to_main_sqr;
+                                secondary_target = target_character;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (secondary_target == NULL) {
+            break;
+        }
+        dictionary_try_add(this->targets, secondary_target, secondary_target);
+    }
+
+    return this->targets;
 }

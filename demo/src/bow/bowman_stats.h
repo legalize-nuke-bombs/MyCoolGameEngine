@@ -12,6 +12,7 @@ struct bowman_stats {
     double interval;
     double speed;
     double range;
+    int arrows;
 };
 
 #endif //MYCOOLGAMEENGINE_BOWMAN_STATS_H

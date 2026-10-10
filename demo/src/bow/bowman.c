@@ -34,6 +34,7 @@ static void bowman_on_create(struct component* base, struct fields *fields) {
     this->stats.interval = fields_get_double(fields, "interval", 0.25);
     this->stats.speed = fields_get_double(fields, "speed", 0.5);
     this->stats.range = fields_get_double(fields, "range", 10);
+    this->stats.arrows = fields_get_int(fields, "arrows", 1);
 }
 
 static void bowman_awake(struct component* base) {

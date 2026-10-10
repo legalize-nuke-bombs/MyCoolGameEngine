@@ -15,6 +15,6 @@ extern const struct component_vtable bow_vtable;
 
 void bow_set_stats(struct bow* this, struct bowman_stats stats);
 
-struct character* bow_try_find_target(struct bow* this);
+struct dictionary* bow_try_find_targets(struct bow* this);
 
 #endif //MYCOOLGAMEENGINE_BOW_H
