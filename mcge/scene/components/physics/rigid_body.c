@@ -147,30 +147,34 @@ static void rigid_body_hit(struct rigid_body *this, const struct collider *colli
     }
 }
 
-static void rigid_body_move_along(struct rigid_body *this, const struct collider *collider, const struct vector2 axis, const double dt) {
+static struct vector2 rigid_body_free_step_along(struct rigid_body *this, const struct collider *collider, const struct rect collider_rect, const struct vector2 axis, const double dt) {
     const double distance = vector_dot(this->v, axis) * dt;
     if (distance == 0) {
-        return;
+        return vector2_zero;
     }
-    const struct vector2 d_pos = vector_multiply_scalar(axis, distance);
+    const struct vector2 step = vector_multiply_scalar(axis, distance);
 
-    struct rect rect = component_get_rect((const struct component*)collider);
-    rect.position = vector_sum(rect.position, d_pos);
-    const struct entity *obstacle = collider_try_get_obstacle(collider, rect);
+    struct rect target_rect = collider_rect;
+    target_rect.position = vector_sum(target_rect.position, step);
+    const struct entity *obstacle = collider_try_get_obstacle(collider, collider_rect, target_rect);
     if (obstacle != NULL) {
         rigid_body_hit(this, collider, obstacle, vector_multiply_scalar(axis, distance > 0 ? 1.0 : -1.0));
-        return;
+        return vector2_zero;
     }
-
-    struct entity* parent = component_get_parent((struct component*)this);
-    struct rect local_rect = entity_get_local_rect(parent);
-    local_rect.position = vector_sum(local_rect.position, d_pos);
-    entity_set_local_rect(parent, local_rect);
+    return step;
 }
 
 static void rigid_body_move(struct rigid_body *this, const struct collider *collider, const double dt) {
-    rigid_body_move_along(this, collider, axis_x, dt);
-    rigid_body_move_along(this, collider, axis_y, dt);
+    struct rect collider_rect = component_get_rect((const struct component*)collider);
+
+    const struct vector2 step_x = rigid_body_free_step_along(this, collider, collider_rect, axis_x, dt);
+    collider_rect.position = vector_sum(collider_rect.position, step_x);
+    const struct vector2 step_y = rigid_body_free_step_along(this, collider, collider_rect, axis_y, dt);
+
+    struct entity* parent = component_get_parent((struct component*)this);
+    struct rect local_rect = entity_get_local_rect(parent);
+    local_rect.position = vector_sum(vector_sum(local_rect.position, step_x), step_y);
+    entity_set_local_rect(parent, local_rect);
 }
 
 static void rigid_body_simulation_chunk_update(struct component* base, const struct update_context *context) {

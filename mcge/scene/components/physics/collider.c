@@ -221,9 +221,8 @@ static void collider_on_movement(struct component *base) {
     }
 }
 
-static struct entity* collider_try_get_obstacle_among(const struct collider *this, const struct rect rect, const struct dictionary *colliders) {
+static struct entity* collider_try_get_obstacle_among(const struct collider *this, const struct rect current_rect, const struct rect rect, const struct dictionary *colliders) {
     const struct entity* current_parent = component_get_global_parent((const struct component*)this);
-    const struct rect current_rect = component_get_rect((const struct component*)this);
 
     struct dictionary_iterator iterator = dictionary_begin(colliders);
     struct dictionary_node node;
@@ -244,7 +243,7 @@ static struct entity* collider_try_get_obstacle_among(const struct collider *thi
     return NULL;
 }
 
-struct entity* collider_try_get_obstacle(const struct collider *this, const struct rect rect) {
+struct entity* collider_try_get_obstacle(const struct collider *this, const struct rect current_rect, const struct rect rect) {
     int x_start, x_end, y_start, y_end;
     chunks_get_rect_indexes(this->chunks, rect, &x_start, &x_end, &y_start, &y_end);
 
@@ -255,7 +254,7 @@ struct entity* collider_try_get_obstacle(const struct collider *this, const stru
                 continue;
             }
 
-            struct entity *obstacle = collider_try_get_obstacle_among(this, rect, colliders);
+            struct entity *obstacle = collider_try_get_obstacle_among(this, current_rect, rect, colliders);
             if (obstacle != NULL) {
                 return obstacle;
             }

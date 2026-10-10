@@ -16,7 +16,7 @@ MCGE_API const char* collider_component_key(void);
 
 MCGE_API extern const struct component_vtable collider_vtable;
 
-MCGE_API struct entity* collider_try_get_obstacle(const struct collider *this, struct rect rect);
+MCGE_API struct entity* collider_try_get_obstacle(const struct collider *this, struct rect current_rect, struct rect rect);
 
 MCGE_API const struct rigid_material* collider_get_rigid_material(const struct collider *this);
 MCGE_API struct action* collider_on_enter(struct collider *this);
