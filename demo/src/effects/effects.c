@@ -75,7 +75,10 @@ static void effects_destroy(struct component *base) {
 
 static void effects_awake(struct component *base) {
     struct effects *this = (struct effects *) base;
-    const struct component* box_renderer = entity_get_component(component_get_parent(base), "box_renderer", entity_query_local);
+    const struct component* box_renderer = entity_try_get_component(component_get_parent(base), "box_renderer", entity_query_local);
+    if (box_renderer == NULL) {
+        return;
+    }
     this->box_renderer_id = component_get_id(box_renderer);
 }
 static void effects_disable(struct component *base) {
