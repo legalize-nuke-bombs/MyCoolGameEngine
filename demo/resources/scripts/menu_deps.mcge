@@ -1,4 +1,5 @@
 once name=menu_deps body=[
+    /* Renderer layers */
     renderer_layer name=bg1 priority=1
     renderer_layer name=bg2 priority=2
     renderer_layer name=prop1 priority=10
@@ -7,19 +8,24 @@ once name=menu_deps body=[
     renderer_layer name=ui1 priority=101
     renderer_layer name=ui2 priority=102
 
-    texture name=character tile=[256 512] count=64 path=textures/character.png
+
+    /* Textures */
     texture name=campfire1 tile=[384 384] count=16 path=textures/campfire1.png
     texture name=campfire2 tile=[384 384] count=16 path=textures/campfire2.png
+
     texture name=tree1 tile=[512 512] count=16 path=textures/tree1.png
     texture name=tree2 tile=[512 512] count=16 path=textures/tree2.png
     texture name=tree3 tile=[512 512] count=16 path=textures/tree3.png
     texture name=tree4 tile=[512 512] count=16 path=textures/tree4.png
     texture name=tree5 tile=[512 512] count=16 path=textures/tree5.png
-    texture name=enemy1 tile=[192 192] count=16 path=textures/enemy1.png
-    texture name=enemy2 tile=[192 192] count=16 path=textures/enemy2.png
-    texture name=soul1 tile=[192 192] count=16 path=textures/soul1.png
-    texture name=soul2 tile=[192 192] count=16 path=textures/soul2.png
-    texture name=soul3 tile=[192 192] count=16 path=textures/soul3.png
+
+    texture name=nevermore1 tile=[256 512] count=64 path=textures/nevermore1.png
+    texture name=nevermore_arrow1 tile=[192 192] count=16 path=textures/nevermore_arrow1.png
+    texture name=nevermore_arrow2 tile=[192 192] count=16 path=textures/nevermore_arrow2.png
+    texture name=nevermore_arrow3 tile=[192 192] count=16 path=textures/nevermore_arrow3.png
+
+    texture name=enemy_default1 tile=[192 192] count=16 path=textures/enemy_default1.png
+    texture name=enemy_default2 tile=[192 192] count=16 path=textures/enemy_default2.png
 
     texture name=light1 tile=[512 512] path=textures/light1.png
 ]

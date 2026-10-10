@@ -11,8 +11,8 @@ once name=map_deps body=[
     rigid_material name=stone friction=0.6 restitution=0.05
     rigid_material name=character friction=0.3 restitution=0.075
 
-    collision_layer name=soul default=overlap
-    collision_rule between=[soul soul] response=ignore
+    collision_layer name=arrow default=overlap
+    collision_rule between=[arrow arrow] response=ignore
 
     bt_graph name=enemy root=[
         selector nodes=[
@@ -26,9 +26,9 @@ once name=map_deps body=[
         ]
     ]
 
-    prefab name=Enemy
+    prefab name=EnemyDefault
         components=[
-            box_renderer layer=prop1 texture=[enemy1 enemy2]
+            box_renderer layer=prop1 texture=[enemy_default1 enemy_default2]
             box_renderer_animated speed=1
             rigid_body mass=50 friction=10 rolling=0.2
             box_renderer_rigid_directed
@@ -52,26 +52,26 @@ once name=map_deps body=[
         box_renderer_animated speed=1
     ]
 
-    prefab name=FearBall size=[0.5 0.5] components=[
-        box_renderer layer=effect1 texture=[soul1 soul2 soul3]
+    prefab name=NevermoreFearBall size=[0.5 0.5] components=[
+        box_renderer layer=effect1 texture=[nevermore_arrow1 nevermore_arrow2 nevermore_arrow3]
         box_renderer_animated speed=2
         fear_ball speed=10 range=10 damage=5 effects=[fear duration=1]
         box_light texture=light1
     ] children = [
         entity name=Hitbox position=[0 0] size=[0.5 0.5] components=[
-            collider layer=soul
+            collider layer=arrow
         ]
     ]
 
-    prefab name=Arrow size=[0.75 0.75] components=[
-            box_renderer layer=effect1 texture=[soul1 soul2 soul3]
+    prefab name=NevermoreArrow size=[0.75 0.75] components=[
+            box_renderer layer=effect1 texture=[nevermore_arrow1 nevermore_arrow2 nevermore_arrow3]
             box_renderer_animated speed=2
             arrow
             arrow_damager
             box_light texture=light1
     ] children = [
         entity name=Hitbox position=[0 0] size=[0.75 0.75] components=[
-            collider layer=soul
+            collider layer=arrow
         ]
     ]
 ]
