@@ -5,7 +5,7 @@
 #include "../component_internal.h"
 #include "../../entity.h"
 #include "../../scene.h"
-#include "../../chunks/chunks.h"
+#include "../../chunks/chunks_algorithms.h"
 #include "../../../utils/dictionary.h"
 #include "../../../utils/fields.h"
 
@@ -45,41 +45,18 @@ static void simulator_awake(struct component *base) {
     this->chunks = scene_get_chunks();
 }
 
+static void simulator_update_component(struct component *component, void *context) {
+    const struct update_context *update_context = context;
+    component_simulation_chunk_update(component, update_context);
+}
+
 static void simulator_simulate(const struct simulator *this, const struct update_context *context) {
     const struct rect rect = {
         .position = component_get_rect((const struct component*)this).position,
         .size.x = 2 * this->simulation_distance,
         .size.y = 2 * this->simulation_distance
     };
-
-    int x_start, x_end, y_start, y_end;
-    chunks_get_rect_indexes(this->chunks, rect, &x_start, &x_end, &y_start, &y_end);
-
-    for (int x = x_start; x <= x_end; x++) {
-        for (int y = y_start; y <= y_end; y++) {
-            const struct dictionary *types = chunks_chunk_get_types(this->chunks, x, y);
-            if (types == NULL) {
-                continue;
-            }
-            struct dictionary_iterator types_iterator = dictionary_begin(types);
-            struct dictionary_node node;
-            while (dictionary_next(types, &types_iterator, &node)) {
-                const struct dictionary* typed_components = node.value;
-
-                struct dictionary_iterator typed_components_iterator = dictionary_begin(typed_components);
-                while (dictionary_next(typed_components, &typed_components_iterator, &node)) {
-                    struct component* component = node.value;
-                    if (!component_is_simulation_chunkable(component)) {
-                        break;
-                    }
-                    if (!component_is_awake(component)) {
-                        continue;
-                    }
-                    component_simulation_chunk_update(component, context);
-                }
-            }
-        }
-    }
+    chunks_algorithms_for_each(rect, component_is_simulation_chunkable, simulator_update_component, (void*)context);
 }
 
 static void simulator_update(struct component *base, const struct update_context *context) {
