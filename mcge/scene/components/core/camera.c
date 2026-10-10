@@ -4,11 +4,9 @@
 
 #include "../component_internal.h"
 #include "../../entity.h"
-#include "../../scene.h"
 #include "../../../rendering/renderer.h"
 #include "../../../rendering/renderer_pipeline.h"
 #include "../../chunks/chunks_algorithms.h"
-#include "../../../utils/dictionary.h"
 #include "../../../utils/fields.h"
 
 
@@ -18,7 +16,6 @@ struct camera {
     double visible_height;
 
     struct renderer_pipeline *renderer;
-    const struct chunks *chunks;
 };
 
 static void camera_on_create(struct component *base, struct fields *fields);
@@ -48,7 +45,6 @@ static void camera_awake(struct component *base) {
     struct camera *this = (struct camera *) base;
 
     this->renderer = renderer_get_pipeline();
-    this->chunks = scene_get_chunks();
 }
 
 static void camera_update_renderer_pipeline_viewport(const struct camera *this) {

@@ -4,9 +4,7 @@
 
 #include "../component_internal.h"
 #include "../../entity.h"
-#include "../../scene.h"
 #include "../../chunks/chunks_algorithms.h"
-#include "../../../utils/dictionary.h"
 #include "../../../utils/fields.h"
 
 
@@ -14,19 +12,15 @@ struct simulator {
     struct component base;
 
     double simulation_distance;
-
-    const struct chunks *chunks;
 };
 
 static void simulator_on_create(struct component *base, struct fields *fields);
-static void simulator_awake(struct component *base);
 static void simulator_update(struct component *base, const struct update_context *context);
 
 const struct component_vtable simulator_vtable = {
     .component_key = simulator_component_key,
     .size = sizeof(struct simulator),
     .on_create = simulator_on_create,
-    .on_awake = simulator_awake,
     .on_update = simulator_update
 };
 
@@ -37,12 +31,6 @@ const char* simulator_component_key(void) {
 static void simulator_on_create(struct component *base, struct fields *fields) {
     struct simulator *this = (struct simulator *) base;
     this->simulation_distance = fields_get_double(fields, "distance", 0);
-}
-
-static void simulator_awake(struct component *base) {
-    struct simulator *this = (struct simulator *) base;
-
-    this->chunks = scene_get_chunks();
 }
 
 static void simulator_update_component(struct component *component, void *context) {
