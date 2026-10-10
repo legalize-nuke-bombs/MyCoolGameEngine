@@ -3,6 +3,9 @@
 //
 
 #include "chunks_algorithms.h"
+
+#include <stddef.h>
+
 #include "chunks.h"
 #include "../scene.h"
 #include "../../utils/dictionary.h"
