@@ -9,6 +9,7 @@
 #include "component_internal.h"
 #include "../../utils/factory.h"
 #include "../../utils/fields.h"
+#include "audio/audio_listener.h"
 #include "core/camera.h"
 #include "core/idle.h"
 #include "core/simulator.h"
@@ -44,6 +45,7 @@ void component_factory_create(void) {
     component_factory_register(&rigid_body_vtable);
     component_factory_register(&box_renderer_rigid_directed_vtable);
     component_factory_register(&keyboard_rigid_controller_vtable);
+    component_factory_register(&audio_listener_vtable);
 }
 void component_factory_destroy(void) {
     factory_destroy(&component_factory);
