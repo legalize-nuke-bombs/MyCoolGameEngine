@@ -36,7 +36,7 @@ static void audio_on_destroy(void) {
 }
 
 const struct msystem audio_msystem = {
-    .name = "renderer",
+    .name = "audio",
     .on_create = audio_on_create,
     .on_destroy = audio_on_destroy
 };
