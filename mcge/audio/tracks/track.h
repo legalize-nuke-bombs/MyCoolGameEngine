@@ -14,6 +14,8 @@ struct track {
     struct MIX_Track *native_track;
 };
 
+MCGE_API extern const struct track track_invalid;
+
 MCGE_API bool track_is_valid(const struct track *this);
 
 #endif //MYCOOLGAMEENGINE_TRACK_H

@@ -15,6 +15,6 @@ MCGE_API struct tracks* tracks_create();
 MCGE_API void tracks_destroy(struct tracks* this);
 
 MCGE_API struct track tracks_request_track(struct tracks* this);
-MCGE_API void tracks_return_track(struct tracks* this, struct track track);
+MCGE_API void tracks_release_track(struct tracks* this, struct track *track);
 
 #endif //MYCOOLGAMEENGINE_TRACKS_H

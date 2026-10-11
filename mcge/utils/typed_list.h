@@ -48,6 +48,10 @@ static void TYPED_LIST_FUNCTION(add)(struct LIST_NAME *this, const LIST_TYPE val
     this->_data[this->_count++] = value;
 }
 
+static void TYPED_LIST_FUNCTION(set)(struct LIST_NAME *this, const int index, const LIST_TYPE value) {
+    this->_data[index] = value;
+}
+
 static void TYPED_LIST_FUNCTION(clear)(struct LIST_NAME *this) {
     this->_count = 0;
 }

@@ -45,17 +45,14 @@ struct track tracks_request_track(struct tracks* this) {
             return track;
         }
     }
-    const struct track fallback = {
-        .native_track = NULL,
-        .id = -1
-    };
     logger_debug("Tracks failed to provide track");
-    return fallback;
+    return track_invalid;
 }
-void tracks_return_track(struct tracks* this, const struct track track) {
-    if (track.id == -1) {
+void tracks_release_track(struct tracks* this, struct track *track) {
+    if (track->id == -1) {
         return;
     }
-    logger_debug("Tracks got back track %d", track.id);
-    this->tracks_occupancy[track.id] = false;
+    logger_debug("Tracks got back track %d", track->id);
+    this->tracks_occupancy[track->id] = false;
+    *track = track_invalid;
 }
