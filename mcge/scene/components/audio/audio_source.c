@@ -4,13 +4,14 @@
 
 #include "audio_source.h"
 #include "../component_internal.h"
+#include <stdlib.h>
 #include <string.h>
 #include <SDL3_mixer/SDL_mixer.h>
 #include "../../../audio/audio.h"
 #include "../../../audio/clip.h"
-#include "../../../audio/clips.h"
+#include "../../../audio/sound.h"
+#include "../../../audio/sounds.h"
 #include "../../../logging/logger.h"
-#include "../../../random/random.h"
 #include "../../../scene/entity.h"
 #include "../../../scene/scene.h"
 #include "../../../utils/dictionary.h"
@@ -20,7 +21,8 @@
 struct audio_source {
     struct component base;
 
-    struct list clips;
+    char *sound_name;
+    struct sound *sound;
     enum audio_source_on_finished_policy on_finished;
     MIX_Track *track;
     bool started;
@@ -36,12 +38,9 @@ const char* audio_source_component_key(void) {
 static void audio_source_on_create(struct component *base, struct fields *fields) {
     struct audio_source *this = (struct audio_source*)base;
 
-    if (fields_has(fields, "clips")) {
-        const struct fields_list *clips = fields_get_list(fields, "clips");
-        for (int i = 0; i < fields_list_count(clips); i++) {
-            const char* clip_name = fields_key(fields_list_get(clips, i));
-            list_add(&this->clips, clips_get(clip_name));
-        }
+    this->sound_name = fields_dup_string(fields, "sound", NULL);
+    if (this->sound_name == NULL) {
+        logger_warn("Audio source of entity %s expected field `sound`", component_get_global_parent_name(base));
     }
 
     const char* on_finished_str = fields_get_string(fields, "on_finished", "loop");
@@ -58,15 +57,22 @@ static void audio_source_on_create(struct component *base, struct fields *fields
         logger_warn("Audio source on_finished unexpected value: %s. Supported: loop, destroy, idle", on_finished_str);
     }
 
-    logger_debug("Entity %s has audio source with %d clips", component_get_global_parent_name(base), list_count(&this->clips));
-
     this->track = MIX_CreateTrack(audio_get_mixer());
 
 }
 static void audio_source_on_destroy(struct component *base) {
     struct audio_source *this = (struct audio_source*)base;
     if (this->track) MIX_DestroyTrack(this->track);
-    list_destroy(&this->clips);
+    free(this->sound_name);
+}
+
+static void audio_source_on_awake(struct component *base) {
+    struct audio_source *this = (struct audio_source*)base;
+    if (this->sound_name != NULL) {
+        this->sound = sounds_get(this->sound_name);
+    }
+    free(this->sound_name);
+    this->sound_name = NULL;
 }
 
 static void audio_source_on_disable(struct component *base) {
@@ -106,6 +112,7 @@ static void audio_source_on_simulation_chunk_update(struct component *base, cons
 const struct component_vtable audio_source_vtable = {
     .component_key = audio_source_component_key,
     .on_create = audio_source_on_create,
+    .on_awake = audio_source_on_awake,
     .on_disable = audio_source_on_disable,
     .on_destroy = audio_source_on_destroy,
     .on_simulation_chunk_update = audio_source_on_simulation_chunk_update,
@@ -114,15 +121,11 @@ const struct component_vtable audio_source_vtable = {
 
 
 MCGE_API bool audio_source_try_play(struct audio_source *this) {
-    if (list_count(&this->clips) == 0) {
-        return false;
-    }
-    struct clip *clip = list_get(&this->clips, random_next_int(0, list_count(&this->clips)));
+    struct clip *clip = sound_get_random_clip(this->sound);
     const MIX_Point3D point = audio_source_get_native_position(this);
     MIX_SetTrack3DPosition(this->track, &point);
     MIX_SetTrackAudio(this->track, clip_get_native_audio(clip));
-    MIX_PlayTrack(this->track, 0);
-    return true;
+    return MIX_PlayTrack(this->track, 0);
 }
 
 static MIX_Point3D audio_source_get_native_position(struct audio_source *this) {

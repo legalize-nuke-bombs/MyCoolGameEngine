@@ -32,4 +32,8 @@ once name=menu_deps body=[
 
     /* Clips */
     clip name=campfire1 path=sounds/campfire.ogg loading_mode=lazy storing_mode=compact
+
+
+    /* Sounds */
+    sound name=campfire clips=[campfire1]
 ]
