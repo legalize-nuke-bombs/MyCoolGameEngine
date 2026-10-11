@@ -52,25 +52,21 @@ static void audio_source_on_create(struct component *base, struct fields *fields
     }
 }
 
-static void audio_source_return_all_tracks(const struct audio_source *this) {
+static void audio_source_stop_all_tracks(const struct audio_source *this) {
     for (int i = 0; i < tracks_list_count(&this->tracks); i++) {
-        struct track* track = tracks_list_get(&this->tracks, i);
-        if (!track_is_valid(track)) {
-            continue;
-        }
-        tracks_release_track(audio_get_tracks(), track);
+        tracks_stop_track(audio_get_tracks(), tracks_list_get(&this->tracks, i));
     }
 }
 
 static void audio_source_on_destroy(struct component *base) {
     struct audio_source *this = (struct audio_source*)base;
-    audio_source_return_all_tracks(this);
+    audio_source_stop_all_tracks(this);
     tracks_list_destroy(&this->tracks);
 }
 
 static void audio_source_on_disable(struct component *base) {
     const struct audio_source *this = (struct audio_source*)base;
-    audio_source_return_all_tracks(this);
+    audio_source_stop_all_tracks(this);
 }
 
 static MIX_Point3D audio_source_get_native_position(struct audio_source *this);
@@ -84,17 +80,10 @@ static void audio_source_on_simulation_chunk_update(struct component *base, cons
     }
 
     for (int i = 0; i < tracks_list_count(&this->tracks); i++) {
-        struct track* track = tracks_list_get(&this->tracks, i);
-        if (!track_is_valid(track)) {
-            continue;
-        }
-        MIX_Track* native_track = track->native_track;
-        if (MIX_TrackPlaying(native_track)) {
+        const struct track* track = tracks_list_get(&this->tracks, i);
+        if (tracks_is_track_playing(audio_get_tracks(), track)) {
             const MIX_Point3D point = audio_source_get_native_position(this);
-            MIX_SetTrack3DPosition(native_track, &point);
-        }
-        else {
-            tracks_release_track(audio_get_tracks(), track);
+            tracks_set_track_position(audio_get_tracks(), track, &point);
         }
     }
 }
@@ -144,36 +133,22 @@ static MIX_Point3D audio_source_get_native_position(struct audio_source *this) {
 
 
 MCGE_API void audio_source_play(struct audio_source *this, const struct sound *sound, const bool loop) {
-    const struct track new_track = tracks_request_track(audio_get_tracks());
-    if (!track_is_valid(&new_track)) {
-        return;
-    }
-
-    bool put = false;
-    for (int i = 0; i < tracks_list_count(&this->tracks); i++) {
-        const struct track* track = tracks_list_get(&this->tracks, i);
-        if (!track_is_valid(track)) {
-            tracks_list_set(&this->tracks, i, new_track);
-            put = true;
-            break;
-        }
-    }
-    if (!put) {
-        tracks_list_add(&this->tracks, new_track);
-    }
-
-    MIX_Track* native_track = new_track.native_track;
-    MIX_SetTrackAudio(native_track, clip_get_native_audio(sound_get_random_clip(sound)));
-
     // This function can be called in constructor when audio listener is not exist yet,
     // so we will put proper position during update.
     // Sound will not be heard in the first frame with 1e+9 distances.
     const MIX_Point3D far_away = {.x = (float)1e+9, .y = (float)1e+9, .z = (float)1e+9};
     const MIX_Point3D point = component_is_awake((struct component*)this) ? audio_source_get_native_position(this) : far_away;
-    MIX_SetTrack3DPosition(native_track, &point);
 
-    const SDL_PropertiesID props = SDL_CreateProperties();
-    if (loop) SDL_SetNumberProperty(props, MIX_PROP_PLAY_LOOPS_NUMBER, -1);
-    MIX_PlayTrack(native_track, props);
-    SDL_DestroyProperties(props);
+    const struct track new_track = tracks_play(audio_get_tracks(), clip_get_native_audio(sound_get_random_clip(sound)), &point, loop);
+    if (!tracks_is_track_playing(audio_get_tracks(), &new_track)) {
+        return;
+    }
+
+    for (int i = 0; i < tracks_list_count(&this->tracks); i++) {
+        if (!tracks_is_track_playing(audio_get_tracks(), tracks_list_get(&this->tracks, i))) {
+            tracks_list_set(&this->tracks, i, new_track);
+            return;
+        }
+    }
+    tracks_list_add(&this->tracks, new_track);
 }

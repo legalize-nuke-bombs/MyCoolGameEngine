@@ -5,6 +5,7 @@
 #include "tracks.h"
 
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include "../audio.h"
 #include <SDL3_mixer/SDL_mixer.h>
@@ -14,7 +15,8 @@
 
 struct tracks {
     MIX_Track* native_tracks[TRACKS_BUFFER_SIZE];
-    bool tracks_occupancy[TRACKS_BUFFER_SIZE];
+    uint64_t play_numbers[TRACKS_BUFFER_SIZE];
+    uint64_t last_play_number;
 };
 
 struct tracks* tracks_create() {
@@ -33,27 +35,54 @@ void tracks_destroy(struct tracks* this) {
     free(this);
 }
 
-struct track tracks_request_track(struct tracks* this) {
+struct track tracks_play(struct tracks* this, MIX_Audio *audio, const MIX_Point3D *position, const bool loop) {
     for (unsigned int i = 0; i < TRACKS_BUFFER_SIZE; i++) {
-        if (!this->tracks_occupancy[i] && this->native_tracks[i]) {
-            logger_debug("Tracks provided track %d", i);
-            this->tracks_occupancy[i] = true;
-            const struct track track = {
-                .native_track = this->native_tracks[i],
-                .id = i
-            };
-            return track;
+        MIX_Track* native_track = this->native_tracks[i];
+        if (native_track == NULL || MIX_TrackPlaying(native_track)) {
+            continue;
         }
+
+        MIX_SetTrackAudio(native_track, audio);
+        MIX_SetTrack3DPosition(native_track, position);
+
+        const SDL_PropertiesID props = SDL_CreateProperties();
+        if (loop) SDL_SetNumberProperty(props, MIX_PROP_PLAY_LOOPS_NUMBER, -1);
+        const bool started = MIX_PlayTrack(native_track, props);
+        SDL_DestroyProperties(props);
+        if (!started) {
+            break;
+        }
+
+        logger_debug("Tracks play on track %d", i);
+        this->play_numbers[i] = ++this->last_play_number;
+        const struct track track = {
+            .index = i,
+            .play_number = this->play_numbers[i]
+        };
+        return track;
     }
-    logger_debug("Tracks failed to provide track");
+    logger_debug("Tracks failed to play");
     return track_invalid;
 }
-void tracks_release_track(struct tracks* this, struct track *track) {
-    if (track->id == -1) {
+
+bool tracks_is_track_playing(const struct tracks* this, const struct track *track) {
+    if (track->index >= TRACKS_BUFFER_SIZE || this->play_numbers[track->index] != track->play_number) {
+        return false;
+    }
+    return MIX_TrackPlaying(this->native_tracks[track->index]);
+}
+
+void tracks_set_track_position(struct tracks* this, const struct track *track, const MIX_Point3D *position) {
+    if (!tracks_is_track_playing(this, track)) {
         return;
     }
-    logger_debug("Tracks got back track %d", track->id);
-    MIX_StopTrack(track->native_track, 0);
-    this->tracks_occupancy[track->id] = false;
-    *track = track_invalid;
+    MIX_SetTrack3DPosition(this->native_tracks[track->index], position);
+}
+
+void tracks_stop_track(struct tracks* this, const struct track *track) {
+    if (!tracks_is_track_playing(this, track)) {
+        return;
+    }
+    logger_debug("Tracks stop track %d", track->index);
+    MIX_StopTrack(this->native_tracks[track->index], 0);
 }

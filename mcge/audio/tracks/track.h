@@ -5,17 +5,15 @@
 #ifndef MYCOOLGAMEENGINE_TRACK_H
 #define MYCOOLGAMEENGINE_TRACK_H
 
-#include <stdbool.h>
+#include <stdint.h>
 
 #include "../../api.h"
 
 struct track {
-    unsigned int id;
-    struct MIX_Track *native_track;
+    unsigned int index;
+    uint64_t play_number;
 };
 
 MCGE_API extern const struct track track_invalid;
-
-MCGE_API bool track_is_valid(const struct track *this);
 
 #endif //MYCOOLGAMEENGINE_TRACK_H
