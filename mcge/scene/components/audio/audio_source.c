@@ -168,7 +168,8 @@ MCGE_API void audio_source_play(struct audio_source *this, const struct sound *s
     // This function can be called in constructor when audio listener is not exist yet,
     // so we will put proper position during update.
     // Sound will not be heard in the first frame with 1e+9 distances.
-    const MIX_Point3D point = {.x = (float)1e+9, .y = (float)1e+9, .z = (float)1e+9};
+    const MIX_Point3D far_away = {.x = (float)1e+9, .y = (float)1e+9, .z = (float)1e+9};
+    const MIX_Point3D point = component_is_awake((struct component*)this) ? audio_source_get_native_position(this) : far_away;
     MIX_SetTrack3DPosition(native_track, &point);
 
     const SDL_PropertiesID props = SDL_CreateProperties();
