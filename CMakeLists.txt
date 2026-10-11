@@ -263,6 +263,8 @@ add_library(mcge SHARED
         mcge/scene/components/audio/audio_listener.c
         mcge/scene/components/audio/audio_source.h
         mcge/scene/components/audio/audio_source.c
+        mcge/audio/sound.h
+        mcge/audio/sound.c
 )
 set_target_properties(mcge PROPERTIES DEFINE_SYMBOL MCGE_EXPORT)
 if(WIN32)
