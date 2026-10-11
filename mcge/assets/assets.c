@@ -15,7 +15,7 @@
 #include "../msystems/msystem.h"
 #include "../utils/fields.h"
 #include "../utils/list.h"
-#include "mcge/audio/sounds.h"
+#include "mcge/audio/clips.h"
 
 
 static struct {
@@ -48,7 +48,7 @@ void assets_register(const struct asset_type *type) {
 static void assets_on_create(void) {
     assets.types = list_create(8);
     assets_register(&textures_asset_type);
-    assets_register(&sounds_asset_type);
+    assets_register(&clips_asset_type);
     assets_register(&renderer_layers_asset_type);
     assets_register(&rigid_layers_asset_type);
     assets_register(&rigid_materials_asset_type);

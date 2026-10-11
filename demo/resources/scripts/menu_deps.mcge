@@ -30,6 +30,6 @@ once name=menu_deps body=[
     texture name=light1 tile=[512 512] path=textures/light1.png
 
 
-    /* Sounds */
-    sound name=campfire path=sounds/campfire.ogg loading_mode=lazy storing_mode=compact
+    /* Clips */
+    clip name=campfire1 path=sounds/campfire.ogg loading_mode=lazy storing_mode=compact
 ]

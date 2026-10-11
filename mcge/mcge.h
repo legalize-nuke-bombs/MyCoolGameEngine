@@ -97,8 +97,8 @@
 #include "scene/component_ids/component_ids.h"
 #include "scene/components/rendering/box_renderer_rigid_directed.h"
 #include "audio/audio.h"
-#include "audio/sound.h"
-#include "audio/sounds.h"
+#include "audio/clip.h"
+#include "audio/clips.h"
 #include "scene/components/audio/audio_listener.h"
 #include "scene/components/audio/audio_source.h"
 
