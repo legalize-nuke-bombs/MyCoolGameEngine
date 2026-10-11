@@ -3,9 +3,15 @@
 //
 
 #include "audio.h"
+#include <stdlib.h>
 #include <SDL3_mixer/SDL_mixer.h>
 #include "../msystems/msystem.h"
 #include "mcge/logging/logger.h"
+
+
+#define AUDIO_FALLBACK_SAMPLE_RATE 44100
+#define AUDIO_FALLBACK_FREQUENCY 440
+#define AUDIO_FALLBACK_AMPLITUDE 0.15f
 
 
 static struct {
@@ -14,6 +20,18 @@ static struct {
     MIX_Audio *fallback_audio;
 } audio;
 
+
+static MIX_Audio* audio_create_one_second_beep(void) {
+    const SDL_AudioSpec spec = {.format = SDL_AUDIO_F32, .channels = 1, .freq = AUDIO_FALLBACK_SAMPLE_RATE};
+    const size_t size = sizeof(float) * AUDIO_FALLBACK_SAMPLE_RATE;
+    float *samples = malloc(size);
+    for (int i = 0; i < AUDIO_FALLBACK_SAMPLE_RATE; i++) {
+        samples[i] = AUDIO_FALLBACK_AMPLITUDE * SDL_sinf(2 * SDL_PI_F * AUDIO_FALLBACK_FREQUENCY * (float)i / AUDIO_FALLBACK_SAMPLE_RATE);
+    }
+    MIX_Audio *beep = MIX_LoadRawAudio(audio.mixer, samples, size, &spec);
+    free(samples);
+    return beep;
+}
 
 static void audio_on_create(void) {
     if (MIX_Init() == 0) {
@@ -25,7 +43,7 @@ static void audio_on_create(void) {
         logger_error("Failed to create Mixer");
         return;
     }
-    audio.fallback_audio = MIX_CreateSineWaveAudio(audio.mixer, 440, 0.15f, 1000);
+    audio.fallback_audio = audio_create_one_second_beep();
 }
 static void audio_on_destroy(void) {
     if (audio.mixer) {
