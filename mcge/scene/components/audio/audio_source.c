@@ -4,6 +4,7 @@
 
 #include "audio_source.h"
 #include "../component_internal.h"
+#include <string.h>
 #include <SDL3_mixer/SDL_mixer.h>
 #include "../../../audio/audio.h"
 #include "../../../audio/sound.h"

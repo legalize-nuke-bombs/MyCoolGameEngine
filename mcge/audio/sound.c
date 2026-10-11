@@ -3,6 +3,7 @@
 //
 
 #include "sound.h"
+#include <stdlib.h>
 #include <SDL3_mixer/SDL_mixer.h>
 
 #include "audio.h"
