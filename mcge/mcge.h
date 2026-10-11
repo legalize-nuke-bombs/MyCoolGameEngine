@@ -96,5 +96,10 @@
 #include "utils/uint128_t.h"
 #include "scene/component_ids/component_ids.h"
 #include "scene/components/rendering/box_renderer_rigid_directed.h"
+#include "audio/audio.h"
+#include "audio/sound.h"
+#include "audio/sounds.h"
+#include "scene/components/audio/audio_listener.h"
+#include "scene/components/audio/audio_source.h"
 
 #endif //MYCOOLGAMEENGINE_MCGE_H
