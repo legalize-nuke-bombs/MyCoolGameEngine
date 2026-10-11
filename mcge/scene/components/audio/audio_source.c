@@ -4,7 +4,6 @@
 
 #include "audio_source.h"
 #include "../component_internal.h"
-#include <stdlib.h>
 #include <string.h>
 #include <SDL3_mixer/SDL_mixer.h>
 #include "../../../audio/audio.h"
@@ -21,7 +20,6 @@
 struct audio_source {
     struct component base;
 
-    char *sound_name;
     struct sound *sound;
     enum audio_source_on_finished_policy on_finished;
     MIX_Track *track;
@@ -38,9 +36,12 @@ const char* audio_source_component_key(void) {
 static void audio_source_on_create(struct component *base, struct fields *fields) {
     struct audio_source *this = (struct audio_source*)base;
 
-    this->sound_name = fields_dup_string(fields, "sound", NULL);
-    if (this->sound_name == NULL) {
+    const char *sound_name = fields_get_string(fields, "sound", NULL);
+    if (sound_name == NULL) {
         logger_warn("Audio source of entity %s expected field `sound`", component_get_global_parent_name(base));
+    }
+    else {
+        this->sound = sounds_get(sound_name);
     }
 
     const char* on_finished_str = fields_get_string(fields, "on_finished", "loop");
@@ -63,16 +64,6 @@ static void audio_source_on_create(struct component *base, struct fields *fields
 static void audio_source_on_destroy(struct component *base) {
     struct audio_source *this = (struct audio_source*)base;
     if (this->track) MIX_DestroyTrack(this->track);
-    free(this->sound_name);
-}
-
-static void audio_source_on_awake(struct component *base) {
-    struct audio_source *this = (struct audio_source*)base;
-    if (this->sound_name != NULL) {
-        this->sound = sounds_get(this->sound_name);
-    }
-    free(this->sound_name);
-    this->sound_name = NULL;
 }
 
 static void audio_source_on_disable(struct component *base) {
@@ -112,7 +103,6 @@ static void audio_source_on_simulation_chunk_update(struct component *base, cons
 const struct component_vtable audio_source_vtable = {
     .component_key = audio_source_component_key,
     .on_create = audio_source_on_create,
-    .on_awake = audio_source_on_awake,
     .on_disable = audio_source_on_disable,
     .on_destroy = audio_source_on_destroy,
     .on_simulation_chunk_update = audio_source_on_simulation_chunk_update,
