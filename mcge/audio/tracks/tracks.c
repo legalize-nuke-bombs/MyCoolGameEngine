@@ -35,7 +35,7 @@ void tracks_destroy(struct tracks* this) {
 
 struct track tracks_request_track(struct tracks* this) {
     for (unsigned int i = 0; i < TRACKS_BUFFER_SIZE; i++) {
-        if (!this->tracks_occupancy[i]) {
+        if (!this->tracks_occupancy[i] && this->native_tracks[i]) {
             logger_debug("Tracks provided track %d", i);
             this->tracks_occupancy[i] = true;
             const struct track track = {

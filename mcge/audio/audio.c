@@ -36,7 +36,7 @@ static MIX_Audio* audio_create_one_second_beep(void) {
     return beep;
 }
 
-static void audio_on_create(void) {
+static void audio_create_mixer(void) {
     if (MIX_Init() == 0) {
         logger_error("Failed to initializer SDL Mixer");
         return;
@@ -44,9 +44,12 @@ static void audio_on_create(void) {
     audio.mixer = MIX_CreateMixerDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, NULL);
     if (audio.mixer == NULL) {
         logger_error("Failed to create Mixer");
-        return;
     }
-    audio.fallback_audio = audio_create_one_second_beep();
+}
+
+static void audio_on_create(void) {
+    audio_create_mixer();
+    if (audio.mixer) audio.fallback_audio = audio_create_one_second_beep();
     audio.tracks = tracks_create();
 }
 static void audio_on_destroy(void) {
