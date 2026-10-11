@@ -53,6 +53,7 @@ void tracks_release_track(struct tracks* this, struct track *track) {
         return;
     }
     logger_debug("Tracks got back track %d", track->id);
+    MIX_StopTrack(track->native_track, 0);
     this->tracks_occupancy[track->id] = false;
     *track = track_invalid;
 }
