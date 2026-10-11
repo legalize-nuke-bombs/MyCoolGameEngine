@@ -27,6 +27,10 @@ struct audio_source {
 
     struct tracks_list tracks;
 
+    const struct sound *initial_sound;
+    bool initial_loop;
+    bool initial_sound_pending;
+
     bool listener_missing_reported;
     uint128_t audio_listener_id;
 };
@@ -41,10 +45,10 @@ static void audio_source_on_create(struct component *base, struct fields *fields
     this->tracks = tracks_list_create(1);
 
     const char *sound_name = fields_get_string(fields, "sound", NULL);
-    const bool loop = fields_get_bool(fields, "loop", 1);
+    this->initial_loop = fields_get_bool(fields, "loop", 1);
     if (sound_name) {
-        const struct sound *sound = sounds_get(sound_name);
-        audio_source_play(this, sound, loop);
+        this->initial_sound = sounds_get(sound_name);
+        this->initial_sound_pending = true;
     }
 }
 
@@ -73,6 +77,11 @@ static MIX_Point3D audio_source_get_native_position(struct audio_source *this);
 
 static void audio_source_on_simulation_chunk_update(struct component *base, const struct update_context *context) {
     struct audio_source *this = (struct audio_source*)base;
+
+    if (this->initial_sound_pending) {
+        this->initial_sound_pending = false;
+        audio_source_play(this, this->initial_sound, this->initial_loop);
+    }
 
     for (int i = 0; i < tracks_list_count(&this->tracks); i++) {
         struct track* track = tracks_list_get(&this->tracks, i);
