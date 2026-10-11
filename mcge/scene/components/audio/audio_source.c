@@ -24,6 +24,7 @@ struct audio_source {
     enum audio_source_on_finished_policy on_finished;
     MIX_Track *track;
     bool started;
+    bool listener_missing_reported;
 
     uint128_t audio_listener_id;
 };
@@ -125,7 +126,10 @@ static MIX_Point3D audio_source_get_native_position(struct audio_source *this) {
     if (listener == NULL) {
         const struct dictionary* dict = tmap_try_get_components(scene_get_tmap(), "audio_listener");
         if (dict == NULL || dictionary_count(dict) == 0) {
-            logger_warn("No audio listeners on the scene");
+            if (!this->listener_missing_reported) {
+                logger_warn("No audio listeners on the scene");
+                this->listener_missing_reported = true;
+            }
             return fallback;
         }
         if (dictionary_count(dict) > 1) {
@@ -136,6 +140,7 @@ static MIX_Point3D audio_source_get_native_position(struct audio_source *this) {
         dictionary_next(dict, &iterator, &node);
         listener = node.value;
         this->audio_listener_id = component_get_id((struct component*)listener);
+        this->listener_missing_reported = false;
     }
 
     const struct vector2 self_position = entity_get_rect(component_get_parent((struct component*)this)).position;
