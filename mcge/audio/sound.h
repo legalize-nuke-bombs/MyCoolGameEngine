@@ -21,7 +21,7 @@ struct sound;
 struct MIX_Mixer;
 struct MIX_Audio;
 
-MCGE_API struct sound* sound_create(char *id, char *path, enum sound_loading_mode loading_mode, enum sound_storing_mode storing_mode, struct MIX_Mixer *mixer);
+MCGE_API struct sound* sound_create(char *id, char *path, enum sound_loading_mode loading_mode, enum sound_storing_mode storing_mode);
 MCGE_API void sound_destroy(struct sound* this);
 
 MCGE_API const char* sound_get_id(const struct sound* this);

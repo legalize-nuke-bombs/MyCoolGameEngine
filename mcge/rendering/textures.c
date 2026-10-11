@@ -13,7 +13,7 @@ static void textures_destroy_item(void *item) {
     texture_destroy(item);
 }
 
-static struct asset_storage textures = {
+static struct asset_storage sounds = {
     ._key = "texture",
     ._destroy_item = textures_destroy_item
 };
@@ -32,13 +32,13 @@ static void textures_on_add(struct fields *fields) {
         logger_warn("Unexpected texture loading mode `%s`, `lazy` will be used instead", loading_mode_name);
     }
 
-    asset_storage_add(&textures, name, texture_create(strdup(name ? name : ""), fields_dup_string(fields, "path", ""), (int)tile.x, (int)tile.y, tiles_count, loading_mode, renderer_get_native_renderer()));
+    asset_storage_add(&sounds, name, texture_create(strdup(name ? name : ""), fields_dup_string(fields, "path", ""), (int)tile.x, (int)tile.y, tiles_count, loading_mode, renderer_get_native_renderer()));
 }
 static void textures_on_clear(void) {
-    asset_storage_clear(&textures);
+    asset_storage_clear(&sounds);
 }
 static void textures_on_destroy(void) {
-    asset_storage_destroy(&textures);
+    asset_storage_destroy(&sounds);
 }
 
 const struct asset_type textures_asset_type = {
@@ -49,5 +49,5 @@ const struct asset_type textures_asset_type = {
 };
 
 struct texture* textures_get(const char *name) {
-    return asset_storage_get(&textures, name);
+    return asset_storage_get(&sounds, name);
 }
