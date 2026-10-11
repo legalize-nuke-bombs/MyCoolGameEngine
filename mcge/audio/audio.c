@@ -40,3 +40,10 @@ const struct msystem audio_msystem = {
     .on_create = audio_on_create,
     .on_destroy = audio_on_destroy
 };
+
+MIX_Mixer* audio_get_mixer() {
+    return audio.mixer;
+}
+MIX_Audio* audio_get_fallback_audio() {
+    return audio.fallback_audio;
+}
