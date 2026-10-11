@@ -103,5 +103,7 @@
 #include "scene/components/audio/audio_source.h"
 #include "audio/resources/sound.h"
 #include "audio/resources/sounds.h"
+#include "audio/tracks/track.h"
+#include "audio/tracks/tracks.h"
 
 #endif //MYCOOLGAMEENGINE_MCGE_H
