@@ -257,6 +257,8 @@ add_library(mcge SHARED
         mcge/scene/components/rendering/box_renderer_rigid_directed.c
         mcge/scene/chunks/chunks_algorithms.h
         mcge/scene/chunks/chunks_algorithms.c
+        mcge/audio/audio.h
+        mcge/audio/audio.c
 )
 set_target_properties(mcge PROPERTIES DEFINE_SYMBOL MCGE_EXPORT)
 if(WIN32)

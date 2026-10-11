@@ -24,6 +24,7 @@
 #include "../random/random.h"
 #include "../rendering/renderer.h"
 #include "../scene/scene.h"
+#include "mcge/audio/audio.h"
 
 #define FRAME_DT_EXPLOSION_THRESHOLD 0.03f
 #define ENGINE_MSYSTEMS_MAX 32
@@ -86,6 +87,7 @@ void engine_create(void) {
     engine_register_msystem(&bt_msystem);
     engine_register_msystem(&scene_msystem);
     engine_register_msystem(&renderer_msystem);
+    engine_register_msystem(&audio_msystem);
     engine_register_msystem(&interpreter_msystem);
     engine_register_msystem(&profiler_msystem);
     engine_register_msystem(&engine_closer_msystem);
