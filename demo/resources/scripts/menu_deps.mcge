@@ -31,5 +31,5 @@ once name=menu_deps body=[
 
 
     /* Sounds */
-    sound name=campfire path=sounds/campfire.ogg loading_mode=lazy storing_mode=fast
+    sound name=campfire path=sounds/campfire.ogg loading_mode=lazy storing_mode=compact
 ]

@@ -25,7 +25,7 @@ static void audio_on_create(void) {
         logger_error("Failed to create Mixer");
         return;
     }
-    audio.fallback_audio = MIX_CreateSineWaveAudio(audio.mixer, 100, 0.5f, 100);
+    audio.fallback_audio = MIX_CreateSineWaveAudio(audio.mixer, 440, 0.15f, 1000);
 }
 static void audio_on_destroy(void) {
     if (audio.mixer) {
