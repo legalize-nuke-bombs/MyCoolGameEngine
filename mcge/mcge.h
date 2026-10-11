@@ -101,5 +101,7 @@
 #include "audio/clips.h"
 #include "scene/components/audio/audio_listener.h"
 #include "scene/components/audio/audio_source.h"
+#include "audio/sound.h"
+#include "audio/sounds.h"
 
 #endif //MYCOOLGAMEENGINE_MCGE_H
