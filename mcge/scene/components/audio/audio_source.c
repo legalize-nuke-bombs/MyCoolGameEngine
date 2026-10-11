@@ -69,6 +69,11 @@ static void audio_source_on_destroy(struct component *base) {
     list_destroy(&this->sounds);
 }
 
+static void audio_source_on_disable(struct component *base) {
+    const struct audio_source *this = (struct audio_source*)base;
+    if (this->track) MIX_StopTrack(this->track, 0);
+}
+
 static MIX_Point3D audio_source_get_native_position(struct audio_source *this);
 
 static void audio_source_on_simulation_chunk_update(struct component *base, const struct update_context *context) {
@@ -101,6 +106,7 @@ static void audio_source_on_simulation_chunk_update(struct component *base, cons
 const struct component_vtable audio_source_vtable = {
     .component_key = audio_source_component_key,
     .on_create = audio_source_on_create,
+    .on_disable = audio_source_on_disable,
     .on_destroy = audio_source_on_destroy,
     .on_simulation_chunk_update = audio_source_on_simulation_chunk_update,
     .size = sizeof(struct audio_source)
