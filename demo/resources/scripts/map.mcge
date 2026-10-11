@@ -54,8 +54,9 @@ entity name=Nevermore position=[2.5 1.5] size=[1.5 3]
             printer manacost=100 cooldown=1 execution_time=1 interruptable=1 title=Math.exe body=1000-7?
             fear_balls manacost=100 cooldown=1 execution_time=1 interruptable=0 prefab=NevermoreFearBall count=50
         ]
-        bow arrow=NevermoreArrow
-        bowman damage_amount=10 interval=0.1 speed=10 range=7.5 arrows=3
+        audio_source
+        bow arrow=NevermoreArrow shot_sound=nevermore_arrow
+        bowman damage_amount=10 interval=0.5 speed=10 range=7.5 arrows=1
         character group=player
     ]
     children=[

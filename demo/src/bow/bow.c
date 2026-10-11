@@ -17,6 +17,7 @@ struct bow {
 
     struct bowman_stats stats;
     struct prefab* arrow;
+    struct sound* shot_sound;
 
     double attack_timer;
 
@@ -24,6 +25,7 @@ struct bow {
 
     uint128_t character_id;
     uint128_t hands_id;
+    uint128_t audio_source_id;
 };
 
 const char* bow_component_key(void) {
@@ -33,6 +35,7 @@ const char* bow_component_key(void) {
 static void bow_on_create(struct component *base, struct fields *fields) {
     struct bow *this = (struct bow*)base;
     this->arrow = prefabs_get(fields_get_string(fields, "arrow", "default"));
+    this->shot_sound = sounds_get(fields_get_string(fields, "shot_sound", "<null>"));
     this->targets = pointer_dictionary_build(8);
 }
 
@@ -47,13 +50,15 @@ static void bow_awake(struct component *base) {
 
     const struct component* character = entity_get_component(entity, "character", entity_query_local);
     const struct component* hands = entity_get_component(entity, "hands", entity_query_local);
-    if (character == NULL || hands == NULL) {
+    const struct component* audio_source = entity_get_component(entity, "audio_source", entity_query_local);
+    if (character == NULL || hands == NULL || audio_source == NULL) {
         entity_mark_destroyed(entity);
         return;
     }
 
     this->character_id = component_get_id(character);
     this->hands_id = component_get_id(hands);
+    this->audio_source_id = component_get_id(audio_source);
 }
 
 static bool bow_try_schedule_attack(struct bow *this);
@@ -91,6 +96,11 @@ static void bow_execute_attack(void *executor, void *context) {
 
     if (!prefab_contains_component(this->arrow, "arrow", entity_query_local)) {
         return;
+    }
+
+    struct audio_source* audio_source = (struct audio_source*)scene_try_get_component(this->audio_source_id);
+    if (audio_source) {
+        audio_source_play(audio_source, this->shot_sound, false);
     }
 
     struct dictionary_node node;
