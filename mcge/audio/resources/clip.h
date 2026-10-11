@@ -5,7 +5,7 @@
 #ifndef MYCOOLGAMEENGINE_CLIP_H
 #define MYCOOLGAMEENGINE_CLIP_H
 
-#include "../api.h"
+#include "../../api.h"
 
 enum clip_loading_mode {
     clip_loading_mode_lazy,

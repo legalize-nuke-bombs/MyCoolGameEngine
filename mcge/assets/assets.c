@@ -15,8 +15,8 @@
 #include "../msystems/msystem.h"
 #include "../utils/fields.h"
 #include "../utils/list.h"
-#include "mcge/audio/clips.h"
-#include "mcge/audio/sounds.h"
+#include "../audio/resources/clips.h"
+#include "mcge/audio/resources/sounds.h"
 
 
 static struct {

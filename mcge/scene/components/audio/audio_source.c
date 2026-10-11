@@ -7,9 +7,9 @@
 #include <string.h>
 #include <SDL3_mixer/SDL_mixer.h>
 #include "../../../audio/audio.h"
-#include "../../../audio/clip.h"
-#include "../../../audio/sound.h"
-#include "../../../audio/sounds.h"
+#include "../../../audio/resources/clip.h"
+#include "../../../audio/resources/sound.h"
+#include "../../../audio/resources/sounds.h"
 #include "../../../logging/logger.h"
 #include "../../../scene/entity.h"
 #include "../../../scene/scene.h"

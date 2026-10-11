@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <SDL3_mixer/SDL_mixer.h>
 
-#include "audio.h"
+#include "../audio.h"
 #include "mcge/logging/logger.h"
 
 

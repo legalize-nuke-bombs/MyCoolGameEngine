@@ -5,7 +5,7 @@
 #ifndef MYCOOLGAMEENGINE_CLIPS_H
 #define MYCOOLGAMEENGINE_CLIPS_H
 
-#include "../api.h"
+#include "../../api.h"
 
 struct clip;
 struct asset_type;

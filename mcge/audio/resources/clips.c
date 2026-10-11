@@ -6,9 +6,9 @@
 
 #include <string.h>
 
-#include "audio.h"
-#include "../assets/asset_storage.h"
-#include "../assets/asset_type.h"
+#include "../audio.h"
+#include "../../assets/asset_storage.h"
+#include "../../assets/asset_type.h"
 #include "clip.h"
 #include "mcge/logging/logger.h"
 #include "mcge/utils/fields.h"

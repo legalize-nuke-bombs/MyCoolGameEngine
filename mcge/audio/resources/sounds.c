@@ -3,11 +3,11 @@
 #include <string.h>
 
 #include "sound.h"
-#include "../assets/asset_storage.h"
-#include "../assets/asset_type.h"
-#include "../logging/logger.h"
-#include "../utils/fields.h"
-#include "../utils/list.h"
+#include "../../assets/asset_storage.h"
+#include "../../assets/asset_type.h"
+#include "../../logging/logger.h"
+#include "../../utils/fields.h"
+#include "../../utils/list.h"
 
 
 static void sounds_destroy_item(void *item) {

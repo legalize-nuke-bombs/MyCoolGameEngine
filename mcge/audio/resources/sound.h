@@ -1,8 +1,8 @@
 #ifndef MYCOOLGAMEENGINE_SOUND_H
 #define MYCOOLGAMEENGINE_SOUND_H
 
-#include "../api.h"
-#include "../utils/list.h"
+#include "../../api.h"
+#include "../../utils/list.h"
 
 struct sound;
 struct clip;

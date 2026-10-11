@@ -263,14 +263,14 @@ add_library(mcge SHARED
         mcge/scene/components/audio/audio_listener.c
         mcge/scene/components/audio/audio_source.h
         mcge/scene/components/audio/audio_source.c
-        mcge/audio/clip.h
-        mcge/audio/clip.c
-        mcge/audio/clips.h
-        mcge/audio/clips.c
-        mcge/audio/sound.h
-        mcge/audio/sounds.h
-        mcge/audio/sound.c
-        mcge/audio/sounds.c
+        mcge/audio/resources/clip.h
+        mcge/audio/resources/clip.c
+        mcge/audio/resources/clips.h
+        mcge/audio/resources/clips.c
+        mcge/audio/resources/sound.h
+        mcge/audio/resources/sounds.h
+        mcge/audio/resources/sound.c
+        mcge/audio/resources/sounds.c
 )
 set_target_properties(mcge PROPERTIES DEFINE_SYMBOL MCGE_EXPORT)
 if(WIN32)

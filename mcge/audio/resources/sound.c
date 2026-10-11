@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 #include "clips.h"
-#include "../random/random.h"
+#include "../../random/random.h"
 
 
 struct sound {

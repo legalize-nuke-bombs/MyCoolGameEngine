@@ -1,7 +1,7 @@
 #ifndef MYCOOLGAMEENGINE_SOUNDS_H
 #define MYCOOLGAMEENGINE_SOUNDS_H
 
-#include "../api.h"
+#include "../../api.h"
 
 struct sound;
 struct asset_type;

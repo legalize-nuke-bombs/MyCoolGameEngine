@@ -97,11 +97,11 @@
 #include "scene/component_ids/component_ids.h"
 #include "scene/components/rendering/box_renderer_rigid_directed.h"
 #include "audio/audio.h"
-#include "audio/clip.h"
-#include "audio/clips.h"
+#include "audio/resources/clip.h"
+#include "audio/resources/clips.h"
 #include "scene/components/audio/audio_listener.h"
 #include "scene/components/audio/audio_source.h"
-#include "audio/sound.h"
-#include "audio/sounds.h"
+#include "audio/resources/sound.h"
+#include "audio/resources/sounds.h"
 
 #endif //MYCOOLGAMEENGINE_MCGE_H
