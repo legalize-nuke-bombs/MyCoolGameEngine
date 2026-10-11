@@ -13,5 +13,6 @@ MCGE_API extern const struct msystem audio_msystem;
 
 MCGE_API struct MIX_Mixer* audio_get_mixer();
 MCGE_API struct MIX_Audio* audio_get_fallback_audio();
+MCGE_API struct tracks* audio_get_tracks();
 
 #endif //MYCOOLGAMEENGINE_AUDIO_H

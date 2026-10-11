@@ -271,6 +271,10 @@ add_library(mcge SHARED
         mcge/audio/resources/sounds.h
         mcge/audio/resources/sound.c
         mcge/audio/resources/sounds.c
+        mcge/audio/tracks/tracks.h
+        mcge/audio/tracks/tracks.c
+        mcge/audio/tracks/track.h
+        mcge/audio/tracks/track.c
 )
 set_target_properties(mcge PROPERTIES DEFINE_SYMBOL MCGE_EXPORT)
 if(WIN32)

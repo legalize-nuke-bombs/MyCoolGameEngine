@@ -5,6 +5,8 @@
 #include "audio.h"
 #include <stdlib.h>
 #include <SDL3_mixer/SDL_mixer.h>
+
+#include "tracks/tracks.h"
 #include "../msystems/msystem.h"
 #include "mcge/logging/logger.h"
 
@@ -18,6 +20,7 @@ static struct {
     MIX_Mixer *mixer;
 
     MIX_Audio *fallback_audio;
+    struct tracks *tracks;
 } audio;
 
 
@@ -44,12 +47,14 @@ static void audio_on_create(void) {
         return;
     }
     audio.fallback_audio = audio_create_one_second_beep();
+    audio.tracks = tracks_create();
 }
 static void audio_on_destroy(void) {
+    if (audio.tracks) tracks_destroy(audio.tracks);
+    if (audio.fallback_audio) MIX_DestroyAudio(audio.fallback_audio);
     if (audio.mixer) {
         MIX_DestroyMixer(audio.mixer);
     }
-    if (audio.fallback_audio) MIX_DestroyAudio(audio.fallback_audio);
     MIX_Quit();
 }
 
@@ -64,4 +69,7 @@ MIX_Mixer* audio_get_mixer() {
 }
 MIX_Audio* audio_get_fallback_audio() {
     return audio.fallback_audio;
+}
+struct tracks* audio_get_tracks() {
+    return audio.tracks;
 }
