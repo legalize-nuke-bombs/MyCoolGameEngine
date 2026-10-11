@@ -23,6 +23,7 @@ struct audio_source {
     struct list sounds;
     enum audio_source_on_finished_policy on_finished;
     MIX_Track *track;
+    bool started;
 
     uint128_t audio_listener_id;
 };
@@ -67,11 +68,6 @@ static void audio_source_on_destroy(struct component *base) {
     list_destroy(&this->sounds);
 }
 
-static void audio_source_awake(struct component *base) {
-    const struct audio_source *this = (struct audio_source*)base;
-    audio_source_try_play(this);
-}
-
 static MIX_Point3D audio_source_get_native_position(struct audio_source *this);
 
 static void audio_source_on_simulation_chunk_update(struct component *base, const struct update_context *context) {
@@ -82,6 +78,11 @@ static void audio_source_on_simulation_chunk_update(struct component *base, cons
     if (MIX_TrackPlaying(this->track)) {
         const MIX_Point3D point = audio_source_get_native_position(this);
         MIX_SetTrack3DPosition(this->track, &point);
+        return;
+    }
+    if (!this->started) {
+        this->started = true;
+        audio_source_try_play(this);
         return;
     }
     switch (this->on_finished) {
@@ -99,18 +100,19 @@ static void audio_source_on_simulation_chunk_update(struct component *base, cons
 const struct component_vtable audio_source_vtable = {
     .component_key = audio_source_component_key,
     .on_create = audio_source_on_create,
-    .on_awake = audio_source_awake,
     .on_destroy = audio_source_on_destroy,
     .on_simulation_chunk_update = audio_source_on_simulation_chunk_update,
     .size = sizeof(struct audio_source)
 };
 
 
-MCGE_API bool audio_source_try_play(const struct audio_source *this) {
+MCGE_API bool audio_source_try_play(struct audio_source *this) {
     if (list_count(&this->sounds) == 0) {
         return false;
     }
     struct sound *sound = list_get(&this->sounds, random_next_int(0, list_count(&this->sounds)));
+    const MIX_Point3D point = audio_source_get_native_position(this);
+    MIX_SetTrack3DPosition(this->track, &point);
     MIX_SetTrackAudio(this->track, sound_get_native_clip(sound));
     MIX_PlayTrack(this->track, 0);
     return true;

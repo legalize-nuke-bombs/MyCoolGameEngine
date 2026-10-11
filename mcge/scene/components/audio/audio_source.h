@@ -23,6 +23,6 @@ MCGE_API const char* audio_source_component_key(void);
 
 MCGE_API extern const struct component_vtable audio_source_vtable;
 
-MCGE_API bool audio_source_try_play(const struct audio_source *this);
+MCGE_API bool audio_source_try_play(struct audio_source *this);
 
 #endif //MYCOOLGAMEENGINE_AUDIO_SOURCE_H
