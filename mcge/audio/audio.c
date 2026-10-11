@@ -10,6 +10,8 @@
 
 static struct {
     MIX_Mixer *mixer;
+
+    MIX_Audio *fallback_audio;
 } audio;
 
 
@@ -21,12 +23,15 @@ static void audio_on_create(void) {
     audio.mixer = MIX_CreateMixerDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, NULL);
     if (audio.mixer == NULL) {
         logger_error("Failed to create Mixer");
+        return;
     }
+    audio.fallback_audio = MIX_CreateSineWaveAudio(audio.mixer, 100, 0.5f, 100);
 }
 static void audio_on_destroy(void) {
     if (audio.mixer) {
         MIX_DestroyMixer(audio.mixer);
     }
+    if (audio.fallback_audio) MIX_DestroyAudio(audio.fallback_audio);
     MIX_Quit();
 }
 
