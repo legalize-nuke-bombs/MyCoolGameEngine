@@ -23,6 +23,7 @@ entity name=Campfire position=[4 2] size=[1.5 1.5]
     components=[
         box_renderer layer=prop1 texture=[campfire1 campfire2]
         box_renderer_animated speed=1
+        audio_source sounds=[campfire] on_finished=loop
     ]
     children=[
         entity name=Light size=[6.5 6.5] components=[
@@ -44,6 +45,7 @@ entity name=Nevermore position=[2.5 1.5] size=[1.5 3]
         keyboard_movement up=W down=S left=A right=D
         camera height=17.5
         simulator distance=50
+        audio_listener
         player
         mana max=800
         health max=1000

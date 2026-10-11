@@ -6,12 +6,15 @@
 #include "../component_internal.h"
 #include <SDL3_mixer/SDL_mixer.h>
 #include "../../../audio/audio.h"
-#include "mcge/audio/sound.h"
-#include "mcge/audio/sounds.h"
-#include "mcge/logging/logger.h"
-#include "mcge/random/random.h"
-#include "mcge/scene/entity.h"
-#include "mcge/utils/fields.h"
+#include "../../../audio/sound.h"
+#include "../../../audio/sounds.h"
+#include "../../../logging/logger.h"
+#include "../../../random/random.h"
+#include "../../../scene/entity.h"
+#include "../../../scene/scene.h"
+#include "../../../utils/dictionary.h"
+#include "../../../utils/fields.h"
+#include "../../../utils/vector2_math.h"
 
 struct audio_source {
     struct component base;
@@ -19,6 +22,8 @@ struct audio_source {
     struct list sounds;
     enum audio_source_on_finished_policy on_finished;
     MIX_Track *track;
+
+    uint128_t audio_listener_id;
 };
 
 const char* audio_source_component_key(void) {
@@ -66,12 +71,16 @@ static void audio_source_awake(struct component *base) {
     audio_source_try_play(this);
 }
 
+static MIX_Point3D audio_source_get_native_position(struct audio_source *this);
+
 static void audio_source_on_simulation_chunk_update(struct component *base, const struct update_context *context) {
-    const struct audio_source *this = (struct audio_source*)base;
+    struct audio_source *this = (struct audio_source*)base;
     if (this->track == NULL) {
         return;
     }
     if (MIX_TrackPlaying(this->track)) {
+        const MIX_Point3D point = audio_source_get_native_position(this);
+        MIX_SetTrack3DPosition(this->track, &point);
         return;
     }
     switch (this->on_finished) {
@@ -104,4 +113,32 @@ MCGE_API bool audio_source_try_play(const struct audio_source *this) {
     MIX_SetTrackAudio(this->track, sound_get_native_clip(sound));
     MIX_PlayTrack(this->track, 0);
     return true;
+}
+
+static MIX_Point3D audio_source_get_native_position(struct audio_source *this) {
+    const MIX_Point3D fallback = {.x = 0, .y = 0, .z = 0};
+
+    struct audio_listener* listener = (struct audio_listener*)scene_try_get_component(this->audio_listener_id);
+    if (listener == NULL) {
+        const struct dictionary* dict = tmap_try_get_components(scene_get_tmap(), "audio_listener");
+        if (dict == NULL || dictionary_count(dict) == 0) {
+            logger_warn("No audio listeners on the scene");
+            return fallback;
+        }
+        if (dictionary_count(dict) > 1) {
+            logger_warn("%d audio listeners on the scene. Expected 1", dictionary_count(dict));
+        }
+        struct dictionary_iterator iterator = dictionary_begin(dict);
+        struct dictionary_node node;
+        dictionary_next(dict, &iterator, &node);
+        listener = node.value;
+        this->audio_listener_id = component_get_id((struct component*)listener);
+    }
+
+    const struct vector2 self_position = entity_get_rect(component_get_parent((struct component*)this)).position;
+    const struct vector2 listener_position = entity_get_rect(component_get_parent((struct component*)listener)).position;
+    const struct vector2 offset = vector_sub(self_position, listener_position);
+
+    const MIX_Point3D result = {.x = (float)offset.x, .y = 0, .z = (float)offset.y};
+    return result;
 }
