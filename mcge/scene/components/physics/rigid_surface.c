@@ -75,7 +75,7 @@ static void rigid_surface_on_destroy(struct component *base) {
 
 
 
-const char* rigid_surface_get_name(const struct rigid_surface *this) {
+const char* rigid_surface_get_material_name(const struct rigid_surface *this) {
     return this ? (this->material ? rigid_material_get_name(this->material) : "<null>") : "<null>";
 }
 #define DEFAULT_FRICTION 0.5

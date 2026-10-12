@@ -18,7 +18,7 @@ MCGE_API const char* rigid_surface_component_key(void);
 
 MCGE_API extern const struct component_vtable rigid_surface_vtable;
 
-MCGE_API const char* rigid_surface_get_name(const struct rigid_surface *this);
+MCGE_API const char* rigid_surface_get_material_name(const struct rigid_surface *this);
 MCGE_API double rigid_surface_get_friction(const struct rigid_surface *this);
 
 MCGE_API const struct rigid_surface* rigid_surface_get(struct rect rect);

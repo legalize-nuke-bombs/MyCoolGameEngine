@@ -61,6 +61,6 @@ static void handle_footstep(void *listener, void *context) {
 
     struct audio_source* audio_source = (struct audio_source*)scene_try_get_component(this->audio_source_id);
     if (audio_source) {
-        audio_source_play(audio_source, rigid_material_sounds_get_sound(rigid_surface_get_name(cnt->surface)), false);
+        audio_source_play(audio_source, rigid_material_sounds_get_sound(rigid_surface_get_material_name(cnt->surface)), false);
     }
 }
