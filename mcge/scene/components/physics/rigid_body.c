@@ -171,9 +171,11 @@ static void rigid_body_move(struct rigid_body *this, const struct collider *coll
     collider_rect.position = vector_sum(collider_rect.position, step_x);
     const struct vector2 step_y = rigid_body_free_step_along(this, collider, collider_rect, axis_y, dt);
 
+    const struct vector2 step = vector_sum(step_x, step_y);
+
     struct entity* parent = component_get_parent((struct component*)this);
     struct rect local_rect = entity_get_local_rect(parent);
-    local_rect.position = vector_sum(vector_sum(local_rect.position, step_x), step_y);
+    local_rect.position = vector_sum(local_rect.position, step);
     entity_set_local_rect(parent, local_rect);
 }
 
@@ -187,7 +189,7 @@ static void rigid_body_simulation_chunk_update(struct component* base, const str
     rigid_body_apply_rolling_friction(this, friction_impulse_max_scalar * this->rolling_friction_coefficient);
 
     const struct collider *collider = rigid_body_collider(this);
-    if (collider != NULL) {
+    if (collider) {
         rigid_body_move(this, collider, dt);
     }
 }
