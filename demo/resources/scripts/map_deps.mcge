@@ -5,9 +5,11 @@ once name=map_deps body=[
     rigid_layer name=bg2 priority=2
 
     rigid_material name=ground friction=0.5 restitution=0.15
+    rigid_material name=water friction=0.5 restitution=0.15
     rigid_material name=character friction=0.3 restitution=0.075
 
-    rigid_material_sound name=ground sound=nevermore_arrow
+    rigid_material_sound name=ground sound=footstep_ground
+    rigid_material_sound name=water sound=footstep_water
 
     collision_layer name=arrow default=overlap
     collision_rule between=[arrow arrow] response=ignore

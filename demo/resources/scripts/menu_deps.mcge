@@ -36,6 +36,21 @@ once name=menu_deps body=[
     clip name=nevermore_fear_balls_cast path=sounds/nevermore_fear_balls_cast.wav loading_mode=lazy storing_mode=compact
     clip name=nevermore_fear_balls_invoke path=sounds/nevermore_fear_balls_invoke.wav loading_mode=lazy storing_mode=compact
     clip name=coins1 path=sounds/coins1.wav loading_mode=lazy storing_mode=fast
+    clip name=footstep_ground1 path=sounds/footstep_ground1.wav loading_mode=lazy storing_mode=fast
+    clip name=footstep_ground2 path=sounds/footstep_ground2.wav loading_mode=lazy storing_mode=fast
+    clip name=footstep_ground3 path=sounds/footstep_ground3.wav loading_mode=lazy storing_mode=fast
+    clip name=footstep_ground4 path=sounds/footstep_ground4.wav loading_mode=lazy storing_mode=fast
+    clip name=footstep_water1 path=sounds/footstep_water1.wav loading_mode=lazy storing_mode=fast
+    clip name=footstep_water2 path=sounds/footstep_water2.wav loading_mode=lazy storing_mode=fast
+    clip name=footstep_water3 path=sounds/footstep_water3.wav loading_mode=lazy storing_mode=fast
+    clip name=footstep_water4 path=sounds/footstep_water4.wav loading_mode=lazy storing_mode=fast
+    clip name=footstep_water5 path=sounds/footstep_water5.wav loading_mode=lazy storing_mode=fast
+    clip name=footstep_water6 path=sounds/footstep_water6.wav loading_mode=lazy storing_mode=fast
+    clip name=footstep_water7 path=sounds/footstep_water7.wav loading_mode=lazy storing_mode=fast
+    clip name=footstep_water8 path=sounds/footstep_water8.wav loading_mode=lazy storing_mode=fast
+    clip name=footstep_water9 path=sounds/footstep_water9.wav loading_mode=lazy storing_mode=fast
+    clip name=footstep_water10 path=sounds/footstep_water10.wav loading_mode=lazy storing_mode=fast
+    clip name=footstep_water11 path=sounds/footstep_water11.wav loading_mode=lazy storing_mode=fast
 
     /* Sounds */
     sound name=campfire clips=[campfire1]
@@ -43,4 +58,6 @@ once name=menu_deps body=[
     sound name=nevermore_fear_balls_cast clips=[nevermore_fear_balls_cast]
     sound name=nevermore_fear_balls_invoke clips=[nevermore_fear_balls_invoke]
     sound name=coins clips=[coins1]
+    sound name=footstep_ground clips=[footstep_ground1 footstep_ground2 footstep_ground3 footstep_ground4]
+    sound name=footstep_water clips=[footstep_water1 footstep_water2 footstep_water3 footstep_water4 footstep_water5 footstep_water6 footstep_water7 footstep_water8 footstep_water9 footstep_water10 footstep_water11]
 ]
