@@ -88,12 +88,21 @@ enum skill_invoke_result skill_schedule_invoke(struct skill *this) {
         .method.context = NULL,
         .method.func = skill_invoke
     };
-    if (hands_try_put(hands, hands_action)) {
-        logger_debug("Skill %s invoke scheduled", this->vtable->key);
-        mana_try_take(mana, this->manacost);
-        return skill_invoke_scheduled;
+
+    if (!hands_can_be_put(hands, hands_action.priority)) {
+        logger_debug("Failed to schedule skill invoke %s: hands are busy", this->vtable->key);
+        return skill_invoke_hands_are_busy;
     }
 
-    logger_debug("Failed to schedule skill invoke %s: hands are busy", this->vtable->key);
-    return skill_invoke_hands_are_busy;
+    if (this->vtable->on_cast) {
+        if (!this->vtable->on_cast(this)) {
+            logger_debug("Failed to schedule skill invoke %s: child class declined", this->vtable->key);
+            return skill_invoke_child_class_declined;
+        }
+    }
+
+    logger_debug("Skill %s invoke scheduled", this->vtable->key);
+    hands_try_put(hands, hands_action);
+    mana_try_take(mana, this->manacost);
+    return skill_invoke_scheduled;
 }

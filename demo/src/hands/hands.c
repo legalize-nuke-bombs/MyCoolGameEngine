@@ -53,8 +53,11 @@ const struct component_vtable hands_vtable = {
     .on_simulation_chunk_update = hands_simulation_chunk_update
 };
 
+bool hands_can_be_put(const struct hands *this, const unsigned char priority) {
+    return !this->action_active || priority > this->action.priority;
+}
 bool hands_try_put(struct hands* this, const struct hands_action action) {
-    if (this->action_active && this->action.priority >= action.priority) {
+    if (!hands_can_be_put(this, action.priority)) {
         logger_debug("Entity %s failed to put in hands queue action %s because action %s with higher priority is active", component_get_global_parent_name((struct component*)this), action.name, this->action.name);
         return false;
     }

@@ -22,7 +22,8 @@ enum skill_invoke_result {
     skill_invoke_insufficient_mana,
     skill_invoke_cooldown,
     skill_invoke_runtime_error,
-    skill_invoke_hands_are_busy
+    skill_invoke_hands_are_busy,
+    skill_invoke_child_class_declined
 };
 enum skill_invoke_result skill_schedule_invoke(struct skill *this);
 

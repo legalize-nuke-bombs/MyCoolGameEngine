@@ -19,6 +19,7 @@ struct skill_vtable {
     void (*on_create)(struct skill *this, struct fields *fields);
     void (*on_destroy)(struct skill *this);
     void (*on_enable)(struct skill *this);
+    bool (*on_cast)(struct skill *this);
     bool (*on_invoke)(struct skill *this);
 };
 

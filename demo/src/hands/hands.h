@@ -14,6 +14,7 @@ const char* hands_component_key();
 
 extern const struct component_vtable hands_vtable;
 
+bool hands_can_be_put(const struct hands *this, unsigned char priority);
 bool hands_try_put(struct hands* this, struct hands_action action);
 
 double hands_get_current_action_timer(const struct hands *this);
