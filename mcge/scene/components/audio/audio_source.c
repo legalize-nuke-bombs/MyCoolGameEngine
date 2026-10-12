@@ -85,6 +85,10 @@ const struct component_vtable audio_source_vtable = {
 
 
 MCGE_API void audio_source_play(struct audio_source *this, const struct sound *sound, const bool loop) {
+    if (sound == NULL) {
+        return;
+    }
+
     struct MIX_Audio *audio = clip_get_native_audio(sound_get_random_clip(sound));
     const struct vector2 position = component_get_rect((struct component*)this).position;
 

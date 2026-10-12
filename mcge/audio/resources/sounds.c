@@ -48,5 +48,9 @@ const struct asset_type sounds_asset_type = {
 };
 
 struct sound* sounds_get(const char *name) {
-    return asset_storage_get(&sounds, name);
+    if (name == NULL) {
+        return NULL;
+    }
+    struct sound *sound = asset_storage_get(&sounds, name);
+    return sound ? sound : sound_get_fallback();
 }

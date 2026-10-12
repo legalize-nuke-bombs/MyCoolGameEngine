@@ -27,6 +27,13 @@ void sound_destroy(struct sound* this) {
     free(this);
 }
 
+static struct sound sound_fallback = {
+    .id = "<fallback>"
+};
+struct sound* sound_get_fallback(void) {
+    return &sound_fallback;
+}
+
 const char* sound_get_id(const struct sound* this) {
     return this->id;
 }
