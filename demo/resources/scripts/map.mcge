@@ -63,6 +63,7 @@ entity name=Nevermore position=[2.5 1.5] size=[1.5 3]
         bowman damage_amount=10 interval=0.5 speed=10 range=7.5 arrows=1
         character group=player
         footsteps footstep_distance=0.5
+        footsteps_sounds
     ]
     children=[
         entity name=Hitbox size=[0.45 0.6] components=[

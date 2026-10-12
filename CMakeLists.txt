@@ -275,6 +275,7 @@ add_library(mcge SHARED
         mcge/audio/tracks/tracks.c
         mcge/audio/tracks/track.h
         mcge/audio/tracks/track.c
+        demo/src/footsteps/footsteps_sounds.h
 )
 set_target_properties(mcge PROPERTIES DEFINE_SYMBOL MCGE_EXPORT)
 if(WIN32)
@@ -371,6 +372,7 @@ add_executable(MyCoolGameEngine demo/src/main.c
         demo/src/health/sound_on_kill.c
         demo/src/footsteps/footsteps.h
         demo/src/footsteps/footsteps.c
+        demo/src/footsteps/footsteps_sounds.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE mcge)
