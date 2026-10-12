@@ -23,7 +23,6 @@ struct fear_balls {
 };
 
 static void fear_balls_on_create(struct skill* base, struct fields *fields);
-static void fear_balls_on_destroy(struct skill* base);
 static void fear_balls_on_enable(struct skill* base);
 static bool fear_balls_cast(struct skill* base);
 static bool fear_balls_invoke(struct skill* base);
@@ -32,7 +31,6 @@ const struct skill_vtable fear_balls_vtable = {
     .key = SKILL_FEAR_BALLS_KEY,
     .size = sizeof(struct fear_balls),
     .on_create = fear_balls_on_create,
-    .on_destroy = fear_balls_on_destroy,
     .on_enable = fear_balls_on_enable,
     .on_cast = fear_balls_cast,
     .on_invoke = fear_balls_invoke
@@ -49,10 +47,6 @@ static void fear_balls_on_create(struct skill* base, struct fields *fields) {
     if (cast_sound_name) this->cast_sound = sounds_get(cast_sound_name);
     if (invoke_sound_name) this->invoke_sound = sounds_get(invoke_sound_name);
     this->fear_balls_num = fields_get_int(fields, "count", 0);
-}
-
-static void fear_balls_on_destroy(struct skill* base) {
-    const struct fear_balls* this = (struct fear_balls*)base;
 }
 
 static void fear_balls_on_enable(struct skill* base) {
