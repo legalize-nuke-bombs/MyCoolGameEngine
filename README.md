@@ -20,7 +20,7 @@ You can view a demo game created with this engine [here](demo).
 * Colliders
 * Collision layers
 * Collision triggers (on_enter, on_exit)
-* Rigid bodies (physical based movement, friction, law of conversion of momentum, restitution)
+* Rigid bodies (physical based movement, friction, law of conservation of momentum, restitution)
 ## Audio
 * Eager / lazy audio loading
 * Fast / compact audio representation in memory
