@@ -6,6 +6,7 @@
 #include <mcge/mcge.h>
 
 #include "arrow.h"
+#include "demo/src/health/damager.h"
 #include "demo/src/health/health.h"
 
 
@@ -67,11 +68,14 @@ static void handle_arrow_hit(void *listener, void *context) {
         return;
     }
 
-    struct health *health = (struct health*)entity_try_get_component(target, "health", entity_query_local);
-    if (health == NULL) {
+    struct health *target_health = (struct health*)entity_try_get_component(target, "health", entity_query_local);
+    if (target_health == NULL) {
         return;
     }
-
     const struct damage damage = arrow_stats(arrow).damage;
-    health_take_damage(health, damage);
+    const struct entity* launcher = arrow_try_get_launcher(arrow);
+    const struct damager* damager = launcher ? (const struct damager*)entity_get_component(launcher, "damager", entity_query_local) : NULL;
+    if (damager) {
+        damager_deal_damage(damager, target_health, damage);
+    }
 }

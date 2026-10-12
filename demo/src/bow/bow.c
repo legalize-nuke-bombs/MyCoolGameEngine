@@ -113,7 +113,7 @@ static void bow_execute_attack(void *executor, void *context) {
         entity_set_local_rect(arrow_entity, arrow_rect);
 
         struct arrow* arrow = (struct arrow*)entity_get_component(arrow_entity, "arrow", entity_query_local);
-        arrow_launch(arrow, node.value, this->stats);
+        arrow_launch(arrow, component_get_parent((struct component*)this), node.value, this->stats);
 
         scene_capture_entity(arrow_entity);
     }

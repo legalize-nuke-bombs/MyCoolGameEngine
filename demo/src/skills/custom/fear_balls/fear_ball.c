@@ -11,6 +11,7 @@
 #include <mcge/mcge.h>
 #include "../../../health/damage.h"
 #include "../../../health/health.h"
+#include "demo/src/health/damager.h"
 
 struct fear_ball {
     struct component base;
@@ -76,12 +77,12 @@ static void handle_on_enter(void *listener, void *context);
 static void fear_ball_awake(struct component *base) {
     struct fear_ball* this = (struct fear_ball*)base;
     this->self = component_get_parent(base);
+    this->base_scale = entity_get_local_rect(this->self).size;
     struct collider *collider = (struct collider*)entity_get_component(this->self, "collider", entity_query_in_children);
     if (collider == NULL) {
         entity_mark_destroyed(this->self);
         return;
     }
-    this->base_scale = entity_get_local_rect(this->self).size;
     this->collider_id = component_get_id((struct component*)collider);
     action_subscribe(collider_on_enter(collider), this, handle_on_enter, &this->collider_token);
 }
@@ -97,10 +98,6 @@ void fear_ball_launch(const struct entity *launcher, struct fear_ball* this, con
     this->direction = vector_normalize(direction);
 }
 
-static struct entity* fear_ball_launcher(const struct fear_ball *this) {
-    return scene_try_get_entity(this->launcher_id);
-}
-
 static void fear_ball_on_update(struct component *base, const struct update_context *context) {
     struct fear_ball* this = (struct fear_ball*)base;
 
@@ -109,7 +106,7 @@ static void fear_ball_on_update(struct component *base, const struct update_cont
 
     struct vector2 direction;
     if (this->travelled >= this->range) {
-        const struct entity *launcher = fear_ball_launcher(this);
+        const struct entity *launcher = scene_try_get_entity(this->launcher_id);
         if (launcher == NULL) {
             direction = vector2_zero;
             entity_mark_destroyed(component_get_parent(base));
@@ -133,24 +130,30 @@ static void fear_ball_on_update(struct component *base, const struct update_cont
 static void handle_on_enter(void *listener, void *context) {
     struct fear_ball* this = listener;
     struct entity* entity = context;
-    const struct entity* launcher = fear_ball_launcher(this);
-    if (launcher)
+
+    const struct entity* launcher = scene_try_get_entity(this->launcher_id);
+    if (launcher == NULL)
     {
-        if (launcher == entity) {
-            if (this->travelled >= this->range) {
-                entity_mark_destroyed(component_get_parent((struct component*)this));
-            }
-            return;
-        }
+        return;
     }
+
+    if (launcher == entity) {
+        if (this->travelled >= this->range) {
+            entity_mark_destroyed(component_get_parent((struct component*)this));
+        }
+        return;
+    }
+
     struct effects* effects = (struct effects*)entity_try_get_component(entity, "effects", entity_query_local);
     if (effects) {
         for (int i = 0; i < list_count(&this->effect_fields); i++) {
             effects_apply(effects, effect_factory_produce(list_get(&this->effect_fields, i), entity));
         }
     }
+
+    const struct damager* damager = (struct damager*)entity_get_component(launcher, "damager", entity_query_local);
     struct health* health = (struct health*)entity_try_get_component(entity, "health", entity_query_local);
-    if (health) {
-        health_take_damage(health, this->damage);
+    if (damager && health) {
+        damager_deal_damage(damager, health, this->damage);
     }
 }

@@ -7,6 +7,7 @@
 
 #include "bowman_stats.h"
 
+struct entity;
 struct arrow;
 struct character;
 
@@ -14,8 +15,9 @@ const char* arrow_component_key(void);
 
 extern const struct component_vtable arrow_vtable;
 
-void arrow_launch(struct arrow *this, struct character *target, struct bowman_stats stats);
+void arrow_launch(struct arrow *this, const struct entity* launcher, struct character *target, struct bowman_stats stats);
 
+struct entity* arrow_try_get_launcher(const struct arrow* this);
 struct bowman_stats arrow_stats(const struct arrow *this);
 
 struct action* arrow_on_hit(struct arrow *this);
