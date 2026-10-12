@@ -6,16 +6,21 @@
 
 #include <stdlib.h>
 
-struct rigid_material* rigid_material_create(const double friction, const double restitution) {
+struct rigid_material* rigid_material_create(char *name, const double friction, const double restitution) {
     struct rigid_material *this = calloc(1, sizeof(struct rigid_material));
+    this->_name = name;
     this->_friction = friction;
     this->_restitution = restitution;
     return this;
 }
 void rigid_material_destroy(struct rigid_material *this) {
+    free(this->_name);
     free(this);
 }
 
+const char* rigid_material_get_name(const struct rigid_material *this) {
+    return this->_name;
+}
 double rigid_material_get_friction(const struct rigid_material *this) {
     return this->_friction;
 }

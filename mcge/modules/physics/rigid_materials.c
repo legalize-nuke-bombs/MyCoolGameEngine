@@ -17,9 +17,10 @@ static struct asset_storage rigid_materials = {
 };
 
 static void rigid_materials_on_add(struct fields *fields) {
+    char *name = fields_dup_string(fields, "name", "<null>");
     const double friction = fields_get_double(fields, "friction", rigid_material_get_friction(&rigid_material_default));
     const double restitution = fields_get_double(fields, "restitution", rigid_material_get_restitution(&rigid_material_default));
-    asset_storage_add(&rigid_materials, fields_get_string(fields, "name", NULL), rigid_material_create(friction, restitution));
+    asset_storage_add(&rigid_materials, name, rigid_material_create(name, friction, restitution));
 }
 static void rigid_materials_on_clear(void) {
     asset_storage_clear(&rigid_materials);
