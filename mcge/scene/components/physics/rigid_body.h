@@ -6,6 +6,7 @@
 #define MYCOOLGAMEENGINE_RIGID_BODY_H
 
 #include "../../../api.h"
+#include "../../../utils/vector2.h"
 
 struct component_vtable;
 struct entity;
@@ -23,5 +24,11 @@ MCGE_API struct vector2 rigid_body_get_velocity(const struct rigid_body *this);
 MCGE_API double rigid_body_get_mass(const struct rigid_body *this);
 
 MCGE_API struct action* rigid_body_get_on_drive_intent(struct rigid_body *this);
+
+struct rigid_body_on_movement_callback_context {
+    const struct rigid_surface *surface;
+    const struct vector2 step;
+};
+MCGE_API struct action* rigid_body_get_on_movement(struct rigid_body *this);
 
 #endif //MYCOOLGAMEENGINE_RIGID_BODY_H

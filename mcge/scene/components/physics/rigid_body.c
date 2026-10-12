@@ -38,6 +38,7 @@ struct rigid_body {
     bool driven;
 
     struct action on_drive_intent;
+    struct action on_movement;
 
     uint128_t collider_id;
 };
@@ -72,10 +73,12 @@ static void rigid_body_on_create(struct component *base, struct fields *fields) 
     this->rolling_friction_coefficient = fields_get_double(fields, "rolling", 0.1);
 
     this->on_drive_intent = action_create();
+    this->on_movement = action_create();
 }
 
 static void rigid_body_on_destroy(struct component *base) {
     struct rigid_body *this = (struct rigid_body *) base;
+    action_destroy(&this->on_movement);
     action_destroy(&this->on_drive_intent);
 }
 
@@ -164,7 +167,7 @@ static struct vector2 rigid_body_free_step_along(struct rigid_body *this, const 
     return step;
 }
 
-static void rigid_body_move(struct rigid_body *this, const struct collider *collider, const double dt) {
+static struct vector2 rigid_body_move(struct rigid_body *this, const struct collider *collider, const double dt) {
     struct rect collider_rect = component_get_rect((const struct component*)collider);
 
     const struct vector2 step_x = rigid_body_free_step_along(this, collider, collider_rect, axis_x, dt);
@@ -177,6 +180,8 @@ static void rigid_body_move(struct rigid_body *this, const struct collider *coll
     struct rect local_rect = entity_get_local_rect(parent);
     local_rect.position = vector_sum(local_rect.position, step);
     entity_set_local_rect(parent, local_rect);
+
+    return step;
 }
 
 static void rigid_body_simulation_chunk_update(struct component* base, const struct update_context *context) {
@@ -190,9 +195,15 @@ static void rigid_body_simulation_chunk_update(struct component* base, const str
     rigid_body_apply_rolling_friction(this, friction_impulse_max_scalar * this->rolling_friction_coefficient);
 
     const struct collider *collider = rigid_body_collider(this);
-    if (collider) {
-        rigid_body_move(this, collider, dt);
+    if (collider == NULL) {
+        return;
     }
+
+    struct rigid_body_on_movement_callback_context on_movement_callback_context = {
+        .step = rigid_body_move(this, collider, dt),
+        .surface = surface
+    };
+    action_invoke(&this->on_movement, &on_movement_callback_context);
 }
 
 void rigid_body_push(struct rigid_body *this, const struct vector2 impulse) {
@@ -214,4 +225,7 @@ double rigid_body_get_mass(const struct rigid_body *this) {
 
 MCGE_API struct action* rigid_body_get_on_drive_intent(struct rigid_body *this) {
     return &this->on_drive_intent;
+}
+MCGE_API struct action* rigid_body_get_on_movement(struct rigid_body *this) {
+    return &this->on_movement;
 }
