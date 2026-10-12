@@ -276,6 +276,8 @@ add_library(mcge SHARED
         mcge/audio/tracks/track.h
         mcge/audio/tracks/track.c
         demo/src/footsteps/footsteps_sounds.h
+        demo/src/footsteps/resources/rigid_surface_sound.h
+        demo/src/footsteps/resources/rigid_surface_sound.c
 )
 set_target_properties(mcge PROPERTIES DEFINE_SYMBOL MCGE_EXPORT)
 if(WIN32)
