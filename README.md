@@ -11,7 +11,7 @@ You can view a demo game created with this engine [here](demo).
 * Entity and component identifiers to prevent the dangling pointer problem
 * A simple DSL for asset management and scene setup
 ## Rendering
-* Lazy texture loading
+* Eager / lazy texture loading
 * Tilesets
 * Light map
 * Rendering layers
@@ -21,6 +21,11 @@ You can view a demo game created with this engine [here](demo).
 * Collision layers
 * Collision triggers (on_enter, on_exit)
 * Rigid bodies (physical based movement, friction, law of conversion of momentum, restitution)
+## Audio
+* Eager / lazy audio loading
+* Fast / compact audio representation in memory
+* Sound geometry
+* Sound randomization
 ## Other
 * A development mode supporting hot reloading via a hotkey or upon changes to the scene file on disk
 * A simple profiler for measuring frame time components
