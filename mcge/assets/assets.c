@@ -39,11 +39,11 @@ static const struct asset_type* assets_find(const char *key) {
 
 void assets_register(const struct asset_type *type) {
     if (assets_find(type->key) != NULL) {
-        logger_warn("Assets failed to register asset type %s", type->key);
+        logger_warn("Assets failed to register asset type `%s`", type->key);
         return;
     }
     list_add(&assets.types, (void*)type);
-    logger_debug("Assets know asset type %s", type->key);
+    logger_info("Assets know asset type `%s`", type->key);
 }
 
 static void assets_on_create(void) {

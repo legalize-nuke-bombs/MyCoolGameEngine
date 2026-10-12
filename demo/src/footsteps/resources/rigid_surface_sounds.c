@@ -29,7 +29,7 @@ static void rigid_surface_sound_on_destroy(void) {
     asset_storage_destroy(&rigid_surface_sounds);
 }
 
-const struct asset_type rigid_surface_sound_asset_type = {
+const struct asset_type rigid_surface_sounds_asset_type = {
     .key = "rigid_surface_sound",
     .on_add = rigid_surface_sound_on_add,
     .on_clear = rigid_surface_sound_on_clear,
