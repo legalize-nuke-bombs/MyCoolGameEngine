@@ -11,7 +11,7 @@ static void rigid_material_sounds_destroy_item(void *item) {
     rigid_material_sound_destroy(item);
 }
 static struct asset_storage rigid_material_sounds = {
-    ._key = "rigid_material_sounds",
+    ._key = "rigid_material_sound",
     ._destroy_item = rigid_material_sounds_destroy_item
 };
 
