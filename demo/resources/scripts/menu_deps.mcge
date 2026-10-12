@@ -35,10 +35,12 @@ once name=menu_deps body=[
     clip name=nevermore_arrow1 path=sounds/nevermore_arrow1.wav loading_mode=lazy storing_mode=fast
     clip name=nevermore_fear_balls_cast path=sounds/nevermore_fear_balls_cast.wav loading_mode=lazy storing_mode=compact
     clip name=nevermore_fear_balls_invoke path=sounds/nevermore_fear_balls_invoke.wav loading_mode=lazy storing_mode=compact
+    clip name=coins1 path=sounds/coins1.wav loading_mode=lazy storing_mode=fast
 
     /* Sounds */
     sound name=campfire clips=[campfire1]
     sound name=nevermore_arrow clips=[nevermore_arrow1]
     sound name=nevermore_fear_balls_cast clips=[nevermore_fear_balls_cast]
     sound name=nevermore_fear_balls_invoke clips=[nevermore_fear_balls_invoke]
+    sound name=coins clips=[coins1]
 ]

@@ -50,6 +50,8 @@ entity name=Nevermore position=[2.5 1.5] size=[1.5 3]
         mana max=800
         health max=1000
         hands
+        damager
+        sound_on_kill sound=coins
         skilled skills=[
             printer manacost=100 cooldown=1 execution_time=1 interruptable=1 title=Math.exe body=1000-7?
             fear_balls manacost=100 cooldown=1 execution_time=1 interruptable=0 prefab=NevermoreFearBall cast_sound=nevermore_fear_balls_cast invoke_sound=nevermore_fear_balls_invoke count=50

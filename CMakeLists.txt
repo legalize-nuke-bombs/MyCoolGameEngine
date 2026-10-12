@@ -365,6 +365,10 @@ add_executable(MyCoolGameEngine demo/src/main.c
         demo/src/bow/bowman_stats.h
         demo/src/bow/bowman.h
         demo/src/bow/bowman.c
+        demo/src/health/damager.h
+        demo/src/health/damager.c
+        demo/src/health/sound_on_kill.h
+        demo/src/health/sound_on_kill.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE mcge)
