@@ -175,6 +175,9 @@ static struct vector2 rigid_body_move(struct rigid_body *this, const struct coll
     const struct vector2 step_y = rigid_body_free_step_along(this, collider, collider_rect, axis_y, dt);
 
     const struct vector2 step = vector_sum(step_x, step_y);
+    if (vectors_equal(step, vector2_zero)) {
+        return step;
+    }
 
     struct entity* parent = component_get_parent((struct component*)this);
     struct rect local_rect = entity_get_local_rect(parent);
@@ -203,7 +206,9 @@ static void rigid_body_simulation_chunk_update(struct component* base, const str
         .step = rigid_body_move(this, collider, dt),
         .surface = surface
     };
-    action_invoke(&this->on_movement, &on_movement_callback_context);
+    if (!vectors_equal(on_movement_callback_context.step, vector2_zero)) {
+        action_invoke(&this->on_movement, &on_movement_callback_context);
+    }
 }
 
 void rigid_body_push(struct rigid_body *this, const struct vector2 impulse) {

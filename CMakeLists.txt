@@ -369,6 +369,8 @@ add_executable(MyCoolGameEngine demo/src/main.c
         demo/src/health/damager.c
         demo/src/health/sound_on_kill.h
         demo/src/health/sound_on_kill.c
+        demo/src/footsteps/footsteps.h
+        demo/src/footsteps/footsteps.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE mcge)

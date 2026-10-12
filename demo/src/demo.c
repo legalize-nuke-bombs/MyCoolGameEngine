@@ -26,6 +26,7 @@
 #include "skills/skilled.h"
 #include "environment/clock.h"
 #include "environment/sky.h"
+#include "footsteps/footsteps.h"
 #include "health/damager.h"
 #include "health/sound_on_kill.h"
 #include "scenes/game_closer.h"
@@ -60,6 +61,7 @@ void demo_install(void) {
     component_factory_register(&bowman_vtable);
     component_factory_register(&damager_vtable);
     component_factory_register(&sound_on_kill_vtable);
+    component_factory_register(&footsteps_vtable);
 
     bt_node_factory_register(&player_is_near_vtable);
     bt_node_factory_register(&player_chase_vtable);

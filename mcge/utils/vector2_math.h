@@ -5,7 +5,7 @@
 #include "../api.h"
 
 MCGE_API double vector_mod(struct vector2 vector);
-MCGE_API double vector_sql_mod(struct vector2 vector);
+MCGE_API double vector_sqr_mod(struct vector2 vector);
 
 MCGE_API struct vector2 vector_sum(struct vector2 vector1, struct vector2 vector2);
 MCGE_API struct vector2 vector_sub(struct vector2 vector1, struct vector2 vector2);

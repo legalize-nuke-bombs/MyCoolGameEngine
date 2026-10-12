@@ -3,9 +3,9 @@
 #include <math.h>
 
 double vector_mod(const struct vector2 vector) {
-    return sqrt(vector_sql_mod(vector));
+    return sqrt(vector_sqr_mod(vector));
 }
-double vector_sql_mod(struct vector2 vector) {
+double vector_sqr_mod(const struct vector2 vector) {
     return vector.x * vector.x + vector.y * vector.y;
 }
 
