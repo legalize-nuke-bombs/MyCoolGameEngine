@@ -373,10 +373,10 @@ add_executable(MyCoolGameEngine demo/src/main.c
         demo/src/footsteps/footsteps.c
         demo/src/footsteps/footsteps_sounds.c
         demo/src/footsteps/footsteps_sounds.h
-        demo/src/footsteps/resources/rigid_surface_sound.h
-        demo/src/footsteps/resources/rigid_surface_sound.c
-        demo/src/footsteps/resources/rigid_surface_sounds.h
-        demo/src/footsteps/resources/rigid_surface_sounds.c
+        demo/src/footsteps/resources/rigid_material_sound.h
+        demo/src/footsteps/resources/rigid_material_sound.c
+        demo/src/footsteps/resources/rigid_material_sounds.h
+        demo/src/footsteps/resources/rigid_material_sounds.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE mcge)

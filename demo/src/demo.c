@@ -28,7 +28,7 @@
 #include "environment/sky.h"
 #include "footsteps/footsteps.h"
 #include "footsteps/footsteps_sounds.h"
-#include "footsteps/resources/rigid_surface_sounds.h"
+#include "footsteps/resources/rigid_material_sounds.h"
 #include "health/damager.h"
 #include "health/sound_on_kill.h"
 #include "scenes/game_closer.h"
@@ -37,7 +37,7 @@
 #include "world/forest.h"
 
 void demo_install(void) {
-    assets_register(&rigid_surface_sounds_asset_type);
+    assets_register(&rigid_material_sounds_asset_type);
 
     component_factory_register(&pulsator_vtable);
     component_factory_register(&forest_vtable);
