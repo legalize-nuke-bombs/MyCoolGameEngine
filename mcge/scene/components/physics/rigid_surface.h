@@ -10,6 +10,7 @@
 struct component_vtable;
 struct entity;
 struct chunks;
+struct rigid_surface;
 
 #include "../../../utils/rect.h"
 
@@ -17,6 +18,8 @@ MCGE_API const char* rigid_surface_component_key(void);
 
 MCGE_API extern const struct component_vtable rigid_surface_vtable;
 
-MCGE_API double rigid_surface_get_friction(struct rect rect);
+MCGE_API double rigid_surface_get_friction(const struct rigid_surface *this);
+
+MCGE_API const struct rigid_surface* rigid_surface_get(struct rect rect);
 
 #endif //MYCOOLGAMEENGINE_RIGID_SURFACE_H

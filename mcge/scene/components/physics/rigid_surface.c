@@ -76,7 +76,9 @@ static void rigid_surface_on_destroy(struct component *base) {
 
 
 #define DEFAULT_FRICTION 0.5
-
+MCGE_API double rigid_surface_get_friction(const struct rigid_surface *this) {
+    return this ? this->material->_friction : DEFAULT_FRICTION;
+}
 
 
 struct rigid_surface_get_friction_context {
@@ -92,11 +94,11 @@ static void rigid_surface_notice_surface(struct component *component, void *cont
         cont->highest_surface_priority = surface_priority;
     }
 }
-double rigid_surface_get_friction(const struct rect rect) {
+const struct rigid_surface* rigid_surface_get(const struct rect rect) {
     struct rigid_surface_get_friction_context context = {};
     chunks_algorithms_for_each_typed(rect, "rigid_surface", rigid_surface_notice_surface, &context);
     if (context.highest_surface == NULL || context.highest_surface->material == NULL) {
-        return DEFAULT_FRICTION;
+        return NULL;
     }
-    return rigid_material_get_friction(context.highest_surface->material);
+    return context.highest_surface;
 }

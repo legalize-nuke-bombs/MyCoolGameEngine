@@ -183,7 +183,8 @@ static void rigid_body_simulation_chunk_update(struct component* base, const str
     struct rigid_body *this = (struct rigid_body *) base;
     const double dt = context->dt;
 
-    const double friction_impulse_max_scalar = this->m * GRAVITY * this->base_friction_coefficient * rigid_surface_get_friction(component_get_rect(base)) * dt;
+    const struct rigid_surface *surface = rigid_surface_get(component_get_rect(base));
+    const double friction_impulse_max_scalar = this->m * GRAVITY * this->base_friction_coefficient * rigid_surface_get_friction(surface) * dt;
 
     rigid_body_apply_impulses(this, friction_impulse_max_scalar);
     rigid_body_apply_rolling_friction(this, friction_impulse_max_scalar * this->rolling_friction_coefficient);
