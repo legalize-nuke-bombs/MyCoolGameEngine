@@ -23,7 +23,6 @@ struct audio_source {
 
     const struct sound *initial_sound;
     bool initial_loop;
-    bool initial_sound_present;
 };
 
 const char* audio_source_component_key(void) {
@@ -39,13 +38,12 @@ static void audio_source_on_create(struct component *base, struct fields *fields
     this->initial_loop = fields_get_bool(fields, "loop", 1);
     if (sound_name) {
         this->initial_sound = sounds_get(sound_name);
-        this->initial_sound_present = true;
     }
 }
 
 static void audio_source_on_awake(struct component *base) {
     struct audio_source *this = (struct audio_source*)base;
-    if (this->initial_sound_present) {
+    if (this->initial_sound) {
         audio_source_play(this, this->initial_sound, this->initial_loop);
     }
 }
