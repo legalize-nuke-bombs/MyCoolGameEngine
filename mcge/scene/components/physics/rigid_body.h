@@ -22,6 +22,6 @@ MCGE_API void rigid_body_drive(struct rigid_body *this, struct vector2 target_ve
 MCGE_API struct vector2 rigid_body_get_velocity(const struct rigid_body *this);
 MCGE_API double rigid_body_get_mass(const struct rigid_body *this);
 
-MCGE_API struct action* rigid_body_get_on_drive(struct rigid_body *this);
+MCGE_API struct action* rigid_body_get_on_drive_intent(struct rigid_body *this);
 
 #endif //MYCOOLGAMEENGINE_RIGID_BODY_H

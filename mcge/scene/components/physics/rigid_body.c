@@ -37,7 +37,7 @@ struct rigid_body {
     struct vector2 target_velocity;
     bool driven;
 
-    struct action on_drive;
+    struct action on_drive_intent;
 
     uint128_t collider_id;
 };
@@ -71,12 +71,12 @@ static void rigid_body_on_create(struct component *base, struct fields *fields) 
     this->base_friction_coefficient = fields_get_double(fields, "friction", 1);
     this->rolling_friction_coefficient = fields_get_double(fields, "rolling", 0.1);
 
-    this->on_drive = action_create();
+    this->on_drive_intent = action_create();
 }
 
 static void rigid_body_on_destroy(struct component *base) {
     struct rigid_body *this = (struct rigid_body *) base;
-    action_destroy(&this->on_drive);
+    action_destroy(&this->on_drive_intent);
 }
 
 static void rigid_body_awake(struct component *base) {
@@ -199,7 +199,7 @@ void rigid_body_push(struct rigid_body *this, const struct vector2 impulse) {
 void rigid_body_drive(struct rigid_body *this, const struct vector2 target_velocity) {
     this->target_velocity = target_velocity;
     this->driven = true;
-    action_invoke(&this->on_drive, (void*)&target_velocity);
+    action_invoke(&this->on_drive_intent, (void*)&target_velocity);
 }
 
 struct vector2 rigid_body_get_velocity(const struct rigid_body *this) {
@@ -209,6 +209,6 @@ double rigid_body_get_mass(const struct rigid_body *this) {
     return this->m;
 }
 
-MCGE_API struct action* rigid_body_get_on_drive(struct rigid_body *this) {
-    return &this->on_drive;
+MCGE_API struct action* rigid_body_get_on_drive_intent(struct rigid_body *this) {
+    return &this->on_drive_intent;
 }

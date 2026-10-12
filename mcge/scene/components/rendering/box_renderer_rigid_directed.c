@@ -21,7 +21,7 @@ struct box_renderer_rigid_directed {
     uint128_t box_renderer_id;
 
     uint128_t rigid_body_id;
-    unsigned int rigid_body_on_drive_token;
+    unsigned int rigid_body_on_drive_intent_token;
 };
 
 #define BOX_RENDERER_RIGID_DIRECTED_MIN_SPEED_TO_TURN 0.5
@@ -65,14 +65,14 @@ static void box_renderer_rigid_directed_awake(struct component *base) {
 
     this->box_renderer_id = component_get_id((struct component*)box_renderer);
     this->rigid_body_id = component_get_id((struct component*)rigid_body);
-    action_subscribe(rigid_body_get_on_drive(rigid_body), this, handle_rigid_body_drive, &this->rigid_body_on_drive_token);
+    action_subscribe(rigid_body_get_on_drive_intent(rigid_body), this, handle_rigid_body_drive, &this->rigid_body_on_drive_intent_token);
 }
 
 static void box_renderer_rigid_directed_on_disable(struct component *base) {
     struct box_renderer_rigid_directed *this = (struct box_renderer_rigid_directed *) base;
     struct rigid_body *rigid_body = (struct rigid_body*)scene_try_get_component(this->rigid_body_id);
     if (rigid_body) {
-        action_unsubscribe(rigid_body_get_on_drive(rigid_body), this->rigid_body_on_drive_token);
+        action_unsubscribe(rigid_body_get_on_drive_intent(rigid_body), this->rigid_body_on_drive_intent_token);
     }
 }
 
