@@ -84,13 +84,13 @@ double rigid_surface_get_friction(const struct rigid_surface *this) {
 }
 
 
-struct rigid_surface_get_friction_context {
+struct rigid_surface_get_context {
     const struct rigid_surface *highest_surface;
     uint8_t highest_surface_priority;
 };
 static void rigid_surface_notice_surface(struct component *component, void *context) {
     const struct rigid_surface *surface = (struct rigid_surface *) component;
-    struct rigid_surface_get_friction_context *cont = context;
+    struct rigid_surface_get_context *cont = context;
     const uint8_t surface_priority = surface->layer ? rigid_layer_get_priority(surface->layer) : 0;
     if (surface_priority >= cont->highest_surface_priority) {
         cont->highest_surface = surface;
@@ -98,7 +98,7 @@ static void rigid_surface_notice_surface(struct component *component, void *cont
     }
 }
 const struct rigid_surface* rigid_surface_get(const struct rect rect) {
-    struct rigid_surface_get_friction_context context = {};
+    struct rigid_surface_get_context context = {};
     chunks_algorithms_for_each_typed(rect, "rigid_surface", rigid_surface_notice_surface, &context);
     if (context.highest_surface == NULL || context.highest_surface->material == NULL) {
         return NULL;
