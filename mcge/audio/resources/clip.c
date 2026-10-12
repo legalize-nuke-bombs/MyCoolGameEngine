@@ -42,6 +42,7 @@ const char* clip_get_id(const struct clip* this) {
 
 MIX_Audio* clip_get_native_audio(struct clip* this) {
     if (this == NULL) {
+        logger_warn("Clip nullptr access. Fallback returned");
         return audio_get_fallback_audio();
     }
     if (this->native_audio == NULL && !this->loading_error) {
