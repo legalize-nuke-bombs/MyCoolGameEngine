@@ -7,6 +7,6 @@
 
 #define DEMO_V_MAJOR 0
 #define DEMO_V_MINOR 0
-#define DEMO_V_PATCH 7
+#define DEMO_V_PATCH 8
 
 #endif //MYCOOLGAMEENGINE_DEMO_VERSION_H
