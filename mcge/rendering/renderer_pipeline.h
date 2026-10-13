@@ -18,7 +18,7 @@ MCGE_API struct renderer_pipeline* renderer_pipeline_create(struct SDL_Renderer 
 MCGE_API void renderer_pipeline_destroy(struct renderer_pipeline *this);
 
 MCGE_API void renderer_pipeline_enable(struct renderer_pipeline *this);
-MCGE_API void renderer_pipeline_disable(const struct renderer_pipeline *this);
+MCGE_API void renderer_pipeline_disable(struct renderer_pipeline *this);
 
 MCGE_API void renderer_pipeline_set_viewport(struct renderer_pipeline *this, struct rect viewport);
 MCGE_API void renderer_pipeline_remove_viewport(struct renderer_pipeline *this);
@@ -37,5 +37,8 @@ MCGE_API void renderer_pipeline_draw_primitive(struct renderer_pipeline *this, s
 MCGE_API void renderer_pipeline_flush(struct renderer_pipeline *this);
 
 MCGE_API struct light_map* renderer_pipeline_get_light_map(const struct renderer_pipeline *this);
+
+MCGE_API struct action* renderer_pipeline_get_on_viewport_changed(struct renderer_pipeline *this);
+MCGE_API struct action* renderer_pipeline_get_on_output_size_changed(struct renderer_pipeline *this);
 
 #endif //MYCOOLGAMEENGINE_RENDERER_PIPELINE_H

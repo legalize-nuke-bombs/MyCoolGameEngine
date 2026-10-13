@@ -40,7 +40,7 @@ void action_invoke(const struct action *this, void* action_context) {
             continue;
         }
         action_method._action(action_method._listener, action_context);
-    }
+    } 
 }
 
 void action_clear(struct action *this) {
