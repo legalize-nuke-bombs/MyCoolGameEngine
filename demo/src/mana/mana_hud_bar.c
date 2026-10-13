@@ -80,7 +80,30 @@ static void mana_hud_bar_on_disable(struct component* base) {
 }
 
 static void mana_hud_bar_on_visible_chunk_update(struct component* base, const struct update_context *context) {
-    struct mana_hud_bar *this = (struct mana_hud_bar*)base;
+    const struct mana_hud_bar *this = (struct mana_hud_bar*)base;
+
+    const struct rect rect1 = component_get_rect(base);
+    const struct rect rect2 = {
+        .position.x = rect1.position.x - (1 - this->scale) * rect1.size.x / 2,
+        .position.y = rect1.position.y,
+        .size.x = rect1.size.x * this->scale,
+        .size.y = rect1.size.y
+    };
+
+    const struct renderer_pipeline_draw_call dc1 = {
+        .primitive = (struct renderer_primitive*)this->bar1,
+        .layer = this->layer1,
+        .rect = rect1
+    };
+    const struct renderer_pipeline_draw_call dc2 = {
+        .primitive = (struct renderer_primitive*)this->bar2,
+        .layer = this->layer2,
+        .rect = rect2
+    };
+
+    struct renderer_pipeline* pipeline = renderer_get_pipeline();
+    renderer_pipeline_draw_primitive(pipeline, dc1);
+    renderer_pipeline_draw_primitive(pipeline, dc2);
 }
 
 const struct component_vtable mana_hud_bar_vtable = {

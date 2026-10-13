@@ -87,6 +87,6 @@ entity name=Hud components=[
             box_renderer layer=ui3 color=[0 255 0 255]
         ]
 	entity name=ManaBar position=[0.5 0.025] size=[0.25 0.015] components=[
-            mana_hud_bar layer1=ui3 layer2=ui4 entity_id=123
+            mana_hud_bar layer1=ui3 layer2=ui4 color1=[10 10 10 255] color2=[0 0 255 255] entity_id=123
         ]
     ]
