@@ -44,11 +44,11 @@ static void entity_update_rect(struct entity *this) {
     }
 }
 
-struct entity* entity_create(char *name, struct entity *parent) {
+struct entity* entity_create(char *name, const uint128_t id, struct entity *parent) {
     struct entity *this = calloc(1, sizeof(struct entity));
     this->_name = name;
     logger_debug("Entity %s is initializing...", this->_name);
-    this->_id = random_next_uint128();
+    this->_id = (uint128_cmp(id, uint128_zero) == 0) ? random_next_uint128() : id;
     this->_awake = false;
     this->_alive = true;
 

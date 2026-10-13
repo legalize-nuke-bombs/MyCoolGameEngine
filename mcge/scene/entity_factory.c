@@ -9,7 +9,9 @@
 
 
 struct entity* entity_factory_produce(struct fields *fields) {
-    struct entity *entity = entity_create(fields_dup_string(fields, "name", "Entity"), NULL);
+    char* entity_name = fields_dup_string(fields, "name", "Entity");
+    const char* entity_id = fields_get_string(fields, "id", "0");
+    struct entity *entity = entity_create(entity_name, uint128_zero, NULL);
 
     const struct rect rect = {
         .position = fields_get_vector2(fields, "position", vector2_zero),

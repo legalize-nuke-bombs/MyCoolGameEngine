@@ -25,7 +25,7 @@ struct entity {
     bool _in_scene;
 };
 
-MCGE_API struct entity* entity_create(char *name, struct entity *parent);
+MCGE_API struct entity* entity_create(char *name, uint128_t id, struct entity *parent);
 MCGE_API void entity_awake(struct entity *this);
 MCGE_API void entity_destroy(struct entity *this);
 MCGE_API void entity_mark_destroyed(struct entity *this);
