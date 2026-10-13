@@ -59,7 +59,7 @@ double mana_amount(const struct mana *this) {
 double mana_max_amount(const struct mana *this) {
     return this->max_amount;
 }
-double mana_percent(const struct mana *this) {
+double mana_scale(const struct mana *this) {
     return this->amount / this->max_amount;
 }
 

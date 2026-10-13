@@ -17,7 +17,7 @@ extern const struct component_vtable mana_vtable;
 bool mana_try_take(struct mana *this, double amount);
 double mana_amount(const struct mana *this);
 double mana_max_amount(const struct mana *this);
-double mana_percent(const struct mana *this);
+double mana_scale(const struct mana *this);
 
 struct action* mana_get_on_changed(struct mana *this);
 
