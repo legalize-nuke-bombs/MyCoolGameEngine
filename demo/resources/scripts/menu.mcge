@@ -10,12 +10,15 @@ entity name=Terrain size=[20 20] components=[
     box_renderer layer=bg1 color=[30 30 40 255]
 ]
 
-entity name=PlayButton position=[-2.25 2] size=[1.5 0.3] components=[
-    box_renderer layer=ui1 color=[255 255 255 255]
-]
-
-entity name=ExitButton position=[-2.25 1.6] size=[1.5 0.3] components=[
-    box_renderer layer=ui1 color=[255 255 255 255]
+entity name=Hud components=[
+    hud
+] children=[
+    entity name=PlayButton position=[0.125 0.925] size=[0.2 0.05] components=[
+        box_renderer layer=ui1 color=[255 255 255 255]
+    ]
+    entity name=ExitButton position=[0.125 0.85] size=[0.2 0.05] components=[
+        box_renderer layer=ui1 color=[255 255 255 255]
+    ]
 ]
 
 entity name=Camera components=[

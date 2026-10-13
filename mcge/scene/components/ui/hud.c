@@ -6,7 +6,9 @@
 #include "../component_internal.h"
 #include "mcge/rendering/renderer.h"
 #include "mcge/rendering/renderer_pipeline.h"
+#include "mcge/scene/entity.h"
 #include "mcge/utils/action.h"
+#include "mcge/utils/vector2_math.h"
 
 
 struct hud {
@@ -48,6 +50,12 @@ const struct component_vtable hud_vtable = {
 static void handle_viewport_changed(void *listener, void *context) {
     struct hud *this = listener;
     struct rect *viewport = context;
+
+    const struct rect new_rect = {
+        .position = vector_sub(viewport->position, vector_multiply_scalar(viewport->size, 1.f / 2.f)),
+        .size = viewport->size
+    };
+    entity_set_local_rect(component_get_parent((struct component*)this), new_rect);
 }
 static void handle_output_size_changed(void *listener, void *context) {
     struct hud *this = listener;

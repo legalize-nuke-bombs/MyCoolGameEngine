@@ -26,6 +26,7 @@
 #include "rendering/box_renderer_animated.h"
 #include "rendering/box_renderer_rigid_directed.h"
 #include "rendering/renderer_settings.h"
+#include "ui/hud.h"
 
 static struct factory component_factory;
 
@@ -48,6 +49,7 @@ void component_factory_create(void) {
     component_factory_register(&keyboard_rigid_controller_vtable);
     component_factory_register(&audio_listener_vtable);
     component_factory_register(&audio_source_vtable);
+    component_factory_register(&hud_vtable);
 }
 void component_factory_destroy(void) {
     factory_destroy(&component_factory);
