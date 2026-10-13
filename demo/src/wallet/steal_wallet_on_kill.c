@@ -76,13 +76,11 @@ static void handle_kill(void *listener, void *context) {
 
     struct wallet* wallet = (struct wallet*)scene_try_get_component(this->wallet_id);
     if (wallet == NULL) {
-        logger_info("i do not have wallet");
         return;
     }
 
     struct wallet *target_wallet = (struct wallet*)entity_try_get_component(target, "wallet", entity_query_local);
     if (target_wallet == NULL) {
-        logger_info("Target do not have wallet");
         return;
     }
 
