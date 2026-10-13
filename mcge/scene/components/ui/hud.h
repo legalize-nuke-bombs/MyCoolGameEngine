@@ -5,8 +5,10 @@
 #ifndef MYCOOLGAMEENGINE_HUD_H
 #define MYCOOLGAMEENGINE_HUD_H
 
-const char* hud_component_key(void);
+#include "../../../api.h"
 
-extern const struct component_vtable hud_vtable;
+MCGE_API const char* hud_component_key(void);
+
+MCGE_API extern const struct component_vtable hud_vtable;
 
 #endif //MYCOOLGAMEENGINE_HUD_H
