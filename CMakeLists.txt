@@ -277,6 +277,8 @@ add_library(mcge SHARED
         mcge/audio/tracks/track.c
         mcge/scene/components/ui/hud.h
         mcge/scene/components/ui/hud.c
+        mcge/devices/mouse.h
+        mcge/devices/mouse.c
 )
 set_target_properties(mcge PROPERTIES DEFINE_SYMBOL MCGE_EXPORT)
 if(WIN32)

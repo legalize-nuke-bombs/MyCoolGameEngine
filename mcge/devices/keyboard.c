@@ -21,7 +21,7 @@ static struct {
     struct action on_key_released[SDL3_SCANCODE_NUMBER];
 
     struct action* on_native_event;
-    unsigned int subscription_token;
+    unsigned int on_native_event_token;
 } keyboard;
 
 
@@ -73,12 +73,12 @@ static void keyboard_on_enable(struct engine_arguments args) {
         keyboard.status[i] = 0;
     }
     keyboard.on_native_event = engine_events_on_native_event();
-    action_subscribe(keyboard.on_native_event, NULL, keyboard_register_native_event, &keyboard.subscription_token);
+    action_subscribe(keyboard.on_native_event, NULL, keyboard_register_native_event, &keyboard.on_native_event_token);
 }
 static void keyboard_on_disable(void) {
-    action_unsubscribe(keyboard.on_native_event, keyboard.subscription_token);
+    action_unsubscribe(keyboard.on_native_event, keyboard.on_native_event_token);
     keyboard.on_native_event = NULL;
-    keyboard.subscription_token = 0;
+    keyboard.on_native_event_token = 0;
     for (int i = 0; i < SDL3_SCANCODE_NUMBER; i++) {
         action_clear(&keyboard.on_key_pressed[i]);
         action_clear(&keyboard.on_key_released[i]);
