@@ -66,6 +66,15 @@ bool health_is_alive(const struct health* this) {
     return this->amount > DEATH_THRESHOLD;
 }
 
+void health_check_damage(const struct health *this, const struct damage damage, double *delta_hp, bool *kill) {
+    if (!health_is_alive(this)) {
+        *delta_hp = 0;
+        *kill = false;
+        return;
+    }
+    *delta_hp = damage.amount > this->amount ? this->amount : damage.amount;
+    *kill = (damage.amount >= this->amount);
+}
 void health_take_damage(struct health* this, struct damage damage) {
     if (!health_is_alive(this) || damage.amount <= 0) {
         return;
@@ -81,6 +90,7 @@ void health_take_damage(struct health* this, struct damage damage) {
         action_invoke(&this->on_death, &damage);
     }
 }
+
 void health_restore(struct health* this, double amount) {
     if (!health_is_alive(this) || amount <= 0) {
         return;

@@ -64,7 +64,7 @@ bool wallet_try_take(struct wallet *this, const int amount) {
     action_invoke(&this->on_changed, NULL);
     return true;
 }
-void wallet_put(struct wallet *this, const int amount) {
+void wallet_add(struct wallet *this, const int amount) {
     if (amount <= 0) {
         return;
     }

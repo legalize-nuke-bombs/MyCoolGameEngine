@@ -14,7 +14,7 @@ extern const struct component_vtable wallet_vtable;
 
 int wallet_amount(const struct wallet *this);
 bool wallet_try_take(struct wallet *this, int amount);
-void wallet_put(struct wallet *this, int amount);
+void wallet_add(struct wallet *this, int amount);
 
 struct action* wallet_get_on_changed(struct wallet *this);
 

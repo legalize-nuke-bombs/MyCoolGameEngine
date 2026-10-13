@@ -36,19 +36,25 @@ const struct component_vtable damager_vtable = {
     .on_destroy = damager_on_destroy
 };
 
-void damager_deal_damage(const struct damager *this, struct health *target, const struct damage damage) {
-    if (!health_is_alive(target)) {
+void damager_deal_damage(const struct damager *this, struct health *target_health, const struct damage damage) {
+    if (!health_is_alive(target_health)) {
         return;
     }
-    const double hp_prev = health_amount(target);
-    health_take_damage(target, damage);
-    const double hp_curr = health_amount(target);
-    if (hp_prev != hp_curr) {
-        action_invoke(&this->on_damage_dealt, NULL);
+    struct entity* target_entity = component_get_parent((struct component*)target_health);
+
+    double delta_hp;
+    bool kill;
+    health_check_damage(target_health, damage, &delta_hp, &kill);
+
+    // Callbacks must be called before entity actually take damage because entity can be marked destroyed after taking damage
+    if (delta_hp > 0) {
+        action_invoke(&this->on_damage_dealt, target_entity);
     }
-    if (!health_is_alive(target)) {
-        action_invoke(&this->on_kill, NULL);
+    if (kill) {
+        action_invoke(&this->on_kill, target_entity);
     }
+
+    health_take_damage(target_health, damage);
 }
 
 struct action* damager_on_damage_dealt(struct damager *this) {

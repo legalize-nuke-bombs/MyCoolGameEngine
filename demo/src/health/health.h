@@ -20,7 +20,9 @@ double health_max_amount(const struct health *this);
 double health_scale(const struct health *this);
 bool health_is_alive(const struct health* this);
 
+void health_check_damage(const struct health *this, struct damage damage, double *delta_hp, bool *kill);
 void health_take_damage(struct health* this, struct damage damage);
+
 void health_restore(struct health* this, double amount);
 
 void health_resurrect(struct health* this, double amount);
