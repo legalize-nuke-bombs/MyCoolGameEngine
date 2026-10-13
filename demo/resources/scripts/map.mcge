@@ -78,3 +78,15 @@ entity name=Nevermore position=[2.5 1.5] size=[1.5 3]
             hands_bar layer1=ui1 layer2=ui2 color1=[10 10 10 255] color2=[255 0 0 255]
         ]
     ]
+
+
+entity name=Hud components=[
+        hud
+    ] children=[
+        entity name=HpBar position=[0.5 0.05] size=[0.25 0.015] components=[
+            box_renderer layer=ui1 color=[0 255 0 255]
+        ]
+	entity name=ManaBar position=[0.5 0.025] size=[0.25 0.015] components=[
+            box_renderer layer=ui1 color=[0 0 255 255]
+        ]
+    ]
