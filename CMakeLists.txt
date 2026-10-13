@@ -381,6 +381,8 @@ add_executable(MyCoolGameEngine demo/src/main.c
         demo/src/footsteps/resources/rigid_material_sounds.c
         demo/src/mana/mana_hud_bar.h
         demo/src/mana/mana_hud_bar.c
+        demo/src/health/health_hud_bar.h
+        demo/src/health/health_hud_bar.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE mcge)

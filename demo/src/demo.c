@@ -30,6 +30,7 @@
 #include "footsteps/footsteps_sounds.h"
 #include "footsteps/resources/rigid_material_sounds.h"
 #include "health/damager.h"
+#include "health/health_hud_bar.h"
 #include "health/sound_on_kill.h"
 #include "mana/mana_hud_bar.h"
 #include "scenes/game_closer.h"
@@ -69,6 +70,7 @@ void demo_install(void) {
     component_factory_register(&footsteps_vtable);
     component_factory_register(&footsteps_sounds_vtable);
     component_factory_register(&mana_hud_bar_vtable);
+    component_factory_register(&health_hud_bar_vtable);
 
     bt_node_factory_register(&player_is_near_vtable);
     bt_node_factory_register(&player_chase_vtable);
