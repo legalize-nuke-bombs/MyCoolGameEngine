@@ -5,6 +5,8 @@
 #include "mana_hud_bar.h"
 #include <mcge/mcge.h>
 
+#include "mana.h"
+
 
 struct mana_hud_bar {
     struct component base;
@@ -12,6 +14,7 @@ struct mana_hud_bar {
     struct renderer_layer* layer2;
     uint128_t entity_id;
     uint128_t mana_id;
+    unsigned int mana_on_changed_token;
 };
 
 
@@ -33,6 +36,8 @@ static void mana_hud_bar_on_create(struct component* base, struct fields *fields
     }
 }
 
+static void handle_mana_changed(void *listener, void *context);
+
 static void mana_hud_bar_awake(struct component* base) {
     struct mana_hud_bar* this = (struct mana_hud_bar*)base;
     const struct entity *entity = scene_try_get_entity(this->entity_id);
@@ -40,11 +45,20 @@ static void mana_hud_bar_awake(struct component* base) {
         logger_warn("Entity %s mana hub bar failed to find specified entity", component_get_global_parent_name(base));
         return;
     }
-    const struct mana* mana = (struct mana*)entity_get_component(entity, "mana", entity_query_local);
+    struct mana* mana = (struct mana*)entity_get_component(entity, "mana", entity_query_local);
     if (mana == NULL) {
         return;
     }
     this->mana_id = component_get_id((struct component*)mana);
+    action_subscribe(mana_get_on_changed(mana), this, handle_mana_changed, &this->mana_on_changed_token);
+    handle_mana_changed(this, NULL);
+}
+static void mana_hud_bar_on_disable(struct component* base) {
+    struct mana_hud_bar* this = (struct mana_hud_bar*)base;
+    struct mana* mana = (struct mana*)scene_try_get_component(this->mana_id);
+    if (mana) {
+        action_unsubscribe(mana_get_on_changed(mana), this->mana_on_changed_token);
+    }
 }
 
 static void mana_hud_bar_on_visible_chunk_update(struct component* base, const struct update_context *context) {
@@ -56,5 +70,11 @@ const struct component_vtable mana_hud_bar_vtable = {
     .size = sizeof(struct mana_hud_bar),
     .on_create = mana_hud_bar_on_create,
     .on_awake = mana_hud_bar_awake,
+    .on_disable = mana_hud_bar_on_disable,
     .on_visible_chunk_update = mana_hud_bar_on_visible_chunk_update
 };
+
+
+static void handle_mana_changed(void *listener, void *context) {
+    logger_info("mana changed");
+}
