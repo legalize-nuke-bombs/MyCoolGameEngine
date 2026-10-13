@@ -23,6 +23,7 @@ struct camera_wheel_zoom {
 
     uint128_t camera_id;
 
+    struct action* on_mouse_wheel_scrolled;
     unsigned int on_mouse_wheel_scrolled_token;
 };
 
@@ -53,11 +54,15 @@ static void camera_wheel_zoom_awake(struct component* base) {
     }
     this->camera_id = component_get_id(camera);
 
-    action_subscribe(mouse_get_on_wheel_scrolled(), this, handle_mouse_wheel_scrolled, &this->on_mouse_wheel_scrolled_token);
+    this->on_mouse_wheel_scrolled = mouse_get_on_wheel_scrolled();
+    action_subscribe(this->on_mouse_wheel_scrolled, this, handle_mouse_wheel_scrolled, &this->on_mouse_wheel_scrolled_token);
 }
 static void camera_wheel_zoom_on_disable(struct component* base) {
     const struct camera_wheel_zoom* this = (struct camera_wheel_zoom*)base;
-    action_unsubscribe(mouse_get_on_wheel_scrolled(), this->on_mouse_wheel_scrolled_token);
+    if (this->on_mouse_wheel_scrolled == NULL) {
+        return;
+    }
+    action_unsubscribe(this->on_mouse_wheel_scrolled, this->on_mouse_wheel_scrolled_token);
 }
 
 
