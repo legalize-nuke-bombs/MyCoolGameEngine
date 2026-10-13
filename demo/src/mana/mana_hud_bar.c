@@ -60,7 +60,7 @@ static void mana_hud_bar_awake(struct component* base) {
     struct mana_hud_bar* this = (struct mana_hud_bar*)base;
     const struct entity *entity = scene_try_get_entity(this->entity_id);
     if (entity == NULL) {
-        logger_warn("Entity %s mana hub bar failed to find specified entity", component_get_global_parent_name(base));
+        logger_warn("Entity %s mana hud bar failed to find specified entity", component_get_global_parent_name(base));
         return;
     }
     struct mana* mana = (struct mana*)entity_get_component(entity, "mana", entity_query_local);
