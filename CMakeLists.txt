@@ -383,6 +383,8 @@ add_executable(MyCoolGameEngine demo/src/main.c
         demo/src/mana/mana_hud_bar.c
         demo/src/health/health_hud_bar.h
         demo/src/health/health_hud_bar.c
+        demo/src/mana/mana_regeneration.h
+        demo/src/mana/mana_regeneration.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE mcge)

@@ -42,9 +42,9 @@ static void mana_on_destroy(struct component *base) {
     action_destroy(&this->on_changed);
 }
 
-bool mana_try_take(struct mana *this, double amount) {
-    if (amount < 0) {
-        amount = 0;
+bool mana_try_take(struct mana *this, const double amount) {
+    if (amount <= 0) {
+        return true;
     }
     if (this->amount >= amount) {
         this->amount -= amount;
@@ -53,6 +53,20 @@ bool mana_try_take(struct mana *this, double amount) {
     }
     return false;
 }
+void mana_add(struct mana* this, const double amount) {
+    if (amount <= 0) {
+        return;
+    }
+    if (this->amount >= this->max_amount) {
+        return;
+    }
+    this->amount += amount;
+    if (this->amount > this->max_amount) {
+        this->amount = this->max_amount;
+    }
+    action_invoke(&this->on_changed, NULL);
+}
+
 double mana_amount(const struct mana *this) {
     return this->amount;
 }

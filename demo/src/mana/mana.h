@@ -15,6 +15,8 @@ const char* mana_component_key(void);
 extern const struct component_vtable mana_vtable;
 
 bool mana_try_take(struct mana *this, double amount);
+void mana_add(struct mana* this, double amount);
+
 double mana_amount(const struct mana *this);
 double mana_max_amount(const struct mana *this);
 double mana_scale(const struct mana *this);
