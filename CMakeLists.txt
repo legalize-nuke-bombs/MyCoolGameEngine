@@ -277,7 +277,6 @@ add_library(mcge SHARED
         mcge/audio/tracks/track.c
         mcge/scene/components/ui/hud.h
         mcge/scene/components/ui/hud.c
-        demo/src/wallet/wallet.c
 )
 set_target_properties(mcge PROPERTIES DEFINE_SYMBOL MCGE_EXPORT)
 if(WIN32)
@@ -387,7 +386,7 @@ add_executable(MyCoolGameEngine demo/src/main.c
         demo/src/mana/mana_regeneration.h
         demo/src/mana/mana_regeneration.c
         demo/src/wallet/wallet.h
-        demo/src/wallet/wallet.h
+        demo/src/wallet/wallet.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE mcge)

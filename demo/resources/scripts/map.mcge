@@ -70,6 +70,7 @@ entity name=Nevermore position=[2.5 1.5] size=[1.5 3] id=123
         character group=player
         footsteps footstep_distance=2.5
         footsteps_sounds
+        wallet start_min=0 start_max=0
     ]
     children=[
         entity name=Hitbox size=[0.45 0.6] components=[
