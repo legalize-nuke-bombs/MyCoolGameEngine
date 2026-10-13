@@ -1,7 +1,5 @@
 #include "camera.h"
 
-#include <stdlib.h>
-
 #include "../component_internal.h"
 #include "../../entity.h"
 #include "../../../rendering/renderer.h"
@@ -14,6 +12,7 @@ struct camera {
     struct component base;
 
     double visible_height;
+    double visible_height_multiplier;
 
     struct renderer_pipeline *renderer;
 };
@@ -38,7 +37,8 @@ const char* camera_component_key(void) {
 
 static void camera_on_create(struct component *base, struct fields *fields) {
     struct camera *this = (struct camera *) base;
-    this->visible_height = fields_get_double(fields, "height", 0);
+    this->visible_height = fields_get_double(fields, "height", 15);
+    this->visible_height_multiplier = 1;
 }
 
 static void camera_awake(struct component *base) {
@@ -49,15 +49,15 @@ static void camera_awake(struct component *base) {
 
 static void camera_update_renderer_pipeline_viewport(const struct camera *this) {
     const struct vector2 output_size = renderer_pipeline_get_output_size(this->renderer);
-    if (output_size.y <= 0 || this->visible_height <= 0) {
+    if (output_size.y <= 0 || camera_get_visible_height(this) <= 0) {
         renderer_pipeline_remove_viewport(this->renderer);
         return;
     }
-    const double pixels_per_meter = output_size.y / this->visible_height;
+    const double pixels_per_meter = output_size.y / camera_get_visible_height(this);
 
     const struct rect viewport = {
         .position = component_get_rect((struct component*)this).position,
-        .size = { output_size.x / pixels_per_meter, this->visible_height }
+        .size = { output_size.x / pixels_per_meter, camera_get_visible_height(this) }
     };
     renderer_pipeline_set_viewport(this->renderer, viewport);
 }
@@ -81,4 +81,18 @@ static void camera_on_disable(struct component *base) {
     const struct camera *this = (struct camera *) base;
 
     renderer_pipeline_remove_viewport(this->renderer);
+}
+
+
+
+
+double camera_get_visible_height(const struct camera* this) {
+    return this->visible_height * this->visible_height_multiplier;
+}
+
+double camera_get_visible_height_multiplier(const struct camera* this) {
+    return this->visible_height_multiplier;
+}
+void camera_set_visible_height_multiplier(struct camera* this, const double multiplier) {
+    this->visible_height_multiplier = multiplier;
 }

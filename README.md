@@ -9,6 +9,7 @@ You can view a demo game created with this engine [here](demo).
 * Chunks for finding all components within a rectangle in O(1) time, including the ability to filter by type in O(1)
 * Components without a specific global update callback consume zero CPU time. Components can define a specific callback that the engine invokes only when the component is visible to the camera or within the simulation radius
 * Entity and component identifiers to prevent the dangling pointer problem
+* Physically accurate units of measurement
 * A simple DSL for asset management and scene setup
 ## Rendering
 * Eager / lazy texture loading

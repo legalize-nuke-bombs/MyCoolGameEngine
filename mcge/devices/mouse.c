@@ -52,8 +52,8 @@ static void handle_native_event(void *listener, void *context) {
     const SDL_Event *event = context;
     if (event->type == SDL_EVENT_MOUSE_WHEEL) {
         struct mouse_on_wheel_scrolled_callback_context cnt = {
-            .dx = event->wheel.x,
-            .dy = event->wheel.y
+            .dx = -event->wheel.x,
+            .dy = -event->wheel.y
         };
         action_invoke(&mouse.on_wheel_scrolled, &cnt);
     }

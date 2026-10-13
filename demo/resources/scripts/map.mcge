@@ -74,7 +74,7 @@ entity name=Nevermore position=[2.5 1.5] size=[1.5 3] id=123
     children=[
         entity name=Camera components=[
             camera height=17.5
-            camera_wheel_zoom min=0.5 max=2 speed=1
+            camera_wheel_zoom min=0.75 max=1.25 speed=0.025
             simulator distance=50
         ]
         entity name=Hitbox size=[0.45 0.6] components=[
