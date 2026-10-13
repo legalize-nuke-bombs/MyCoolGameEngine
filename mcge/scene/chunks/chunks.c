@@ -14,8 +14,8 @@
 #include "../../utils/pointer_dictionary.h"
 #include "../components/component.h"
 
-#define CHUNKS_SIZE 512
-#define CHUNKS_START_CHUNK_SIZE 8.f
+#define CHUNKS_SIZE 1024
+#define CHUNKS_START_CHUNK_SIZE 2.f
 
 
 struct chunks {
