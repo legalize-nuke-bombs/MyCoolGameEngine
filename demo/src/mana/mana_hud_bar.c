@@ -20,11 +20,31 @@ const char* mana_hud_bar_component_key(void) {
 }
 
 static void mana_hud_bar_on_create(struct component* base, struct fields *fields) {
-
+    struct mana_hud_bar* this = (struct mana_hud_bar*)base;
+    this->layer1 = renderer_layers_try_get(fields_get_string(fields, "layer1", "<null>"));
+    this->layer2 = renderer_layers_try_get(fields_get_string(fields, "layer2", "<null>"));
+    const char* entity_id_str = fields_get_string(fields, "entity_id", NULL);
+    if (entity_id_str == NULL) {
+        logger_warn("Entity %s mana hud bar does not have specified entity id", component_get_global_parent_name(base));
+        return;
+    }
+    if (!uint128_from_string(entity_id_str, &this->entity_id)) {
+        logger_warn("Entity %s mana hud bar failed to convert entity id `%s` to uint128_t", component_get_global_parent_name(base), entity_id_str);
+    }
 }
 
 static void mana_hud_bar_awake(struct component* base) {
-
+    struct mana_hud_bar* this = (struct mana_hud_bar*)base;
+    const struct entity *entity = scene_try_get_entity(this->entity_id);
+    if (entity == NULL) {
+        logger_warn("Entity %s mana hub bar failed to find specified entity", component_get_global_parent_name(base));
+        return;
+    }
+    const struct mana* mana = (struct mana*)entity_get_component(entity, "mana", entity_query_local);
+    if (mana == NULL) {
+        return;
+    }
+    this->mana_id = component_get_id((struct component*)mana);
 }
 
 static void mana_hud_bar_on_visible_chunk_update(struct component* base, const struct update_context *context) {

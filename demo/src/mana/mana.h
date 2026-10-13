@@ -19,4 +19,6 @@ double mana_amount(const struct mana *this);
 double mana_max_amount(const struct mana *this);
 double mana_percent(const struct mana *this);
 
+struct action* mana_get_on_changed(struct mana *this);
+
 #endif //MYCOOLGAMEENGINE_MANA_H
