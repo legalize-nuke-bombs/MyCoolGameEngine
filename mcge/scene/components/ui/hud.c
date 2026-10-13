@@ -59,5 +59,5 @@ static void handle_viewport_changed(void *listener, void *context) {
 }
 static void handle_output_size_changed(void *listener, void *context) {
     struct hud *this = listener;
-    struct rect *viewport = context;
+    struct vector2 *output_size = context;
 }
