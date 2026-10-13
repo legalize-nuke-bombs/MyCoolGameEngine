@@ -148,7 +148,7 @@ void renderer_pipeline_flush(struct renderer_pipeline *this) {
     };
 
     struct vector2 output_size = renderer_pipeline_get_output_size(this);
-    if (!vectors_equal(output_size, this->output_size)) {
+    if (!vectors_equal(output_size, this->output_size)) { // TODO Наверное чтобы убрать задержку в 1 кадр в идеале не спрашивать постоянно размер аутпута а подписываться на нативные события SDL.
         action_invoke(&this->on_output_size_changed, &output_size);
         this->output_size = output_size;
     }
