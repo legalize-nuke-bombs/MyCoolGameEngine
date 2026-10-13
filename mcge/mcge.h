@@ -105,5 +105,8 @@
 #include "audio/resources/sounds.h"
 #include "audio/tracks/track.h"
 #include "audio/tracks/tracks.h"
+#include "devices/mouse.h"
+#include "scene/components/core/camera_wheel_zoom.h"
+#include "scene/components/ui/hud.h"
 
 #endif //MYCOOLGAMEENGINE_MCGE_H
