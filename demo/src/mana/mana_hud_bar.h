@@ -5,7 +5,7 @@
 #ifndef MYCOOLGAMEENGINE_MANA_HUD_BAR_H
 #define MYCOOLGAMEENGINE_MANA_HUD_BAR_H
 
-const char* mana_hud_bar(void);
+const char* mana_hud_bar_component_key(void);
 
 extern const struct component_vtable mana_hud_bar_vtable;
 
