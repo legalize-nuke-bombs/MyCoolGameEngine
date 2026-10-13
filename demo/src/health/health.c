@@ -73,7 +73,7 @@ void health_check_damage(const struct health *this, const struct damage damage, 
         return;
     }
     *delta_hp = damage.amount > this->amount ? this->amount : damage.amount;
-    *kill = (damage.amount >= this->amount);
+    *kill = this->amount - *delta_hp <= DEATH_THRESHOLD;
 }
 void health_take_damage(struct health* this, struct damage damage) {
     if (!health_is_alive(this) || damage.amount <= 0) {
