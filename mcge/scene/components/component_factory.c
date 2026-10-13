@@ -12,6 +12,7 @@
 #include "audio/audio_listener.h"
 #include "audio/audio_source.h"
 #include "core/camera.h"
+#include "core/camera_wheel_zoom.h"
 #include "core/idle.h"
 #include "core/simulator.h"
 #include "mcge/logging/logger.h"
@@ -50,6 +51,7 @@ void component_factory_create(void) {
     component_factory_register(&audio_listener_vtable);
     component_factory_register(&audio_source_vtable);
     component_factory_register(&hud_vtable);
+    component_factory_register(&camera_wheel_zoom_vtable);
 }
 void component_factory_destroy(void) {
     factory_destroy(&component_factory);

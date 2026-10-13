@@ -50,8 +50,6 @@ entity name=Nevermore position=[2.5 1.5] size=[1.5 3] id=123
         box_renderer_rigid_directed
         movement speed=6.25
         keyboard_movement up=W down=S left=A right=D
-        camera height=17.5
-        simulator distance=50
         audio_listener
         player
         mana max=800
@@ -74,6 +72,11 @@ entity name=Nevermore position=[2.5 1.5] size=[1.5 3] id=123
         steal_wallet_on_kill efficiency=1
     ]
     children=[
+        entity name=Camera components=[
+            camera height=17.5
+            camera_wheel_zoom min=0.5 max=2 speed=1
+            simulator distance=50
+        ]
         entity name=Hitbox size=[0.45 0.6] components=[
             collider material=character
         ]

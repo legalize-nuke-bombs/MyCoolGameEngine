@@ -279,6 +279,8 @@ add_library(mcge SHARED
         mcge/scene/components/ui/hud.c
         mcge/devices/mouse.h
         mcge/devices/mouse.c
+        mcge/scene/components/core/camera_wheel_zoom.h
+        mcge/scene/components/core/camera_wheel_zoom.c
 )
 set_target_properties(mcge PROPERTIES DEFINE_SYMBOL MCGE_EXPORT)
 if(WIN32)
