@@ -36,6 +36,7 @@
 #include "mana/mana_regeneration.h"
 #include "scenes/game_closer.h"
 #include "scenes/scene_switcher.h"
+#include "wallet/wallet.h"
 #include "world/pulsator.h"
 #include "world/forest.h"
 
@@ -73,6 +74,7 @@ void demo_install(void) {
     component_factory_register(&mana_hud_bar_vtable);
     component_factory_register(&health_hud_bar_vtable);
     component_factory_register(&mana_regeneration_vtable);
+    component_factory_register(&wallet_vtable);
 
     bt_node_factory_register(&player_is_near_vtable);
     bt_node_factory_register(&player_chase_vtable);
