@@ -5,8 +5,10 @@
 #ifndef MYCOOLGAMEENGINE_TEXT_RENDERER_H
 #define MYCOOLGAMEENGINE_TEXT_RENDERER_H
 
-const char* text_renderer_component_key(void);
+#include "../../../api.h"
 
-extern const struct component_vtable text_renderer_vtable;
+MCGE_API const char* text_renderer_component_key(void);
+
+MCGE_API extern const struct component_vtable text_renderer_vtable;
 
 #endif //MYCOOLGAMEENGINE_TEXT_RENDERER_H

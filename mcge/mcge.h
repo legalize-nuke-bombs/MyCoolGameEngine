@@ -108,5 +108,10 @@
 #include "devices/mouse.h"
 #include "scene/components/core/camera_wheel_zoom.h"
 #include "scene/components/ui/hud.h"
+#include "modules/text/components/text_renderer.h"
+#include "modules/text/fonts/font.h"
+#include "modules/text/fonts/fonts.h"
+#include "modules/text/rendering/renderer_text.h"
+#include "modules/text/text_module.h"
 
 #endif //MYCOOLGAMEENGINE_MCGE_H

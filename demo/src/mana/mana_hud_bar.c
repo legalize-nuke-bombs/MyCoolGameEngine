@@ -7,9 +7,6 @@
 #include "mana.h"
 #include <stdio.h>
 
-#include "mcge/modules/text/fonts/fonts.h"
-#include "mcge/modules/text/rendering/renderer_text.h"
-
 
 struct mana_hud_bar {
     struct component base;

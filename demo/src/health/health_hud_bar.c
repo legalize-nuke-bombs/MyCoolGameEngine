@@ -6,8 +6,6 @@
 #include <mcge/mcge.h>
 
 #include "health.h"
-#include "mcge/modules/text/fonts/fonts.h"
-#include "mcge/modules/text/rendering/renderer_text.h"
 #include <stdio.h>
 
 
