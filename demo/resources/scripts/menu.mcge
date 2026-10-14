@@ -16,10 +16,12 @@ entity name=Hud components=[
     entity name=PlayButton position=[0.125 0.925] size=[0.2 0.05] components=[
         box_renderer layer=ui1 color=[255 255 255 255]
         text_renderer layer=ui2 string=Play color=[0 0 0 255] font=font1
+        clickable
     ]
     entity name=ExitButton position=[0.125 0.85] size=[0.2 0.05] components=[
         box_renderer layer=ui1 color=[255 255 255 255]
         text_renderer layer=ui2 string=Exit color=[0 0 0 255] font=font1
+        clickable
     ]
     entity name=DemoGame position=[0.9 0.95] size=[0.1 0.05] components=[
         text_renderer layer=ui2 string=DemoGame color=[255 255 255 255] font=font1

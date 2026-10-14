@@ -18,6 +18,7 @@ struct rect {
 
 MCGE_API bool rects_equal(struct rect rect1, struct rect rect2);
 
+MCGE_API bool rect_contains(struct rect rect, struct vector2 point);
 MCGE_API bool rects_intersection(struct rect rect1, struct rect rect2);
 
 MCGE_API extern const struct rect rect_0;
