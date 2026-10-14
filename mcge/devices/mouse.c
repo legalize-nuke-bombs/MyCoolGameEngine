@@ -3,7 +3,7 @@
 //
 
 #include "mouse.h"
-#include "../msystems/msystem.h"
+#include "../engine/msystem.h"
 #include "mcge/engine/events/engine_events.h"
 #include "mcge/utils/action.h"
 #include <SDL3/SDL.h>

@@ -4,7 +4,7 @@
 
 #include "engine_lifecycle.h"
 
-#include "../../msystems/msystem.h"
+#include "../msystem.h"
 
 
 static struct {

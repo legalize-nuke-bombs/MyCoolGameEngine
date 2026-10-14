@@ -1,7 +1,7 @@
 #ifndef MYCOOLGAMEENGINE_MSYSTEM_H
 #define MYCOOLGAMEENGINE_MSYSTEM_H
 
-#include "../engine/engine_arguments.h"
+#include "engine_arguments.h"
 
 struct msystem {
     const char *name;

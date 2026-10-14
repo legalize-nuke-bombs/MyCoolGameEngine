@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#include "../msystems/msystem.h"
+#include "../engine/msystem.h"
 #include "mcge/logging/logger.h"
 
 #if defined(_WIN32) || defined(_WIN64)

@@ -166,7 +166,7 @@ add_library(mcge SHARED
         mcge/engine/utils/engine_closer.c
         mcge/engine/utils/engine_restarter.h
         mcge/engine/utils/engine_restarter.c
-        mcge/msystems/msystem.h
+        mcge/engine/msystem.h
         mcge/engine/lifecycle/engine_lifecycle.h
         mcge/engine/lifecycle/engine_lifecycle.c
         mcge/engine/engine_arguments.h

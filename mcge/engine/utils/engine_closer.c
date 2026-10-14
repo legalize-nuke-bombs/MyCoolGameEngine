@@ -8,7 +8,7 @@
 #include "../events/engine_events.h"
 #include "../../utils/action.h"
 #include <SDL3/SDL.h>
-#include "../../msystems/msystem.h"
+#include "../msystem.h"
 #include "../lifecycle/engine_lifecycle.h"
 
 static struct {

@@ -14,7 +14,7 @@
 #include "component_ids/component_ids.h"
 #include "../engine/events/engine_events.h"
 #include "../utils/action.h"
-#include "../msystems/msystem.h"
+#include "../engine/msystem.h"
 #include "chunks/chunks.h"
 #include "components/component_factory.h"
 #include "../interpreter/interpreter.h"
