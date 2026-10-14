@@ -38,7 +38,7 @@ static void wallet_hud_on_create(struct component* base, struct fields *fields) 
     const char* font_name = fields_get_string(fields, "font", NULL);
     struct font* font = fonts_get(font_name);
 
-    this->text = (struct renderer_text*)renderer_text_create_from_string("test", color, font);
+    this->text = (struct renderer_text*)renderer_text_create_from_string("", color, font);
 
     const char* entity_id_str = fields_get_string(fields, "entity_id", NULL);
     if (entity_id_str == NULL) {
