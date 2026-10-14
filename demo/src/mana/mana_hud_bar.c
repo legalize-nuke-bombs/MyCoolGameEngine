@@ -4,8 +4,11 @@
 
 #include "mana_hud_bar.h"
 #include <mcge/mcge.h>
-
 #include "mana.h"
+#include <stdio.h>
+
+#include "mcge/modules/text/fonts/fonts.h"
+#include "mcge/modules/text/rendering/renderer_text.h"
 
 
 struct mana_hud_bar {
@@ -13,10 +16,13 @@ struct mana_hud_bar {
 
     struct renderer_layer* layer1;
     struct renderer_layer* layer2;
+    struct renderer_layer* layer3;
 
     double scale;
+
     struct renderer_square* bar1;
     struct renderer_square* bar2;
+    struct renderer_text* text;
 
     uint128_t entity_id;
     uint128_t mana_id;
@@ -33,11 +39,18 @@ static void mana_hud_bar_on_create(struct component* base, struct fields *fields
 
     this->layer1 = renderer_layers_try_get(fields_get_string(fields, "layer1", "<null>"));
     this->layer2 = renderer_layers_try_get(fields_get_string(fields, "layer2", "<null>"));
+    this->layer3 = renderer_layers_try_get(fields_get_string(fields, "layer3", "<null>"));
+
     const struct color color1 = fields_get_color(fields, "color1", color_black);
     const struct color color2 = fields_get_color(fields, "color2", color_blue);
+    const struct color color3 = fields_get_color(fields, "color3", color_white);
+
+    const char* font_name = fields_get_string(fields, "font", NULL);
+    struct font* font = fonts_get(font_name);
 
     this->bar1 = (struct renderer_square*)renderer_square_create_from_color(color1);
     this->bar2 = (struct renderer_square*)renderer_square_create_from_color(color2);
+    this->text = (struct renderer_text*)renderer_text_create_from_string("", color3, font);
 
     const char* entity_id_str = fields_get_string(fields, "entity_id", NULL);
     if (entity_id_str == NULL) {
@@ -100,10 +113,16 @@ static void mana_hud_bar_on_visible_chunk_update(struct component* base, const s
         .layer = this->layer2,
         .rect = rect2
     };
+    const struct renderer_pipeline_draw_call dc3 = {
+        .primitive = (struct renderer_primitive*)this->text,
+        .layer = this->layer3,
+        .rect = rect1
+    };
 
     struct renderer_pipeline* pipeline = renderer_get_pipeline();
     renderer_pipeline_draw_primitive(pipeline, dc1);
     renderer_pipeline_draw_primitive(pipeline, dc2);
+    renderer_pipeline_draw_primitive(pipeline, dc3);
 }
 
 const struct component_vtable mana_hud_bar_vtable = {
@@ -120,11 +139,17 @@ const struct component_vtable mana_hud_bar_vtable = {
 static void handle_mana_changed(void *listener, void *context) {
     struct mana_hud_bar* this = listener;
 
-    struct mana* mana = (struct mana*)scene_try_get_component(this->mana_id);
+    const struct mana* mana = (struct mana*)scene_try_get_component(this->mana_id);
     if (mana == NULL) {
         this->scale = 0;
         return;
     }
 
     this->scale = mana_scale(mana);
+
+    const unsigned int string_size = sizeof(char) * 32;
+    char* string = malloc(string_size);
+    snprintf(string, string_size, "%d / %d", (int)mana_amount(mana), (int)mana_max_amount(mana));
+    renderer_text_set_string(this->text, string);
+    free(string);
 }
