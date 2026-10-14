@@ -74,7 +74,22 @@ FetchContent_Declare(
         SYSTEM
 )
 
-FetchContent_MakeAvailable(SDL3 SDL3_image SDL3_mixer)
+set(SDLTTF_VENDORED ON)
+set(SDLTTF_HARFBUZZ OFF)
+set(SDLTTF_PLUTOSVG OFF)
+set(SDLTTF_SAMPLES OFF)
+
+FetchContent_Declare(
+        SDL3_ttf
+        GIT_REPOSITORY https://github.com/libsdl-org/SDL_ttf.git
+        GIT_TAG release-3.2.2
+        GIT_SHALLOW TRUE
+        GIT_SUBMODULES external/freetype
+        EXCLUDE_FROM_ALL
+        SYSTEM
+)
+
+FetchContent_MakeAvailable(SDL3 SDL3_image SDL3_mixer SDL3_ttf)
 
 add_library(mcge SHARED
         mcge/api.h
@@ -287,7 +302,7 @@ if(WIN32)
     set_target_properties(mcge PROPERTIES PREFIX "")
 endif()
 target_include_directories(mcge PUBLIC .)
-target_link_libraries(mcge PUBLIC SDL3::SDL3 SDL3_image::SDL3_image SDL3_mixer::SDL3_mixer)
+target_link_libraries(mcge PUBLIC SDL3::SDL3 SDL3_image::SDL3_image SDL3_mixer::SDL3_mixer SDL3_ttf::SDL3_ttf)
 
 add_executable(MyCoolGameEngine demo/src/main.c
         demo/src/world/forest.h
