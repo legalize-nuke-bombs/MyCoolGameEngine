@@ -134,3 +134,6 @@ struct vector2 mouse_get_position() {
 
 
 
+
+const int MOUSE_BUTTON_LEFT = SDL_BUTTON_LEFT;
+const int MOUSE_BUTTON_RIGHT = SDL_BUTTON_RIGHT;

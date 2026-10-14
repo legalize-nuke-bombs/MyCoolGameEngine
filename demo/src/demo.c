@@ -35,6 +35,7 @@
 #include "mana/mana_hud_bar.h"
 #include "mana/mana_regeneration.h"
 #include "scenes/game_closer.h"
+#include "scenes/game_closer_on_click.h"
 #include "scenes/scene_switcher.h"
 #include "wallet/steal_wallet_on_kill.h"
 #include "wallet/wallet.h"
@@ -81,6 +82,7 @@ void demo_install(void) {
     component_factory_register(&wallet_vtable);
     component_factory_register(&steal_wallet_on_kill_vtable);
     component_factory_register(&wallet_hud_vtable);
+    component_factory_register(&game_closer_on_click_vtable);
 
     bt_node_factory_register(&player_is_near_vtable);
     bt_node_factory_register(&player_chase_vtable);

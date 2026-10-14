@@ -28,4 +28,9 @@ MCGE_API struct action* mouse_get_on_button_released();
 
 MCGE_API struct vector2 mouse_get_position();
 
+
+
+extern const int MOUSE_BUTTON_LEFT;
+extern const int MOUSE_BUTTON_RIGHT;
+
 #endif //MYCOOLGAMEENGINE_MOUSE_H

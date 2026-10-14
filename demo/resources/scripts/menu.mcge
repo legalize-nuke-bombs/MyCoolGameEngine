@@ -22,6 +22,7 @@ entity name=Hud components=[
         box_renderer layer=ui1 color=[255 255 255 255]
         text_renderer layer=ui2 string=Exit color=[0 0 0 255] font=font1
         clickable
+        game_closer_on_click
     ]
     entity name=DemoGame position=[0.9 0.95] size=[0.1 0.05] components=[
         text_renderer layer=ui2 string=DemoGame color=[255 255 255 255] font=font1

@@ -72,7 +72,7 @@ static void handle_mouse_button_pressed(void *listener, void *context) {
         return;
     }
     logger_debug("Clickable mouse button pressed");
-    action_invoke(&this->on_pressed, &cnt);
+    action_invoke(&this->on_pressed, cnt);
 }
 static void handle_mouse_button_released(void *listener, void *context) {
     struct clickable* this = listener;
@@ -84,5 +84,13 @@ static void handle_mouse_button_released(void *listener, void *context) {
         return;
     }
     logger_debug("Clickable mouse button released");
-    action_invoke(&this->on_released, &cnt);
+    action_invoke(&this->on_released, cnt);
+}
+
+
+struct action* clickable_get_on_pressed(struct clickable *this) {
+    return &this->on_pressed;
+}
+struct action* clickable_get_on_released(struct clickable *this) {
+    return &this->on_released;
 }
