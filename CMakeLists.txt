@@ -182,10 +182,10 @@ add_library(mcge SHARED
         mcge/scene/chunks/chunk.c
         mcge/scene/components/physics/rigid_body.h
         mcge/scene/components/physics/rigid_body.c
-        mcge/modules/physics/rigid_material.h
-        mcge/modules/physics/rigid_material.c
-        mcge/modules/physics/rigid_layer.h
-        mcge/modules/physics/rigid_layer.c
+        mcge/scene/physics/rigid_material.h
+        mcge/scene/physics/rigid_material.c
+        mcge/scene/physics/rigid_layer.h
+        mcge/scene/physics/rigid_layer.c
         mcge/scene/components/physics/rigid_surface.h
         mcge/scene/components/physics/rigid_surface.c
         mcge/scene/components/physics/keyboard_rigid_controller.h
@@ -225,24 +225,24 @@ add_library(mcge SHARED
         mcge/scene/entity_factory.c
         mcge/modules/bt/bt_graphs.h
         mcge/modules/bt/bt_graphs.c
-        mcge/modules/physics/rigid_layers.h
-        mcge/modules/physics/rigid_materials.h
-        mcge/modules/physics/rigid_layers.c
-        mcge/modules/physics/rigid_materials.c
+        mcge/scene/physics/rigid_layers.h
+        mcge/scene/physics/rigid_materials.h
+        mcge/scene/physics/rigid_layers.c
+        mcge/scene/physics/rigid_materials.c
         mcge/rendering/renderer_layers.h
         mcge/rendering/textures.h
         mcge/rendering/renderer_layers.c
         mcge/rendering/textures.c
         mcge/scene/prefabs/prefabs.h
         mcge/scene/prefabs/prefabs.c
-        mcge/modules/physics/collision_layer.h
-        mcge/modules/physics/collision_layers.h
-        mcge/modules/physics/collision_response.h
-        mcge/modules/physics/collision_rules.h
-        mcge/modules/physics/collision_layer.c
-        mcge/modules/physics/collision_layers.c
-        mcge/modules/physics/collision_response.c
-        mcge/modules/physics/collision_rules.c
+        mcge/scene/physics/collision_layer.h
+        mcge/scene/physics/collision_layers.h
+        mcge/scene/physics/collision_response.h
+        mcge/scene/physics/collision_rules.h
+        mcge/scene/physics/collision_layer.c
+        mcge/scene/physics/collision_layers.c
+        mcge/scene/physics/collision_response.c
+        mcge/scene/physics/collision_rules.c
         mcge/utils/uint128_t.h
         mcge/utils/uint128_t.c
         mcge/utils/pointer_hasher.h

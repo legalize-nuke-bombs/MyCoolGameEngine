@@ -9,10 +9,10 @@
 #include "../../entity.h"
 #include "../../../utils/fields.h"
 #include "../../chunks/chunks_algorithms.h"
-#include "../../../modules/physics/rigid_layer.h"
-#include "../../../modules/physics/rigid_layers.h"
-#include "../../../modules/physics/rigid_material.h"
-#include "../../../modules/physics/rigid_materials.h"
+#include "../../physics/rigid_layer.h"
+#include "../../physics/rigid_layers.h"
+#include "../../physics/rigid_material.h"
+#include "../../physics/rigid_materials.h"
 
 
 struct rigid_surface {

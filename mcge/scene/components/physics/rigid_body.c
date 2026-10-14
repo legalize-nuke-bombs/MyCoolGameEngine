@@ -12,7 +12,7 @@
 #include "../../entity.h"
 #include "../../scene.h"
 #include "../../../logging/logger.h"
-#include "../../../modules/physics/rigid_material.h"
+#include "../../physics/rigid_material.h"
 #include "../../../utils/fields.h"
 #include "../../../utils/vector2_math.h"
 #include "../../../utils/action.h"
