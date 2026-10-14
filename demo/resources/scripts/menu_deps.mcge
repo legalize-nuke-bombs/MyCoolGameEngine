@@ -12,6 +12,7 @@ once name=menu_deps body=[
     renderer_layer name=ui10 priority=104
     renderer_layer name=ui11 priority=105
     renderer_layer name=ui12 priority=106
+    renderer_layer name=ui13 priority=107
 
 
     /* Textures */
