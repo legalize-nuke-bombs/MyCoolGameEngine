@@ -4,15 +4,16 @@
 
 #include "text_module.h"
 #include "../../engine/msystem.h"
+#include <SDL3_ttf/SDL_ttf.h>
 
 
 static void text_on_create(void) {
-
+    TTF_Init();
 }
 
 
 static void text_on_destroy(void) {
-
+    TTF_Quit();
 }
 
 
