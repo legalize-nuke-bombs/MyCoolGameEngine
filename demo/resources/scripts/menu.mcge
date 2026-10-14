@@ -15,9 +15,11 @@ entity name=Hud components=[
 ] children=[
     entity name=PlayButton position=[0.125 0.925] size=[0.2 0.05] components=[
         box_renderer layer=ui1 color=[255 255 255 255]
+        text_renderer
     ]
     entity name=ExitButton position=[0.125 0.85] size=[0.2 0.05] components=[
         box_renderer layer=ui1 color=[255 255 255 255]
+        text_renderer
     ]
 ]
 
