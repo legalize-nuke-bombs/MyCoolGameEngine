@@ -149,9 +149,7 @@ static void handle_health_changed(void *listener, void *context) {
 
     this->scale = health_scale(health);
 
-    const unsigned int string_size = sizeof(char) * 32;
-    char* string = malloc(string_size);
-    snprintf(string, string_size, "%d / %d", (int)health_amount(health), (int)health_max_amount(health));
+    char string[32];
+    snprintf(string, sizeof(string), "%d / %d", (int)health_amount(health), (int)health_max_amount(health));
     renderer_text_set_string(this->text, string);
-    free(string);
 }

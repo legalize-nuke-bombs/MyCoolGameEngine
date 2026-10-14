@@ -147,9 +147,7 @@ static void handle_mana_changed(void *listener, void *context) {
 
     this->scale = mana_scale(mana);
 
-    const unsigned int string_size = sizeof(char) * 32;
-    char* string = malloc(string_size);
-    snprintf(string, string_size, "%d / %d", (int)mana_amount(mana), (int)mana_max_amount(mana));
+    char string[32];
+    snprintf(string, sizeof(string), "%d / %d", (int)mana_amount(mana), (int)mana_max_amount(mana));
     renderer_text_set_string(this->text, string);
-    free(string);
 }
