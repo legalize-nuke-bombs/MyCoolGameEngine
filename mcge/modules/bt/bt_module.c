@@ -4,10 +4,16 @@
 #include "bt_node_factory.h"
 #include "../../assets/assets.h"
 #include "../../msystems/msystem.h"
+#include "mcge/logging/logger.h"
 
-static void bt_on_create(void) {
+static void bt_install(void) {
+    logger_info("Bt module is installing...");
     bt_node_factory_create();
     assets_register(&bt_graphs_asset_type);
+}
+
+static void bt_on_create(void) {
+    bt_install();
 }
 
 const struct msystem bt_msystem = {

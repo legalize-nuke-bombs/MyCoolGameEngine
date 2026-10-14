@@ -42,6 +42,8 @@
 #include "world/forest.h"
 
 void demo_install(void) {
+    logger_info("Demo game is installing...");
+
     assets_register(&rigid_material_sounds_asset_type);
 
     component_factory_register(&pulsator_vtable);
