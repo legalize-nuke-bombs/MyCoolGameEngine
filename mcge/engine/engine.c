@@ -85,9 +85,9 @@ void engine_create(void) {
     engine_register_msystem(&engine_lifecycle_msystem);
     engine_register_msystem(&engine_events_msystem);
     engine_register_msystem(&keyboard_msystem);
-    engine_register_msystem(&mouse_msystem);
     engine_register_msystem(&assets_msystem);
     engine_register_msystem(&renderer_msystem);
+    engine_register_msystem(&mouse_msystem);
     engine_register_msystem(&scene_msystem);
     engine_register_msystem(&bt_msystem);
     engine_register_msystem(&text_msystem);
