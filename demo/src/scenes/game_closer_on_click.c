@@ -57,7 +57,6 @@ const struct component_vtable game_closer_on_click_vtable = {
 static void handle_mouse_button_pressed(void *listener, void *context) {
     struct game_closer_on_click *this = listener;
     struct mouse_on_button_callback_context *cnt = context;
-    logger_info("Invoke %d", cnt->button);
     if (cnt->button == MOUSE_BUTTON_LEFT) {
         engine_lifecycle_mark_stop();
     }

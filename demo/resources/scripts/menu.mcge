@@ -17,6 +17,7 @@ entity name=Hud components=[
         box_renderer layer=ui1 color=[255 255 255 255]
         text_renderer layer=ui2 string=Play color=[0 0 0 255] font=font1
         clickable
+        scene_switcher_on_click script=scripts/map.mcge
     ]
     entity name=ExitButton position=[0.125 0.85] size=[0.2 0.05] components=[
         box_renderer layer=ui1 color=[255 255 255 255]

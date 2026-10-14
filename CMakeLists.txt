@@ -424,6 +424,8 @@ add_executable(MyCoolGameEngine demo/src/main.c
         demo/src/wallet/wallet_hud.c
         demo/src/scenes/game_closer_on_click.h
         demo/src/scenes/game_closer_on_click.c
+        demo/src/scenes/scene_switcher_on_click.h
+        demo/src/scenes/scene_switcher_on_click.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE mcge)
