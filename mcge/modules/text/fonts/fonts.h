@@ -1,0 +1,8 @@
+//
+// Created by nikita on 14.10.2026.
+//
+
+#ifndef MYCOOLGAMEENGINE_FONTS_H
+#define MYCOOLGAMEENGINE_FONTS_H
+
+#endif //MYCOOLGAMEENGINE_FONTS_H

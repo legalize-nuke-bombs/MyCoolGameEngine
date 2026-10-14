@@ -298,6 +298,10 @@ add_library(mcge SHARED
         mcge/scene/components/core/camera_wheel_zoom.c
         mcge/modules/text/text_module.h
         mcge/modules/text/text_module.c
+        mcge/modules/text/fonts/font.h
+        mcge/modules/text/fonts/font.c
+        mcge/modules/text/fonts/fonts.h
+        mcge/modules/text/fonts/fonts.c
 )
 set_target_properties(mcge PROPERTIES DEFINE_SYMBOL MCGE_EXPORT)
 if(WIN32)
