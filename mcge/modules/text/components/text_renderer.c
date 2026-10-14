@@ -34,7 +34,7 @@ static void text_renderer_on_create(struct component* base, struct fields *field
     const char* layer_name = fields_get_string(fields, "layer", NULL);
     this->layer = renderer_layers_try_get(layer_name);
 
-    const char *string = fields_dup_string(fields, "string", NULL);
+    const char *string = fields_get_string(fields, "string", "");
     const struct color color = fields_get_color(fields, "color", color_white);
     const char* font_name = fields_get_string(fields, "font", NULL);
     struct font *font = fonts_get(font_name);

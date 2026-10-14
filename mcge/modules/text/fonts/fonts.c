@@ -58,5 +58,5 @@ const struct asset_type fonts_asset_type = {
 };
 
 struct font* fonts_get(const char* name) {
-    return asset_storage_try_get(&fonts, name);
+    return asset_storage_get(&fonts, name);
 }
