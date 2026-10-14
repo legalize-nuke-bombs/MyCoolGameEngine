@@ -7,7 +7,11 @@
 #include <stdlib.h>
 
 #include "mcge/modules/text/fonts/fonts.h"
+#include "mcge/modules/text/rendering/renderer_text.h"
+#include "mcge/rendering/renderer.h"
 #include "mcge/rendering/renderer_layers.h"
+#include "mcge/rendering/renderer_pipeline.h"
+#include "mcge/rendering/primitives/renderer_primitive.h"
 #include "mcge/scene/components/component_internal.h"
 #include "mcge/utils/fields.h"
 
@@ -16,8 +20,7 @@ struct text_renderer {
     struct component base;
 
     struct renderer_layer *layer;
-    struct font *font;
-    char *string;
+    struct renderer_text *text;
 };
 
 
@@ -29,20 +32,27 @@ static void text_renderer_on_create(struct component* base, struct fields *field
     struct text_renderer* this = (struct text_renderer*)base;
 
     const char* layer_name = fields_get_string(fields, "layer", NULL);
-    const char* font_name = fields_get_string(fields, "font", NULL);
-    this->string = fields_dup_string(fields, "string", NULL);
-
     this->layer = renderer_layers_try_get(layer_name);
-    this->font = fonts_get(font_name);
+
+    const char* font_name = fields_get_string(fields, "font", NULL);
+    struct font *font = fonts_get(font_name);
+    const char *string = fields_dup_string(fields, "string", NULL);
+    this->text = (struct renderer_text*)renderer_text_create_from_string(string, font);
 }
 static void text_renderer_on_destroy(struct component* base) {
     const struct text_renderer* this = (struct text_renderer*)base;
-    if (this->string) free(this->string);
+    renderer_primitive_destroy((struct renderer_primitive*)this->text);
 }
 
 
 static void text_renderer_on_visible_chunk_update(struct component* base, const struct update_context *context) {
     const struct text_renderer* this = (struct text_renderer*)base;
+    const struct renderer_pipeline_draw_call draw_call = {
+        .rect = component_get_rect(base),
+        .primitive = (struct renderer_primitive*)this->text,
+        .layer = this->layer
+    };
+    renderer_pipeline_draw_primitive(renderer_get_pipeline(), draw_call);
 }
 
 
