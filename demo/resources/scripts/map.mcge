@@ -90,9 +90,9 @@ entity name=Hud components=[
         hud
     ] children=[
         entity name=HpBar position=[0.5 0.05] size=[0.25 0.015] components=[
-            health_hud_bar layer1=ui3 layer2=ui4 color1=[10 10 10 255] color2=[0 255 0 255] entity_id=123
+            health_hud_bar layer1=ui10 layer2=ui11 layer3=ui12 color1=[10 10 10 255] color2=[0 255 0 255] color3=[255 255 255 255] font=font1 entity_id=123
         ]
 	entity name=ManaBar position=[0.5 0.025] size=[0.25 0.015] components=[
-            mana_hud_bar layer1=ui3 layer2=ui4 color1=[10 10 10 255] color2=[0 0 255 255] entity_id=123
+            mana_hud_bar layer1=ui10 layer2=ui11 layer3=ui12 color1=[10 10 10 255] color2=[0 0 255 255] color3=[255 255 255 255] font=font1 entity_id=123
         ]
     ]

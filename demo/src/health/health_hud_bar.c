@@ -6,6 +6,9 @@
 #include <mcge/mcge.h>
 
 #include "health.h"
+#include "mcge/modules/text/fonts/fonts.h"
+#include "mcge/modules/text/rendering/renderer_text.h"
+#include <stdio.h>
 
 
 struct health_hud_bar {
@@ -13,10 +16,12 @@ struct health_hud_bar {
 
     struct renderer_layer *layer1;
     struct renderer_layer *layer2;
+    struct renderer_layer *layer3;
 
     double scale;
     struct renderer_square *bar1;
     struct renderer_square *bar2;
+    struct renderer_text *text;
 
     uint128_t entity_id;
     uint128_t health_id;
@@ -34,12 +39,18 @@ static void health_hud_bar_on_create(struct component* base, struct fields *fiel
 
     this->layer1 = renderer_layers_try_get(fields_get_string(fields, "layer1", "<null>"));
     this->layer2 = renderer_layers_try_get(fields_get_string(fields, "layer2", "<null>"));
+    this->layer3 = renderer_layers_try_get(fields_get_string(fields, "layer3", "<null>"));
 
     const struct color color1 = fields_get_color(fields, "color1", color_black);
     const struct color color2 = fields_get_color(fields, "color2", color_green);
+    const struct color color3 = fields_get_color(fields, "color3", color_white);
+
+    const char* font_name = fields_get_string(fields, "font", NULL);
+    struct font *font = fonts_get(font_name);
 
     this->bar1 = (struct renderer_square*)renderer_square_create_from_color(color1);
     this->bar2 = (struct renderer_square*)renderer_square_create_from_color(color2);
+    this->text = (struct renderer_text*)renderer_text_create_from_string("", color3, font);
 
     const char* entity_id_str = fields_get_string(fields, "entity_id", NULL);
     if (entity_id_str == NULL) {
@@ -54,6 +65,7 @@ static void health_hud_bar_on_destroy(struct component* base) {
     const struct health_hud_bar* this = (struct health_hud_bar*)base;
     renderer_primitive_destroy((struct renderer_primitive*)this->bar1);
     renderer_primitive_destroy((struct renderer_primitive*)this->bar2);
+    renderer_primitive_destroy((struct renderer_primitive*)this->text);
 }
 
 static void handle_health_changed(void *listener, void *context);
@@ -102,10 +114,16 @@ static void health_hud_bar_on_visible_chunk_update(struct component* base, const
         .layer = this->layer2,
         .rect = rect2
     };
+    const struct renderer_pipeline_draw_call dc3 = {
+        .primitive = (struct renderer_primitive*)this->text,
+        .layer = this->layer3,
+        .rect = rect1
+    };
 
     struct renderer_pipeline* pipeline = renderer_get_pipeline();
     renderer_pipeline_draw_primitive(pipeline, dc1);
     renderer_pipeline_draw_primitive(pipeline, dc2);
+    renderer_pipeline_draw_primitive(pipeline, dc3);
 }
 
 
@@ -130,4 +148,10 @@ static void handle_health_changed(void *listener, void *context) {
     }
 
     this->scale = health_scale(health);
+
+    const unsigned int string_size = sizeof(char) * 32;
+    char* string = malloc(string_size);
+    snprintf(string, string_size, "%d / %d", (int)health_amount(health), (int)health_max_amount(health));
+    renderer_text_set_string(this->text, string);
+    free(string);
 }

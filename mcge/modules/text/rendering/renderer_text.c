@@ -59,7 +59,7 @@ static void renderer_text_draw(struct renderer_primitive* base, const struct rec
         .w = target_rect.size.x,
         .h = target_rect.size.y
     };
-    
+
     TTF_DrawRendererText(this->text, sdl_target_rect.x, sdl_target_rect.y);
 }
 
@@ -67,4 +67,8 @@ static void renderer_text_draw(struct renderer_primitive* base, const struct rec
 
 static bool renderer_text_is_visible(struct renderer_primitive* base, const struct rect rect, const struct rect viewport) {
     return rects_intersection(rect, viewport);
+}
+
+void renderer_text_set_string(const struct renderer_text *this, const char *string) {
+    TTF_SetTextString(this->text, string, strlen(string));
 }
