@@ -9,4 +9,6 @@
 
 MCGE_API extern const struct msystem text_msystem;
 
+MCGE_API struct TTF_TextEngine* text_module_get_native_text_engine();
+
 #endif //MYCOOLGAMEENGINE_TEXT_MODULE_H

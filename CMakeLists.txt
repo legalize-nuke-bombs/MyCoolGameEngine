@@ -304,6 +304,8 @@ add_library(mcge SHARED
         mcge/modules/text/fonts/fonts.c
         mcge/modules/text/components/text_renderer.h
         mcge/modules/text/components/text_renderer.c
+        mcge/modules/text/rendering/renderer_text.h
+        mcge/modules/text/rendering/renderer_text.c
 )
 set_target_properties(mcge PROPERTIES DEFINE_SYMBOL MCGE_EXPORT)
 if(WIN32)
