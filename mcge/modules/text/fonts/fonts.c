@@ -57,3 +57,7 @@ const struct asset_type fonts_asset_type = {
     .on_clear = fonts_on_clear,
     .on_destroy = fonts_on_destroy
 };
+
+struct font* fonts_get(const char* name) {
+    return asset_storage_try_get(&fonts, name);
+}
