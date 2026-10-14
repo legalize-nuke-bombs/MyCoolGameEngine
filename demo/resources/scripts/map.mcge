@@ -92,7 +92,10 @@ entity name=Hud components=[
         entity name=HpBar position=[0.5 0.05] size=[0.25 0.015] components=[
             health_hud_bar layer1=ui11 layer2=ui12 layer3=ui13 color1=[10 10 10 255] color2=[0 255 0 255] color3=[255 255 255 255] font=font1 entity_id=123
         ]
-	entity name=ManaBar position=[0.5 0.025] size=[0.25 0.015] components=[
+	    entity name=ManaBar position=[0.5 0.025] size=[0.25 0.015] components=[
             mana_hud_bar layer1=ui11 layer2=ui12 layer3=ui13 color1=[10 10 10 255] color2=[0 0 255 255] color3=[255 255 255 255] font=font1 entity_id=123
+        ]
+        entity name=WalletHud position=[0.8 0.1] size=[0.1 0.1] components=[
+            wallet_hud
         ]
     ]

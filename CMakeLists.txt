@@ -418,6 +418,8 @@ add_executable(MyCoolGameEngine demo/src/main.c
         demo/src/wallet/wallet.c
         demo/src/wallet/steal_wallet_on_kill.h
         demo/src/wallet/steal_wallet_on_kill.c
+        demo/src/wallet/wallet_hud.h
+        demo/src/wallet/wallet_hud.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE mcge)
