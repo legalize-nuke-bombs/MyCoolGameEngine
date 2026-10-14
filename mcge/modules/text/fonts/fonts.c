@@ -26,7 +26,6 @@ static struct asset_storage fonts = {
 static void fonts_on_add(struct fields *fields) {
     char* name = fields_dup_string(fields, "name", "<null>");
     char* path = fields_dup_string(fields, "path", "<null>");
-    const float size = (float)fields_get_double(fields, "size", 48);
     const char* loading_mode_name = fields_get_string(fields, "loading_mode", "lazy");
 
     enum font_loading_mode loading_mode = font_loading_mode_lazy;
@@ -40,7 +39,7 @@ static void fonts_on_add(struct fields *fields) {
         logger_warn("Font %s unexpected loading mode %s", name, loading_mode_name);
     }
 
-    asset_storage_add(&fonts, name, font_create(name, path, size, loading_mode));
+    asset_storage_add(&fonts, name, font_create(name, path, loading_mode));
 }
 
 static void fonts_on_clear(void) {

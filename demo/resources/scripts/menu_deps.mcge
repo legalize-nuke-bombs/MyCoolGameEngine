@@ -41,7 +41,7 @@ once name=menu_deps body=[
 
 
     /* Fonts */
-    font name=font1 path=fonts/jetbrains_mono.ttf size=40 loading_mode=lazy
+    font name=font1 path=fonts/jetbrains_mono.ttf loading_mode=lazy
 
 
 
