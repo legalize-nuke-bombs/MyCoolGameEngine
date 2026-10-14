@@ -106,7 +106,7 @@
 #include "audio/tracks/track.h"
 #include "audio/tracks/tracks.h"
 #include "devices/mouse.h"
-#include "scene/components/core/camera_wheel_zoom.h"
+#include "scene/components/custom/camera_wheel_zoom.h"
 #include "scene/components/ui/hud.h"
 #include "modules/text/components/text_renderer.h"
 #include "modules/text/fonts/font.h"

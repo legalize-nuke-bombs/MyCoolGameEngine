@@ -4,7 +4,7 @@
 
 #include "camera_wheel_zoom.h"
 
-#include "camera.h"
+#include "../core/camera.h"
 #include "../component_internal.h"
 #include "mcge/devices/mouse.h"
 #include "mcge/logging/logger.h"

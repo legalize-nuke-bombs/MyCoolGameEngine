@@ -12,7 +12,7 @@
 #include "audio/audio_listener.h"
 #include "audio/audio_source.h"
 #include "core/camera.h"
-#include "core/camera_wheel_zoom.h"
+#include "custom/camera_wheel_zoom.h"
 #include "core/idle.h"
 #include "core/simulator.h"
 #include "mcge/logging/logger.h"
@@ -27,6 +27,7 @@
 #include "rendering/box_renderer_animated.h"
 #include "rendering/box_renderer_rigid_directed.h"
 #include "rendering/renderer_settings.h"
+#include "custom/clickable.h"
 #include "ui/hud.h"
 
 static struct factory component_factory;
@@ -51,6 +52,7 @@ void component_factory_create(void) {
     component_factory_register(&audio_listener_vtable);
     component_factory_register(&audio_source_vtable);
     component_factory_register(&hud_vtable);
+    component_factory_register(&clickable_vtable);
     component_factory_register(&camera_wheel_zoom_vtable);
 }
 void component_factory_destroy(void) {

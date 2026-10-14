@@ -294,8 +294,8 @@ add_library(mcge SHARED
         mcge/scene/components/ui/hud.c
         mcge/devices/mouse.h
         mcge/devices/mouse.c
-        mcge/scene/components/core/camera_wheel_zoom.h
-        mcge/scene/components/core/camera_wheel_zoom.c
+        mcge/scene/components/custom/camera_wheel_zoom.h
+        mcge/scene/components/custom/camera_wheel_zoom.c
         mcge/modules/text/text_module.h
         mcge/modules/text/text_module.c
         mcge/modules/text/fonts/font.h
@@ -306,6 +306,8 @@ add_library(mcge SHARED
         mcge/modules/text/components/text_renderer.c
         mcge/modules/text/rendering/renderer_text.h
         mcge/modules/text/rendering/renderer_text.c
+        mcge/scene/components/custom/clickable.h
+        mcge/scene/components/custom/clickable.c
 )
 set_target_properties(mcge PROPERTIES DEFINE_SYMBOL MCGE_EXPORT)
 if(WIN32)
