@@ -6,9 +6,15 @@
 #include "../../engine/msystem.h"
 #include <SDL3_ttf/SDL_ttf.h>
 
+#include "fonts/fonts.h"
+#include "mcge/assets/assets.h"
+#include "mcge/logging/logger.h"
+
 
 static void text_on_create(void) {
+    logger_info("Text module is installing...");
     TTF_Init();
+    assets_register(&fonts_asset_type);
 }
 
 

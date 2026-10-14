@@ -32,6 +32,19 @@ once name=menu_deps body=[
     texture name=light1 tile=[512 512] path=textures/light1.png
 
 
+
+
+
+
+    /* Fonts */
+    font name=font1 path=fonts/jetbrains_mono.ttf size=40 loading_mode=lazy
+
+
+
+
+
+
+
     /* Clips */
     clip name=campfire1 path=sounds/campfire.ogg loading_mode=lazy storing_mode=compact
     clip name=nevermore_arrow1 path=sounds/nevermore_arrow1.wav loading_mode=lazy storing_mode=fast
