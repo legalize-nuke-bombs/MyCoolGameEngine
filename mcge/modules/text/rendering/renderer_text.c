@@ -11,6 +11,7 @@
 
 #include "mcge/modules/text/text_module.h"
 #include "mcge/modules/text/fonts/font.h"
+#include "mcge/utils/rect_math.h"
 
 
 struct renderer_text {
@@ -31,10 +32,11 @@ static const struct rendering_primitive_vtable renderer_text_vtable = {
 };
 
 
-struct renderer_primitive* renderer_text_create_from_string(const char *string, struct font *font) {
+struct renderer_primitive* renderer_text_create_from_string(const char *string, struct color color, struct font *font) {
     struct renderer_text* this = calloc(1, sizeof(struct renderer_text));
     this->base.vtable = &renderer_text_vtable;
     this->text = TTF_CreateText(text_module_get_native_text_engine(), font_get_native_font(font), string, strlen(string));
+    TTF_SetTextColor(this->text, color.r, color.g, color.b, color.a);
     return (struct renderer_primitive*)this;
 }
 static void renderer_text_on_destroy(struct renderer_primitive* base) {
@@ -47,12 +49,22 @@ static void renderer_text_on_destroy(struct renderer_primitive* base) {
 
 
 
-static void renderer_text_draw(struct renderer_primitive* base, struct rect rect, struct rect viewport, struct vector2 output_size, SDL_Renderer* renderer) {
+static void renderer_text_draw(struct renderer_primitive* base, const struct rect rect, const struct rect viewport, const struct vector2 output_size, SDL_Renderer* renderer) {
+    struct renderer_text* this = (struct renderer_text*)base;
 
+    const struct rect target_rect = rect_sdl(&rect, &viewport, output_size);
+    const SDL_FRect sdl_target_rect = {
+        .x = target_rect.position.x,
+        .y = target_rect.position.y,
+        .w = target_rect.size.x,
+        .h = target_rect.size.y
+    };
+    
+    TTF_DrawRendererText(this->text, sdl_target_rect.x, sdl_target_rect.y);
 }
 
 
 
-static bool renderer_text_is_visible(struct renderer_primitive* base, struct rect rect, struct rect viewport) {
-    return true;
+static bool renderer_text_is_visible(struct renderer_primitive* base, const struct rect rect, const struct rect viewport) {
+    return rects_intersection(rect, viewport);
 }
