@@ -9,9 +9,9 @@
 
 struct clickable;
 
-const char* clickable_component_key(void);
+MCGE_API const char* clickable_component_key(void);
 
-extern const struct component_vtable clickable_vtable;
+MCGE_API extern const struct component_vtable clickable_vtable;
 
 MCGE_API struct action* clickable_get_on_pressed(struct clickable *this);
 MCGE_API struct action* clickable_get_on_released(struct clickable *this);
