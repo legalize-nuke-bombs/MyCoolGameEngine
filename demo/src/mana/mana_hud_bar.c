@@ -62,6 +62,7 @@ static void mana_hud_bar_on_destroy(struct component* base) {
     const struct mana_hud_bar* this = (struct mana_hud_bar*)base;
     renderer_primitive_destroy((struct renderer_primitive*)this->bar1);
     renderer_primitive_destroy((struct renderer_primitive*)this->bar2);
+    renderer_primitive_destroy((struct renderer_primitive*)this->text);
 }
 
 static void handle_mana_changed(void *listener, void *context);
