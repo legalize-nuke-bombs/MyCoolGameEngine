@@ -8,9 +8,6 @@
 #include "mcge/api.h"
 
 
-typedef unsigned long long ll;
-
-
 
 extern const struct msystem allocator_msystem;
 
@@ -22,14 +19,14 @@ MCGE_API void allocator_delete(void *ptr);
 
 
 
-MCGE_API ll allocator_get_total_allocations_num(void);
-MCGE_API ll allocator_get_total_allocations_size(void);
+MCGE_API unsigned long long allocator_get_total_allocations_num(void);
+MCGE_API unsigned long long allocator_get_total_allocations_size(void);
 
-MCGE_API ll allocator_get_total_frees_num(void);
-MCGE_API ll allocator_get_total_frees_size(void);
+MCGE_API unsigned long long allocator_get_total_frees_num(void);
+MCGE_API unsigned long long allocator_get_total_frees_size(void);
 
-MCGE_API ll allocator_get_active_allocations_num(void);
-MCGE_API ll allocator_get_active_allocations_size(void);
+MCGE_API unsigned long long allocator_get_active_allocations_num(void);
+MCGE_API unsigned long long allocator_get_active_allocations_size(void);
 
 
 

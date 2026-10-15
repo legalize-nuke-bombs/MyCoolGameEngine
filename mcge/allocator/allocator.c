@@ -19,24 +19,24 @@
 
 
 static struct {
-    ll total_allocations_num;
-    ll total_allocations_size;
+    unsigned long long total_allocations_num;
+    unsigned long long total_allocations_size;
 
-    ll total_frees_num;
-    ll total_frees_size;
+    unsigned long long total_frees_num;
+    unsigned long long total_frees_size;
 } allocator;
 
 
-static ll allocator_ptr_size(void *ptr) {
+static unsigned long long allocator_ptr_size(void *ptr) {
     if (ptr == NULL) {
         return 0;
     }
 #if defined(_WIN32)
     return _msize(ptr);
 #elif defined(__APPLE__)
-    return (ll)malloc_size(ptr);
+    return (unsigned long long)malloc_size(ptr);
 #elif defined(__linux__)
-    return (ll)malloc_usable_size(ptr);
+    return (unsigned long long)malloc_usable_size(ptr);
 #else
     #warning "Allocator: unsupported platform"
     return 0;
@@ -50,10 +50,10 @@ static void allocator_create(void) {
 
 static void allocator_destroy(void) {
     if (allocator_get_active_allocations_num() == 0 && allocator_get_active_allocations_size() == 0) {
-        logger_info("Allocator finished with no leaks detected. Total allocations: %lld (%lld bytes)", allocator.total_allocations_num, allocator.total_allocations_size);
+        logger_info("Allocator finished with no leaks detected. Total allocations: %llu (%llu bytes)", allocator.total_allocations_num, allocator.total_allocations_size);
     }
     else {
-        logger_error("Allocator finished with leaks detected. Total allocations: %lld (%lld bytes). Total frees: %lld (%lld bytes)", allocator.total_allocations_num, allocator.total_allocations_size, allocator.total_frees_num, allocator.total_frees_size);
+        logger_error("Allocator finished with leaks detected. Total allocations: %llu (%llu bytes). Total frees: %llu (%llu bytes)", allocator.total_allocations_num, allocator.total_allocations_size, allocator.total_frees_num, allocator.total_frees_size);
     }
     memset(&allocator, 0, sizeof(allocator));
 }
@@ -88,24 +88,24 @@ void allocator_delete(void *ptr) {
 }
 
 
-ll allocator_get_total_allocations_num(void) {
+unsigned long long allocator_get_total_allocations_num(void) {
     return allocator.total_allocations_num;
 }
-ll allocator_get_total_allocations_size(void) {
+unsigned long long allocator_get_total_allocations_size(void) {
     return allocator.total_allocations_size;
 }
 
-ll allocator_get_total_frees_num(void) {
+unsigned long long allocator_get_total_frees_num(void) {
     return allocator.total_frees_num;
 }
-ll allocator_get_total_frees_size(void) {
+unsigned long long allocator_get_total_frees_size(void) {
     return allocator.total_frees_size;
 }
 
-ll allocator_get_active_allocations_num(void) {
+unsigned long long allocator_get_active_allocations_num(void) {
     return allocator.total_allocations_num - allocator.total_frees_num;
 }
-ll allocator_get_active_allocations_size(void) {
+unsigned long long allocator_get_active_allocations_size(void) {
     return allocator.total_allocations_size - allocator.total_frees_size;
 }
 

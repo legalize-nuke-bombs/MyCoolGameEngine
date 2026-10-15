@@ -73,11 +73,11 @@ static void debug_overlay_fill_debug_info() {
     debug_overlay_println(&line_idx, "");
 
     const double active_memory_mb = (double)allocator_get_active_allocations_size() / 1024 / 1024;
-    const ll active_allocations_num = allocator_get_active_allocations_num();
+    const unsigned long long active_allocations_num = allocator_get_active_allocations_num();
     const double total_memory_mb = (double)allocator_get_total_allocations_size() / 1024 / 1024;
-    const ll total_allocations_num = allocator_get_total_allocations_num();
-    debug_overlay_println(&line_idx, "Memory allocated: %.1f MB. Active allocations: %lld", active_memory_mb, active_allocations_num);
-    debug_overlay_println(&line_idx, "Memory allocations sum: %.1f MB. Total allocations: %lld", total_memory_mb, total_allocations_num);
+    const unsigned long long total_allocations_num = allocator_get_total_allocations_num();
+    debug_overlay_println(&line_idx, "Memory allocated: %.1f MB. Active allocations: %llu", active_memory_mb, active_allocations_num);
+    debug_overlay_println(&line_idx, "Memory allocations sum: %.1f MB. Total allocations: %llu", total_memory_mb, total_allocations_num);
 
     debug_overlay_println(&line_idx, "Root entities: %d", scene_get_root_entities_count());
     debug_overlay_println(&line_idx, "Total entities: %d", scene_get_total_entities_count());
