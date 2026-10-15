@@ -11,7 +11,7 @@
 #include <SDL3_mixer/SDL_mixer.h>
 #include "../../logging/logger.h"
 #include "../../utils/vector2_math.h"
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 
 #define TRACKS_BUFFER_SIZE 256
 #define TRACKS_DISTANCE_WITHOUT_LISTENER 1e+9f

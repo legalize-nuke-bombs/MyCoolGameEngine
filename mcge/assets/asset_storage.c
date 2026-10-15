@@ -6,7 +6,7 @@
 #include "../logging/logger.h"
 #include "../utils/dictionary.h"
 #include "../utils/string_dictionary.h"
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 
 
 void asset_storage_add(struct asset_storage *this, const char *name, void *item) {

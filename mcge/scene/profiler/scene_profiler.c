@@ -6,7 +6,7 @@
 
 #include <stdlib.h>
 
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 #include "mcge/utils/dictionary.h"
 #include "mcge/utils/string_dictionary.h"
 #include "mcge/utils/time_estimator.h"

@@ -9,7 +9,7 @@
 #include <SDL3/SDL.h>
 
 #include "../../texture.h"
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 
 struct renderer_square {
     struct renderer_primitive base;

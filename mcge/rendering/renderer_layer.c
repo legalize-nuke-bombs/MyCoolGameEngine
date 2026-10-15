@@ -6,7 +6,7 @@
 
 #include <stdlib.h>
 
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 
 
 struct renderer_layer {

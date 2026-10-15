@@ -23,6 +23,8 @@ MCGE_API extern const struct color color_green;
 
 MCGE_API extern const struct color color_blue;
 
+MCGE_API extern const struct color color_magenta;
+
 MCGE_API extern const struct color color_red;
 MCGE_API extern const struct color color_red_light;
 

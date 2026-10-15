@@ -9,7 +9,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3_ttf/SDL_ttf.h>
 
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 #include "mcge/modules/text/text_module.h"
 #include "mcge/modules/text/fonts/font.h"
 #include "mcge/utils/rect_math.h"

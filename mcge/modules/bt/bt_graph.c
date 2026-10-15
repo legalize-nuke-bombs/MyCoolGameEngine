@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 #include "bt_node.h"
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 
 
 struct bt_graph {

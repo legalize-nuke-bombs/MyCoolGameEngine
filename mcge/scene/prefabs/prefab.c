@@ -11,7 +11,7 @@
 #include "../entity_factory.h"
 #include "../../logging/logger.h"
 #include "../../utils/fields.h"
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 
 struct prefab {
     struct fields* fields;

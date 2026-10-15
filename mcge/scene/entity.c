@@ -8,7 +8,7 @@
 #include "../utils/rect_pair.h"
 #include "../utils/vector2_math.h"
 #include "../logging/logger.h"
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 #include "mcge/random/random.h"
 
 

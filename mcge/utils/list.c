@@ -6,7 +6,7 @@
 
 #include <stdlib.h>
 
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 
 struct list list_create(int capacity) {
     if (capacity <= 0) {

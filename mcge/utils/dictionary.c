@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 #include "../logging/logger.h"
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 
 #define DICTIONARY_MAX_DIM 30
 #define DICTIONARY_NONE (-1)

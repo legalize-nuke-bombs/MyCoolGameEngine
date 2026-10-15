@@ -13,7 +13,7 @@
 #include "../../physics/rigid_layers.h"
 #include "../../physics/rigid_material.h"
 #include "../../physics/rigid_materials.h"
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 
 
 struct rigid_surface {

@@ -30,10 +30,10 @@ static void allocator_create(void) {
 
 static void allocator_destroy(void) {
     if (allocator_get_active_allocations_num() == 0 && allocator_get_active_allocations_size() == 0) {
-        logger_info("Allocator finished with no leaks detected. Total allocations: %llu (%llu bytes)", allocator.total_allocations_num, allocator.total_allocations_size);
+        logger_info("Allocator finished with no leaks detected. Total allocations: %lld (%lld bytes)", allocator.total_allocations_num, allocator.total_allocations_size);
     }
     else {
-        logger_error("Allocator finished with leaks detected. Total allocations: %llu (%llu bytes). Total frees: %llu (%llu bytes)", allocator.total_allocations_num, allocator.total_allocations_size, allocator.total_frees_num, allocator.total_frees_size);
+        logger_error("Allocator finished with leaks detected. Total allocations: %lld (%lld bytes). Total frees: %lld (%lld bytes)", allocator.total_allocations_num, allocator.total_allocations_size, allocator.total_frees_num, allocator.total_frees_size);
     }
     memset(&allocator, 0, sizeof(allocator));
 }

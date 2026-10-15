@@ -28,7 +28,7 @@
 #include "rendering/box_renderer_rigid_directed.h"
 #include "rendering/renderer_settings.h"
 #include "custom/clickable.h"
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 #include "ui/hud.h"
 
 static struct factory component_factory;

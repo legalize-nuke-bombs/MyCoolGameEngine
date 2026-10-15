@@ -4,7 +4,7 @@
 
 #include "clips.h"
 #include "../../random/random.h"
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 
 
 struct sound {

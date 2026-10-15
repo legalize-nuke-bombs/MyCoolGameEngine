@@ -18,7 +18,7 @@
 #include "../../../utils/fields.h"
 #include "../../../rendering/texture.h"
 #include "../../../rendering/textures.h"
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 
 struct box_light {
     struct component base;

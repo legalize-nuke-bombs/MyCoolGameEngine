@@ -14,13 +14,14 @@
 #include "mcge/engine/version.h"
 #include "mcge/profiler/profiler.h"
 #include "../utils/time_estimator.h"
+#include "mcge/allocator/allocator.h"
 #include "mcge/rendering/renderer_pipeline.h"
 #include "mcge/scene/scene.h"
 #include "mcge/scene/chunks/chunks.h"
 
 
 #define LINES_NUMBER 20
-#define LINE_LENGTH 256
+#define LINE_LENGTH 128
 #define DEBUG_CHAR_SIZE 8
 #define DEBUG_TEXT_Y_MARGIN 2
 
@@ -38,43 +39,67 @@ static struct {
 
 
 
-// This is kinda ugly
+static void debug_overlay_println(int *index, const char *format, ...) {
+    if (*index >= LINES_NUMBER) {
+        return;
+    }
+    va_list args;
+    va_start(args, format);
+    vsnprintf(debug_overlay.lines[*index], LINE_LENGTH, format, args);
+    va_end(args);
+    (*index)++;
+}
+
 static void debug_overlay_fill_debug_info() {
-    snprintf(debug_overlay.lines[0], sizeof(char) * LINE_LENGTH, "MyCoolGameEngine v%d.%d.%d", ENGINE_V_MAJOR, ENGINE_V_MINOR, ENGINE_V_PATCH);
-    snprintf(debug_overlay.lines[1], sizeof(char) * LINE_LENGTH, "Program: %s. Script: %s. Dev mode: %d", debug_overlay.args.program_name, debug_overlay.args.script_path, debug_overlay.args.dev_mode);
-    snprintf(debug_overlay.lines[2], sizeof(char) * LINE_LENGTH, "");
+    int line_idx = 0;
 
-    const double frame_ms = time_estimator_average_block_ms(profiler_get_frame());
-    const double update_ms = time_estimator_average_block_ms(profiler_get_update());
-    const double render_ms = time_estimator_average_block_ms(profiler_get_rendering());
+    debug_overlay_println(&line_idx, "MyCoolGameEngine v%d.%d.%d", ENGINE_V_MAJOR, ENGINE_V_MINOR, ENGINE_V_PATCH);
+    debug_overlay_println(&line_idx, "Program: %s. Script: %s. Dev mode: %d",
+               debug_overlay.args.program_name, debug_overlay.args.script_path, debug_overlay.args.dev_mode);
+    debug_overlay_println(&line_idx, "");
+
+    const double frame_ms   = time_estimator_average_block_ms(profiler_get_frame());
+    const double update_ms  = time_estimator_average_block_ms(profiler_get_update());
+    const double render_ms  = time_estimator_average_block_ms(profiler_get_rendering());
     const double unknown_ms = frame_ms - update_ms - render_ms;
-    const double update_ms_percent = update_ms / frame_ms * 100;
-    const double render_ms_percent = render_ms / frame_ms * 100;
-    const double unknown_ms_percent = unknown_ms / frame_ms * 100;
-    const double fps = 1000 / frame_ms;
-    snprintf(debug_overlay.lines[3], sizeof(char) * LINE_LENGTH, "FPS: %f. Frame: %f ms", fps, frame_ms);
-    snprintf(debug_overlay.lines[4], sizeof(char) * LINE_LENGTH, "Update: %f ms (%f%%)", update_ms, update_ms_percent);
-    snprintf(debug_overlay.lines[5], sizeof(char) * LINE_LENGTH, "Render: %f ms (%f%%)", render_ms, render_ms_percent);
-    snprintf(debug_overlay.lines[6], sizeof(char) * LINE_LENGTH, "Unknown: %f ms (%f%%)", unknown_ms, unknown_ms_percent);
-    snprintf(debug_overlay.lines[7], sizeof(char) * LINE_LENGTH, "");
+    const double update_ms_percent  = (update_ms / frame_ms) * 100;
+    const double render_ms_percent  = (render_ms / frame_ms) * 100;
+    const double unknown_ms_percent = (unknown_ms / frame_ms) * 100;
+    const double fps                = 1000.0 / frame_ms;
+    debug_overlay_println(&line_idx, "FPS: %.1f. Frame: %.2f ms", fps, frame_ms);
+    debug_overlay_println(&line_idx, "Update: %.2f ms (%.1f%%)", update_ms, update_ms_percent);
+    debug_overlay_println(&line_idx, "Render: %.2f ms (%.1f%%)", render_ms, render_ms_percent);
+    debug_overlay_println(&line_idx, "Unknown: %.2f ms (%.1f%%)", unknown_ms, unknown_ms_percent);
+    debug_overlay_println(&line_idx, "");
 
-    snprintf(debug_overlay.lines[8], sizeof(char) * LINE_LENGTH, "Root entities: %d", scene_get_root_entities_count());
-    snprintf(debug_overlay.lines[9], sizeof(char) * LINE_LENGTH, "Total entities: %d", scene_get_total_entities_count());
-    snprintf(debug_overlay.lines[10], sizeof(char) * LINE_LENGTH, "Components: %d", scene_get_components_count());
-    snprintf(debug_overlay.lines[11], sizeof(char) * LINE_LENGTH, "");
+    const double active_memory_mb = (double)allocator_get_active_allocations_size() / 1024 / 1024;
+    const ll active_allocations_num = allocator_get_active_allocations_num();
+    const double total_memory_mb = (double)allocator_get_total_allocations_size() / 1024 / 1024;
+    const ll total_allocations_num = allocator_get_total_allocations_num();
+    debug_overlay_println(&line_idx, "Memory allocated: %f MB. Active allocations: %lld", active_memory_mb, active_allocations_num);
+    debug_overlay_println(&line_idx, "Memory allocations sum: %f MB. Total allocations: %lld", total_memory_mb, total_allocations_num);
 
-    snprintf(debug_overlay.lines[12], sizeof(char) * LINE_LENGTH, "Chunks number: %d x %d", chunks_get_number(scene_get_chunks()), chunks_get_number(scene_get_chunks()));
-    snprintf(debug_overlay.lines[13], sizeof(char) * LINE_LENGTH, "Chunk size: %f x %f", chunks_get_chunk_size(scene_get_chunks()), chunks_get_chunk_size(scene_get_chunks()));
-    snprintf(debug_overlay.lines[14], sizeof(char) * LINE_LENGTH, "");
+    debug_overlay_println(&line_idx, "Root entities: %d", scene_get_root_entities_count());
+    debug_overlay_println(&line_idx, "Total entities: %d", scene_get_total_entities_count());
+    debug_overlay_println(&line_idx, "Components: %d", scene_get_components_count());
+    debug_overlay_println(&line_idx, "");
+
+    const unsigned int chunk_num = chunks_get_number(scene_get_chunks());
+    const double chunk_size = chunks_get_chunk_size(scene_get_chunks());
+    debug_overlay_println(&line_idx, "Chunks number: %d x %d", chunk_num, chunk_num);
+    debug_overlay_println(&line_idx, "Chunk size: %.2f x %.2f", chunk_size, chunk_size);
+    debug_overlay_println(&line_idx, "");
 
     const struct renderer_pipeline *pipeline = renderer_get_pipeline();
     const struct rect viewport = renderer_pipeline_get_viewport(pipeline);
-    snprintf(debug_overlay.lines[15], sizeof(char) * LINE_LENGTH, "Renderer pipeline last frame draw calls count: %d", renderer_pipeline_get_prev_draw_call_count(pipeline));
-    snprintf(debug_overlay.lines[16], sizeof(char) * LINE_LENGTH, "Renderer pipeline viewport: x %f y %f w %f h %f", viewport.position.x, viewport.position.y, viewport.size.x, viewport.size.y);
-    snprintf(debug_overlay.lines[17], sizeof(char) * LINE_LENGTH, "");
 
-
+    debug_overlay_println(&line_idx, "Renderer pipeline last frame draw calls count: %d",
+               renderer_pipeline_get_prev_draw_call_count(pipeline));
+    debug_overlay_println(&line_idx, "Renderer pipeline viewport: x %.2f y %.2f w %.2f h %.2f",
+               viewport.position.x, viewport.position.y, viewport.size.x, viewport.size.y);
+    debug_overlay_println(&line_idx, "");
 }
+
 
 
 
@@ -94,6 +119,12 @@ static void handle_post_pipeline(void *listener, void *context) {
         return;
     }
     debug_overlay_fill_debug_info();
+    const SDL_FRect rect = {
+        .w = DEBUG_CHAR_SIZE * LINE_LENGTH,
+        .h = (DEBUG_CHAR_SIZE + DEBUG_TEXT_Y_MARGIN) * LINES_NUMBER
+    };
+    SDL_SetRenderDrawColor(renderer_get_native_renderer(), 0, 0, 0, 200);
+    SDL_RenderFillRect(renderer_get_native_renderer(), &rect);
     SDL_SetRenderDrawColor(renderer_get_native_renderer(), color_white.r, color_white.g, color_white.b, color_white.a);
     for (int i = 0; i < LINES_NUMBER; i++) {
         SDL_RenderDebugText(renderer_get_native_renderer(), 0, (float)(i * (DEBUG_CHAR_SIZE + DEBUG_TEXT_Y_MARGIN)), debug_overlay.lines[i]);

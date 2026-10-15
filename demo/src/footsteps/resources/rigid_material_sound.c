@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 #include "mcge/audio/resources/sounds.h"
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 
 struct rigid_material_sound {
     char *id;

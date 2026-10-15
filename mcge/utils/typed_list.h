@@ -1,6 +1,6 @@
 #include <stdlib.h>
 
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 
 #define TYPED_LIST_CONCAT_(a, b) a##b
 #define TYPED_LIST_CONCAT(a, b) TYPED_LIST_CONCAT_(a, b)

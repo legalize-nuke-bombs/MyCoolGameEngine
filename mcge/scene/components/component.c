@@ -7,7 +7,7 @@
 #include "../scene.h"
 #include "../../random/random.h"
 #include "../../utils/rect_pair.h"
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 
 void component_base_create(struct component *this, const struct component_vtable *vtable, struct entity *parent) {
     this->vtable = vtable;

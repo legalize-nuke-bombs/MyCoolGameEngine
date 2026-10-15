@@ -9,7 +9,7 @@
 #include "../../../utils/fields.h"
 #include "../../../utils/vector2_math.h"
 #include "rigid_body.h"
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 
 
 struct keyboard_rigid_controller {

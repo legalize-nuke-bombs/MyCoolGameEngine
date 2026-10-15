@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <SDL3/SDL.h>
 
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 
 
 struct time_estimator {

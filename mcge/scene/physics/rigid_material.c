@@ -6,7 +6,7 @@
 
 #include <stdlib.h>
 
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 
 struct rigid_material* rigid_material_create(char *name, const double friction, const double restitution) {
     struct rigid_material *this = allocator_new0(1, sizeof(struct rigid_material));

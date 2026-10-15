@@ -12,7 +12,7 @@
 #include "core/bt_selector.h"
 #include "core/bt_sequence.h"
 #include "mcge/logging/logger.h"
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 
 static struct factory bt_node_factory;
 

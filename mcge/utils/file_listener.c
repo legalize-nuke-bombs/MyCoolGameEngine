@@ -8,7 +8,7 @@
 #include <string.h>
 #include <sys/stat.h>
 
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 
 
 #define CHECK_INTERVAL 0.10

@@ -10,7 +10,7 @@
 #include "../logging/logger.h"
 #include "../utils/list.h"
 #include "../utils/pointer_dictionary.h"
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 
 struct entity_collection {
     struct dictionary *entities;

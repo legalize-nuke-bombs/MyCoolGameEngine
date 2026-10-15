@@ -2,7 +2,7 @@
 
 #include <stdlib.h>
 
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 
 struct collision_layer* collision_layer_create(const uint8_t index, const enum collision_response default_response) {
     struct collision_layer *this = allocator_new0(1, sizeof(struct collision_layer));

@@ -9,7 +9,7 @@
 #include "tracks/tracks.h"
 #include "../engine/msystem.h"
 #include "mcge/logging/logger.h"
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 
 
 #define AUDIO_FALLBACK_SAMPLE_RATE 44100

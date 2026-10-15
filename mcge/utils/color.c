@@ -33,6 +33,13 @@ const struct color color_blue = {
     .a = 255
 };
 
+const struct color color_magenta = {
+    .r = 255,
+    .g = 0,
+    .b = 255,
+    .a = 255
+};
+
 const struct color color_red = {
     .r = 255,
     .g = 0,

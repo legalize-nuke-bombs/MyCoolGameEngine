@@ -17,7 +17,7 @@
 #include "../../../rendering/renderer_layers.h"
 #include "../../../rendering/textures.h"
 #include "../../../utils/fields.h"
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 
 struct box_renderer {
     struct component base;

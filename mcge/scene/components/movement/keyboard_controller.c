@@ -12,7 +12,7 @@
 #include "../../../devices/keyboard.h"
 #include "controller.h"
 #include "../../../utils/fields.h"
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 
 
 struct keyboard_controller {

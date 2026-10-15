@@ -8,7 +8,7 @@
 #include "../../logging/logger.h"
 #include "../../utils/fields.h"
 #include "../../utils/list.h"
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 
 
 static void sounds_destroy_item(void *item) {

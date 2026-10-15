@@ -27,7 +27,7 @@
 #include "mcge/audio/audio.h"
 #include "mcge/debug_overlay/debug_overlay.h"
 #include "mcge/devices/mouse.h"
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 #include "mcge/modules/text/text_module.h"
 
 #define FRAME_DT_EXPLOSION_THRESHOLD 0.03f

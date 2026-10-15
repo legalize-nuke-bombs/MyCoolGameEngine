@@ -8,7 +8,7 @@
 #include <SDL3/SDL.h>
 #include "../../../logging/logger.h"
 #include "../renderer_primitive_internal.h"
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 
 
 #define DRAW_CALLS_BUFFER_SIZE (1 << 10)

@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 #include "bt_node_internal.h"
-#include "mcge/memory/allocator.h"
+#include "mcge/allocator/allocator.h"
 
 const char* bt_node_key(const struct bt_node *this) {
     return this->vtable->key;
