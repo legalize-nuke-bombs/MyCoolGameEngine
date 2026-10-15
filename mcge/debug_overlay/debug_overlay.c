@@ -9,28 +9,41 @@
 #include "mcge/rendering/renderer.h"
 #include "mcge/utils/action.h"
 #include "mcge/utils/color.h"
-#include "SDL3/SDL_render.h"
+#include <SDL3/SDL.h>
+#include <stdio.h>
+#include "mcge/engine/version.h"
 
 
-
-#define BUFFER_SIZE 2048
+#define LINES_NUMBER 10
+#define LINE_LENGTH 256
+#define DEBUG_CHAR_SIZE 8
+#define DEBUG_TEXT_Y_MARGIN 2
 
 
 static struct {
     bool enabled;
     bool visible;
-    char *buffer;
+    char lines[LINES_NUMBER][LINE_LENGTH];
     unsigned int renderer_post_pipeline_token;
     unsigned int keyboard_on_hotkey_pressed_token;
 } debug_overlay;
+
+
+static void debug_overlay_fill_debug_info() {
+    snprintf(debug_overlay.lines[0], sizeof(char) * LINE_LENGTH, "MyCoolGameEngine v%d.%d.%d", ENGINE_V_MAJOR, ENGINE_V_MINOR, ENGINE_V_PATCH);
+    snprintf(debug_overlay.lines[1], sizeof(char) * LINE_LENGTH, "Hello");
+}
 
 
 static void handle_post_pipeline(void *listener, void *context) {
     if (!debug_overlay.visible) {
         return;
     }
+    debug_overlay_fill_debug_info();
     SDL_SetRenderDrawColor(renderer_get_native_renderer(), color_white.r, color_white.g, color_white.b, color_white.a);
-    SDL_RenderDebugText(renderer_get_native_renderer(), 0, 0, debug_overlay.buffer);
+    for (int i = 0; i < LINES_NUMBER; i++) {
+        SDL_RenderDebugText(renderer_get_native_renderer(), 0, (float)(i * (DEBUG_CHAR_SIZE + DEBUG_TEXT_Y_MARGIN)), debug_overlay.lines[i]);
+    }
 }
 
 static void handle_hotkey_pressed(void *listener, void *context) {
@@ -42,7 +55,6 @@ static void debug_overlay_on_enable(const struct engine_arguments args) {
     debug_overlay.enabled = args.dev_mode;
     if (debug_overlay.enabled) {
         debug_overlay.visible = false;
-        debug_overlay.buffer = calloc(BUFFER_SIZE, sizeof(char));
         action_subscribe(renderer_get_post_pipeline(), NULL, handle_post_pipeline, &debug_overlay.renderer_post_pipeline_token);
         action_subscribe(keyboard_require_action_on_key_pressed("F3"), NULL, handle_hotkey_pressed, &debug_overlay.keyboard_on_hotkey_pressed_token);
     }
@@ -50,7 +62,6 @@ static void debug_overlay_on_enable(const struct engine_arguments args) {
 static void debug_overlay_on_disable(void) {
     if (debug_overlay.enabled) {
         debug_overlay.enabled = false;
-        free(debug_overlay.buffer);
         action_unsubscribe(renderer_get_post_pipeline(), debug_overlay.renderer_post_pipeline_token);
         action_unsubscribe(keyboard_require_action_on_key_pressed("F3"), debug_overlay.keyboard_on_hotkey_pressed_token);
     }
