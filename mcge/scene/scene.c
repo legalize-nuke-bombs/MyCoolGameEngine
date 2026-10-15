@@ -36,7 +36,6 @@ static struct {
     struct component_ids* component_ids;
     struct tmap *tmap;
     struct chunks* chunks;
-    struct scene_profiler *profiler;
 
     struct action* on_physics;
     unsigned int on_physics_subscription_token;
@@ -190,9 +189,6 @@ const struct tmap* scene_get_tmap(void) {
 }
 const struct chunks* scene_get_chunks(void) {
     return scene.chunks;
-}
-const struct scene_profiler* scene_get_profiler(void) {
-    return scene.profiler;
 }
 
 struct entity* scene_try_get_entity(const uint128_t id) {
