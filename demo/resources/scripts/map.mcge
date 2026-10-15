@@ -6,17 +6,17 @@ entity name=GameState components=[
     scene_switcher key=Escape script=scripts/menu.mcge
 ]
 
-entity name=Terrain size=[250 250] components=[
+entity name=Terrain size=[500 500] components=[
     box_renderer layer=bg1 color=[30 30 40 255]
     rigid_surface layer=bg1 material=ground
 ]
 
-entity name=Forest size=[250 250] components=[
-    forest count=2000 prefabs=[Tree]
+entity name=Forest size=[500 500] components=[
+    forest count=5000 prefabs=[Tree]
 ]
 
-entity name=Forest size=[250 250] components=[
-    forest count=2000 prefabs=[EnemyDefault]
+entity name=Forest size=[500 500] components=[
+    forest count=5000 prefabs=[EnemyDefault]
 ]
 
 entity name=Campfire position=[4 2] size=[1.5 1.5]
