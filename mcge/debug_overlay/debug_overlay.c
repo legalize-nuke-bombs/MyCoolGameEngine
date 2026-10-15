@@ -22,8 +22,8 @@
 
 #define LINES_NUMBER 20
 #define LINE_LENGTH 128
-#define DEBUG_CHAR_SIZE 8
-#define DEBUG_TEXT_Y_MARGIN 2
+#define DEBUG_CHAR_SIZE 8.f
+#define DEBUG_TEXT_Y_MARGIN 2.f
 
 
 static struct {
@@ -76,8 +76,8 @@ static void debug_overlay_fill_debug_info() {
     const ll active_allocations_num = allocator_get_active_allocations_num();
     const double total_memory_mb = (double)allocator_get_total_allocations_size() / 1024 / 1024;
     const ll total_allocations_num = allocator_get_total_allocations_num();
-    debug_overlay_println(&line_idx, "Memory allocated: %f MB. Active allocations: %lld", active_memory_mb, active_allocations_num);
-    debug_overlay_println(&line_idx, "Memory allocations sum: %f MB. Total allocations: %lld", total_memory_mb, total_allocations_num);
+    debug_overlay_println(&line_idx, "Memory allocated: %.1f MB. Active allocations: %lld", active_memory_mb, active_allocations_num);
+    debug_overlay_println(&line_idx, "Memory allocations sum: %.1f MB. Total allocations: %lld", total_memory_mb, total_allocations_num);
 
     debug_overlay_println(&line_idx, "Root entities: %d", scene_get_root_entities_count());
     debug_overlay_println(&line_idx, "Total entities: %d", scene_get_total_entities_count());
@@ -102,6 +102,26 @@ static void debug_overlay_fill_debug_info() {
 
 
 
+static unsigned int debug_overlay_longest_line_length() {
+    unsigned int result = 0;
+    for (int i = 0; i < LINES_NUMBER; i++) {
+        const unsigned int len = strlen(debug_overlay.lines[i]);
+        if (len > result) {
+            result = len;
+        }
+    }
+    return result;
+}
+static unsigned int debug_overlay_lines_number() {
+    unsigned int result = 0;
+    for (int i = 0; i < LINES_NUMBER; i++) {
+        if (debug_overlay.lines[i][0] != '\0') {
+            result = i + 1;
+        }
+    }
+    return result;
+}
+
 
 
 
@@ -120,14 +140,14 @@ static void handle_post_pipeline(void *listener, void *context) {
     }
     debug_overlay_fill_debug_info();
     const SDL_FRect rect = {
-        .w = DEBUG_CHAR_SIZE * LINE_LENGTH,
-        .h = (DEBUG_CHAR_SIZE + DEBUG_TEXT_Y_MARGIN) * LINES_NUMBER
+        .w = DEBUG_CHAR_SIZE * (float)debug_overlay_longest_line_length(),
+        .h = (DEBUG_CHAR_SIZE + DEBUG_TEXT_Y_MARGIN) * (float)(debug_overlay_lines_number())
     };
     SDL_SetRenderDrawColor(renderer_get_native_renderer(), 0, 0, 0, 200);
     SDL_RenderFillRect(renderer_get_native_renderer(), &rect);
     SDL_SetRenderDrawColor(renderer_get_native_renderer(), color_white.r, color_white.g, color_white.b, color_white.a);
     for (int i = 0; i < LINES_NUMBER; i++) {
-        SDL_RenderDebugText(renderer_get_native_renderer(), 0, (float)(i * (DEBUG_CHAR_SIZE + DEBUG_TEXT_Y_MARGIN)), debug_overlay.lines[i]);
+        SDL_RenderDebugText(renderer_get_native_renderer(), 0, (float)i * (DEBUG_CHAR_SIZE + DEBUG_TEXT_Y_MARGIN), debug_overlay.lines[i]);
     }
 }
 
