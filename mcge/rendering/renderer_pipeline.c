@@ -135,9 +135,19 @@ void renderer_pipeline_flush(struct renderer_pipeline *this) {
         this->dropped_draw_calls_count = 0;
     }
 
+    struct vector2 output_size = renderer_pipeline_get_output_size(this);
+    if (!vectors_equal(output_size, this->output_size)) { // TODO Наверное чтобы убрать задержку в 1 кадр в идеале не спрашивать постоянно размер аутпута а подписываться на нативные события SDL.
+        action_invoke(&this->on_output_size_changed, &output_size);
+        this->output_size = output_size;
+    }
+
     if (!this->viewport_enabled) {
         light_map_clear_draw_calls((struct light_map*)this->light_map);
         this->draw_calls_count = 0;
+        const char* no_active_camera_label = "NO ACTIVE CAMERA IN THE SCENE";
+        const float debug_char_size = 8;
+        SDL_SetRenderDrawColor(this->native_renderer, color_white.r, color_white.g, color_white.b, color_white.a);
+        SDL_RenderDebugText(this->native_renderer, (float)(output_size.x * 0.5) - (float)strlen(no_active_camera_label) * debug_char_size / 2.f, (float)(output_size.y * 0.5), no_active_camera_label);
         return;
     }
 
@@ -146,12 +156,6 @@ void renderer_pipeline_flush(struct renderer_pipeline *this) {
         .rect = rect_0,
         .layer = this->light_map_layer
     };
-
-    struct vector2 output_size = renderer_pipeline_get_output_size(this);
-    if (!vectors_equal(output_size, this->output_size)) { // TODO Наверное чтобы убрать задержку в 1 кадр в идеале не спрашивать постоянно размер аутпута а подписываться на нативные события SDL.
-        action_invoke(&this->on_output_size_changed, &output_size);
-        this->output_size = output_size;
-    }
 
     qsort(
            this->draw_calls,

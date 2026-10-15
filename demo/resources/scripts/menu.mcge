@@ -33,11 +33,13 @@ entity name=Hud components=[
     ]
 ]
 
+/*
 entity name=Camera components=[
     camera height=5
     audio_listener
     simulator distance=50
 ]
+*/
 
 entity name=Campfire position=[2.5 -1.5] size=[1.5 1.5]
     components=[
