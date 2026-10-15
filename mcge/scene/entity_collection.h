@@ -21,4 +21,6 @@ MCGE_API void entity_collection_move_to_dead(struct entity_collection *this, str
 
 MCGE_API void entity_collection_pre_update(struct entity_collection *this);
 
+MCGE_API unsigned int entity_collection_count(const struct entity_collection *this);
+
 #endif //MYCOOLGAMEENGINE_ENTITY_COLLECTION_H

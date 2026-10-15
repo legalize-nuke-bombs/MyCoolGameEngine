@@ -41,4 +41,7 @@ MCGE_API struct light_map* renderer_pipeline_get_light_map(const struct renderer
 MCGE_API struct action* renderer_pipeline_get_on_viewport_changed(struct renderer_pipeline *this);
 MCGE_API struct action* renderer_pipeline_get_on_output_size_changed(struct renderer_pipeline *this);
 
+
+MCGE_API int renderer_pipeline_get_prev_draw_call_count(const struct renderer_pipeline *this);
+
 #endif //MYCOOLGAMEENGINE_RENDERER_PIPELINE_H

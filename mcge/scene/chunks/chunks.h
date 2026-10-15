@@ -22,4 +22,7 @@ MCGE_API void chunks_get_rect_indexes(const struct chunks *this, struct rect rec
 MCGE_API struct dictionary* chunks_chunk_get_types(const struct chunks *this, int index_x, int index_y);
 MCGE_API struct dictionary* chunks_chunk_get_components_by_type(const struct chunks *this, int index_x, int index_y, const char *component_type);
 
+MCGE_API unsigned int chunks_get_number(const struct chunks *this);
+MCGE_API float chunks_get_chunk_size(const struct chunks *this);
+
 #endif //MYCOOLGAMEENGINE_CHUNKS_H

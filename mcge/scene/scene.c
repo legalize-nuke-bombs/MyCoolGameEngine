@@ -205,3 +205,14 @@ void scene_capture_entity(struct entity *entity) {
 
     entity_awake(entity);
 }
+
+
+unsigned int scene_get_root_entities_count(void) {
+    return entity_collection_count(scene.entities);
+}
+unsigned int scene_get_total_entities_count(void) {
+    return entity_ids_count(scene.entity_ids);
+}
+unsigned int scene_get_components_count(void) {
+    return component_ids_count(scene.component_ids);
+}

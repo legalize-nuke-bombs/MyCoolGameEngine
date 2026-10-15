@@ -72,3 +72,7 @@ static void handle_component_marked_destroyed(void *listener, void *context) {
 struct component* component_ids_try_get(const struct component_ids *this, uint128_t id) {
     return dictionary_get(this->components, &id);
 }
+
+unsigned int component_ids_count(const struct component_ids *this) {
+    return dictionary_count(this->components);
+}

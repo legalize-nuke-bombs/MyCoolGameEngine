@@ -72,3 +72,8 @@ static void handle_entity_marked_destroyed(void *listener, void *context) {
 struct entity* entity_ids_try_get(const struct entity_ids *this, uint128_t id) {
     return dictionary_get(this->entities, &id);
 }
+
+
+unsigned int entity_ids_count(const struct entity_ids *this) {
+    return dictionary_count(this->entities);
+}

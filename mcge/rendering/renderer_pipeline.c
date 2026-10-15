@@ -25,6 +25,7 @@ struct renderer_pipeline {
     struct vector2 output_size;
 
     struct renderer_pipeline_draw_call draw_calls[DRAW_CALLS_BUFFER_SIZE];
+    int prev_draw_calls_count;
     int draw_calls_count;
     int dropped_draw_calls_count;
 
@@ -76,7 +77,7 @@ void renderer_pipeline_remove_viewport(struct renderer_pipeline *this) {
     this->viewport_enabled = false;
 }
 struct rect renderer_pipeline_get_viewport(const struct renderer_pipeline *this) {
-    return this->viewport;
+    return this->viewport_enabled ? this->viewport : rect_0;
 }
 
 struct vector2 renderer_pipeline_get_output_size(const struct renderer_pipeline *this) {
@@ -169,6 +170,7 @@ void renderer_pipeline_flush(struct renderer_pipeline *this) {
         renderer_primitive_draw(draw_call.primitive, draw_call.rect, this->viewport, output_size, this->native_renderer);
     }
 
+    this->prev_draw_calls_count = this->draw_calls_count;
     this->draw_calls_count = 0;
 }
 
@@ -181,4 +183,10 @@ struct action* renderer_pipeline_get_on_viewport_changed(struct renderer_pipelin
 }
 struct action* renderer_pipeline_get_on_output_size_changed(struct renderer_pipeline *this) {
     return &this->on_output_size_changed;
+}
+
+
+
+int renderer_pipeline_get_prev_draw_call_count(const struct renderer_pipeline *this) {
+    return this->prev_draw_calls_count;
 }

@@ -81,3 +81,7 @@ void entity_collection_pre_update(struct entity_collection *this) {
         entity_collect_garbage(node.value);
     }
 }
+
+unsigned int entity_collection_count(const struct entity_collection *this) {
+    return dictionary_count(this->entities);
+}

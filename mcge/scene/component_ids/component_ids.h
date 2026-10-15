@@ -14,4 +14,6 @@ MCGE_API void component_ids_clear(const struct component_ids *this);
 
 MCGE_API struct component* component_ids_try_get(const struct component_ids *this, uint128_t id);
 
+MCGE_API unsigned int component_ids_count(const struct component_ids *this);
+
 #endif //MYCOOLGAMEENGINE_COMPONENT_IDS_H

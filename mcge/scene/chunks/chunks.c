@@ -210,3 +210,10 @@ static void handle_component_resize(void *listener, void *context) {
     chunks_remove_component(this, data->rect_pair.rect1, component);
     chunks_add_component_with_resize(this, component);
 }
+
+unsigned int chunks_get_number(const struct chunks *this) {
+    return CHUNKS_SIZE;
+}
+float chunks_get_chunk_size(const struct chunks *this) {
+    return this->chunk_size;
+}

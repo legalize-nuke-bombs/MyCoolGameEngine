@@ -36,4 +36,8 @@ MCGE_API struct entity* scene_try_get_entity(uint128_t id);
 MCGE_API struct component* scene_try_get_component(uint128_t id);
 MCGE_API void scene_capture_entity(struct entity *entity);
 
+MCGE_API unsigned int scene_get_root_entities_count(void);
+MCGE_API unsigned int scene_get_total_entities_count(void);
+MCGE_API unsigned int scene_get_components_count(void);
+
 #endif //MYCOOLGAMEENGINE_SCENE_H
