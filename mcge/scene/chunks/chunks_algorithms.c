@@ -13,7 +13,7 @@
 void chunks_algorithms_for_each(const struct rect rect, bool type_validation(const struct component *target), void f(struct component *target, void *context), void *f_context) {
     const struct chunks *chunks = scene_get_chunks();
     int x_start, x_end, y_start, y_end;
-    chunks_get_rect_indexes(chunks, rect, &x_start, &x_end, &y_start, &y_end);
+    chunks_get_safe_rect_indexes(chunks, rect, &x_start, &x_end, &y_start, &y_end);
     for (int x = x_start; x <= x_end; x++) {
         for (int y = y_start; y <= y_end; y++) {
             const struct dictionary *types = chunks_chunk_get_types(chunks, x, y);
@@ -45,7 +45,7 @@ void chunks_algorithms_for_each(const struct rect rect, bool type_validation(con
 void chunks_algorithms_for_each_typed(const struct rect rect, const char *component_key, void f(struct component* target, void *context), void *f_context) {
     const struct chunks *chunks = scene_get_chunks();
     int x_start, x_end, y_start, y_end;
-    chunks_get_rect_indexes(chunks, rect, &x_start, &x_end, &y_start, &y_end);
+    chunks_get_safe_rect_indexes(chunks, rect, &x_start, &x_end, &y_start, &y_end);
     for (int x = x_start; x <= x_end; x++) {
         for (int y = y_start; y <= y_end; y++) {
             const struct dictionary* components = chunks_chunk_get_components_by_type(chunks, x, y, component_key);

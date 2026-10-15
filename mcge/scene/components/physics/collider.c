@@ -207,7 +207,7 @@ static void collider_on_movement(struct component *base) {
     collider_validate_old_intersections(this, rect);
 
     int x_start, x_end, y_start, y_end;
-    chunks_get_rect_indexes(this->chunks, rect, &x_start, &x_end, &y_start, &y_end);
+    chunks_get_safe_rect_indexes(this->chunks, rect, &x_start, &x_end, &y_start, &y_end);
 
     for (int x = x_start; x <= x_end; x++) {
         for (int y = y_start; y <= y_end; y++) {
@@ -245,7 +245,7 @@ static struct entity* collider_try_get_obstacle_among(const struct collider *thi
 
 struct entity* collider_try_get_obstacle(const struct collider *this, const struct rect current_rect, const struct rect rect) {
     int x_start, x_end, y_start, y_end;
-    chunks_get_rect_indexes(this->chunks, rect, &x_start, &x_end, &y_start, &y_end);
+    chunks_get_safe_rect_indexes(this->chunks, rect, &x_start, &x_end, &y_start, &y_end);
 
     for (int x = x_start; x <= x_end; x++) {
         for (int y = y_start; y <= y_end; y++) {

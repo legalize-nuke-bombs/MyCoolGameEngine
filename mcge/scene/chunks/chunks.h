@@ -17,7 +17,7 @@ MCGE_API void chunks_destroy(struct chunks *this);
 
 MCGE_API void chunks_clear(struct chunks *this);
 
-MCGE_API void chunks_get_rect_indexes(const struct chunks *this, struct rect rect, int *x_start, int *x_end, int *y_start, int *y_end);
+MCGE_API void chunks_get_safe_rect_indexes(const struct chunks *this, struct rect rect, int *x_start, int *x_end, int *y_start, int *y_end);
 
 MCGE_API struct dictionary* chunks_chunk_get_types(const struct chunks *this, int index_x, int index_y);
 MCGE_API struct dictionary* chunks_chunk_get_components_by_type(const struct chunks *this, int index_x, int index_y, const char *component_type);

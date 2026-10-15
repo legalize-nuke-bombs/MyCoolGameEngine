@@ -80,7 +80,7 @@ static int chunks_get_position_index(const struct chunks* this, const double pos
     return (CHUNKS_SIZE / 2) + offset;
 }
 
-void chunks_get_rect_indexes(const struct chunks *this, const struct rect rect, int *x_start, int *x_end, int *y_start, int *y_end) {
+static void chunks_get_raw_rect_indexes(const struct chunks *this, const struct rect rect, int *x_start, int *x_end, int *y_start, int *y_end) {
     const double min_x = rect.position.x - rect.size.x / 2;
     const double max_x = rect.position.x + rect.size.x / 2;
     const double min_y = rect.position.y - rect.size.y / 2;
@@ -91,24 +91,33 @@ void chunks_get_rect_indexes(const struct chunks *this, const struct rect rect, 
     *y_start = chunks_get_position_index(this, min_y);
     *y_end = chunks_get_position_index(this, max_y);
 }
+void chunks_get_safe_rect_indexes(const struct chunks *this, const struct rect rect, int *x_start, int *x_end, int *y_start, int *y_end) {
+    chunks_get_raw_rect_indexes(this, rect, x_start, x_end, y_start, y_end);
+    if (*x_start < 0) {
+        *x_start = 0;
+    }
+    if (*y_start < 0) {
+        *y_start = 0;
+    }
+    if (*x_end >= CHUNKS_SIZE) {
+        *x_end = CHUNKS_SIZE - 1;
+    }
+    if (*y_end >= CHUNKS_SIZE) {
+        *y_end = CHUNKS_SIZE - 1;
+    }
+}
 
 struct dictionary* chunks_chunk_get_types(const struct chunks *this, const int index_x, const int index_y) {
-    if (index_x < 0 || index_y < 0 || index_x >= CHUNKS_SIZE || index_y >= CHUNKS_SIZE) {
-        return NULL;
-    }
     return chunk_get_types(&this->chunks[index_x][index_y]);
 }
 
 struct dictionary* chunks_chunk_get_components_by_type(const struct chunks *this, const int index_x, const int index_y, const char *component_type) {
-    if (index_x < 0 || index_y < 0 || index_x >= CHUNKS_SIZE || index_y >= CHUNKS_SIZE) {
-        return NULL;
-    }
     return chunk_get_components_by_type(&this->chunks[index_x][index_y], component_type);
 }
 
 static void chunks_remove_component(const struct chunks *this, const struct rect rect, const struct component *component) {
     int start_x, end_x, start_y, end_y;
-    chunks_get_rect_indexes(this, rect, &start_x, &end_x, &start_y, &end_y);
+    chunks_get_safe_rect_indexes(this, rect, &start_x, &end_x, &start_y, &end_y);
     for (int x = start_x; x <= end_x; x++) {
         for (int y = start_y; y <= end_y; y++) {
             chunk_try_remove_component(&this->chunks[x][y], component);
@@ -118,7 +127,7 @@ static void chunks_remove_component(const struct chunks *this, const struct rect
 
 static void chunks_add_component_without_resize(struct chunks *this, struct component *component) {
     int start_x, end_x, start_y, end_y;
-    chunks_get_rect_indexes(this, component_get_rect(component), &start_x, &end_x, &start_y, &end_y);
+    chunks_get_safe_rect_indexes(this, component_get_rect(component), &start_x, &end_x, &start_y, &end_y);
     for (int x = start_x; x <= end_x; x++) {
         for (int y = start_y; y <= end_y; y++) {
             chunk_try_add_component(&this->chunks[x][y], component);
@@ -129,7 +138,7 @@ static void chunks_add_component_without_resize(struct chunks *this, struct comp
 static void chunks_add_component_with_resize(struct chunks* this, struct component* component) {
     int start_x, end_x, start_y, end_y;
     while (1) {
-        chunks_get_rect_indexes(this, component_get_rect(component), &start_x, &end_x, &start_y, &end_y);
+        chunks_get_raw_rect_indexes(this, component_get_rect(component), &start_x, &end_x, &start_y, &end_y);
         if (start_x >= 0 && end_x < CHUNKS_SIZE && start_y >= 0 && end_y < CHUNKS_SIZE) {
             break;
         }
@@ -201,9 +210,9 @@ static void handle_component_resize(void *listener, void *context) {
     }
 
     int old_x_start, old_x_end, old_y_start, old_y_end;
-    chunks_get_rect_indexes(this, data->rect_pair.rect1, &old_x_start, &old_x_end, &old_y_start, &old_y_end);
+    chunks_get_raw_rect_indexes(this, data->rect_pair.rect1, &old_x_start, &old_x_end, &old_y_start, &old_y_end);
     int new_x_start, new_x_end, new_y_start, new_y_end;
-    chunks_get_rect_indexes(this, data->rect_pair.rect2, &new_x_start, &new_x_end, &new_y_start, &new_y_end);
+    chunks_get_raw_rect_indexes(this, data->rect_pair.rect2, &new_x_start, &new_x_end, &new_y_start, &new_y_end);
     if (old_x_start == new_x_start && old_x_end == new_x_end && old_y_start == new_y_start && old_y_end == new_y_end) {
         return;
     }
