@@ -312,6 +312,9 @@ add_library(mcge SHARED
         mcge/debug_overlay/debug_overlay.c
         mcge/scene/profiler/scene_profiler.h
         mcge/scene/profiler/scene_profiler.c
+        mcge/memory/allocator.h
+        mcge/memory/allocator.c
+        mcge/memory/allocator_groups.h
 )
 set_target_properties(mcge PROPERTIES DEFINE_SYMBOL MCGE_EXPORT)
 if(WIN32)
