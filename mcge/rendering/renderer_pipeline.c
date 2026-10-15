@@ -145,6 +145,7 @@ void renderer_pipeline_flush(struct renderer_pipeline *this) {
     if (!this->viewport_enabled) {
         light_map_clear_draw_calls((struct light_map*)this->light_map);
         this->draw_calls_count = 0;
+        this->prev_draw_calls_count = 0;
         const char* no_active_camera_label = "NO ACTIVE CAMERA IN THE SCENE";
         const float debug_char_size = 8;
         SDL_SetRenderDrawColor(this->native_renderer, color_white.r, color_white.g, color_white.b, color_white.a);
