@@ -9,6 +9,15 @@
 #include "mcge/logging/logger.h"
 
 
+#if defined(_WIN32)
+    #include <malloc.h>
+#elif defined(__APPLE__)
+    #include <malloc/malloc.h>
+#elif defined(__linux__)
+    #include <malloc.h>
+#endif
+
+
 static struct {
     ll total_allocations_num;
     ll total_allocations_size;
@@ -18,9 +27,20 @@ static struct {
 } allocator;
 
 
-
 static ll allocator_ptr_size(void *ptr) {
+    if (ptr == NULL) {
+        return 0;
+    }
+#if defined(_WIN32)
     return _msize(ptr);
+#elif defined(__APPLE__)
+    return (ll)malloc_size(ptr);
+#elif defined(__linux__)
+    return (ll)malloc_usable_size(ptr);
+#else
+    #warning "Allocator: unsupported platform"
+    return 0;
+#endif
 }
 
 
