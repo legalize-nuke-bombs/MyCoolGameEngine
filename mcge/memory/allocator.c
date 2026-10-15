@@ -46,13 +46,19 @@ const struct msystem allocator_msystem = {
 };
 
 
-void* allocator_calloc(const unsigned int elements, const unsigned int element_size) {
+void* allocator_new(const unsigned int size) {
+    void *ptr = malloc(size);
+    allocator.total_allocations_num++;
+    allocator.total_allocations_size += allocator_ptr_size(ptr);
+    return ptr;
+}
+void* allocator_new0(const unsigned int elements, const unsigned int element_size) {
     void *ptr = calloc(elements, element_size);
     allocator.total_allocations_num++;
     allocator.total_allocations_size += allocator_ptr_size(ptr);
     return ptr;
 }
-void allocator_free(void *ptr) {
+void allocator_delete(void *ptr) {
     if (ptr == NULL) {
         return;
     }

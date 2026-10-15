@@ -6,6 +6,8 @@
 
 #include <stdlib.h>
 
+#include "mcge/memory/allocator.h"
+
 struct list list_create(int capacity) {
     if (capacity <= 0) {
         capacity = 1;
@@ -18,7 +20,7 @@ struct list list_create(int capacity) {
     return list;
 }
 void list_destroy(struct list *this) {
-    free(this->_data);
+    allocator_delete(this->_data);
 }
 
 int list_count(const struct list *this) {
@@ -31,11 +33,11 @@ void* list_get(const struct list *this, const int index) {
 
 static void list_realloc(struct list *list) {
     const int new_capacity = 2 * list->_capacity;
-    void **new_data = malloc(sizeof(void *) * new_capacity);
+    void **new_data = allocator_new(sizeof(void *) * new_capacity);
     for (int i = 0; i < list->_count; i++) {
         new_data[i] = list->_data[i];
     }
-    free(list->_data);
+    allocator_delete(list->_data);
     list->_data = new_data;
     list->_capacity = new_capacity;
 }
@@ -44,7 +46,7 @@ void list_add(struct list *this, void *data) {
         if (this->_capacity < 1) {
             this->_capacity = 1;
         }
-        this->_data = malloc(sizeof(void *) * this->_capacity);
+        this->_data = allocator_new(sizeof(void *) * this->_capacity);
     }
     else if (this->_count >= this->_capacity) {
         list_realloc(this);
