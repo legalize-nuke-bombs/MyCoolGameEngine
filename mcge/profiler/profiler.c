@@ -19,9 +19,6 @@ static struct {
     struct time_estimator *update;
     struct time_estimator *rendering;
 
-    struct action* on_hotkey;
-    unsigned int on_hotkey_token;
-
     struct action* pre_frame;
     unsigned int pre_frame_token;
 
@@ -91,9 +88,6 @@ static void profiler_handle_post_rendering(void *listener, void *context) {
 }
 
 static void profiler_on_enable(struct engine_arguments args) {
-    profiler.on_hotkey = keyboard_require_action_on_key_pressed("F3");
-    action_subscribe(profiler.on_hotkey, NULL, profiler_handle_hotkey_pressed, &profiler.on_hotkey_token);
-
     profiler.pre_frame = engine_events_pre_frame();
     action_subscribe(profiler.pre_frame, NULL, profiler_handle_pre_frame, &profiler.pre_frame_token);
 
@@ -111,9 +105,6 @@ static void profiler_on_enable(struct engine_arguments args) {
 }
 
 static void profiler_on_disable(void) {
-    action_unsubscribe(profiler.on_hotkey, profiler.on_hotkey_token);
-    profiler.on_hotkey = NULL;
-
     action_unsubscribe(profiler.pre_frame, profiler.pre_frame_token);
     profiler.pre_frame = NULL;
 
