@@ -7,8 +7,6 @@
 #include <stddef.h>
 
 #include "../utils/time_estimator.h"
-#include "../devices/keyboard.h"
-#include "../logging/logger.h"
 #include "../engine/events/engine_events.h"
 #include "../utils/action.h"
 #include "../engine/msystem.h"
@@ -49,20 +47,6 @@ static void profiler_on_destroy(void) {
 
 
 
-
-static void profiler_handle_hotkey_pressed(void *listener, void *context) {
-    const double frame_ms = time_estimator_average_block_ms(profiler.frame);
-    const double update_ms = time_estimator_average_block_ms(profiler.update);
-    const double render_ms = time_estimator_average_block_ms(profiler.rendering);
-    const double unknown_ms = frame_ms - update_ms - render_ms;
-    const double update_ms_percent = update_ms / frame_ms * 100;
-    const double render_ms_percent = render_ms / frame_ms * 100;
-    const double unknown_ms_percent = unknown_ms / frame_ms * 100;
-
-    const double fps = 1000 / frame_ms;
-
-    logger_info("Profiler output. FPS: %f. Frame: %f ms (update %f ms %f%%, render %f ms %f%%, unknown %f ms %f%%)", fps, frame_ms, update_ms, update_ms_percent, render_ms, render_ms_percent, unknown_ms, unknown_ms_percent);
-}
 
 static void profiler_update(void) {
     time_estimator_update(profiler.frame);
