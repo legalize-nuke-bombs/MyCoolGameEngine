@@ -4,6 +4,7 @@ entity name=GameState components=[
     clock seconds=0 speed=3600
     sky day=[125 125 150 255] night=[40 40 70 255]
     scene_switcher key=Escape script=scripts/menu.mcge
+    fullscreen_toggler key=F11
 ]
 
 entity name=Terrain size=[500 500] components=[
