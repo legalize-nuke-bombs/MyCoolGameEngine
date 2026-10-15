@@ -70,7 +70,6 @@
 #include "scene/components/rendering/renderer_settings.h"
 #include "scene/components/custom/clickable.h"
 #include "scene/entity.h"
-#include "scene/profiler/scene_profiler.h"
 #include "scene/entity_collection.h"
 #include "scene/entity_factory.h"
 #include "scene/prefabs/prefab.h"

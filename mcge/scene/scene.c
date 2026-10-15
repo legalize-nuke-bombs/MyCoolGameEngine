@@ -18,7 +18,6 @@
 #include "chunks/chunks.h"
 #include "components/component_factory.h"
 #include "../interpreter/interpreter.h"
-#include "profiler/scene_profiler.h"
 
 
 static struct {
@@ -59,13 +58,11 @@ static void scene_on_create(void) {
     scene.component_ids = component_ids_create();
     scene.tmap = tmap_create();
     scene.chunks = chunks_create();
-    scene.profiler = scene_profiler_create();
 }
 
 static void scene_on_destroy(void) {
     logger_info("Scene %s is destroying...", scene.name);
 
-    scene_profiler_destroy(scene.profiler);
     chunks_destroy(scene.chunks);
     entity_collection_destroy(scene.entities);
     entity_ids_destroy(scene.entity_ids);
@@ -99,7 +96,6 @@ static void scene_on_disable(void) {
     component_ids_clear(scene.component_ids);
     tmap_clear(scene.tmap);
     chunks_clear(scene.chunks);
-    scene_profiler_clear(scene.profiler);
 }
 
 const struct msystem scene_msystem = {
@@ -141,7 +137,6 @@ static void scene_update(void *listener, void *context) {
     scene_handle_switch();
     entity_collection_pre_update(scene.entities);
     tmap_update(scene.tmap, update_context);
-    scene_profiler_update(scene.profiler);
 }
 
 

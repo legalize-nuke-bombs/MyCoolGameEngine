@@ -310,8 +310,6 @@ add_library(mcge SHARED
         mcge/scene/components/custom/clickable.c
         mcge/debug_overlay/debug_overlay.h
         mcge/debug_overlay/debug_overlay.c
-        mcge/scene/profiler/scene_profiler.h
-        mcge/scene/profiler/scene_profiler.c
         mcge/allocator/allocator.h
         mcge/allocator/allocator.c
 )
