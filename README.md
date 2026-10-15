@@ -29,5 +29,5 @@ You can view a demo game created with this engine [here](demo).
 * Sound randomization
 ## Other
 * A development mode supporting hot reloading via a hotkey or upon changes to the scene file on disk
-* A simple profiler for measuring frame time components
+* A simple build in debug overlay for development mode
 * Behavior trees

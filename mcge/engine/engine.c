@@ -25,6 +25,7 @@
 #include "../rendering/renderer.h"
 #include "../scene/scene.h"
 #include "mcge/audio/audio.h"
+#include "mcge/debug_overlay/debug_overlay.h"
 #include "mcge/devices/mouse.h"
 #include "mcge/modules/text/text_module.h"
 
@@ -94,6 +95,7 @@ void engine_create(void) {
     engine_register_msystem(&audio_msystem);
     engine_register_msystem(&interpreter_msystem);
     engine_register_msystem(&profiler_msystem);
+    engine_register_msystem(&debug_overlay_msystem);
     engine_register_msystem(&engine_closer_msystem);
     engine_register_msystem(&engine_restarter_msystem);
     logger_info("Engine knows %d msystems", engine.msystems_count);

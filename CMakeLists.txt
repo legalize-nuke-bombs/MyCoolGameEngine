@@ -308,6 +308,8 @@ add_library(mcge SHARED
         mcge/modules/text/rendering/renderer_text.c
         mcge/scene/components/custom/clickable.h
         mcge/scene/components/custom/clickable.c
+        mcge/debug_overlay/debug_overlay.h
+        mcge/debug_overlay/debug_overlay.c
 )
 set_target_properties(mcge PROPERTIES DEFINE_SYMBOL MCGE_EXPORT)
 if(WIN32)
