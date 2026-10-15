@@ -75,6 +75,7 @@
 #include "scene/prefabs/prefabs.h"
 #include "scene/scene.h"
 #include "scene/tmap/tmap.h"
+#include "debug_overlay/debug_overlay.h"
 #include "utils/action.h"
 #include "utils/color.h"
 #include "utils/dictionary.h"

@@ -13,5 +13,6 @@ MCGE_API extern const struct msystem renderer_msystem;
 
 MCGE_API struct SDL_Renderer* renderer_get_native_renderer(void);
 MCGE_API struct renderer_pipeline* renderer_get_pipeline(void);
+MCGE_API struct action* renderer_get_post_pipeline(void);
 
 #endif //MYCOOLGAMEENGINE_RENDERER_H

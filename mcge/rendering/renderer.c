@@ -17,6 +17,8 @@ static struct {
     SDL_Renderer *native;
     struct renderer_pipeline *pipeline;
 
+    struct action post_pipeline;
+
     struct action* on_rendering;
     unsigned int on_rendering_subscription_token;
 } renderer;
@@ -35,9 +37,11 @@ static void renderer_on_create(void) {
         return;
     }
     renderer.pipeline = renderer_pipeline_create(renderer.native);
+    renderer.post_pipeline = action_create();
 }
 static void renderer_on_destroy(void) {
     renderer_pipeline_destroy(renderer.pipeline);
+    action_destroy(&renderer.post_pipeline);
     SDL_DestroyRenderer(renderer.native);
     SDL_DestroyWindow(renderer.window);
     SDL_Quit();
@@ -47,10 +51,11 @@ static void renderer_update(void *listener, void *context) {
     SDL_SetRenderDrawColor(renderer.native, 0, 0, 0, 255);
     SDL_RenderClear(renderer.native);
     renderer_pipeline_flush(renderer.pipeline);
+    action_invoke(&renderer.post_pipeline, NULL);
     SDL_RenderPresent(renderer.native);
 }
 
-static void renderer_on_enable(struct engine_arguments args) {
+static void renderer_on_enable(const struct engine_arguments args) {
     renderer_pipeline_enable(renderer.pipeline);
     if (args.program_name) SDL_SetWindowTitle(renderer.window, args.program_name);
     renderer.on_rendering = engine_events_on_rendering();
@@ -75,4 +80,7 @@ SDL_Renderer* renderer_get_native_renderer(void) {
 }
 struct renderer_pipeline* renderer_get_pipeline(void) {
     return renderer.pipeline;
+}
+struct action* renderer_get_post_pipeline(void) {
+    return &renderer.post_pipeline;
 }
