@@ -13,7 +13,7 @@
 #include <stdio.h>
 #include "mcge/engine/version.h"
 #include "mcge/profiler/profiler.h"
-#include "mcge/profiler/time_estimator.h"
+#include "../utils/time_estimator.h"
 #include "mcge/rendering/renderer_pipeline.h"
 #include "mcge/scene/scene.h"
 #include "mcge/scene/chunks/chunks.h"

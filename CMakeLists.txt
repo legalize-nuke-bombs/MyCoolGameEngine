@@ -152,8 +152,8 @@ add_library(mcge SHARED
         mcge/devices/keyboard.c
         mcge/profiler/profiler.h
         mcge/profiler/profiler.c
-        mcge/profiler/time_estimator.h
-        mcge/profiler/time_estimator.c
+        mcge/utils/time_estimator.h
+        mcge/utils/time_estimator.c
         mcge/scene/components/core/idle.h
         mcge/scene/components/core/idle.c
         mcge/utils/file_listener.h
@@ -310,6 +310,8 @@ add_library(mcge SHARED
         mcge/scene/components/custom/clickable.c
         mcge/debug_overlay/debug_overlay.h
         mcge/debug_overlay/debug_overlay.c
+        mcge/scene/profiler/scene_profiler.h
+        mcge/scene/profiler/scene_profiler.c
 )
 set_target_properties(mcge PROPERTIES DEFINE_SYMBOL MCGE_EXPORT)
 if(WIN32)

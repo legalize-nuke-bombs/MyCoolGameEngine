@@ -31,6 +31,7 @@ MCGE_API struct action* scene_get_on_component_resize(void);
 
 MCGE_API const struct tmap* scene_get_tmap(void);
 MCGE_API const struct chunks* scene_get_chunks(void);
+MCGE_API const struct scene_profiler* scene_get_profiler(void);
 
 MCGE_API struct entity* scene_try_get_entity(uint128_t id);
 MCGE_API struct component* scene_try_get_component(uint128_t id);
