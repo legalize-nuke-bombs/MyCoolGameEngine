@@ -33,3 +33,4 @@ You can view a demo game created with this engine [here](demo).
 * A development mode supporting hot reloading via a hotkey or upon changes to the scene file on disk
 * A simple build in debug overlay for development mode
 * Behavior trees
+* A custom allocator for convenient tracking of memory leaks and runtime information about allocated memory
