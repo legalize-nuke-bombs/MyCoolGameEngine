@@ -8,6 +8,7 @@
 
 #include "../audio.h"
 #include "mcge/logging/logger.h"
+#include "mcge/memory/allocator.h"
 
 
 struct clip {
@@ -20,7 +21,7 @@ struct clip {
 
 
 struct clip* clip_create(char *id, char *path, const enum clip_loading_mode loading_mode, const enum clip_storing_mode storing_mode) {
-    struct clip* this = calloc(1, sizeof(struct clip));
+    struct clip* this = allocator_new0(1, sizeof(struct clip));
     this->id = id;
     this->path = path;
     this->storing_mode = storing_mode;
@@ -30,10 +31,10 @@ struct clip* clip_create(char *id, char *path, const enum clip_loading_mode load
     return this;
 }
 void clip_destroy(struct clip* this) {
-    free(this->id);
-    free(this->path);
+    allocator_delete(this->id);
+    allocator_delete(this->path);
     if (this->native_audio) MIX_DestroyAudio(this->native_audio);
-    free(this);
+    allocator_delete(this);
 }
 
 const char* clip_get_id(const struct clip* this) {

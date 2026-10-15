@@ -7,6 +7,7 @@
 #include <stdlib.h>
 
 #include "bt_node.h"
+#include "mcge/memory/allocator.h"
 
 
 struct bt_graph {
@@ -15,13 +16,13 @@ struct bt_graph {
 
 
 struct bt_graph* bt_graph_create(struct bt_node *root) {
-    struct bt_graph* this = calloc(1, sizeof(struct bt_graph));
+    struct bt_graph* this = allocator_new0(1, sizeof(struct bt_graph));
     this->root = root;
     return this;
 }
 void bt_graph_destroy(struct bt_graph *this) {
     if (this->root) bt_node_destroy(this->root);
-    free(this);
+    allocator_delete(this);
 }
 
 struct bt_node* bt_graph_root(const struct bt_graph *this) {

@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 #include "renderer_primitive_internal.h"
+#include "mcge/memory/allocator.h"
 
 
 void renderer_primitive_draw(struct renderer_primitive* this, const struct rect rect, const struct rect viewport, const struct vector2 output_size, struct SDL_Renderer* renderer) {
@@ -18,5 +19,5 @@ void renderer_primitive_destroy(struct renderer_primitive* this) {
     if (this->vtable->on_destroy) {
         this->vtable->on_destroy(this);
     }
-    free(this);
+    allocator_delete(this);
 }

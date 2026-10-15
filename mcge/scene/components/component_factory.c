@@ -28,6 +28,7 @@
 #include "rendering/box_renderer_rigid_directed.h"
 #include "rendering/renderer_settings.h"
 #include "custom/clickable.h"
+#include "mcge/memory/allocator.h"
 #include "ui/hud.h"
 
 static struct factory component_factory;
@@ -68,7 +69,7 @@ struct component* component_factory_produce(const char* key, struct fields *fiel
     if (vtable == NULL) {
         return NULL;
     }
-    struct component *component = calloc(1, vtable->size);
+    struct component *component = allocator_new0(1, vtable->size);
     component_base_create(component, vtable, parent);
     if (vtable->on_create) {
         vtable->on_create(component, fields);

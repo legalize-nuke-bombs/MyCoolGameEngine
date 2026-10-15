@@ -39,12 +39,12 @@ struct renderer_pipeline {
 
 struct renderer_pipeline* renderer_pipeline_create(SDL_Renderer *native_renderer) {
     logger_info("Renderer pipeline is creating...");
-    struct renderer_pipeline *this = calloc(1, sizeof(struct renderer_pipeline));
+    struct renderer_pipeline *this = allocator_new0(1, sizeof(struct renderer_pipeline));
     this->native_renderer = native_renderer;
     this->on_viewport_changed = action_create();
     this->on_output_size_changed = action_create();
     this->light_map = light_map_create();
-    this->light_map_layer = renderer_layer_create(strdup("Light Map Layer"), 100);
+    this->light_map_layer = renderer_layer_create(allocator_strcpy("Light Map Layer"), 100);
     return this;
 }
 void renderer_pipeline_destroy(struct renderer_pipeline *this) {
@@ -53,7 +53,7 @@ void renderer_pipeline_destroy(struct renderer_pipeline *this) {
     renderer_layer_destroy(this->light_map_layer);
     action_destroy(&this->on_output_size_changed);
     action_destroy(&this->on_viewport_changed);
-    free(this);
+    allocator_delete(this);
 }
 
 void renderer_pipeline_enable(struct renderer_pipeline *this) {

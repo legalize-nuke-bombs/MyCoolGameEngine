@@ -9,6 +9,7 @@
 #include "tracks/tracks.h"
 #include "../engine/msystem.h"
 #include "mcge/logging/logger.h"
+#include "mcge/memory/allocator.h"
 
 
 #define AUDIO_FALLBACK_SAMPLE_RATE 44100
@@ -27,12 +28,12 @@ static struct {
 static MIX_Audio* audio_create_one_second_beep(void) {
     const SDL_AudioSpec spec = {.format = SDL_AUDIO_F32, .channels = 1, .freq = AUDIO_FALLBACK_SAMPLE_RATE};
     const size_t size = sizeof(float) * AUDIO_FALLBACK_SAMPLE_RATE;
-    float *samples = malloc(size);
+    float *samples = allocator_new(size);
     for (int i = 0; i < AUDIO_FALLBACK_SAMPLE_RATE; i++) {
         samples[i] = AUDIO_FALLBACK_AMPLITUDE * SDL_sinf(2 * SDL_PI_F * AUDIO_FALLBACK_FREQUENCY * (float)i / AUDIO_FALLBACK_SAMPLE_RATE);
     }
     MIX_Audio *beep = MIX_LoadRawAudio(audio.mixer, samples, size, &spec);
-    free(samples);
+    allocator_delete(samples);
     return beep;
 }
 

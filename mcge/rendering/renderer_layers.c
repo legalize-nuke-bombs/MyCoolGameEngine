@@ -7,6 +7,7 @@
 #include "../assets/asset_type.h"
 #include "../logging/logger.h"
 #include "../utils/fields.h"
+#include "mcge/memory/allocator.h"
 
 static void renderer_layers_destroy_item(void *item) {
     renderer_layer_destroy(item);
@@ -23,7 +24,7 @@ static void renderer_layers_on_add(struct fields *fields) {
     if (priority < 0 || priority > UINT8_MAX) {
         logger_warn("Renderer layer %s expected priority from 0 to %d, got %d", name ? name : "<null>", UINT8_MAX, priority);
     }
-    asset_storage_add(&renderer_layers, name, renderer_layer_create(strdup(name ? name : ""), (uint8_t)priority));
+    asset_storage_add(&renderer_layers, name, renderer_layer_create(allocator_strcpy(name ? name : ""), (uint8_t)priority));
 }
 static void renderer_layers_on_clear(void) {
     asset_storage_clear(&renderer_layers);

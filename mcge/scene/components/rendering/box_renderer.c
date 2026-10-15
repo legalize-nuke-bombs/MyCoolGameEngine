@@ -17,6 +17,7 @@
 #include "../../../rendering/renderer_layers.h"
 #include "../../../rendering/textures.h"
 #include "../../../utils/fields.h"
+#include "mcge/memory/allocator.h"
 
 struct box_renderer {
     struct component base;
@@ -59,7 +60,7 @@ static void box_renderer_on_create(struct component *base, struct fields *fields
         const int count = fields_list_count(textures);
         if (count > 0) {
             const int index = count > 1 ? random_next_int(0, count) : 0;
-            this->texture_name = strdup(fields_key(fields_list_get(textures, index)));
+            this->texture_name = allocator_strcpy(fields_key(fields_list_get(textures, index)));
         }
         this->texture_frame = fields_get_int(fields, "frame", 0);
     }
@@ -75,8 +76,8 @@ static void box_renderer_on_destroy(struct component *base) {
     if (this->square != NULL) {
         renderer_primitive_destroy(this->square);
     }
-    free(this->renderer_layer_name);
-    free(this->texture_name);
+    allocator_delete(this->renderer_layer_name);
+    allocator_delete(this->texture_name);
 }
 
 static void box_renderer_awake(struct component *base) {
@@ -87,7 +88,7 @@ static void box_renderer_awake(struct component *base) {
     if (this->renderer_layer == NULL) {
         this->renderer_layer = renderer_layers_try_get(this->renderer_layer_name);
     }
-    free(this->renderer_layer_name);
+    allocator_delete(this->renderer_layer_name);
     this->renderer_layer_name = NULL;
 
     if (this->square == NULL) {
@@ -99,7 +100,7 @@ static void box_renderer_awake(struct component *base) {
             this->square = renderer_square_create_from_texture(texture, this->texture_frame);
         }
     }
-    free(this->texture_name);
+    allocator_delete(this->texture_name);
     this->texture_name = NULL;
 }
 

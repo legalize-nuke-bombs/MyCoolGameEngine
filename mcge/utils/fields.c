@@ -9,8 +9,7 @@
 
 #include "list.h"
 #include "../logging/logger.h"
-
-
+#include "mcge/memory/allocator.h"
 
 
 struct fields_list {
@@ -154,7 +153,7 @@ static void reader_advance(struct reader *this) {
 }
 
 static char* token_dup(const struct token token) {
-    char *word = malloc(token.length + 1);
+    char *word = allocator_new(token.length + 1);
     memcpy(word, token.start, token.length);
     word[token.length] = '\0';
     return word;
@@ -172,7 +171,7 @@ static bool word_to_double(const char *word, double *out_value) {
 }
 
 static struct fields* fields_create(const struct token token) {
-    struct fields *this = calloc(1, sizeof(struct fields));
+    struct fields *this = allocator_new0(1, sizeof(struct fields));
     this->key = token_dup(token);
     this->line = token.line;
     this->is_number = word_to_double(this->key, &this->number);
@@ -189,8 +188,8 @@ static void fields_list_clear(struct fields_list *this) {
 
 static void fields_field_destroy(struct fields_field *this) {
     fields_list_clear(&this->value);
-    free(this->name);
-    free(this);
+    allocator_delete(this->name);
+    allocator_delete(this);
 }
 
 void fields_destroy(struct fields *this) {
@@ -198,8 +197,8 @@ void fields_destroy(struct fields *this) {
         fields_field_destroy(list_get(&this->fields, i));
     }
     list_destroy(&this->fields);
-    free(this->key);
-    free(this);
+    allocator_delete(this->key);
+    allocator_delete(this);
 }
 
 static struct fields_field* fields_find(const struct fields *this, const char *name) {
@@ -249,7 +248,7 @@ static struct fields* reader_parse_node(struct reader *this) {
     reader_advance(this);
 
     while (this->current.type == token_word && this->next.type == token_equals) {
-        struct fields_field *field = calloc(1, sizeof(struct fields_field));
+        struct fields_field *field = allocator_new0(1, sizeof(struct fields_field));
         field->name = token_dup(this->current);
         field->value.nodes = list_create(1);
         const int line = this->current.line;
@@ -281,7 +280,7 @@ static char* read_file(const char *filename) {
     const long size = ftell(file);
     fseek(file, 0, SEEK_SET);
 
-    char *buffer = malloc(size + 1);
+    char *buffer = allocator_new(size + 1);
     buffer[fread(buffer, 1, size, file)] = '\0';
     fclose(file);
     return buffer;
@@ -302,7 +301,7 @@ struct fields_list* fields_parse_file(const char *filename) {
     reader_advance(&reader);
     reader_advance(&reader);
 
-    struct fields_list *list = calloc(1, sizeof(struct fields_list));
+    struct fields_list *list = allocator_new0(1, sizeof(struct fields_list));
     list->nodes = list_create(8);
 
     while (reader.current.type == token_word) {
@@ -316,7 +315,7 @@ struct fields_list* fields_parse_file(const char *filename) {
         reader_fail(&reader, reader.current.line, "expected word");
     }
 
-    free(buffer);
+    allocator_delete(buffer);
     if (reader.failed) {
         fields_list_destroy(list);
         return NULL;
@@ -326,7 +325,7 @@ struct fields_list* fields_parse_file(const char *filename) {
 
 void fields_list_destroy(struct fields_list *this) {
     fields_list_clear(this);
-    free(this);
+    allocator_delete(this);
 }
 
 int fields_list_count(const struct fields_list *this) {
@@ -367,7 +366,7 @@ const char* fields_get_string(struct fields *this, const char *name, const char 
 }
 char* fields_dup_string(struct fields *this, const char *name, const char *default_value) {
     const char *word = fields_get_string(this, name, default_value);
-    return word != NULL ? strdup(word) : NULL;
+    return word != NULL ? allocator_strcpy(word) : NULL;
 }
 
 bool fields_get_bool(struct fields *this, const char *name, const bool default_value) {
@@ -473,16 +472,16 @@ void fields_warn_unknown(struct fields *this) {
 }
 
 struct fields* fields_clone(const struct fields *this) {
-    struct fields *clone = calloc(1, sizeof(struct fields));
-    clone->key = strdup(this->key);
+    struct fields *clone = allocator_new0(1, sizeof(struct fields));
+    clone->key = allocator_strcpy(this->key);
     clone->line = this->line;
     clone->is_number = this->is_number;
     clone->number = this->number;
     clone->fields = list_create(list_count(&this->fields));
     for (int i = 0; i < list_count(&this->fields); i++) {
         const struct fields_field *field = list_get(&this->fields, i);
-        struct fields_field *field_clone = calloc(1, sizeof(struct fields_field));
-        field_clone->name = strdup(field->name);
+        struct fields_field *field_clone = allocator_new0(1, sizeof(struct fields_field));
+        field_clone->name = allocator_strcpy(field->name);
         field_clone->asked = field->asked;
         field_clone->value.nodes = list_create(list_count(&field->value.nodes));
         for (int j = 0; j < list_count(&field->value.nodes); j++) {

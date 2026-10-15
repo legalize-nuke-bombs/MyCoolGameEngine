@@ -6,6 +6,8 @@
 
 #include <stdlib.h>
 
+#include "mcge/memory/allocator.h"
+
 
 struct renderer_layer {
     char *name;
@@ -14,14 +16,14 @@ struct renderer_layer {
 
 
 struct renderer_layer* renderer_layer_create(char *name, uint8_t priority) {
-    struct renderer_layer *layer = malloc(sizeof(struct renderer_layer));
+    struct renderer_layer *layer = allocator_new(sizeof(struct renderer_layer));
     layer->name = name;
     layer->priority = priority;
     return layer;
 }
 void renderer_layer_destroy(struct renderer_layer *layer) {
-    free(layer->name);
-    free(layer);
+    allocator_delete(layer->name);
+    allocator_delete(layer);
 }
 
 const char* renderer_layer_get_name(const struct renderer_layer *layer) {

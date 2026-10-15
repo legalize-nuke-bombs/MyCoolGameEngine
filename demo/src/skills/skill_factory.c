@@ -24,7 +24,7 @@ struct skill* skill_factory_produce(struct fields *fields, struct entity *self) 
         if (strcmp(vtable->key, key) != 0) {
             continue;
         }
-        struct skill *skill = calloc(1, vtable->size);
+        struct skill *skill = allocator_new0(1, vtable->size);
         skill_base_create(
             skill,
             vtable,

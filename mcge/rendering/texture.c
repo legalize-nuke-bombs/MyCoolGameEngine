@@ -10,6 +10,7 @@
 #include <SDL3_image/SDL_image.h>
 
 #include "../logging/logger.h"
+#include "mcge/memory/allocator.h"
 
 struct texture {
     char* id;
@@ -33,7 +34,7 @@ static void texture_load(struct texture* this);
 
 struct texture* texture_create(char* id, char* path, const int tile_w, const int tile_h, const int tiles_count, const enum texture_loading_mode loading_mode, SDL_Renderer* native_renderer) {
     logger_debug("Texture %s is creating...", id);
-    struct texture* this = calloc(1, sizeof(struct texture));
+    struct texture* this = allocator_new0(1, sizeof(struct texture));
 
     this->id = id;
     this->path = path;
@@ -55,12 +56,12 @@ struct texture* texture_create(char* id, char* path, const int tile_w, const int
 }
 void texture_destroy(struct texture* this) {
     logger_debug("Texture %s is destroying...", this->id);
-    free(this->id);
-    free(this->path);
+    allocator_delete(this->id);
+    allocator_delete(this->path);
     if (this->native_texture != NULL) {
         SDL_DestroyTexture(this->native_texture);
     }
-    free(this);
+    allocator_delete(this);
 }
 
 const char* texture_get_id(const struct texture* this) {

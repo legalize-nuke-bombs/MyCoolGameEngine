@@ -8,6 +8,7 @@
 #include "../../logging/logger.h"
 #include "../../utils/fields.h"
 #include "../../utils/list.h"
+#include "mcge/memory/allocator.h"
 
 
 static void sounds_destroy_item(void *item) {
@@ -25,7 +26,7 @@ static void sounds_on_add(struct fields *fields) {
     struct list clip_names = list_create(1);
     const struct fields_list *clips = fields_get_list(fields, "clips");
     for (int i = 0; i < fields_list_count(clips); i++) {
-        list_add(&clip_names, strdup(fields_key(fields_list_get(clips, i))));
+        list_add(&clip_names, allocator_strcpy(fields_key(fields_list_get(clips, i))));
     }
     if (list_count(&clip_names) == 0) {
         logger_warn("Sound %s expected a list of clips in field `clips`", name);

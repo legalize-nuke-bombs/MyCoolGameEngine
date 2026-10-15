@@ -27,7 +27,7 @@ void skill_destroy(struct skill *this) {
     if (this->vtable->on_destroy) {
         this->vtable->on_destroy(this);
     }
-    free(this);
+    allocator_delete(this);
 }
 
 void skill_enable(struct skill *this) {

@@ -10,16 +10,16 @@
 
 
 static struct {
-    ull total_allocations_num;
-    ull total_allocations_size;
+    ll total_allocations_num;
+    ll total_allocations_size;
 
-    ull total_frees_num;
-    ull total_frees_size;
+    ll total_frees_num;
+    ll total_frees_size;
 } allocator;
 
 
 
-static ull allocator_ptr_size(void *ptr) {
+static ll allocator_ptr_size(void *ptr) {
     return _msize(ptr);
 }
 
@@ -68,23 +68,39 @@ void allocator_delete(void *ptr) {
 }
 
 
-ull allocator_get_total_allocations_num(void) {
+ll allocator_get_total_allocations_num(void) {
     return allocator.total_allocations_num;
 }
-ull allocator_get_total_allocations_size(void) {
+ll allocator_get_total_allocations_size(void) {
     return allocator.total_allocations_size;
 }
 
-ull allocator_get_total_frees_num(void) {
+ll allocator_get_total_frees_num(void) {
     return allocator.total_frees_num;
 }
-ull allocator_get_total_frees_size(void) {
+ll allocator_get_total_frees_size(void) {
     return allocator.total_frees_size;
 }
 
-ull allocator_get_active_allocations_num(void) {
+ll allocator_get_active_allocations_num(void) {
     return allocator.total_allocations_num - allocator.total_frees_num;
 }
-ull allocator_get_active_allocations_size(void) {
+ll allocator_get_active_allocations_size(void) {
     return allocator.total_allocations_size - allocator.total_frees_size;
+}
+
+
+
+
+
+char* allocator_strcpy(const char *source) {
+    if (source == NULL) {
+        return NULL;
+    }
+    const size_t length = strlen(source) + 1;
+    char *output = allocator_new(length);
+    if (output != NULL) {
+        memcpy(output, source, length);
+    }
+    return output;
 }

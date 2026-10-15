@@ -10,6 +10,7 @@
 #include "../logging/logger.h"
 #include "../utils/list.h"
 #include "../utils/pointer_dictionary.h"
+#include "mcge/memory/allocator.h"
 
 struct entity_collection {
     struct dictionary *entities;
@@ -21,7 +22,7 @@ struct entity_collection {
 
 struct entity_collection *entity_collection_create(void) {
     logger_info("Entity_collection is creating...");
-    struct entity_collection *this = calloc(1, sizeof(struct entity_collection));
+    struct entity_collection *this = allocator_new0(1, sizeof(struct entity_collection));
     this->entities = pointer_dictionary_build(4);
     this->dead = list_create(16);
     return this;
@@ -43,7 +44,7 @@ void entity_collection_destroy(struct entity_collection *this) {
     entity_collection_destroy_everyone(this);
     dictionary_destroy(this->entities);
     list_destroy(&this->dead);
-    free(this);
+    allocator_delete(this);
 }
 
 void entity_collection_clear(struct entity_collection *this) {

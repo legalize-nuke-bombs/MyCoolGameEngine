@@ -44,9 +44,9 @@ static void interpreter_once_execute(struct fields *fields) {
         return;
     }
 
-    char *block_name = strdup(name);
+    char *block_name = allocator_strcpy(name);
     if (!dictionary_try_add(interpreter.once_memory, block_name, block_name)) {
-        free(block_name);
+        allocator_delete(block_name);
         return;
     }
     interpreter_execute_list(body);
@@ -92,7 +92,7 @@ static void interpreter_clear_once_memory(void) {
     struct dictionary_iterator iterator = dictionary_begin(interpreter.once_memory);
     struct dictionary_node node;
     while (dictionary_next(interpreter.once_memory, &iterator, &node)) {
-        free(node.value);
+        allocator_delete(node.value);
     }
     dictionary_clear(interpreter.once_memory);
 }

@@ -28,7 +28,7 @@ struct font {
 
 
 struct font* font_create(char *id, char *path, const enum font_loading_mode loading_mode) {
-    struct font* this = calloc(1, sizeof(struct font));
+    struct font* this = allocator_new0(1, sizeof(struct font));
     this->id = id;
     this->path = path;
     this->sizes = font_sizes_list_create(4);
@@ -42,10 +42,10 @@ void font_destroy(struct font* this) {
         TTF_CloseFont(font_sizes_list_get(&this->sizes, i)->native_font);
     }
     font_sizes_list_destroy(&this->sizes);
-    free(this->id);
-    free(this->path);
+    allocator_delete(this->id);
+    allocator_delete(this->path);
     if (this->native_font) TTF_CloseFont(this->native_font);
-    free(this);
+    allocator_delete(this);
 }
 
 TTF_Font* font_get_native_font(struct font* this) {

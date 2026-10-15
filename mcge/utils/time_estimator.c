@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <SDL3/SDL.h>
 
+#include "mcge/memory/allocator.h"
+
 
 struct time_estimator {
     unsigned long long blocks_num;
@@ -18,7 +20,7 @@ struct time_estimator {
 };
 
 struct time_estimator* time_estimator_create() {
-    struct time_estimator* this = malloc(sizeof(struct time_estimator));
+    struct time_estimator* this = allocator_new(sizeof(struct time_estimator));
 
     this->blocks_num = 0;
     this->blocks_sum = 0;
@@ -30,7 +32,7 @@ struct time_estimator* time_estimator_create() {
     return this;
 }
 void time_estimator_destroy(struct time_estimator* this) {
-    free(this);
+    allocator_delete(this);
 }
 
 void time_estimator_start_block(struct time_estimator* this) {

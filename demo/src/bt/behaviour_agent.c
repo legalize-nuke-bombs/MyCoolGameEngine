@@ -43,14 +43,14 @@ static void behaviour_agent_on_create(struct component *base, struct fields *fie
 
 static void behaviour_agent_on_destroy(struct component *base) {
     const struct behaviour_agent *this = (struct behaviour_agent*)base;
-    if (this->bt_graph_name) free(this->bt_graph_name);
+    if (this->bt_graph_name) allocator_delete(this->bt_graph_name);
 }
 
 static void behaviour_agent_awake(struct component *base) {
     struct behaviour_agent *this = (struct behaviour_agent*)base;
     if (this->bt_graph_name) {
         this->bt_graph = bt_graphs_get(this->bt_graph_name);
-        free(this->bt_graph_name);
+        allocator_delete(this->bt_graph_name);
         this->bt_graph_name = NULL;
     }
     if (this->bt_graph == NULL) {

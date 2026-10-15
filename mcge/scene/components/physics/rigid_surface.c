@@ -13,6 +13,7 @@
 #include "../../physics/rigid_layers.h"
 #include "../../physics/rigid_material.h"
 #include "../../physics/rigid_materials.h"
+#include "mcge/memory/allocator.h"
 
 
 struct rigid_surface {
@@ -57,20 +58,20 @@ static void rigid_surface_awake(struct component *base) {
     if (this->layer == NULL) {
         this->layer = rigid_layers_get(this->layer_name);
     }
-    free(this->layer_name);
+    allocator_delete(this->layer_name);
     this->layer_name = NULL;
 
     if (this->material == NULL) {
         this->material = rigid_materials_get(this->material_name);
     }
-    free(this->material_name);
+    allocator_delete(this->material_name);
     this->material_name = NULL;
 }
 
 static void rigid_surface_on_destroy(struct component *base) {
     const struct rigid_surface *this = (struct rigid_surface *) base;
-    free(this->layer_name);
-    free(this->material_name);
+    allocator_delete(this->layer_name);
+    allocator_delete(this->material_name);
 }
 
 

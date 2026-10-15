@@ -22,7 +22,7 @@ void effect_destroy(struct effect *this) {
     if (this->vtable->on_destroy) {
         this->vtable->on_destroy(this);
     }
-    free(this);
+    allocator_delete(this);
 }
 
 void effect_update(struct effect *this, const double dt) {

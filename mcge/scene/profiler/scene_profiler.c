@@ -5,6 +5,8 @@
 #include "scene_profiler.h"
 
 #include <stdlib.h>
+
+#include "mcge/memory/allocator.h"
 #include "mcge/utils/dictionary.h"
 #include "mcge/utils/string_dictionary.h"
 #include "mcge/utils/time_estimator.h"
@@ -16,14 +18,14 @@ struct scene_profiler {
 
 
 struct scene_profiler* scene_profiler_create() {
-    struct scene_profiler* this = calloc(1, sizeof(struct scene_profiler));
+    struct scene_profiler* this = allocator_new0(1, sizeof(struct scene_profiler));
     this->time_estimators = string_dictionary_build(4);
     return this;
 }
 void scene_profiler_destroy(struct scene_profiler* this) {
     scene_profiler_clear(this);
     dictionary_destroy(this->time_estimators);
-    free(this);
+    allocator_delete(this);
 }
 
 void scene_profiler_clear(const struct scene_profiler* this) {

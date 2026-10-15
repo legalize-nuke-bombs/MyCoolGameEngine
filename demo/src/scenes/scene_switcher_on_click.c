@@ -29,7 +29,7 @@ static void scene_switcher_on_click_on_create(struct component* base, struct fie
 }
 static void scene_switcher_on_click_on_destroy(struct component* base) {
     const struct scene_switcher_on_click* this = (struct scene_switcher_on_click*)base;
-    free(this->script);
+    allocator_delete(this->script);
 }
 
 

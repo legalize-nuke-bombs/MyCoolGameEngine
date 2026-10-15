@@ -1,5 +1,6 @@
-
 #include <stdlib.h>
+
+#include "mcge/memory/allocator.h"
 
 #define TYPED_LIST_CONCAT_(a, b) a##b
 #define TYPED_LIST_CONCAT(a, b) TYPED_LIST_CONCAT_(a, b)
@@ -22,8 +23,9 @@ static struct LIST_NAME TYPED_LIST_FUNCTION(create)(int capacity) {
     };
     return list;
 }
+
 static void TYPED_LIST_FUNCTION(destroy)(struct LIST_NAME *this) {
-    free(this->_data);
+    allocator_delete(this->_data);
 }
 
 static int TYPED_LIST_FUNCTION(count)(const struct LIST_NAME *this) {
@@ -39,11 +41,18 @@ static void TYPED_LIST_FUNCTION(add)(struct LIST_NAME *this, const LIST_TYPE val
         if (this->_capacity < 1) {
             this->_capacity = 1;
         }
-        this->_data = malloc(sizeof(LIST_TYPE) * this->_capacity);
+        this->_data = allocator_new(sizeof(LIST_TYPE) * this->_capacity);
     }
     else if (this->_count >= this->_capacity) {
         this->_capacity *= 2;
-        this->_data = realloc(this->_data, sizeof(LIST_TYPE) * this->_capacity);
+        LIST_TYPE *new_data = allocator_new(sizeof(LIST_TYPE) * this->_capacity);
+        if (new_data != NULL) {
+            for (int i = 0; i < this->_count; i++) {
+                new_data[i] = this->_data[i];
+            }
+            allocator_delete(this->_data);
+            this->_data = new_data;
+        }
     }
     this->_data[this->_count++] = value;
 }

@@ -22,7 +22,7 @@ struct effect* effect_factory_produce(struct fields *fields, struct entity *self
         if (strcmp(vtable->key, key) != 0) {
             continue;
         }
-        struct effect *effect = calloc(1, vtable->size);
+        struct effect *effect = allocator_new0(1, vtable->size);
         effect_base_create(
             effect,
             vtable,

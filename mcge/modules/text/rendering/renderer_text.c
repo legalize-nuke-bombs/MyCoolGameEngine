@@ -9,6 +9,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3_ttf/SDL_ttf.h>
 
+#include "mcge/memory/allocator.h"
 #include "mcge/modules/text/text_module.h"
 #include "mcge/modules/text/fonts/font.h"
 #include "mcge/utils/rect_math.h"
@@ -37,7 +38,7 @@ static const struct rendering_primitive_vtable renderer_text_vtable = {
 
 
 struct renderer_primitive* renderer_text_create_from_string(const char *string, struct color color, struct font *font) {
-    struct renderer_text* this = calloc(1, sizeof(struct renderer_text));
+    struct renderer_text* this = allocator_new0(1, sizeof(struct renderer_text));
     this->base.vtable = &renderer_text_vtable;
     this->font = font;
     this->text = TTF_CreateText(text_module_get_native_text_engine(), NULL, string, 0);

@@ -38,7 +38,7 @@ static void forest_on_create(struct component *base, struct fields *fields) {
     this->prefabIds = list_create(1);
     const struct fields_list *prefabs = fields_get_list(fields, "prefabs");
     for (int i = 0; i < fields_list_count(prefabs); i++) {
-        list_add(&this->prefabIds, strdup(fields_key(fields_list_get(prefabs, i))));
+        list_add(&this->prefabIds, allocator_strcpy(fields_key(fields_list_get(prefabs, i))));
     }
 }
 
@@ -87,7 +87,7 @@ static void forest_awake(struct component *base) {
 static void forest_on_destroy(struct component *base) {
     struct forest *this = (struct forest *) base;
     for (int i = 0; i < list_count(&this->prefabIds); i++) {
-        free(list_get(&this->prefabIds, i));
+        allocator_delete(list_get(&this->prefabIds, i));
     }
     list_destroy(&this->prefabIds);
 }

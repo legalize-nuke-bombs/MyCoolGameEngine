@@ -47,10 +47,10 @@ static void keyboard_movement_on_create(struct component* base, struct fields* f
 }
 static void keyboard_movement_on_destroy(struct component* base) {
     const struct keyboard_movement *this = (struct keyboard_movement *) base;
-    free(this->up);
-    free(this->down);
-    free(this->left);
-    free(this->right);
+    allocator_delete(this->up);
+    allocator_delete(this->down);
+    allocator_delete(this->left);
+    allocator_delete(this->right);
 }
 
 static void keyboard_movement_awake(struct component* base) {

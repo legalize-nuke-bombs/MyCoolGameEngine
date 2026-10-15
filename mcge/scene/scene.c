@@ -71,7 +71,7 @@ static void scene_on_destroy(void) {
     entity_ids_destroy(scene.entity_ids);
     component_ids_destroy(scene.component_ids);
     tmap_destroy(scene.tmap);
-    if (scene.switch_flag != NULL) free(scene.switch_flag);
+    if (scene.switch_flag != NULL) allocator_delete(scene.switch_flag);
     scene.switch_flag = NULL;
     action_destroy(&scene.on_component_resize);
     action_destroy(&scene.on_component_marked_destroyed);
@@ -123,13 +123,13 @@ static void scene_handle_switch(void) {
     component_ids_clear(scene.component_ids);
     tmap_clear(scene.tmap);
     interpreter_eval(scene.switch_flag);
-    if (scene.switch_flag != NULL) free(scene.switch_flag);
+    if (scene.switch_flag != NULL) allocator_delete(scene.switch_flag);
     scene.switch_flag = NULL;
 }
 
 void scene_mark_switch(const char* script_path) {
-    free(scene.switch_flag);
-    scene.switch_flag = strdup(script_path);
+    allocator_delete(scene.switch_flag);
+    scene.switch_flag = allocator_strcpy(script_path);
 }
 
 

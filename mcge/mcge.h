@@ -2,6 +2,7 @@
 #define MYCOOLGAMEENGINE_MCGE_H
 
 #include "api.h"
+#include "memory/allocator.h"
 #include "assets/asset_storage.h"
 #include "assets/asset_type.h"
 #include "assets/assets.h"

@@ -12,6 +12,7 @@
 #include "core/bt_selector.h"
 #include "core/bt_sequence.h"
 #include "mcge/logging/logger.h"
+#include "mcge/memory/allocator.h"
 
 static struct factory bt_node_factory;
 
@@ -34,7 +35,7 @@ struct bt_node* bt_node_factory_produce(struct fields *fields) {
     if (vtable == NULL) {
         return NULL;
     }
-    struct bt_node *node = calloc(1, vtable->size);
+    struct bt_node *node = allocator_new0(1, vtable->size);
     bt_node_base_create(node, vtable);
     if (vtable->on_create) {
         vtable->on_create(node, fields);

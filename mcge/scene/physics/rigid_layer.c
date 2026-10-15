@@ -6,17 +6,19 @@
 
 #include <stdlib.h>
 
+#include "mcge/memory/allocator.h"
+
 struct rigid_layer {
     uint8_t priority;
 };
 
 struct rigid_layer* rigid_layer_create(const uint8_t priority) {
-    struct rigid_layer* this = calloc(1, sizeof(struct rigid_layer));
+    struct rigid_layer* this = allocator_new0(1, sizeof(struct rigid_layer));
     this->priority = priority;
     return this;
 }
 void rigid_layer_destroy(struct rigid_layer *this) {
-    free(this);
+    allocator_delete(this);
 }
 
 uint8_t rigid_layer_get_priority(const struct rigid_layer* this) {

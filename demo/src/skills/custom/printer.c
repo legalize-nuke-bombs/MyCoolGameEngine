@@ -36,8 +36,8 @@ static void printer_on_create(struct skill *base, struct fields *fields) {
 
 static void printer_on_destroy(struct skill *base) {
     const struct printer* this = (struct printer*)base;
-    free(this->title);
-    free(this->body);
+    allocator_delete(this->title);
+    allocator_delete(this->body);
 }
 
 static bool printer_invoke(struct skill* base) {

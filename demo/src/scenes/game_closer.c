@@ -56,5 +56,5 @@ static void game_closer_on_disable(struct component *base) {
 
 static void game_closer_on_destroy(struct component *base) {
     const struct game_closer *this = (struct game_closer *)base;
-    free(this->hotkey);
+    allocator_delete(this->hotkey);
 }

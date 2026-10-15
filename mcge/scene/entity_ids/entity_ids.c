@@ -25,7 +25,7 @@ static void handle_entity_marked_destroyed(void *listener, void *context);
 
 struct entity_ids* entity_ids_create(void) {
     logger_info("Entity_ids are creating...");
-    struct entity_ids *this = calloc(1, sizeof(struct entity_ids));
+    struct entity_ids *this = allocator_new0(1, sizeof(struct entity_ids));
     this->entities = uint128_dictionary_build(4);
 
     this->on_entity_captured = scene_get_on_entity_captured();
@@ -41,7 +41,7 @@ void entity_ids_destroy(struct entity_ids *this) {
     action_unsubscribe(this->on_entity_marked_destroyed, this->on_entity_marked_destroyed_subscription_token);
     action_unsubscribe(this->on_entity_captured, this->on_entity_captured_subscription_token);
     dictionary_destroy(this->entities);
-    free(this);
+    allocator_delete(this);
 }
 
 void entity_ids_clear(const struct entity_ids *this) {

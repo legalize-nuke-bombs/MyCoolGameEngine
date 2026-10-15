@@ -9,6 +9,7 @@
 #include <SDL3/SDL.h>
 
 #include "../../texture.h"
+#include "mcge/memory/allocator.h"
 
 struct renderer_square {
     struct renderer_primitive base;
@@ -69,13 +70,13 @@ static const struct rendering_primitive_vtable renderer_square_vtable = {
 };
 
 struct renderer_primitive* renderer_square_create_from_color(const struct color color) {
-    struct renderer_square* this = calloc(1, sizeof(struct renderer_square));
+    struct renderer_square* this = allocator_new0(1, sizeof(struct renderer_square));
     this->base.vtable = &renderer_square_vtable;
     this->color = color;
     return (struct renderer_primitive*)this;
 }
 struct renderer_primitive* renderer_square_create_from_texture(struct texture* texture, int frame) {
-    struct renderer_square* this = calloc(1, sizeof(struct renderer_square));
+    struct renderer_square* this = allocator_new0(1, sizeof(struct renderer_square));
     this->base.vtable = &renderer_square_vtable;
     this->texture = texture;
     this->texture_frame = frame;

@@ -8,6 +8,7 @@
 #include "../assets/asset_type.h"
 #include "../logging/logger.h"
 #include "../utils/fields.h"
+#include "mcge/memory/allocator.h"
 
 static void textures_destroy_item(void *item) {
     texture_destroy(item);
@@ -32,7 +33,7 @@ static void textures_on_add(struct fields *fields) {
         logger_warn("Unexpected texture loading mode `%s`, `lazy` will be used instead", loading_mode_name);
     }
 
-    asset_storage_add(&textures, name, texture_create(strdup(name ? name : ""), fields_dup_string(fields, "path", ""), (int)tile.x, (int)tile.y, tiles_count, loading_mode, renderer_get_native_renderer()));
+    asset_storage_add(&textures, name, texture_create(allocator_strcpy(name ? name : ""), fields_dup_string(fields, "path", ""), (int)tile.x, (int)tile.y, tiles_count, loading_mode, renderer_get_native_renderer()));
 }
 static void textures_on_clear(void) {
     asset_storage_clear(&textures);

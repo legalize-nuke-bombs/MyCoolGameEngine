@@ -29,7 +29,7 @@ static void handle_component_marked_destroyed(void *listener, void *context);
 
 struct tmap* tmap_create(void) {
     logger_info("TMap is creating...");
-    struct tmap *this = calloc(1, sizeof(struct tmap));
+    struct tmap *this = allocator_new0(1, sizeof(struct tmap));
     this->types = string_dictionary_build(4);
 
     this->on_component_captured = scene_get_on_component_captured();
@@ -50,7 +50,7 @@ void tmap_destroy(struct tmap *this) {
         dictionary_destroy(node.value);
     }
     dictionary_destroy(this->types);
-    free(this);
+    allocator_delete(this);
 }
 
 void tmap_update(const struct tmap *this, const struct update_context *context) {

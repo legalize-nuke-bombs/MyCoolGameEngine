@@ -12,6 +12,7 @@
 #include "../../../devices/keyboard.h"
 #include "controller.h"
 #include "../../../utils/fields.h"
+#include "mcge/memory/allocator.h"
 
 
 struct keyboard_controller {
@@ -89,9 +90,9 @@ static void keyboard_controller_on_create(struct component *base, struct fields 
 
 static void keyboard_controller_on_destroy(struct component* base) {
     const struct keyboard_controller* this = (struct keyboard_controller*)base;
-    if (this->up) free(this->up);
-    if (this->down) free(this->down);
-    if (this->left) free(this->left);
-    if (this->right) free(this->right);
+    if (this->up) allocator_delete(this->up);
+    if (this->down) allocator_delete(this->down);
+    if (this->left) allocator_delete(this->left);
+    if (this->right) allocator_delete(this->right);
 }
 

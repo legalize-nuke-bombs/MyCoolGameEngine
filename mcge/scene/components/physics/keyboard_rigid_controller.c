@@ -9,6 +9,7 @@
 #include "../../../utils/fields.h"
 #include "../../../utils/vector2_math.h"
 #include "rigid_body.h"
+#include "mcge/memory/allocator.h"
 
 
 struct keyboard_rigid_controller {
@@ -89,9 +90,9 @@ static void keyboard_rigid_controller_on_create(struct component *base, struct f
 
 static void keyboard_rigid_controller_on_destroy(struct component* base) {
     const struct keyboard_rigid_controller *this = (struct keyboard_rigid_controller*)base;
-    if (this->up) free(this->up);
-    if (this->down) free(this->down);
-    if (this->left) free(this->left);
-    if (this->right) free(this->right);
+    if (this->up) allocator_delete(this->up);
+    if (this->down) allocator_delete(this->down);
+    if (this->left) allocator_delete(this->left);
+    if (this->right) allocator_delete(this->right);
 }
 

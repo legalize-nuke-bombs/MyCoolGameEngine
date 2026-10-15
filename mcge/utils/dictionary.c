@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "../logging/logger.h"
+#include "mcge/memory/allocator.h"
 
 #define DICTIONARY_MAX_DIM 30
 #define DICTIONARY_NONE (-1)
@@ -44,7 +45,7 @@ struct dictionary* dictionary_create(int dim, int (*hash)(const void*), bool (*e
         logger_warn("Dictionary bad dim passed (%d)", dim);
         dim = 0;
     }
-    struct dictionary *dictionary = malloc(sizeof(struct dictionary));
+    struct dictionary *dictionary = allocator_new(sizeof(struct dictionary));
     dictionary->entries = NULL;
     dictionary->index = NULL;
     dictionary->entries_capacity = 0;
@@ -58,8 +59,8 @@ struct dictionary* dictionary_create(int dim, int (*hash)(const void*), bool (*e
 }
 
 void dictionary_destroy(struct dictionary *dictionary) {
-    free(dictionary->entries);
-    free(dictionary);
+    allocator_delete(dictionary->entries);
+    allocator_delete(dictionary);
 }
 
 int dictionary_count(const struct dictionary *dictionary) {
@@ -91,11 +92,11 @@ static void dictionary_index_place(const struct dictionary *dictionary, const in
 
 static void dictionary_allocate_block(struct dictionary *dictionary, const int dim) {
     const int entries_capacity = (1 << dim) / 2;
-    struct dictionary_entry *entries = malloc(sizeof(struct dictionary_entry) * entries_capacity + sizeof(int) * (1 << dim));
+    struct dictionary_entry *entries = allocator_new(sizeof(struct dictionary_entry) * entries_capacity + sizeof(int) * (1 << dim));
     for (int position = 0; position < dictionary->used; position++) {
         entries[position] = dictionary->entries[position];
     }
-    free(dictionary->entries);
+    allocator_delete(dictionary->entries);
     dictionary->entries = entries;
     dictionary->index = (int *)(entries + entries_capacity);
     dictionary->entries_capacity = entries_capacity;

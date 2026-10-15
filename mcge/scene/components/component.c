@@ -7,6 +7,7 @@
 #include "../scene.h"
 #include "../../random/random.h"
 #include "../../utils/rect_pair.h"
+#include "mcge/memory/allocator.h"
 
 void component_base_create(struct component *this, const struct component_vtable *vtable, struct entity *parent) {
     this->vtable = vtable;
@@ -39,7 +40,7 @@ void component_destroy(struct component *this) {
     if (this->vtable->on_destroy) {
         this->vtable->on_destroy(this);
     }
-    free(this);
+    allocator_delete(this);
 }
 void component_mark_destroyed(struct component *this) {
     if (!this->alive) {

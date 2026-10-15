@@ -59,6 +59,6 @@ static void scene_switched_on_disable(struct component *base) {
 
 static void scene_switcher_on_destroy(struct component *base) {
     const struct scene_switcher *this = (struct scene_switcher *)base;
-    free(this->hotkey);
-    free(this->map_path);
+    allocator_delete(this->hotkey);
+    allocator_delete(this->map_path);
 }

@@ -6,16 +6,18 @@
 
 #include <stdlib.h>
 
+#include "mcge/memory/allocator.h"
+
 struct rigid_material* rigid_material_create(char *name, const double friction, const double restitution) {
-    struct rigid_material *this = calloc(1, sizeof(struct rigid_material));
+    struct rigid_material *this = allocator_new0(1, sizeof(struct rigid_material));
     this->_name = name;
     this->_friction = friction;
     this->_restitution = restitution;
     return this;
 }
 void rigid_material_destroy(struct rigid_material *this) {
-    free(this->_name);
-    free(this);
+    allocator_delete(this->_name);
+    allocator_delete(this);
 }
 
 const char* rigid_material_get_name(const struct rigid_material *this) {

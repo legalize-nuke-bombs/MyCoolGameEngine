@@ -8,6 +8,7 @@
 #include <SDL3/SDL.h>
 #include "../../../logging/logger.h"
 #include "../renderer_primitive_internal.h"
+#include "mcge/memory/allocator.h"
 
 
 #define DRAW_CALLS_BUFFER_SIZE (1 << 10)
@@ -39,7 +40,7 @@ static const struct rendering_primitive_vtable light_map_vtable = {
 
 struct renderer_primitive* light_map_create() {
     logger_info("Light map is creating...");
-    struct light_map* this = calloc(1, sizeof(struct light_map));
+    struct light_map* this = allocator_new0(1, sizeof(struct light_map));
     this->base.vtable = &light_map_vtable;
 
     light_map_reset(this);

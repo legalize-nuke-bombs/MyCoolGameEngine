@@ -18,6 +18,7 @@
 #include "../../../utils/fields.h"
 #include "../../../rendering/texture.h"
 #include "../../../rendering/textures.h"
+#include "mcge/memory/allocator.h"
 
 struct box_light {
     struct component base;
@@ -67,7 +68,7 @@ static void box_light_on_destroy(struct component *base) {
     if (this->square != NULL) {
         renderer_primitive_destroy(this->square);
     }
-    free(this->texture_name);
+    allocator_delete(this->texture_name);
 }
 
 static void box_light_awake(struct component *base) {
@@ -84,7 +85,7 @@ static void box_light_awake(struct component *base) {
             this->square = renderer_square_create_from_texture(texture, this->texture_frame);
         }
     }
-    free(this->texture_name);
+    allocator_delete(this->texture_name);
     this->texture_name = NULL;
 }
 

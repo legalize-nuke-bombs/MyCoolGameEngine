@@ -4,6 +4,7 @@
 
 #include "clips.h"
 #include "../../random/random.h"
+#include "mcge/memory/allocator.h"
 
 
 struct sound {
@@ -13,18 +14,18 @@ struct sound {
 
 
 struct sound* sound_create(char *id, const struct list clip_names) {
-    struct sound* this = calloc(1, sizeof(struct sound));
+    struct sound* this = allocator_new0(1, sizeof(struct sound));
     this->id = id;
     this->clip_names = clip_names;
     return this;
 }
 void sound_destroy(struct sound* this) {
     for (int i = 0; i < list_count(&this->clip_names); i++) {
-        free(list_get(&this->clip_names, i));
+        allocator_delete(list_get(&this->clip_names, i));
     }
     list_destroy(&this->clip_names);
-    free(this->id);
-    free(this);
+    allocator_delete(this->id);
+    allocator_delete(this);
 }
 
 static struct sound sound_fallback = {

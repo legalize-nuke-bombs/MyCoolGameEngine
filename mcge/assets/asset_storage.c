@@ -6,13 +6,14 @@
 #include "../logging/logger.h"
 #include "../utils/dictionary.h"
 #include "../utils/string_dictionary.h"
+#include "mcge/memory/allocator.h"
 
 
 void asset_storage_add(struct asset_storage *this, const char *name, void *item) {
     if (this->_items == NULL) {
         this->_items = string_dictionary_build(4);
     }
-    char *key = name != NULL ? strdup(name) : NULL;
+    char *key = name != NULL ? allocator_strcpy(name) : NULL;
     if (key != NULL && item != NULL && dictionary_try_add(this->_items, key, item)) {
         logger_debug("Asset %s captured %s", this->_key, key);
         return;
@@ -21,7 +22,7 @@ void asset_storage_add(struct asset_storage *this, const char *name, void *item)
     if (item != NULL) {
         this->_destroy_item(item);
     }
-    free(key);
+    allocator_delete(key);
 }
 
 void* asset_storage_try_get(const struct asset_storage *this, const char *name) {
@@ -46,7 +47,7 @@ void asset_storage_clear(struct asset_storage *this) {
     struct dictionary_node node;
     while (dictionary_next(this->_items, &iterator, &node)) {
         this->_destroy_item(node.value);
-        free(node.key);
+        allocator_delete(node.key);
     }
     dictionary_clear(this->_items);
 }

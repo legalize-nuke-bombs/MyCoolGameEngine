@@ -25,7 +25,7 @@ static void handle_component_marked_destroyed(void *listener, void *context);
 
 struct component_ids* component_ids_create(void) {
     logger_info("Component_ids are creating...");
-    struct component_ids *this = calloc(1, sizeof(struct component_ids));
+    struct component_ids *this = allocator_new0(1, sizeof(struct component_ids));
     this->components = uint128_dictionary_build(4);
 
     this->on_component_captured = scene_get_on_component_captured();
@@ -41,7 +41,7 @@ void component_ids_destroy(struct component_ids *this) {
     action_unsubscribe(this->on_component_marked_destroyed, this->on_component_marked_destroyed_subscription_token);
     action_unsubscribe(this->on_component_captured, this->on_component_captured_subscription_token);
     dictionary_destroy(this->components);
-    free(this);
+    allocator_delete(this);
 }
 
 void component_ids_clear(const struct component_ids *this) {

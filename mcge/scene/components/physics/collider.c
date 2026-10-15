@@ -73,8 +73,8 @@ static void collider_on_create(struct component *base, struct fields *fields) {
 
 static void collider_on_destroy(struct component *base) {
     struct collider *this = (struct collider*)base;
-    if (this->material_name) free(this->material_name);
-    if (this->layer_name) free(this->layer_name);
+    if (this->material_name) allocator_delete(this->material_name);
+    if (this->layer_name) allocator_delete(this->layer_name);
     action_destroy(&this->on_exit);
     action_destroy(&this->on_enter);
     if (this->intersections) {
@@ -89,13 +89,13 @@ static void collider_on_awake(struct component *base) {
     if (this->material_name != NULL) {
         this->material = rigid_materials_get(this->material_name);
     }
-    free(this->material_name);
+    allocator_delete(this->material_name);
     this->material_name = NULL;
 
     if (this->layer_name != NULL) {
         this->layer = collision_layers_get(this->layer_name);
     }
-    free(this->layer_name);
+    allocator_delete(this->layer_name);
     this->layer_name = NULL;
 
     this->chunks = scene_get_chunks();

@@ -11,6 +11,7 @@
 #include "../entity_factory.h"
 #include "../../logging/logger.h"
 #include "../../utils/fields.h"
+#include "mcge/memory/allocator.h"
 
 struct prefab {
     struct fields* fields;
@@ -20,7 +21,7 @@ struct prefab {
 struct prefab* prefab_create(struct fields *fields) {
     entity_destroy(entity_factory_produce(fields));
 
-    struct prefab* this = calloc(1, sizeof(struct prefab));
+    struct prefab* this = allocator_new0(1, sizeof(struct prefab));
     this->fields = fields_clone(fields);
     logger_debug("Prefab %s is creating...", prefab_get_name(this));
     return this;
@@ -28,7 +29,7 @@ struct prefab* prefab_create(struct fields *fields) {
 void prefab_destroy(struct prefab* this) {
     logger_debug("Prefab %s is destroying (this prefab was instanced %d times!)...", prefab_get_name(this), this->usages);
     fields_destroy(this->fields);
-    free(this);
+    allocator_delete(this);
 }
 
 struct entity* prefab_instantiate(struct prefab* this) {

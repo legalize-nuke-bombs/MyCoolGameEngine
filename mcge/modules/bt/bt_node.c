@@ -7,6 +7,7 @@
 #include <stdlib.h>
 
 #include "bt_node_internal.h"
+#include "mcge/memory/allocator.h"
 
 const char* bt_node_key(const struct bt_node *this) {
     return this->vtable->key;
@@ -25,5 +26,5 @@ void bt_node_destroy(struct bt_node *this) {
     if (this->vtable->on_destroy) {
         this->vtable->on_destroy(this);
     }
-    free(this);
+    allocator_delete(this);
 }

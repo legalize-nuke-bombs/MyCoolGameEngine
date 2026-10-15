@@ -8,6 +8,7 @@
 #include "../utils/rect_pair.h"
 #include "../utils/vector2_math.h"
 #include "../logging/logger.h"
+#include "mcge/memory/allocator.h"
 #include "mcge/random/random.h"
 
 
@@ -45,7 +46,7 @@ static void entity_update_rect(struct entity *this) {
 }
 
 struct entity* entity_create(char *name, const uint128_t id, struct entity *parent) {
-    struct entity *this = calloc(1, sizeof(struct entity));
+    struct entity *this = allocator_new0(1, sizeof(struct entity));
     this->_name = name;
     logger_debug("Entity %s is initializing...", this->_name);
     this->_id = (uint128_cmp(id, uint128_zero) == 0) ? random_next_uint128() : id;
@@ -90,8 +91,8 @@ void entity_destroy(struct entity *this) {
     }
     list_destroy(&this->_components);
     list_destroy(&this->_entities);
-    free(this->_name);
-    free(this);
+    allocator_delete(this->_name);
+    allocator_delete(this);
 }
 void entity_mark_destroyed(struct entity *this) {
     if (!this->_alive) {

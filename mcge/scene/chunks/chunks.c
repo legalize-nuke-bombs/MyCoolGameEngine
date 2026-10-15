@@ -40,7 +40,7 @@ static void handle_component_resize(void *listener, void *context);
 
 struct chunks *chunks_create(void) {
     logger_info("Chunks (%d x %d, chunk size %f) are creating...", CHUNKS_SIZE, CHUNKS_SIZE, CHUNKS_START_CHUNK_SIZE);
-    struct chunks *this = calloc(1, sizeof(struct chunks));
+    struct chunks *this = allocator_new0(1, sizeof(struct chunks));
     this->chunk_size = CHUNKS_START_CHUNK_SIZE;
 
     this->on_component_captured = scene_get_on_component_captured();
@@ -66,7 +66,7 @@ static void chunks_destroy_chunks(struct chunks *this) {
 void chunks_destroy(struct chunks *this) {
     logger_info("Chunks are destroying...");
     chunks_destroy_chunks(this);
-    free(this);
+    allocator_delete(this);
 }
 
 void chunks_clear(struct chunks *this) {

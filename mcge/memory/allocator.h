@@ -8,7 +8,7 @@
 #include "mcge/api.h"
 
 
-typedef unsigned long long ull;
+typedef unsigned long long ll;
 
 
 
@@ -22,13 +22,18 @@ MCGE_API void allocator_delete(void *ptr);
 
 
 
-MCGE_API ull allocator_get_total_allocations_num(void);
-MCGE_API ull allocator_get_total_allocations_size(void);
+MCGE_API ll allocator_get_total_allocations_num(void);
+MCGE_API ll allocator_get_total_allocations_size(void);
 
-MCGE_API ull allocator_get_total_frees_num(void);
-MCGE_API ull allocator_get_total_frees_size(void);
+MCGE_API ll allocator_get_total_frees_num(void);
+MCGE_API ll allocator_get_total_frees_size(void);
 
-MCGE_API ull allocator_get_active_allocations_num(void);
-MCGE_API ull allocator_get_active_allocations_size(void);
+MCGE_API ll allocator_get_active_allocations_num(void);
+MCGE_API ll allocator_get_active_allocations_size(void);
+
+
+
+
+MCGE_API char* allocator_strcpy(const char *source);
 
 #endif //MYCOOLGAMEENGINE_ALLOCATOR_H

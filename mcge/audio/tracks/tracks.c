@@ -11,6 +11,7 @@
 #include <SDL3_mixer/SDL_mixer.h>
 #include "../../logging/logger.h"
 #include "../../utils/vector2_math.h"
+#include "mcge/memory/allocator.h"
 
 #define TRACKS_BUFFER_SIZE 256
 #define TRACKS_DISTANCE_WITHOUT_LISTENER 1e+9f
@@ -27,7 +28,7 @@ struct tracks {
 
 struct tracks* tracks_create() {
     logger_info("Tracks are creating with buffer size %d...", TRACKS_BUFFER_SIZE);
-    struct tracks* this = calloc(1, sizeof(struct tracks));
+    struct tracks* this = allocator_new0(1, sizeof(struct tracks));
     for (unsigned int i = 0; i < TRACKS_BUFFER_SIZE; i++) {
         this->native_tracks[i] = MIX_CreateTrack(audio_get_mixer());
     }
@@ -38,7 +39,7 @@ void tracks_destroy(struct tracks* this) {
     for (unsigned int i = 0; i < TRACKS_BUFFER_SIZE; i++) {
         MIX_DestroyTrack(this->native_tracks[i]);
     }
-    free(this);
+    allocator_delete(this);
 }
 
 static void tracks_apply_position(const struct tracks* this, const unsigned int index) {

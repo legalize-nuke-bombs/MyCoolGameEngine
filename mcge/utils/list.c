@@ -31,7 +31,7 @@ void* list_get(const struct list *this, const int index) {
     return this->_data[index];
 }
 
-static void list_realloc(struct list *list) {
+static void list_expand(struct list *list) {
     const int new_capacity = 2 * list->_capacity;
     void **new_data = allocator_new(sizeof(void *) * new_capacity);
     for (int i = 0; i < list->_count; i++) {
@@ -49,7 +49,7 @@ void list_add(struct list *this, void *data) {
         this->_data = allocator_new(sizeof(void *) * this->_capacity);
     }
     else if (this->_count >= this->_capacity) {
-        list_realloc(this);
+        list_expand(this);
     }
     this->_data[this->_count++] = data;
 }

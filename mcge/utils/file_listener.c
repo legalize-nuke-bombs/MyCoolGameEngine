@@ -8,6 +8,8 @@
 #include <string.h>
 #include <sys/stat.h>
 
+#include "mcge/memory/allocator.h"
+
 
 #define CHECK_INTERVAL 0.10
 
@@ -27,9 +29,9 @@ static time_t get_file_modification_time(const char* path) {
 }
 
 struct file_listener* file_listener_create(const char* path) {
-    struct file_listener* this = malloc(sizeof(struct file_listener));
+    struct file_listener* this = allocator_new(sizeof(struct file_listener));
 
-    this->path = strdup(path);
+    this->path = allocator_strcpy(path);
     this->timer = 0;
     this->last_modified = get_file_modification_time(path);
 
@@ -37,8 +39,8 @@ struct file_listener* file_listener_create(const char* path) {
 }
 
 void file_listener_destroy(struct file_listener *this) {
-    free(this->path);
-    free(this);
+    allocator_delete(this->path);
+    allocator_delete(this);
 }
 
 const char* file_listener_get_path(const struct file_listener *this) {
