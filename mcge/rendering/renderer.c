@@ -84,3 +84,12 @@ struct renderer_pipeline* renderer_get_pipeline(void) {
 struct action* renderer_get_post_pipeline(void) {
     return &renderer.post_pipeline;
 }
+
+bool renderer_is_fullscreen(void) {
+    return (SDL_GetWindowFlags(renderer.window) & SDL_WINDOW_FULLSCREEN) != 0;
+}
+void renderer_set_fullscreen(const bool fullscreen) {
+    if (!SDL_SetWindowFullscreen(renderer.window, fullscreen)) {
+        logger_warn("Renderer failed to %s fullscreen: %s", fullscreen ? "enter" : "leave", SDL_GetError());
+    }
+}
