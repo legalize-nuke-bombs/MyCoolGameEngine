@@ -1,7 +1,9 @@
 # About
 A simple C game engine created for educational purposes.
 You can view a demo game created with this engine [here](demo).
-![](demo/docs/v0-1-0.png)
+![](demo/docs/s1.png)
+![](demo/docs/s2.png)
+![](demo/docs/s3.png)
 # Features
 ## Core
 * Entity-component
