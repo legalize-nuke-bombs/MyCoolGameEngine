@@ -312,6 +312,8 @@ add_library(mcge SHARED
         mcge/debug_overlay/debug_overlay.c
         mcge/allocator/allocator.h
         mcge/allocator/allocator.c
+        mcge/scene/components/custom/fullscreen_toggler.h
+        mcge/scene/components/custom/fullscreen_toggler.c
 )
 set_target_properties(mcge PROPERTIES DEFINE_SYMBOL MCGE_EXPORT)
 if(WIN32)

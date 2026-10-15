@@ -28,6 +28,7 @@
 #include "rendering/box_renderer_rigid_directed.h"
 #include "rendering/renderer_settings.h"
 #include "custom/clickable.h"
+#include "custom/fullscreen_toggler.h"
 #include "mcge/allocator/allocator.h"
 #include "ui/hud.h"
 
@@ -55,6 +56,7 @@ void component_factory_create(void) {
     component_factory_register(&hud_vtable);
     component_factory_register(&clickable_vtable);
     component_factory_register(&camera_wheel_zoom_vtable);
+    component_factory_register(&fullscreen_toggler_vtable);
 }
 void component_factory_destroy(void) {
     factory_destroy(&component_factory);

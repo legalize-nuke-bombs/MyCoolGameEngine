@@ -69,6 +69,7 @@
 #include "scene/components/rendering/box_renderer_animated.h"
 #include "scene/components/rendering/renderer_settings.h"
 #include "scene/components/custom/clickable.h"
+#include "scene/components/custom/fullscreen_toggler.h"
 #include "scene/entity.h"
 #include "scene/entity_collection.h"
 #include "scene/entity_factory.h"
