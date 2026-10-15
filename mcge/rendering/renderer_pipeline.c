@@ -148,7 +148,7 @@ void renderer_pipeline_flush(struct renderer_pipeline *this) {
         const char* no_active_camera_label = "NO ACTIVE CAMERA IN THE SCENE";
         const float debug_char_size = 8;
         SDL_SetRenderDrawColor(this->native_renderer, color_white.r, color_white.g, color_white.b, color_white.a);
-        SDL_RenderDebugText(this->native_renderer, (float)(output_size.x * 0.5) - (float)strlen(no_active_camera_label) * debug_char_size / 2.f, (float)(output_size.y * 0.5), no_active_camera_label);
+        SDL_RenderDebugText(this->native_renderer, (float)(output_size.x * 0.5) - (float)strlen(no_active_camera_label) * debug_char_size / 2.f, (float)(output_size.y * 0.5) - debug_char_size / 2.f, no_active_camera_label);
         return;
     }
 
