@@ -12,7 +12,7 @@
 #include "track.h"
 
 struct tracks;
-struct MIX_Audio;
+struct clip;
 
 MCGE_API struct tracks* tracks_create();
 MCGE_API void tracks_destroy(struct tracks* this);
@@ -20,7 +20,7 @@ MCGE_API void tracks_destroy(struct tracks* this);
 MCGE_API void tracks_set_listener_position(struct tracks* this, struct vector2 position);
 MCGE_API void tracks_remove_listener_position(struct tracks* this);
 
-MCGE_API struct track tracks_play(struct tracks* this, struct MIX_Audio *audio, struct vector2 position, bool loop);
+MCGE_API struct track tracks_play(struct tracks* this, struct clip *clip, struct vector2 position, bool loop);
 MCGE_API bool tracks_is_track_playing(const struct tracks* this, const struct track *track);
 MCGE_API void tracks_set_track_position(struct tracks* this, const struct track *track, struct vector2 position);
 MCGE_API void tracks_stop_track(struct tracks* this, const struct track *track);

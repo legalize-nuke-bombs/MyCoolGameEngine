@@ -51,25 +51,25 @@ once name=menu_deps body=[
 
     /* Clips */
     clip name=campfire1 path=sounds/campfire.ogg loading_mode=lazy storing_mode=compact
-    clip name=nevermore_arrow1 path=sounds/nevermore_arrow1.wav loading_mode=lazy storing_mode=fast
-    clip name=nevermore_fear_balls_cast path=sounds/nevermore_fear_balls_cast.wav loading_mode=lazy storing_mode=compact
-    clip name=nevermore_fear_balls_invoke path=sounds/nevermore_fear_balls_invoke.wav loading_mode=lazy storing_mode=compact
-    clip name=coins1 path=sounds/coins1.wav loading_mode=lazy storing_mode=fast
-    clip name=footstep_ground1 path=sounds/footstep_ground1.wav loading_mode=lazy storing_mode=fast
-    clip name=footstep_ground2 path=sounds/footstep_ground2.wav loading_mode=lazy storing_mode=fast
-    clip name=footstep_ground3 path=sounds/footstep_ground3.wav loading_mode=lazy storing_mode=fast
-    clip name=footstep_ground4 path=sounds/footstep_ground4.wav loading_mode=lazy storing_mode=fast
-    clip name=footstep_water1 path=sounds/footstep_water1.wav loading_mode=lazy storing_mode=fast
-    clip name=footstep_water2 path=sounds/footstep_water2.wav loading_mode=lazy storing_mode=fast
-    clip name=footstep_water3 path=sounds/footstep_water3.wav loading_mode=lazy storing_mode=fast
-    clip name=footstep_water4 path=sounds/footstep_water4.wav loading_mode=lazy storing_mode=fast
-    clip name=footstep_water5 path=sounds/footstep_water5.wav loading_mode=lazy storing_mode=fast
-    clip name=footstep_water6 path=sounds/footstep_water6.wav loading_mode=lazy storing_mode=fast
-    clip name=footstep_water7 path=sounds/footstep_water7.wav loading_mode=lazy storing_mode=fast
-    clip name=footstep_water8 path=sounds/footstep_water8.wav loading_mode=lazy storing_mode=fast
-    clip name=footstep_water9 path=sounds/footstep_water9.wav loading_mode=lazy storing_mode=fast
-    clip name=footstep_water10 path=sounds/footstep_water10.wav loading_mode=lazy storing_mode=fast
-    clip name=footstep_water11 path=sounds/footstep_water11.wav loading_mode=lazy storing_mode=fast
+    clip name=nevermore_arrow1 path=sounds/nevermore_arrow1.wav volume=0.25 loading_mode=lazy storing_mode=fast
+    clip name=nevermore_fear_balls_cast path=sounds/nevermore_fear_balls_cast.wav volume=0.75 loading_mode=lazy storing_mode=compact
+    clip name=nevermore_fear_balls_invoke path=sounds/nevermore_fear_balls_invoke.wav volume=0.75 loading_mode=lazy storing_mode=compact
+    clip name=coins1 path=sounds/coins1.wav loading_mode=lazy volume=0.25 storing_mode=fast
+    clip name=footstep_ground1 path=sounds/footstep_ground1.wav volume=0.125 loading_mode=lazy storing_mode=fast
+    clip name=footstep_ground2 path=sounds/footstep_ground2.wav volume=0.125 loading_mode=lazy storing_mode=fast
+    clip name=footstep_ground3 path=sounds/footstep_ground3.wav volume=0.125 loading_mode=lazy storing_mode=fast
+    clip name=footstep_ground4 path=sounds/footstep_ground4.wav volume=0.125 loading_mode=lazy storing_mode=fast
+    clip name=footstep_water1 path=sounds/footstep_water1.wav volume=0.125 loading_mode=lazy storing_mode=fast
+    clip name=footstep_water2 path=sounds/footstep_water2.wav volume=0.125 loading_mode=lazy storing_mode=fast
+    clip name=footstep_water3 path=sounds/footstep_water3.wav volume=0.125 loading_mode=lazy storing_mode=fast
+    clip name=footstep_water4 path=sounds/footstep_water4.wav volume=0.125 loading_mode=lazy storing_mode=fast
+    clip name=footstep_water5 path=sounds/footstep_water5.wav volume=0.125 loading_mode=lazy storing_mode=fast
+    clip name=footstep_water6 path=sounds/footstep_water6.wav volume=0.125 loading_mode=lazy storing_mode=fast
+    clip name=footstep_water7 path=sounds/footstep_water7.wav volume=0.125 loading_mode=lazy storing_mode=fast
+    clip name=footstep_water8 path=sounds/footstep_water8.wav volume=0.125 loading_mode=lazy storing_mode=fast
+    clip name=footstep_water9 path=sounds/footstep_water9.wav volume=0.125 loading_mode=lazy storing_mode=fast
+    clip name=footstep_water10 path=sounds/footstep_water10.wav volume=0.125 loading_mode=lazy storing_mode=fast
+    clip name=footstep_water11 path=sounds/footstep_water11.wav volume=0.125 loading_mode=lazy storing_mode=fast
 
     /* Sounds */
     sound name=campfire clips=[campfire1]

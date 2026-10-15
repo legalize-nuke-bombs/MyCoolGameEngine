@@ -16,11 +16,12 @@ struct clip {
     char *path;
     enum clip_storing_mode storing_mode;
     MIX_Audio *native_audio;
+    float volume;
     bool loading_error;
 };
 
 
-struct clip* clip_create(char *id, char *path, const enum clip_loading_mode loading_mode, const enum clip_storing_mode storing_mode) {
+struct clip* clip_create(char *id, char *path, const float volume, const enum clip_loading_mode loading_mode, const enum clip_storing_mode storing_mode) {
     struct clip* this = allocator_new0(1, sizeof(struct clip));
     this->id = id;
     this->path = path;
@@ -28,6 +29,7 @@ struct clip* clip_create(char *id, char *path, const enum clip_loading_mode load
     if (loading_mode == clip_loading_mode_eager) {
         clip_get_native_audio(this);
     }
+    this->volume = volume;
     return this;
 }
 void clip_destroy(struct clip* this) {
@@ -55,4 +57,7 @@ MIX_Audio* clip_get_native_audio(struct clip* this) {
         }
     }
     return this->native_audio ? this->native_audio : audio_get_fallback_audio();
+}
+float clip_get_volume(const struct clip* this) {
+    return this->volume;
 }

@@ -12,6 +12,7 @@
 #include "../../logging/logger.h"
 #include "../../utils/vector2_math.h"
 #include "mcge/allocator/allocator.h"
+#include "mcge/audio/resources/clip.h"
 
 #define TRACKS_BUFFER_SIZE 256
 #define TRACKS_DISTANCE_WITHOUT_LISTENER 1e+9f
@@ -74,7 +75,7 @@ void tracks_remove_listener_position(struct tracks* this) {
     tracks_apply_positions_of_playing(this);
 }
 
-struct track tracks_play(struct tracks* this, MIX_Audio *audio, const struct vector2 position, const bool loop) {
+struct track tracks_play(struct tracks* this, struct clip *clip, const struct vector2 position, const bool loop) {
     for (unsigned int i = 0; i < TRACKS_BUFFER_SIZE; i++) {
         MIX_Track* native_track = this->native_tracks[i];
         if (native_track == NULL || MIX_TrackPlaying(native_track)) {
@@ -82,7 +83,8 @@ struct track tracks_play(struct tracks* this, MIX_Audio *audio, const struct vec
         }
 
         this->positions[i] = position;
-        MIX_SetTrackAudio(native_track, audio);
+        MIX_SetTrackAudio(native_track, clip_get_native_audio(clip));
+        MIX_SetTrackGain(native_track, clip_get_volume(clip));
         tracks_apply_position(this, i);
 
         const SDL_PropertiesID props = SDL_CreateProperties();

@@ -89,10 +89,10 @@ MCGE_API void audio_source_play(struct audio_source *this, const struct sound *s
         return;
     }
 
-    struct MIX_Audio *audio = clip_get_native_audio(sound_get_random_clip(sound));
+    struct clip *clip = sound_get_random_clip(sound);
     const struct vector2 position = component_get_rect((struct component*)this).position;
 
-    const struct track new_track = tracks_play(audio_get_tracks(), audio, position, loop);
+    const struct track new_track = tracks_play(audio_get_tracks(), clip, position, loop);
     if (!tracks_is_track_playing(audio_get_tracks(), &new_track)) {
         return;
     }

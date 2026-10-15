@@ -26,6 +26,7 @@ static struct asset_storage clips = {
 static void clips_on_add(struct fields *fields) {
     char *name = fields_dup_string(fields, "name", "<null>");
     char *path = fields_dup_string(fields, "path", "<null>");
+    float volume = (float)fields_get_double(fields, "volume", 1);
 
     const char* loading_mode_name = fields_get_string(fields, "loading_mode", "lazy");
     enum clip_loading_mode loading_mode = clip_loading_mode_lazy;
@@ -51,7 +52,7 @@ static void clips_on_add(struct fields *fields) {
         logger_warn("Clip %s unexpected storing mode %s. Supported: fast, compact", name, storing_mode_name);
     }
 
-    asset_storage_add(&clips, name, clip_create(name, path, loading_mode, storing_mode));
+    asset_storage_add(&clips, name, clip_create(name, path, volume, loading_mode, storing_mode));
 }
 static void clips_on_clear(void) {
     asset_storage_clear(&clips);
