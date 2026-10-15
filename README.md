@@ -28,6 +28,7 @@ You can view a demo game created with this engine [here](demo).
 * Fast / compact audio representation in memory
 * Sound geometry
 * Sound randomization
+* Clip volumes
 ## Other
 * A development mode supporting hot reloading via a hotkey or upon changes to the scene file on disk
 * A simple build in debug overlay for development mode
