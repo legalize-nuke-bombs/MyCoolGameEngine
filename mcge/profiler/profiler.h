@@ -11,4 +11,8 @@ struct msystem;
 
 MCGE_API extern const struct msystem profiler_msystem;
 
+MCGE_API const struct time_estimator* profiler_get_frame();
+MCGE_API const struct time_estimator* profiler_get_update();
+MCGE_API const struct time_estimator* profiler_get_rendering();
+
 #endif //MYCOOLGAMEENGINE_PROFILER_H

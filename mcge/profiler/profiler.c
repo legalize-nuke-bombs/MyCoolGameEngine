@@ -128,3 +128,14 @@ const struct msystem profiler_msystem = {
     .on_disable = profiler_on_disable,
     .on_destroy = profiler_on_destroy
 };
+
+
+const struct time_estimator* profiler_get_frame() {
+    return profiler.frame;
+}
+const struct time_estimator* profiler_get_update() {
+    return profiler.update;
+}
+const struct time_estimator* profiler_get_rendering() {
+    return profiler.rendering;
+}

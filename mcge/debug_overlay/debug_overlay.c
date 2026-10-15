@@ -12,6 +12,8 @@
 #include <SDL3/SDL.h>
 #include <stdio.h>
 #include "mcge/engine/version.h"
+#include "mcge/profiler/profiler.h"
+#include "mcge/profiler/time_estimator.h"
 
 
 #define LINES_NUMBER 10
@@ -29,10 +31,40 @@ static struct {
 } debug_overlay;
 
 
+
+
+
+
 static void debug_overlay_fill_debug_info() {
     snprintf(debug_overlay.lines[0], sizeof(char) * LINE_LENGTH, "MyCoolGameEngine v%d.%d.%d", ENGINE_V_MAJOR, ENGINE_V_MINOR, ENGINE_V_PATCH);
-    snprintf(debug_overlay.lines[1], sizeof(char) * LINE_LENGTH, "Hello");
+    snprintf(debug_overlay.lines[1], sizeof(char) * LINE_LENGTH, "");
+
+    const double frame_ms = time_estimator_average_block_ms(profiler_get_frame());
+    const double update_ms = time_estimator_average_block_ms(profiler_get_update());
+    const double render_ms = time_estimator_average_block_ms(profiler_get_rendering());
+    const double unknown_ms = frame_ms - update_ms - render_ms;
+    const double update_ms_percent = update_ms / frame_ms * 100;
+    const double render_ms_percent = render_ms / frame_ms * 100;
+    const double unknown_ms_percent = unknown_ms / frame_ms * 100;
+    const double fps = 1000 / frame_ms;
+    snprintf(debug_overlay.lines[2], sizeof(char) * LINE_LENGTH, "FPS: %f. Frame: %f ms", fps, frame_ms);
+    snprintf(debug_overlay.lines[3], sizeof(char) * LINE_LENGTH, "Update: %f ms (%f%%)", update_ms, update_ms_percent);
+    snprintf(debug_overlay.lines[4], sizeof(char) * LINE_LENGTH, "Render: %f ms (%f%%)", render_ms, render_ms_percent);
+    snprintf(debug_overlay.lines[5], sizeof(char) * LINE_LENGTH, "Unknown: %f ms (%f%%)", unknown_ms, unknown_ms_percent);
+    snprintf(debug_overlay.lines[6], sizeof(char) * LINE_LENGTH, "");
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 static void handle_post_pipeline(void *listener, void *context) {
