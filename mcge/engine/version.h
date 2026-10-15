@@ -7,6 +7,6 @@
 
 #define ENGINE_V_MAJOR 0
 #define ENGINE_V_MINOR 4
-#define ENGINE_V_PATCH 0
+#define ENGINE_V_PATCH 1
 
 #endif //MYCOOLGAMEENGINE_VERSION_H
