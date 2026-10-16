@@ -14,7 +14,8 @@
 #include "../../logging/logger.h"
 
 
-#define GC_TYPES_PER_FRAME 2
+#define TMAP_GC_MAX_IDLE_TYPES_PER_FRAME 16
+#define TMAP_GC_MAX_CLEANED_TYPES_PER_FRAME 1
 
 
 struct tmap {
@@ -62,8 +63,8 @@ void tmap_destroy(struct tmap *this) {
 
 void tmap_pre_update(struct tmap *this) {
     struct dictionary_node node;
-    int iterations = GC_TYPES_PER_FRAME;
-    for (int i = 0; i < GC_TYPES_PER_FRAME; i++) {
+    int cleaned = 0;
+    for (int i = 0; i < TMAP_GC_MAX_IDLE_TYPES_PER_FRAME; i++) {
         if (!dictionary_next(this->types, &this->gc_types_iterator, &node)) {
             this->gc_types_iterator = dictionary_begin(this->types);
             continue;
@@ -73,8 +74,14 @@ void tmap_pre_update(struct tmap *this) {
         if (dictionary_count(typed_components) == 0) {
             dictionary_remove(this->types, (void*)type);
             dictionary_destroy(typed_components);
+            cleaned++;
         }
-        iterations--;
+        else {
+            cleaned += dictionary_shrink_to_fit(typed_components);
+        }
+        if (cleaned >= TMAP_GC_MAX_CLEANED_TYPES_PER_FRAME) {
+            break;
+        }
     }
     dictionary_shrink_to_fit(this->types);
 }
