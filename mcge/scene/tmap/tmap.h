@@ -15,9 +15,11 @@ struct dictionary;
 MCGE_API struct tmap* tmap_create(void);
 MCGE_API void tmap_destroy(struct tmap *this);
 
+MCGE_API void tmap_pre_update(struct tmap *this);
+
 MCGE_API void tmap_update(const struct tmap *this, const struct update_context *context);
 
-MCGE_API void tmap_clear(const struct tmap *this);
+MCGE_API void tmap_clear(struct tmap *this);
 
 MCGE_API const struct dictionary* tmap_try_get_components(const struct tmap *this, const char *component_key);
 

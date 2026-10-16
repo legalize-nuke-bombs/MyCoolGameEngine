@@ -14,8 +14,13 @@
 #include "../../logging/logger.h"
 
 
+#define GC_TYPES_PER_FRAME 2
+
+
 struct tmap {
     struct dictionary *types;
+
+    struct dictionary_iterator gc_types_iterator;
 
     struct action* on_component_captured;
     unsigned int on_component_captured_subscription_token;
@@ -31,6 +36,8 @@ struct tmap* tmap_create(void) {
     logger_info("TMap is creating...");
     struct tmap *this = allocator_new0(1, sizeof(struct tmap));
     this->types = string_dictionary_build(4);
+
+    this->gc_types_iterator = dictionary_begin(this->types);
 
     this->on_component_captured = scene_get_on_component_captured();
     action_subscribe(this->on_component_captured, this, handle_component_captured, &this->on_component_captured_subscription_token);
@@ -53,6 +60,25 @@ void tmap_destroy(struct tmap *this) {
     allocator_delete(this);
 }
 
+void tmap_pre_update(struct tmap *this) {
+    struct dictionary_node node;
+    int iterations = GC_TYPES_PER_FRAME;
+    for (int i = 0; i < GC_TYPES_PER_FRAME; i++) {
+        if (!dictionary_next(this->types, &this->gc_types_iterator, &node)) {
+            this->gc_types_iterator = dictionary_begin(this->types);
+            continue;
+        }
+        const char* type = node.key;
+        struct dictionary* typed_components = node.value;
+        if (dictionary_count(typed_components) == 0) {
+            dictionary_remove(this->types, (void*)type);
+            dictionary_destroy(typed_components);
+        }
+        iterations--;
+    }
+    dictionary_shrink_to_fit(this->types);
+}
+
 void tmap_update(const struct tmap *this, const struct update_context *context) {
     struct dictionary_iterator types_iterator = dictionary_begin(this->types);
     struct dictionary_node type_node;
@@ -73,12 +99,14 @@ void tmap_update(const struct tmap *this, const struct update_context *context) 
     }
 }
 
-void tmap_clear(const struct tmap *this) {
+void tmap_clear(struct tmap *this) {
     struct dictionary_iterator iterator = dictionary_begin(this->types);
     struct dictionary_node node;
     while (dictionary_next(this->types, &iterator, &node)) {
-        dictionary_clear(node.value);
+        dictionary_destroy(node.value);
     }
+    dictionary_clear(this->types);
+    this->gc_types_iterator = dictionary_begin(this->types);
 }
 
 static void handle_component_captured(void *listener, void *context) {
