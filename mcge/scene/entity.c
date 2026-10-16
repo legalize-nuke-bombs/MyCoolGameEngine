@@ -136,7 +136,10 @@ void entity_collect_garbage(struct entity *this) {
     removed = false;
     for (int i = list_count(&this->_components) - 1; i >= 0; i--) {
         struct component *component = list_get(&this->_components, i);
-        if (!component_is_alive(component)) {
+        if (component_is_alive(component)) {
+            component_collect_garbage(component);
+        }
+        else {
             component_destroy(component);
             list_set(&this->_components, i, NULL);
             removed = true;

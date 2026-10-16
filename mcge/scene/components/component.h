@@ -14,6 +14,7 @@ struct entity;
 MCGE_API void component_awake(struct component *this);
 MCGE_API void component_destroy(struct component *this);
 MCGE_API void component_mark_destroyed(struct component *this);
+MCGE_API void component_collect_garbage(struct component *this);
 
 MCGE_API uint128_t component_get_id(const struct component *this);
 

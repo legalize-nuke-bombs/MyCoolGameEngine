@@ -24,6 +24,8 @@ struct component_vtable {
 
     void (*on_disable)(struct component *this);
     void (*on_destroy)(struct component *this);
+
+    void (*on_collect_garbage)(struct component *this);
 };
 
 struct component {

@@ -55,6 +55,14 @@ void component_mark_destroyed(struct component *this) {
         scene_notify_component_marked_destroyed(this);
     }
 }
+void component_collect_garbage(struct component *this) {
+    if (!component_is_alive(this)) {
+        return;
+    }
+    if (this->vtable->on_collect_garbage != NULL) {
+        this->vtable->on_collect_garbage(this);
+    }
+}
 
 uint128_t component_get_id(const struct component *this) {
     return this->id;
