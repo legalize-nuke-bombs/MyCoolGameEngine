@@ -12,6 +12,8 @@ You can view a demo game created with this engine [here](demo).
 * Entity and component identifiers to prevent the dangling pointer problem
 * Physically accurate units of measurement
 * A simple DSL for asset management and scene setup
+* Simple prefabs
+* Resource entities that are not destroyed when scenes change
 ## Rendering
 * Eager / lazy texture loading
 * Tilesets
