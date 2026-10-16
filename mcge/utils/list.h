@@ -31,4 +31,6 @@ MCGE_API void list_clear(struct list *this);
 
 MCGE_API void list_pop_back(struct list *this);
 
+MCGE_API void list_shrink_to_fit(struct list *this);
+
 #endif //MYCOOLGAMEENGINE_LIST_H

@@ -80,3 +80,27 @@ void list_clear(struct list *this) {
 void list_pop_back(struct list *this) {
     this->_count--;
 }
+
+
+
+void list_shrink_to_fit(struct list *this) {
+    if (this->_data == NULL || this->_count > this->_capacity / 2) {
+        return;
+    }
+
+    if (this->_count == 0) {
+        allocator_delete(this->_data);
+        this->_data = NULL;
+        this->_capacity = 1;
+        return;
+    }
+
+    void **new_data = allocator_new(sizeof(void *) * this->_count);
+    for (int i = 0; i < this->_count; i++) {
+        new_data[i] = this->_data[i];
+    }
+    allocator_delete(this->_data);
+
+    this->_data = new_data;
+    this->_capacity = this->_count;
+}

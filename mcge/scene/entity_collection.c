@@ -94,6 +94,8 @@ void entity_collection_pre_update(struct entity_collection *this) {
         }
         entity_collect_garbage(node.value);
     }
+    dictionary_shrink_to_fit(this->entities);
+    list_shrink_to_fit(&this->dead);
 }
 
 unsigned int entity_collection_count(const struct entity_collection *this) {
