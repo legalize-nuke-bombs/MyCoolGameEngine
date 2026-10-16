@@ -5,6 +5,8 @@
 #ifndef MYCOOLGAMEENGINE_CHUNK_H
 #define MYCOOLGAMEENGINE_CHUNK_H
 
+#include <stdbool.h>
+
 #include "../../api.h"
 
 struct component;
@@ -16,7 +18,7 @@ struct chunk {
 
 MCGE_API void chunk_destroy(struct chunk *this);
 MCGE_API void chunk_clear(const struct chunk *this);
-MCGE_API void chunk_collect_garbage(struct chunk *this);
+MCGE_API bool chunk_collect_garbage(struct chunk *this);
 
 MCGE_API void chunk_try_add_component(struct chunk *this, const struct component* component);
 MCGE_API void chunk_try_remove_component(const struct chunk *this, const struct component* component);

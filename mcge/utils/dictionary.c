@@ -222,7 +222,10 @@ void dictionary_clear(struct dictionary *this) {
 }
 
 
-void dictionary_shrink_to_fit(struct dictionary *this) {
+bool dictionary_shrink_to_fit(struct dictionary *this) {
+    if (this->entries == NULL) {
+        return false;
+    }
     if (this->count == 0) {
         allocator_delete(this->entries);
         this->entries = NULL;
@@ -231,7 +234,7 @@ void dictionary_shrink_to_fit(struct dictionary *this) {
         this->used = 0;
         this->free_head = DICTIONARY_NONE;
         this->dim = 1;
-        return;
+        return true;
     }
 
     int new_dim = 1;
@@ -240,7 +243,7 @@ void dictionary_shrink_to_fit(struct dictionary *this) {
     }
 
     if (new_dim >= this->dim) {
-        return;
+        return false;
     }
 
     const int new_entries_capacity = (1 << new_dim) / 2;
@@ -271,4 +274,6 @@ void dictionary_shrink_to_fit(struct dictionary *this) {
     for (int position = 0; position < this->used; position++) {
         dictionary_index_place(this, position);
     }
+
+    return true;
 }

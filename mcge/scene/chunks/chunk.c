@@ -51,10 +51,11 @@ void chunk_clear(const struct chunk *this) {
         dictionary_clear(types_node.value);
     }
 }
-void chunk_collect_garbage(struct chunk *this) {
+bool chunk_collect_garbage(struct chunk *this) {
     if (!chunk_is_allocated(this)) {
-        return;
+        return false;
     }
+    bool collected = false;
     struct dictionary_iterator types_iterator = dictionary_begin(this->types);
     struct dictionary_node types_node;
     while (dictionary_next(this->types, &types_iterator, &types_node)) {
@@ -63,20 +64,23 @@ void chunk_collect_garbage(struct chunk *this) {
             continue;
         }
         if (dictionary_count(typed_components) > 0) {
-            dictionary_shrink_to_fit(typed_components);
+            collected = collected || dictionary_shrink_to_fit(typed_components);
         }
         else {
             dictionary_remove(this->types, types_node.key);
             dictionary_destroy(types_node.value);
+            collected = true;
         }
     }
-    if (dictionary_count(this->types) == 0) {
-        dictionary_destroy(this->types);
-        this->types = NULL;
+    if (dictionary_count(this->types) > 0) {
+        collected = collected || dictionary_shrink_to_fit(this->types);
     }
     else {
-        dictionary_shrink_to_fit(this->types);
+        dictionary_destroy(this->types);
+        this->types = NULL;
+        collected = true;
     }
+    return collected;
 }
 
 void chunk_try_add_component(struct chunk *this, const struct component* component) {

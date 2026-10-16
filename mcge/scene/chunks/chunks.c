@@ -16,7 +16,8 @@
 
 #define CHUNKS_NUMBER 128
 #define CHUNKS_START_CHUNK_SIZE 4.f
-#define CHUNKS_GC_CHUNKS_PER_FRAME 32
+#define CHUNKS_GC_MAX_IDLE_CHUNKS_PER_FRAME 256
+#define CHUNKS_GC_MAX_CLEANED_CHUNKS_PER_FRAME 16
 
 
 struct chunks {
@@ -76,9 +77,13 @@ void chunks_clear(struct chunks *this) {
 }
 
 void chunks_pre_update(struct chunks *this) {
-    for (int i = 0; i < CHUNKS_GC_CHUNKS_PER_FRAME; i++) {
-        chunk_collect_garbage(&this->chunks[this->gc_position / CHUNKS_NUMBER][this->gc_position % CHUNKS_NUMBER]);
+    int cleaned = 0;
+    for (int i = 0; i < CHUNKS_GC_MAX_IDLE_CHUNKS_PER_FRAME; i++) {
+        cleaned += chunk_collect_garbage(&this->chunks[this->gc_position / CHUNKS_NUMBER][this->gc_position % CHUNKS_NUMBER]);
         this->gc_position = (this->gc_position + 1) % (CHUNKS_NUMBER * CHUNKS_NUMBER);
+        if (cleaned >= CHUNKS_GC_MAX_CLEANED_CHUNKS_PER_FRAME) {
+            break;
+        }
     }
 }
 
