@@ -195,10 +195,6 @@ static void collider_validate_old_intersections(struct collider *this, const str
             collider_handle_on_exit(this, collider, true);
         }
     }
-    if (dictionary_count(this->intersections) == 0) {
-        dictionary_destroy(this->intersections);
-        this->intersections = NULL;
-    }
 }
 
 static void collider_on_disable(struct component *base) {
