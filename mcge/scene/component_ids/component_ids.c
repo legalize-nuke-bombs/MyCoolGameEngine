@@ -76,3 +76,9 @@ struct component* component_ids_try_get(const struct component_ids *this, uint12
 unsigned int component_ids_count(const struct component_ids *this) {
     return dictionary_count(this->components);
 }
+
+
+
+void components_ids_pre_update(const struct component_ids *this) {
+    dictionary_shrink_to_fit(this->components);
+}

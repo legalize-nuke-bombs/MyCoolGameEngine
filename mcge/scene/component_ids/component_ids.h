@@ -16,4 +16,6 @@ MCGE_API struct component* component_ids_try_get(const struct component_ids *thi
 
 MCGE_API unsigned int component_ids_count(const struct component_ids *this);
 
+MCGE_API void components_ids_pre_update(const struct component_ids *this);
+
 #endif //MYCOOLGAMEENGINE_COMPONENT_IDS_H
