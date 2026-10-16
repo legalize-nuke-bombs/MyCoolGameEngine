@@ -71,6 +71,9 @@ void entity_awake(struct entity *this) {
     }
     logger_debug("Entity %s is awaking...", this->_name);
     this->_awake = true;
+    if (this->_resource && this->_parent) {
+        logger_warn("Entity %s has parent but set as resource. Only mark root entities as resources", entity_get_name(this));
+    }
     for (int i = 0; i < list_count(&this->_components); i++) {
         struct component *component = list_get(&this->_components, i);
         component_awake(component);
