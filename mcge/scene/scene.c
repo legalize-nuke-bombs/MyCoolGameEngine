@@ -132,6 +132,7 @@ static void scene_update(void *listener, void *context) {
     scene_handle_switch();
     entity_collection_pre_update(scene.entities);
     chunks_pre_update(scene.chunks);
+    entity_ids_pre_update(scene.entity_ids);
     components_ids_pre_update(scene.component_ids);
     tmap_update(scene.tmap, update_context);
 }

@@ -77,3 +77,8 @@ struct entity* entity_ids_try_get(const struct entity_ids *this, uint128_t id) {
 unsigned int entity_ids_count(const struct entity_ids *this) {
     return dictionary_count(this->entities);
 }
+
+
+void entity_ids_pre_update(const struct entity_ids *this) {
+    dictionary_shrink_to_fit(this->entities);
+}

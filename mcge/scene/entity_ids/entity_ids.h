@@ -16,4 +16,6 @@ MCGE_API struct entity* entity_ids_try_get(const struct entity_ids *this, uint12
 
 MCGE_API unsigned int entity_ids_count(const struct entity_ids *this);
 
+MCGE_API void entity_ids_pre_update(const struct entity_ids *this);
+
 #endif //MYCOOLGAMEENGINE_ENTITY_IDS_H
