@@ -14,7 +14,7 @@
 #include "../../utils/pointer_dictionary.h"
 #include "../components/component.h"
 
-#define CHUNKS_SIZE 1024
+#define CHUNKS_SIZE 128
 #define CHUNKS_START_CHUNK_SIZE 2.f
 
 
