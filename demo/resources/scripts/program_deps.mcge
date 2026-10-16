@@ -1,6 +1,6 @@
-/* boot.mcge */
+/* program_deps.mcge */
 
-once name=boot body=[
+once name=program_deps body=[
     /* Renderer layers */
     renderer_layer name=bg1 priority=1
     renderer_layer name=bg2 priority=2
@@ -88,9 +88,6 @@ once name=boot body=[
     /* Entities */
     entity name=ProcessState resource=true components=[
         fullscreen_toggler key=F11
-    ]
-    entity name=Loader components=[
-        scene_switcher_on_start script=scripts/menu/menu.mcge
     ]
 ]
 

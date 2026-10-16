@@ -1,5 +1,7 @@
 /* map_deps.mcge */
 
+eval path=scripts/program_deps.mcge
+
 once name=map_deps body=[
     rigid_layer name=bg1 priority=1
     rigid_layer name=bg2 priority=2

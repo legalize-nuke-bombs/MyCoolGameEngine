@@ -1,3 +1,4 @@
 /* main.mcge */
 
-eval path=scripts/boot.mcge
+eval path=scripts/program_deps.mcge
+eval path=scripts/menu/menu.mcge

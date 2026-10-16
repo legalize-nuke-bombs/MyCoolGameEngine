@@ -15,7 +15,6 @@
 #include "custom/camera_wheel_zoom.h"
 #include "core/idle.h"
 #include "core/simulator.h"
-#include "mcge/logging/logger.h"
 #include "movement/controller.h"
 #include "movement/keyboard_controller.h"
 #include "physics/collider.h"
@@ -34,7 +33,6 @@
 #include "lifecycle/game_closer_on_click.h"
 #include "lifecycle/scene_switcher_on_key_pressed.h"
 #include "lifecycle/scene_switcher_on_click.h"
-#include "lifecycle/scene_switcher_on_start.h"
 
 static struct factory component_factory;
 
@@ -64,7 +62,6 @@ void component_factory_create(void) {
     component_factory_register(&game_closer_on_click_vtable);
     component_factory_register(&scene_switcher_on_key_pressed_vtable);
     component_factory_register(&scene_switcher_on_click_vtable);
-    component_factory_register(&scene_switcher_on_start_vtable);
 }
 void component_factory_destroy(void) {
     factory_destroy(&component_factory);

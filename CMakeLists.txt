@@ -320,8 +320,6 @@ add_library(mcge SHARED
         mcge/scene/components/lifecycle/scene_switcher_on_key_pressed.c
         mcge/scene/components/lifecycle/scene_switcher_on_click.h
         mcge/scene/components/lifecycle/scene_switcher_on_click.c
-        mcge/scene/components/lifecycle/scene_switcher_on_start.h
-        mcge/scene/components/lifecycle/scene_switcher_on_start.c
 )
 set_target_properties(mcge PROPERTIES DEFINE_SYMBOL MCGE_EXPORT)
 if(WIN32)
