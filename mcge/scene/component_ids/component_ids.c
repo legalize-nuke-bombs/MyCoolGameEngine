@@ -79,6 +79,6 @@ unsigned int component_ids_count(const struct component_ids *this) {
 
 
 
-void components_ids_pre_update(const struct component_ids *this) {
+void component_ids_pre_update(const struct component_ids *this) {
     dictionary_shrink_to_fit(this->components);
 }
