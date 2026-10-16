@@ -14,12 +14,12 @@
 #include "../../utils/pointer_dictionary.h"
 #include "../components/component.h"
 
-#define CHUNKS_SIZE 128
-#define CHUNKS_START_CHUNK_SIZE 2.f
+#define CHUNKS_NUMBER 128
+#define CHUNKS_START_CHUNK_SIZE 4.f
 
 
 struct chunks {
-    struct chunk chunks[CHUNKS_SIZE][CHUNKS_SIZE];
+    struct chunk chunks[CHUNKS_NUMBER][CHUNKS_NUMBER];
     float chunk_size;
 
     struct action* on_component_captured;
@@ -39,7 +39,7 @@ static void handle_component_resize(void *listener, void *context);
 
 
 struct chunks *chunks_create(void) {
-    logger_info("Chunks (%d x %d, chunk size %f) are creating...", CHUNKS_SIZE, CHUNKS_SIZE, CHUNKS_START_CHUNK_SIZE);
+    logger_info("Chunks (%d x %d, chunk size %f) are creating...", CHUNKS_NUMBER, CHUNKS_NUMBER, CHUNKS_START_CHUNK_SIZE);
     struct chunks *this = allocator_new0(1, sizeof(struct chunks));
     this->chunk_size = CHUNKS_START_CHUNK_SIZE;
 
@@ -56,8 +56,8 @@ struct chunks *chunks_create(void) {
 }
 
 static void chunks_destroy_chunks(struct chunks *this) {
-    for (int i = 0; i < CHUNKS_SIZE; i++) {
-        for (int j = 0; j < CHUNKS_SIZE; j++) {
+    for (int i = 0; i < CHUNKS_NUMBER; i++) {
+        for (int j = 0; j < CHUNKS_NUMBER; j++) {
             chunk_destroy(&this->chunks[i][j]);
         }
     }
@@ -77,7 +77,7 @@ static void chunks_resize(struct chunks *this);
 
 static int chunks_get_position_index(const struct chunks* this, const double position) {
     const int offset = floor(position / this->chunk_size);
-    return (CHUNKS_SIZE / 2) + offset;
+    return (CHUNKS_NUMBER / 2) + offset;
 }
 
 static void chunks_get_raw_rect_indexes(const struct chunks *this, const struct rect rect, int *x_start, int *x_end, int *y_start, int *y_end) {
@@ -99,11 +99,11 @@ void chunks_get_safe_rect_indexes(const struct chunks *this, const struct rect r
     if (*y_start < 0) {
         *y_start = 0;
     }
-    if (*x_end >= CHUNKS_SIZE) {
-        *x_end = CHUNKS_SIZE - 1;
+    if (*x_end >= CHUNKS_NUMBER) {
+        *x_end = CHUNKS_NUMBER - 1;
     }
-    if (*y_end >= CHUNKS_SIZE) {
-        *y_end = CHUNKS_SIZE - 1;
+    if (*y_end >= CHUNKS_NUMBER) {
+        *y_end = CHUNKS_NUMBER - 1;
     }
 }
 
@@ -139,7 +139,7 @@ static void chunks_add_component_with_resize(struct chunks* this, struct compone
     int start_x, end_x, start_y, end_y;
     while (1) {
         chunks_get_raw_rect_indexes(this, component_get_rect(component), &start_x, &end_x, &start_y, &end_y);
-        if (start_x >= 0 && end_x < CHUNKS_SIZE && start_y >= 0 && end_y < CHUNKS_SIZE) {
+        if (start_x >= 0 && end_x < CHUNKS_NUMBER && start_y >= 0 && end_y < CHUNKS_NUMBER) {
             break;
         }
         chunks_resize(this);
@@ -153,8 +153,8 @@ static void chunks_resize(struct chunks *this) {
 
     struct dictionary *all_components = pointer_dictionary_build(10);
 
-    for (int i = 0; i < CHUNKS_SIZE; i++) {
-        for (int j = 0; j < CHUNKS_SIZE; j++) {
+    for (int i = 0; i < CHUNKS_NUMBER; i++) {
+        for (int j = 0; j < CHUNKS_NUMBER; j++) {
             const struct dictionary *chunk_types = chunk_get_types(&this->chunks[i][j]);
             if (chunk_types == NULL) {
                 continue;
@@ -221,7 +221,7 @@ static void handle_component_resize(void *listener, void *context) {
 }
 
 unsigned int chunks_get_number(const struct chunks *this) {
-    return CHUNKS_SIZE;
+    return CHUNKS_NUMBER;
 }
 float chunks_get_chunk_size(const struct chunks *this) {
     return this->chunk_size;
