@@ -64,7 +64,10 @@ bool chunk_collect_garbage(struct chunk *this) {
             continue;
         }
         if (dictionary_count(typed_components) > 0) {
-            collected = collected || dictionary_shrink_to_fit(typed_components);
+            // No || here: C skips the right side once collected is true, and the shrink would not run
+            if (dictionary_shrink_to_fit(typed_components)) {
+                collected = true;
+            }
         }
         else {
             dictionary_remove(this->types, types_node.key);
@@ -73,7 +76,10 @@ bool chunk_collect_garbage(struct chunk *this) {
         }
     }
     if (dictionary_count(this->types) > 0) {
-        collected = collected || dictionary_shrink_to_fit(this->types);
+        // No || here: C skips the right side once collected is true, and the shrink would not run
+        if (dictionary_shrink_to_fit(this->types)) {
+            collected = true;
+        }
     }
     else {
         dictionary_destroy(this->types);
