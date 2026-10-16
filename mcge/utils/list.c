@@ -15,7 +15,8 @@ struct list list_create(int capacity) {
     const struct list list = {
         ._data = NULL,
         ._capacity = capacity,
-        ._count = 0
+        ._count = 0,
+        ._initial_capacity = capacity
     };
     return list;
 }
@@ -84,23 +85,21 @@ void list_pop_back(struct list *this) {
 
 
 void list_shrink_to_fit(struct list *this) {
-    if (this->_data == NULL || this->_count > this->_capacity / 2) {
+    if (this->_data == NULL || this->_capacity <= this->_initial_capacity || this->_count > this->_capacity / 4) {
         return;
     }
 
-    if (this->_count == 0) {
-        allocator_delete(this->_data);
-        this->_data = NULL;
-        this->_capacity = 1;
-        return;
+    int new_capacity = 2 * this->_count;
+    if (new_capacity < this->_initial_capacity) {
+        new_capacity = this->_initial_capacity;
     }
 
-    void **new_data = allocator_new(sizeof(void *) * this->_count);
+    void **new_data = allocator_new(sizeof(void *) * new_capacity);
     for (int i = 0; i < this->_count; i++) {
         new_data[i] = this->_data[i];
     }
     allocator_delete(this->_data);
 
     this->_data = new_data;
-    this->_capacity = this->_count;
+    this->_capacity = new_capacity;
 }

@@ -11,6 +11,7 @@ struct list {
     void **_data;
     int _capacity;
     int _count;
+    int _initial_capacity;
 };
 
 MCGE_API struct list list_create(int capacity);
