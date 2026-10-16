@@ -62,9 +62,10 @@ static void camera_update_renderer_pipeline_viewport(const struct camera *this) 
     renderer_pipeline_set_viewport(this->renderer, viewport);
 }
 
-static void camera_update_visible_component(struct component* component, void *context) {
+static bool camera_update_visible_component(struct component* component, void *context) {
     const struct update_context *update_context = context;
     component_visible_chunk_update(component, update_context);
+    return true;
 }
 
 static void camera_update_visible_chunks(const struct camera *this, const struct update_context *context) {

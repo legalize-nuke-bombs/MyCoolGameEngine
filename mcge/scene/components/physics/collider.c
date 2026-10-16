@@ -162,13 +162,14 @@ static void collider_handle_on_exit(struct collider *this, struct collider *coll
     }
 }
 
-static void collider_check_new_intersections_step(struct component *component, void *context) {
+static bool collider_check_new_intersections_step(struct component *component, void *context) {
     struct collider *this = context;
     struct collider *collider = (struct collider*)component;
     if (collider == this || collider_get_response(this, collider) == collision_response_ignore) {
-        return;
+        return true;
     }
     collider_handle_on_enter(this, collider, true);
+    return true;
 }
 
 static void collider_validate_old_intersections(struct collider *this, const struct rect rect) {
@@ -216,23 +217,22 @@ struct collider_try_get_obstacle_context {
     const struct entity *current_parent;
     struct entity *obstacle;
 };
-static void collider_try_get_obstacle_step(struct component *component, void *context) {
+static bool collider_try_get_obstacle_step(struct component *component, void *context) {
     const struct collider *collider = (struct collider*)component;
     struct collider_try_get_obstacle_context *cnt = context;
 
-    if (cnt->obstacle != NULL) {
-        return;
-    }
     if (rects_intersection(cnt->current_rect, component_get_rect(component))) {
-        return;
+        return true;
     }
     if (collider_get_response(cnt->self, collider) != collision_response_block) {
-        return;
+        return true;
     }
     struct entity *collider_parent = component_get_global_parent(component);
-    if (collider_parent != cnt->current_parent) {
-        cnt->obstacle = collider_parent;
+    if (collider_parent == cnt->current_parent) {
+        return true;
     }
+    cnt->obstacle = collider_parent;
+    return false;
 }
 struct entity* collider_try_get_obstacle(const struct collider *this, const struct rect current_rect, const struct rect rect) {
     struct collider_try_get_obstacle_context context = {

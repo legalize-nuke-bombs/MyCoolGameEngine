@@ -10,8 +10,8 @@
 
 struct component;
 
-MCGE_API void chunks_algorithms_for_each(struct rect rect, bool type_validation(const struct component *target), void f(struct component *target, void *context), void *f_context);
+MCGE_API void chunks_algorithms_for_each(struct rect rect, bool type_validation(const struct component *target), bool f(struct component *target, void *context), void *f_context);
 
-MCGE_API void chunks_algorithms_for_each_typed(struct rect rect, const char *component_key, void f(struct component *target, void *context), void *f_context);
+MCGE_API void chunks_algorithms_for_each_typed(struct rect rect, const char *component_key, bool f(struct component *target, void *context), void *f_context);
 
 #endif //MYCOOLGAMEENGINE_CHUNKS_ALGORITHMS_H

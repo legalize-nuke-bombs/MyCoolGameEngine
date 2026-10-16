@@ -10,7 +10,7 @@
 #include "../scene.h"
 #include "../../utils/dictionary.h"
 
-void chunks_algorithms_for_each(const struct rect rect, bool type_validation(const struct component *target), void f(struct component *target, void *context), void *f_context) {
+void chunks_algorithms_for_each(const struct rect rect, bool type_validation(const struct component *target), bool f(struct component *target, void *context), void *f_context) {
     const struct chunks *chunks = scene_get_chunks();
     int x_start, x_end, y_start, y_end;
     chunks_get_safe_rect_indexes(chunks, rect, &x_start, &x_end, &y_start, &y_end);
@@ -35,14 +35,16 @@ void chunks_algorithms_for_each(const struct rect rect, bool type_validation(con
                     if (!rects_intersection(rect, component_rect)) {
                         continue;
                     }
-                    f(component, f_context);
+                    if (!f(component, f_context)) {
+                        return;
+                    }
                 }
             }
         }
     }
 }
 
-void chunks_algorithms_for_each_typed(const struct rect rect, const char *component_key, void f(struct component* target, void *context), void *f_context) {
+void chunks_algorithms_for_each_typed(const struct rect rect, const char *component_key, bool f(struct component* target, void *context), void *f_context) {
     const struct chunks *chunks = scene_get_chunks();
     int x_start, x_end, y_start, y_end;
     chunks_get_safe_rect_indexes(chunks, rect, &x_start, &x_end, &y_start, &y_end);
@@ -61,7 +63,9 @@ void chunks_algorithms_for_each_typed(const struct rect rect, const char *compon
                 if (!rects_intersection(rect, component_rect)) {
                     continue;
                 }
-                f(component, f_context);
+                if (!f(component, f_context)) {
+                    return;
+                }
             }
         }
     }

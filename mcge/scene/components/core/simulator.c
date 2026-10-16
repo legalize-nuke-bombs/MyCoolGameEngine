@@ -33,9 +33,10 @@ static void simulator_on_create(struct component *base, struct fields *fields) {
     this->simulation_distance = fields_get_double(fields, "distance", 0);
 }
 
-static void simulator_update_component(struct component *component, void *context) {
+static bool simulator_update_component(struct component *component, void *context) {
     const struct update_context *update_context = context;
     component_simulation_chunk_update(component, update_context);
+    return true;
 }
 
 static void simulator_simulate(const struct simulator *this, const struct update_context *context) {

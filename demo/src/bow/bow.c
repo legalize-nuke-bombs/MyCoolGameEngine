@@ -156,7 +156,7 @@ struct bow_find_most_injured_enemy_context {
     struct character* result_character;
     double min_health;
 };
-static void bow_find_most_injured_enemy_step(struct component *component, void *context) {
+static bool bow_find_most_injured_enemy_step(struct component *component, void *context) {
     struct character *character = (struct character*)component;
     struct bow_find_most_injured_enemy_context *cnt = context;
 
@@ -165,12 +165,12 @@ static void bow_find_most_injured_enemy_step(struct component *component, void *
     const double distance_sqr = vector_sqr_distance(&cnt->self_position, &position);
 
     if (cnt->self_group == group || distance_sqr > cnt->sqr_radius) {
-        return;
+        return true;
     }
 
     const struct health *health = (struct health*)entity_try_get_component(component_get_parent(component), "health", entity_query_local);
     if (health == NULL) {
-        return;
+        return true;
     }
     const double h_amount = health_amount(health);
 
@@ -178,6 +178,7 @@ static void bow_find_most_injured_enemy_step(struct component *component, void *
         cnt->min_health = h_amount;
         cnt->result_character = character;
     }
+    return true;
 }
 struct bow_find_closest_enemy_context {
     struct vector2 self_position;
@@ -188,7 +189,7 @@ struct bow_find_closest_enemy_context {
     struct character* result_character;
     double min_distance_sqr;
 };
-static void bow_find_closest_enemy_step(struct component *component, void *context) {
+static bool bow_find_closest_enemy_step(struct component *component, void *context) {
     struct character *character = (struct character*)component;
     struct bow_find_closest_enemy_context *cnt = context;
 
@@ -197,20 +198,21 @@ static void bow_find_closest_enemy_step(struct component *component, void *conte
     const double self_distance_sqr = vector_sqr_distance(&cnt->self_position, &position);
 
     if (cnt->self_group == group || self_distance_sqr > cnt->sqr_radius) {
-        return;
+        return true;
     }
 
     const double most_injured_distance_sqr = vector_sqr_distance(&cnt->most_injured_position, &position);
     if (most_injured_distance_sqr > cnt->min_distance_sqr) {
-        return;
+        return true;
     }
 
     if (dictionary_present(cnt->exclude_dict, character)) {
-        return;
+        return true;
     }
 
     cnt->min_distance_sqr = most_injured_distance_sqr;
     cnt->result_character = character;
+    return true;
 }
 struct dictionary* bow_try_find_targets(struct bow* this) {
     const struct character *character = (struct character*)scene_try_get_component(this->character_id);
