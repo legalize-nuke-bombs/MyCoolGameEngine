@@ -314,6 +314,14 @@ add_library(mcge SHARED
         mcge/allocator/allocator.c
         mcge/scene/components/custom/fullscreen_toggler.h
         mcge/scene/components/custom/fullscreen_toggler.c
+        mcge/scene/components/lifecycle/game_closer_on_click.h
+        mcge/scene/components/lifecycle/game_closer_on_click.c
+        mcge/scene/components/lifecycle/scene_switcher_on_key_pressed.h
+        mcge/scene/components/lifecycle/scene_switcher_on_key_pressed.c
+        mcge/scene/components/lifecycle/scene_switcher_on_click.h
+        mcge/scene/components/lifecycle/scene_switcher_on_click.c
+        mcge/scene/components/lifecycle/scene_switcher_on_start.h
+        mcge/scene/components/lifecycle/scene_switcher_on_start.c
 )
 set_target_properties(mcge PROPERTIES DEFINE_SYMBOL MCGE_EXPORT)
 if(WIN32)
@@ -327,10 +335,6 @@ add_executable(MyCoolGameEngine demo/src/main.c
         demo/src/world/forest.c
         demo/src/world/pulsator.h
         demo/src/world/pulsator.c
-        demo/src/scenes/scene_switcher.h
-        demo/src/scenes/scene_switcher.c
-        demo/src/scenes/game_closer.h
-        demo/src/scenes/game_closer.c
         demo/src/environment/clock.h
         demo/src/environment/clock.c
         demo/src/environment/sky.h
@@ -428,10 +432,6 @@ add_executable(MyCoolGameEngine demo/src/main.c
         demo/src/wallet/steal_wallet_on_kill.c
         demo/src/wallet/wallet_hud.h
         demo/src/wallet/wallet_hud.c
-        demo/src/scenes/game_closer_on_click.h
-        demo/src/scenes/game_closer_on_click.c
-        demo/src/scenes/scene_switcher_on_click.h
-        demo/src/scenes/scene_switcher_on_click.c
 )
 
 target_link_libraries(MyCoolGameEngine PRIVATE mcge)

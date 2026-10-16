@@ -4,7 +4,17 @@
 
 
 #include "scene_switcher_on_click.h"
-#include <mcge/mcge.h>
+
+#include "mcge/allocator/allocator.h"
+#include "mcge/devices/mouse.h"
+#include "mcge/scene/entity.h"
+#include "mcge/scene/scene.h"
+#include "mcge/scene/components/component.h"
+#include "mcge/scene/components/custom/clickable.h"
+#include "mcge/utils/action.h"
+#include "mcge/utils/fields.h"
+#include "mcge/utils/uint128_t.h"
+#include "mcge/scene/components/component_internal.h"
 
 
 struct scene_switcher_on_click {

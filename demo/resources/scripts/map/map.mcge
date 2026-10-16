@@ -1,10 +1,11 @@
-eval path=scripts/map_deps.mcge
+/* map.mcge */
 
-entity name=GameState components=[
+eval path=scripts/map/map_deps.mcge
+
+entity name=MapState components=[
     clock seconds=0 speed=3600
     sky day=[125 125 150 255] night=[40 40 70 255]
-    scene_switcher key=Escape script=scripts/menu.mcge
-    fullscreen_toggler key=F11
+    scene_switcher_on_key_pressed key=Escape script=scripts/menu/menu.mcge
 ]
 
 entity name=Terrain size=[500 500] components=[

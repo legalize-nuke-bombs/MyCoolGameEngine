@@ -34,10 +34,6 @@
 #include "health/sound_on_kill.h"
 #include "mana/mana_hud_bar.h"
 #include "mana/mana_regeneration.h"
-#include "scenes/game_closer.h"
-#include "scenes/game_closer_on_click.h"
-#include "scenes/scene_switcher.h"
-#include "scenes/scene_switcher_on_click.h"
 #include "wallet/steal_wallet_on_kill.h"
 #include "wallet/wallet.h"
 #include "wallet/wallet_hud.h"
@@ -51,8 +47,6 @@ void demo_install(void) {
 
     component_factory_register(&pulsator_vtable);
     component_factory_register(&forest_vtable);
-    component_factory_register(&scene_switcher_vtable);
-    component_factory_register(&game_closer_vtable);
     component_factory_register(&clock_vtable);
     component_factory_register(&sky_vtable);
     component_factory_register(&player_vtable);
@@ -83,8 +77,6 @@ void demo_install(void) {
     component_factory_register(&wallet_vtable);
     component_factory_register(&steal_wallet_on_kill_vtable);
     component_factory_register(&wallet_hud_vtable);
-    component_factory_register(&game_closer_on_click_vtable);
-    component_factory_register(&scene_switcher_on_click_vtable);
 
     bt_node_factory_register(&player_is_near_vtable);
     bt_node_factory_register(&player_chase_vtable);

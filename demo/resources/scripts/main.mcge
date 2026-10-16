@@ -1,1 +1,3 @@
-eval path=scripts/menu.mcge
+/* main.mcge */
+
+eval path=scripts/boot.mcge

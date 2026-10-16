@@ -59,5 +59,8 @@ MIX_Audio* clip_get_native_audio(struct clip* this) {
     return this->native_audio ? this->native_audio : audio_get_fallback_audio();
 }
 float clip_get_volume(const struct clip* this) {
+    if (this == NULL) {
+        return 1;
+    }
     return this->volume;
 }

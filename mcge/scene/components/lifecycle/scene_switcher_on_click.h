@@ -5,8 +5,10 @@
 #ifndef MYCOOLGAMEENGINE_SCENE_SWITCHER_ON_CLICK_H
 #define MYCOOLGAMEENGINE_SCENE_SWITCHER_ON_CLICK_H
 
-const char* scene_switcher_on_click_component_key(void);
+#include "mcge/api.h"
 
-extern const struct component_vtable scene_switcher_on_click_vtable;
+MCGE_API const char* scene_switcher_on_click_component_key(void);
+
+MCGE_API extern const struct component_vtable scene_switcher_on_click_vtable;
 
 #endif //MYCOOLGAMEENGINE_SCENE_SWITCHER_ON_CLICK_H

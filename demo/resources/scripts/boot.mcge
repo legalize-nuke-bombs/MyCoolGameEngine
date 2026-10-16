@@ -1,4 +1,6 @@
-once name=menu_deps body=[
+/* boot.mcge */
+
+once name=boot body=[
     /* Renderer layers */
     renderer_layer name=bg1 priority=1
     renderer_layer name=bg2 priority=2
@@ -79,4 +81,17 @@ once name=menu_deps body=[
     sound name=coins clips=[coins1]
     sound name=footstep_ground clips=[footstep_ground1 footstep_ground2 footstep_ground3 footstep_ground4]
     sound name=footstep_water clips=[footstep_water1 footstep_water2 footstep_water3 footstep_water4 footstep_water5 footstep_water6 footstep_water7 footstep_water8 footstep_water9 footstep_water10 footstep_water11]
+
+
+
+
+    /* Entities */
+    entity name=ProcessState resource=true components=[
+        fullscreen_toggler key=F11
+    ]
+    entity name=Loader components=[
+        scene_switcher_on_start script=scripts/menu/menu.mcge
+    ]
 ]
+
+
