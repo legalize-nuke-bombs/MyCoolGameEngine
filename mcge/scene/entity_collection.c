@@ -28,15 +28,30 @@ struct entity_collection *entity_collection_create(void) {
     return this;
 }
 
-static void entity_collection_destroy_everyone(const struct entity_collection *this) {
+static void entity_collection_destroy_marked_dead(struct entity_collection *this) {
+    for (int i = 0; i < list_count(&this->dead); i++) {
+        entity_destroy(list_get(&this->dead, i));
+    }
+    list_clear(&this->dead);
+}
+static void entity_collection_destroy_everyone(struct entity_collection *this) {
     struct dictionary_iterator iterator = dictionary_begin(this->entities);
     struct dictionary_node node;
     while (dictionary_next(this->entities, &iterator, &node)) {
         entity_mark_destroyed(node.value);
     }
-    for (int i = 0; i < list_count(&this->dead); i++) {
-        entity_destroy(list_get(&this->dead, i));
+    entity_collection_destroy_marked_dead(this);
+}
+static void entity_collection_destroy_exclude_resources(struct entity_collection *this) {
+    struct dictionary_iterator iterator = dictionary_begin(this->entities);
+    struct dictionary_node node;
+    while (dictionary_next(this->entities, &iterator, &node)) {
+        if (entity_is_resource(node.value)) {
+            continue;
+        }
+        entity_mark_destroyed(node.value);
     }
+    entity_collection_destroy_marked_dead(this);
 }
 
 void entity_collection_destroy(struct entity_collection *this) {
@@ -47,10 +62,12 @@ void entity_collection_destroy(struct entity_collection *this) {
     allocator_delete(this);
 }
 
-void entity_collection_clear(struct entity_collection *this) {
+void entity_collection_clear_all(struct entity_collection *this) {
     entity_collection_destroy_everyone(this);
-    dictionary_clear(this->entities);
-    list_clear(&this->dead);
+    this->gc_iterator = dictionary_begin(this->entities);
+}
+void entity_collection_clear_exclude_resources(struct entity_collection *this) {
+    entity_collection_destroy_exclude_resources(this);
     this->gc_iterator = dictionary_begin(this->entities);
 }
 
@@ -68,11 +85,7 @@ void entity_collection_move_to_dead(struct entity_collection *this, struct entit
 }
 
 void entity_collection_pre_update(struct entity_collection *this) {
-    for (int i = 0; i < list_count(&this->dead); i++) {
-        entity_destroy(list_get(&this->dead, i));
-    }
-    list_clear(&this->dead);
-
+    entity_collection_destroy_marked_dead(this);
     for (int i = 0; i < ENTITY_COLLECTION_GC_ROOTS_PER_FRAME; i++) {
         struct dictionary_node node;
         if (!dictionary_next(this->entities, &this->gc_iterator, &node)) {

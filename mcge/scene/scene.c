@@ -90,7 +90,7 @@ static void scene_on_enable(struct engine_arguments args) {
 static void scene_on_disable(void) {
     action_unsubscribe(scene.on_physics, scene.on_physics_subscription_token);
     scene.on_physics = NULL;
-    entity_collection_clear(scene.entities);
+    entity_collection_clear_all(scene.entities);
     entity_ids_clear(scene.entity_ids);
     component_ids_clear(scene.component_ids);
     tmap_clear(scene.tmap);
@@ -112,7 +112,7 @@ static void scene_handle_switch(void) {
         return;
     }
     logger_info("Scene is switching...");
-    entity_collection_clear(scene.entities);
+    entity_collection_clear_exclude_resources(scene.entities);
     interpreter_eval(scene.switch_flag);
     if (scene.switch_flag != NULL) allocator_delete(scene.switch_flag);
     scene.switch_flag = NULL;

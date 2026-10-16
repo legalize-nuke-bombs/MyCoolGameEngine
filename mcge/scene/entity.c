@@ -45,11 +45,12 @@ static void entity_update_rect(struct entity *this) {
     }
 }
 
-struct entity* entity_create(char *name, const uint128_t id, struct entity *parent) {
+struct entity* entity_create(char *name, const uint128_t id, const bool resource, struct entity *parent) {
     struct entity *this = allocator_new0(1, sizeof(struct entity));
     this->_name = name;
     logger_debug("Entity %s is initializing...", this->_name);
     this->_id = (uint128_cmp(id, uint128_zero) == 0) ? random_next_uint128() : id;
+    this->_resource = resource;
     this->_awake = false;
     this->_alive = true;
 
@@ -146,9 +147,11 @@ void entity_collect_garbage(struct entity *this) {
 const char* entity_get_name(const struct entity *this) {
     return this->_name;
 }
-
 uint128_t entity_get_id(const struct entity *this) {
     return this->_id;
+}
+bool entity_is_resource(const struct entity *this) {
+    return this->_resource;
 }
 
 bool entity_is_awake(const struct entity *this) {

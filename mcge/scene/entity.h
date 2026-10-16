@@ -12,6 +12,8 @@
 struct entity {
     char *_name;
     uint128_t _id;
+    bool _resource;
+
     bool _awake;
     bool _alive;
 
@@ -25,15 +27,15 @@ struct entity {
     bool _in_scene;
 };
 
-MCGE_API struct entity* entity_create(char *name, uint128_t id, struct entity *parent);
+MCGE_API struct entity* entity_create(char *name, uint128_t id, bool resource, struct entity *parent);
 MCGE_API void entity_awake(struct entity *this);
 MCGE_API void entity_destroy(struct entity *this);
 MCGE_API void entity_mark_destroyed(struct entity *this);
 MCGE_API void entity_collect_garbage(struct entity *this);
 
 MCGE_API const char *entity_get_name(const struct entity *this);
-
 MCGE_API uint128_t entity_get_id(const struct entity *this);
+MCGE_API bool entity_is_resource(const struct entity *this);
 
 MCGE_API bool entity_is_awake(const struct entity *this);
 MCGE_API bool entity_is_alive(const struct entity *this);

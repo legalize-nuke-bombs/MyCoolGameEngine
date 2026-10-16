@@ -12,10 +12,11 @@ struct entity* entity_factory_produce(struct fields *fields) {
     char* entity_name = fields_dup_string(fields, "name", "Entity");
     const char* entity_id_str = fields_get_string(fields, "id", "0");
     uint128_t entity_id = uint128_zero;
+    const bool resource = fields_get_bool(fields, "resource", false);
     if (!uint128_from_string(entity_id_str, &entity_id)) {
         logger_warn("Failed to convert entity `%s` id `%s` to uint128_t", entity_name, entity_id_str);
     }
-    struct entity *entity = entity_create(entity_name, entity_id, NULL);
+    struct entity *entity = entity_create(entity_name, entity_id, resource, NULL);
 
     const struct rect rect = {
         .position = fields_get_vector2(fields, "position", vector2_zero),
