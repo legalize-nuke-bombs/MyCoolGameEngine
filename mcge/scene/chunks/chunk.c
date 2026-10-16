@@ -66,7 +66,7 @@ void chunk_try_add_component(struct chunk *this, const struct component* compone
 
     dictionary_try_add(typed_components, (void*)component, (void*)component);
 }
-void chunk_try_remove_component(const struct chunk *this, const struct component* component) {
+void chunk_try_remove_component(struct chunk *this, const struct component* component) {
     if (!chunk_is_allocated(this)) {
         return;
     }
@@ -79,6 +79,15 @@ void chunk_try_remove_component(const struct chunk *this, const struct component
     }
 
     dictionary_remove(typed_components, (void*)component);
+
+    if (dictionary_count(typed_components) == 0) {
+        dictionary_remove(this->types, (void*)component_type);
+        dictionary_destroy(typed_components);
+        if (dictionary_count(this->types) == 0) {
+            dictionary_destroy(this->types);
+            this->types = NULL;
+        }
+    }
 }
 
 struct dictionary* chunk_get_types(const struct chunk* this) {

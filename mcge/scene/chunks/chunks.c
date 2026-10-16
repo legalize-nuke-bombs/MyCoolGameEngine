@@ -115,7 +115,7 @@ struct dictionary* chunks_chunk_get_components_by_type(const struct chunks *this
     return chunk_get_components_by_type(&this->chunks[index_x][index_y], component_type);
 }
 
-static void chunks_remove_component(const struct chunks *this, const struct rect rect, const struct component *component) {
+static void chunks_remove_component(struct chunks *this, const struct rect rect, const struct component *component) {
     int start_x, end_x, start_y, end_y;
     chunks_get_safe_rect_indexes(this, rect, &start_x, &end_x, &start_y, &end_y);
     for (int x = start_x; x <= end_x; x++) {
@@ -194,7 +194,7 @@ static void handle_component_captured(void *listener, void *context) {
     chunks_add_component_with_resize(this, component);
 }
 static void handle_component_marked_destroyed(void *listener, void *context) {
-    const struct chunks *this = listener;
+    struct chunks *this = listener;
     const struct component *component = context;
     if (!component_is_chunkable(component)) {
         return;
