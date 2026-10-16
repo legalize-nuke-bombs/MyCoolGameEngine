@@ -16,11 +16,13 @@
 
 #define CHUNKS_NUMBER 128
 #define CHUNKS_START_CHUNK_SIZE 4.f
+#define CHUNKS_GC_CHUNKS_PER_FRAME 128
 
 
 struct chunks {
     struct chunk chunks[CHUNKS_NUMBER][CHUNKS_NUMBER];
     float chunk_size;
+    int gc_position;
 
     struct action* on_component_captured;
     unsigned int on_component_captured_token;
@@ -73,6 +75,13 @@ void chunks_clear(struct chunks *this) {
     chunks_destroy_chunks(this);
 }
 
+void chunks_pre_update(struct chunks *this) {
+    for (int i = 0; i < CHUNKS_GC_CHUNKS_PER_FRAME; i++) {
+        chunk_collect_garbage(&this->chunks[this->gc_position / CHUNKS_NUMBER][this->gc_position % CHUNKS_NUMBER]);
+        this->gc_position = (this->gc_position + 1) % (CHUNKS_NUMBER * CHUNKS_NUMBER);
+    }
+}
+
 static void chunks_resize(struct chunks *this);
 
 static int chunks_get_position_index(const struct chunks* this, const double position) {
@@ -115,7 +124,7 @@ struct dictionary* chunks_chunk_get_components_by_type(const struct chunks *this
     return chunk_get_components_by_type(&this->chunks[index_x][index_y], component_type);
 }
 
-static void chunks_remove_component(struct chunks *this, const struct rect rect, const struct component *component) {
+static void chunks_remove_component(const struct chunks *this, const struct rect rect, const struct component *component) {
     int start_x, end_x, start_y, end_y;
     chunks_get_safe_rect_indexes(this, rect, &start_x, &end_x, &start_y, &end_y);
     for (int x = start_x; x <= end_x; x++) {
@@ -194,7 +203,7 @@ static void handle_component_captured(void *listener, void *context) {
     chunks_add_component_with_resize(this, component);
 }
 static void handle_component_marked_destroyed(void *listener, void *context) {
-    struct chunks *this = listener;
+    const struct chunks *this = listener;
     const struct component *component = context;
     if (!component_is_chunkable(component)) {
         return;

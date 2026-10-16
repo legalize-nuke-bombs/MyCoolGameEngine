@@ -16,6 +16,7 @@ MCGE_API struct chunks *chunks_create(void);
 MCGE_API void chunks_destroy(struct chunks *this);
 
 MCGE_API void chunks_clear(struct chunks *this);
+MCGE_API void chunks_pre_update(struct chunks *this);
 
 MCGE_API void chunks_get_safe_rect_indexes(const struct chunks *this, struct rect rect, int *x_start, int *x_end, int *y_start, int *y_end);
 
