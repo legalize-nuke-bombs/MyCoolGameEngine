@@ -16,7 +16,7 @@
 
 #define CHUNKS_NUMBER 128
 #define CHUNKS_START_CHUNK_SIZE 4.f
-#define CHUNKS_GC_CHUNKS_PER_FRAME 128
+#define CHUNKS_GC_CHUNKS_PER_FRAME 32
 
 
 struct chunks {

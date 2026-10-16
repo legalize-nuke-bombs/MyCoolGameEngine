@@ -35,4 +35,6 @@ MCGE_API bool dictionary_remove(struct dictionary *dictionary, void *key);
 
 MCGE_API void dictionary_clear(struct dictionary *this);
 
+MCGE_API void dictionary_shrink_to_fit(struct dictionary *this);
+
 #endif //MYCOOLGAMEENGINE_DICTIONARY_H

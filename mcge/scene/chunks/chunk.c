@@ -58,15 +58,24 @@ void chunk_collect_garbage(struct chunk *this) {
     struct dictionary_iterator types_iterator = dictionary_begin(this->types);
     struct dictionary_node types_node;
     while (dictionary_next(this->types, &types_iterator, &types_node)) {
-        if (types_node.value == NULL || dictionary_count(types_node.value) > 0) {
+        struct dictionary* typed_components = types_node.value;
+        if (typed_components == NULL) {
             continue;
         }
-        dictionary_remove(this->types, types_node.key);
-        dictionary_destroy(types_node.value);
+        if (dictionary_count(typed_components) > 0) {
+            dictionary_shrink_to_fit(typed_components);
+        }
+        else {
+            dictionary_remove(this->types, types_node.key);
+            dictionary_destroy(types_node.value);
+        }
     }
     if (dictionary_count(this->types) == 0) {
         dictionary_destroy(this->types);
         this->types = NULL;
+    }
+    else {
+        dictionary_shrink_to_fit(this->types);
     }
 }
 

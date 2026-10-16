@@ -220,3 +220,55 @@ void dictionary_clear(struct dictionary *this) {
     this->count = 0;
     this->free_head = DICTIONARY_NONE;
 }
+
+
+void dictionary_shrink_to_fit(struct dictionary *this) {
+    if (this->count == 0) {
+        allocator_delete(this->entries);
+        this->entries = NULL;
+        this->index = NULL;
+        this->entries_capacity = 0;
+        this->used = 0;
+        this->free_head = DICTIONARY_NONE;
+        this->dim = 1;
+        return;
+    }
+
+    int new_dim = 1;
+    while (((1 << new_dim) / 2) < this->count) {
+        new_dim++;
+    }
+
+    if (new_dim >= this->dim) {
+        return;
+    }
+
+    const int new_entries_capacity = (1 << new_dim) / 2;
+
+    struct dictionary_entry *new_entries = allocator_new(
+        sizeof(struct dictionary_entry) * new_entries_capacity +
+        sizeof(int) * (1 << new_dim)
+    );
+
+    int new_used = 0;
+    for (int position = 0; position < this->used; position++) {
+        if (this->entries[position].key != NULL) {
+            new_entries[new_used] = this->entries[position];
+            new_entries[new_used].next_free = DICTIONARY_NONE;
+            new_used++;
+        }
+    }
+
+    allocator_delete(this->entries);
+    this->entries = new_entries;
+    this->index = (int *)(new_entries + new_entries_capacity);
+    this->entries_capacity = new_entries_capacity;
+    this->used = new_used;
+    this->dim = new_dim;
+    this->free_head = DICTIONARY_NONE;
+
+    dictionary_index_reset(this);
+    for (int position = 0; position < this->used; position++) {
+        dictionary_index_place(this, position);
+    }
+}
