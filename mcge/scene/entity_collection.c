@@ -18,7 +18,7 @@ struct entity_collection {
     struct dictionary_iterator gc_iterator;
 };
 
-#define ENTITY_COLLECTION_GC_ROOTS_PER_FRAME 100
+#define ENTITY_COLLECTION_GC_ROOTS_PER_FRAME 128
 
 struct entity_collection *entity_collection_create(void) {
     logger_info("Entity_collection is creating...");
