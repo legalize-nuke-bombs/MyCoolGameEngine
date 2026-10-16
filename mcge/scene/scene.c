@@ -112,11 +112,7 @@ static void scene_handle_switch(void) {
         return;
     }
     logger_info("Scene is switching...");
-    chunks_clear(scene.chunks);
     entity_collection_clear(scene.entities);
-    entity_ids_clear(scene.entity_ids);
-    component_ids_clear(scene.component_ids);
-    tmap_clear(scene.tmap);
     interpreter_eval(scene.switch_flag);
     if (scene.switch_flag != NULL) allocator_delete(scene.switch_flag);
     scene.switch_flag = NULL;
