@@ -51,6 +51,7 @@ static void collider_on_awake(struct component *base);
 static void collider_on_movement(struct component *base);
 static void collider_on_disable(struct component *base);
 static void collider_on_destroy(struct component *base);
+static void collider_on_collect_garbage(struct component *base);
 
 const struct component_vtable collider_vtable = {
     .component_key = collider_component_key,
@@ -60,7 +61,8 @@ const struct component_vtable collider_vtable = {
     .on_awake = collider_on_awake,
     .is_chunkable = collider_is_chunkable,
     .on_movement = collider_on_movement,
-    .on_disable = collider_on_disable
+    .on_disable = collider_on_disable,
+    .on_collect_garbage = collider_on_collect_garbage
 };
 
 static void collider_on_create(struct component *base, struct fields *fields) {
@@ -80,6 +82,20 @@ static void collider_on_destroy(struct component *base) {
     if (this->intersections) {
         dictionary_destroy(this->intersections);
         this->intersections = NULL;
+    }
+}
+
+static void collider_on_collect_garbage(struct component *base) {
+    struct collider *this = (struct collider*)base;
+    if (this->intersections == NULL) {
+        return;
+    }
+    if (dictionary_count(this->intersections) == 0) {
+        dictionary_destroy(this->intersections);
+        this->intersections = NULL;
+    }
+    else {
+        dictionary_shrink_to_fit(this->intersections);
     }
 }
 
