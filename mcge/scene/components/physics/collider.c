@@ -10,7 +10,6 @@
 #include "../component_internal.h"
 #include "../../../utils/dictionary.h"
 #include "../../../utils/pointer_dictionary.h"
-#include "../../scene.h"
 #include "../../physics/collision_layer.h"
 #include "../../physics/collision_layers.h"
 #include "../../physics/collision_rules.h"
@@ -19,7 +18,7 @@
 #include "../../../logging/logger.h"
 #include "../../../utils/action.h"
 #include "../../../utils/fields.h"
-#include "../../chunks/chunks.h"
+#include "../../chunks/chunks_algorithms.h"
 
 
 struct collider {
@@ -34,8 +33,6 @@ struct collider {
 
     struct action on_enter;
     struct action on_exit;
-
-    const struct chunks* chunks;
 };
 
 const char* collider_component_key(void) {
@@ -113,8 +110,6 @@ static void collider_on_awake(struct component *base) {
     }
     allocator_delete(this->layer_name);
     this->layer_name = NULL;
-
-    this->chunks = scene_get_chunks();
 }
 
 static const struct collision_layer* collider_get_layer(const struct collider *this) {
@@ -167,19 +162,13 @@ static void collider_handle_on_exit(struct collider *this, struct collider *coll
     }
 }
 
-static void collider_check_new_intersections(struct collider *this, const struct rect rect, const struct dictionary *colliders) {
-    struct dictionary_iterator iterator = dictionary_begin(colliders);
-    struct dictionary_node node;
-    while (dictionary_next(colliders, &iterator, &node)) {
-        struct collider *collider = node.value;
-        if (collider == this || collider_get_response(this, collider) == collision_response_ignore) {
-            continue;
-        }
-        const struct rect collider_rect = component_get_rect((struct component*)collider);
-        if (rects_intersection(rect, collider_rect)) {
-            collider_handle_on_enter(this, collider, true);
-        }
+static void collider_check_new_intersections_step(struct component *component, void *context) {
+    struct collider *this = context;
+    struct collider *collider = (struct collider*)component;
+    if (collider == this || collider_get_response(this, collider) == collision_response_ignore) {
+        return;
     }
+    collider_handle_on_enter(this, collider, true);
 }
 
 static void collider_validate_old_intersections(struct collider *this, const struct rect rect) {
@@ -218,61 +207,42 @@ static void collider_on_movement(struct component *base) {
     // It is better to validate old intersections sooner than checking new intersections in order to skip validating fresh valid intersections
     collider_validate_old_intersections(this, rect);
 
-    int x_start, x_end, y_start, y_end;
-    chunks_get_safe_rect_indexes(this->chunks, rect, &x_start, &x_end, &y_start, &y_end);
-
-    for (int x = x_start; x <= x_end; x++) {
-        for (int y = y_start; y <= y_end; y++) {
-            const struct dictionary *colliders = chunks_chunk_get_components_by_type(this->chunks, x, y, collider_component_key());
-            if (colliders == NULL) {
-                continue;
-            }
-
-            collider_check_new_intersections(this, rect, colliders);
-        }
-    }
+    chunks_algorithms_for_each_typed(rect, collider_component_key(), collider_check_new_intersections_step, this);
 }
 
-static struct entity* collider_try_get_obstacle_among(const struct collider *this, const struct rect current_rect, const struct rect rect, const struct dictionary *colliders) {
-    const struct entity* current_parent = component_get_global_parent((const struct component*)this);
+struct collider_try_get_obstacle_context {
+    const struct collider *self;
+    struct rect current_rect;
+    const struct entity *current_parent;
+    struct entity *obstacle;
+};
+static void collider_try_get_obstacle_step(struct component *component, void *context) {
+    const struct collider *collider = (struct collider*)component;
+    struct collider_try_get_obstacle_context *cnt = context;
 
-    struct dictionary_iterator iterator = dictionary_begin(colliders);
-    struct dictionary_node node;
-    while (dictionary_next(colliders, &iterator, &node)) {
-        const struct collider *collider = node.value;
-        const struct rect collider_rect = component_get_rect((const struct component*)collider);
-        if (!rects_intersection(rect, collider_rect) || rects_intersection(current_rect, collider_rect)) {
-            continue;
-        }
-        if (collider_get_response(this, collider) != collision_response_block) {
-            continue;
-        }
-        struct entity *collider_parent = component_get_global_parent((const struct component*)collider);
-        if (collider_parent != current_parent) {
-            return collider_parent;
-        }
+    if (cnt->obstacle != NULL) {
+        return;
     }
-    return NULL;
+    if (rects_intersection(cnt->current_rect, component_get_rect(component))) {
+        return;
+    }
+    if (collider_get_response(cnt->self, collider) != collision_response_block) {
+        return;
+    }
+    struct entity *collider_parent = component_get_global_parent(component);
+    if (collider_parent != cnt->current_parent) {
+        cnt->obstacle = collider_parent;
+    }
 }
-
 struct entity* collider_try_get_obstacle(const struct collider *this, const struct rect current_rect, const struct rect rect) {
-    int x_start, x_end, y_start, y_end;
-    chunks_get_safe_rect_indexes(this->chunks, rect, &x_start, &x_end, &y_start, &y_end);
-
-    for (int x = x_start; x <= x_end; x++) {
-        for (int y = y_start; y <= y_end; y++) {
-            const struct dictionary *colliders = chunks_chunk_get_components_by_type(this->chunks, x, y, collider_component_key());
-            if (colliders == NULL) {
-                continue;
-            }
-
-            struct entity *obstacle = collider_try_get_obstacle_among(this, current_rect, rect, colliders);
-            if (obstacle != NULL) {
-                return obstacle;
-            }
-        }
-    }
-    return NULL;
+    struct collider_try_get_obstacle_context context = {
+        .self = this,
+        .current_rect = current_rect,
+        .current_parent = component_get_global_parent((const struct component*)this),
+        .obstacle = NULL
+    };
+    chunks_algorithms_for_each_typed(rect, collider_component_key(), collider_try_get_obstacle_step, &context);
+    return context.obstacle;
 }
 
 
