@@ -238,7 +238,7 @@ bool dictionary_shrink_to_fit(struct dictionary *this) {
     }
 
     int new_dim = 1;
-    while (((1 << new_dim) / 2) < this->count) {
+    while (((1 << new_dim) / 2) < 2 * this->count) {
         new_dim++;
     }
 
